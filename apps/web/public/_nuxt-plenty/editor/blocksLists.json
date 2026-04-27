@@ -844,6 +844,102 @@
             ]
           }
         }
+      },
+      {
+        "title": "Image Banner Neo",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/image_banner_left.png",
+        "template": {
+          "en": {
+            "name": "ImageTextSlider",
+            "type": "content",
+            "meta": { "uuid": "34343434-3434-4434-8434-343434343434" },
+            "content": {
+              "slides": [
+                {
+                  "image": {
+                    "desktop": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                    "mobile": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                    "alt": ""
+                  },
+                  "text": {
+                    "subline": "ENTDECKE JETZT",
+                    "headline": "Specialized Turbo Levo",
+                    "ctaLabel": "zu den Produkten",
+                    "ctaLink": "/",
+                    "ctaVariant": "primary",
+                    "backgroundImage": "",
+                    "backgroundColor": "#1f2937"
+                  },
+                  "desktop": {
+                    "imagePosition": "right",
+                    "textAlignment": "left",
+                    "textPositionX": "start",
+                    "textPositionY": "center",
+                    "margin": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                    "padding": { "top": 48, "right": 48, "bottom": 48, "left": 48 }
+                  },
+                  "mobile": {
+                    "textAlignment": "left",
+                    "textPositionX": "start",
+                    "textPositionY": "center",
+                    "margin": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                    "padding": { "top": 20, "right": 16, "bottom": 20, "left": 16 }
+                  }
+                }
+              ],
+              "controls": {
+                "showPagination": true,
+                "showArrows": true,
+                "arrowsOnHover": true
+              }
+            }
+          },
+          "de": {
+            "name": "ImageTextSlider",
+            "type": "content",
+            "meta": { "uuid": "56565656-5656-4565-8565-565656565656" },
+            "content": {
+              "slides": [
+                {
+                  "image": {
+                    "desktop": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                    "mobile": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                    "alt": ""
+                  },
+                  "text": {
+                    "subline": "ENTDECKE JETZT",
+                    "headline": "Specialized Turbo Levo",
+                    "ctaLabel": "zu den Produkten",
+                    "ctaLink": "/",
+                    "ctaVariant": "primary",
+                    "backgroundImage": "",
+                    "backgroundColor": "#1f2937"
+                  },
+                  "desktop": {
+                    "imagePosition": "right",
+                    "textAlignment": "left",
+                    "textPositionX": "start",
+                    "textPositionY": "center",
+                    "margin": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                    "padding": { "top": 48, "right": 48, "bottom": 48, "left": 48 }
+                  },
+                  "mobile": {
+                    "textAlignment": "left",
+                    "textPositionX": "start",
+                    "textPositionY": "center",
+                    "margin": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                    "padding": { "top": 20, "right": 16, "bottom": 20, "left": 16 }
+                  }
+                }
+              ],
+              "controls": {
+                "showPagination": true,
+                "showArrows": true,
+                "arrowsOnHover": true
+              }
+            }
+          }
+        }
       }
     ]
   },

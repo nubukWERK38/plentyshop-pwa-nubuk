@@ -40,6 +40,7 @@ export const BLOCK_LAYOUT_RULES: Record<string, BlockLayoutRule> = {
   SortFilter: { defaultFullWidth: false, padding: true },
 
   Carousel: { padding: false },
+  ImageTextSlider: { padding: false },
 };
 
 /**
