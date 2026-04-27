@@ -81,3 +81,29 @@ apple-pay-button {
     vertical-align: middle;
   }
 }
+.zipBox>.widget-inner {
+    max-width: 100%;
+    // hintergrund mit gradient 90deg von var(--cidark) zu var(--ci) und fallback zu var(--ci) wenn gradient nicht unterstützt wird
+    background: var(--ci);
+    background: linear-gradient(90deg, var(--cidark), var(--ci));
+    color: #fff;
+    padding: 60px 120px !important;
+    clip-path: polygon(10% 5%, 100% 0%, 90% 95%, 0% 100%);
+    position: relative;
+    margin-bottom: 170px;
+}
+.zipBox {
+  filter: drop-shadow(15px -15px 0px var(--green));
+
+  li {
+    list-style: none;
+
+    &::before {
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      content: '\f00c';
+      margin-right: 10px;
+      color: var(--green);
+    }
+  }
+}

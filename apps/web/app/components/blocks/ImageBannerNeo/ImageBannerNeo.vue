@@ -43,6 +43,7 @@
               :data-testid="`image-banner-neo-cta-${slideIndex}`"
             >
               {{ slide.text.ctaLabel }}
+              <FontAwesomeIcon :icon="['fas', 'arrow-right']" class="ml-2 h-4 w-4" />
             </UiButton>
           </div>
         </article>
@@ -65,9 +66,7 @@
       :aria-label="t('homepage.banner.ariaLabelPreviousSlide')"
       :data-testid="`image-banner-neo-prev-${sliderId}`"
     >
-      <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.8">
-        <path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
+      <FontAwesomeIcon :icon="['fas', 'chevron-left']" class="h-4 w-4" />
     </button>
 
     <button
@@ -81,9 +80,7 @@
       :aria-label="t('homepage.banner.ariaLabelNextSlide')"
       :data-testid="`image-banner-neo-next-${sliderId}`"
     >
-      <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.8">
-        <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
+      <FontAwesomeIcon :icon="['fas', 'chevron-right']" class="h-4 w-4" />
     </button>
   </div>
 </template>
