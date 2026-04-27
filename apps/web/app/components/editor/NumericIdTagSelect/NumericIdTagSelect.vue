@@ -5,6 +5,8 @@
     <Multiselect
       v-model="selectedTags"
       :options="tagOptions"
+      label="text"
+      track-by="id"
       :multiple="true"
       :taggable="true"
       :close-on-select="false"
@@ -65,6 +67,11 @@ import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import type { NumericIdPreviewItem, NumericIdTagSelectProps } from './types';
 
+type NumericIdOption = {
+  id: number;
+  text: string;
+};
+
 const props = withDefaults(defineProps<NumericIdTagSelectProps>(), {
   helpText: '',
   previewTitle: '',
@@ -92,20 +99,40 @@ const updateModelValue = (ids: number[]) => {
   emit('update:modelValue', [...new Set(ids)]);
 };
 
+const previewRowMap = computed(() => {
+  return new Map<number, NumericIdPreviewItem>(props.previewItems.map((item) => [item.id, item]));
+});
+
+const buildOption = (id: number): NumericIdOption => {
+  const previewItem = previewRowMap.value.get(id);
+  return {
+    id,
+    text: previewItem ? `#${id} - ${previewItem.label}` : `#${id}`,
+  };
+};
+
 const selectedTags = computed({
-  get: () => props.modelValue.map(String),
-  set: (value: string[]) => {
-    updateModelValue(
-      value
-        .map(parseId)
-        .filter((id): id is number => id !== null),
-    );
+  get: () => props.modelValue.map((id) => buildOption(id)),
+  set: (value: NumericIdOption[]) => {
+    updateModelValue(value.map((option) => option.id));
   },
 });
 
-const tagOptions = computed(() => selectedTags.value);
+const tagOptions = computed(() => {
+  const optionsById = new Map<number, NumericIdOption>();
 
-const formatTagLabel = (value: string) => `#${value}`;
+  props.previewItems.forEach((item) => {
+    optionsById.set(item.id, buildOption(item.id));
+  });
+
+  props.modelValue.forEach((id) => {
+    optionsById.set(id, buildOption(id));
+  });
+
+  return [...optionsById.values()];
+});
+
+const formatTagLabel = (option: NumericIdOption) => option.text;
 
 const handleTag = (value: string) => {
   const normalized = value.trim();
@@ -121,10 +148,6 @@ const handleTag = (value: string) => {
   invalidEntries.value = invalidEntries.value.filter((entry) => entry !== normalized);
   updateModelValue([...props.modelValue, parsedId]);
 };
-
-const previewRowMap = computed(() => {
-  return new Map<number, NumericIdPreviewItem>(props.previewItems.map((item) => [item.id, item]));
-});
 
 const previewRows = computed(() => {
   return props.modelValue.map((id) => {

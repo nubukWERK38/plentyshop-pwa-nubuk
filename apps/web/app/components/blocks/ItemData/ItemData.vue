@@ -24,7 +24,17 @@
                   {{ row.label }}
                 </td>
                 <td class="item-info-table__cell item-info-table__value">
-                  {{ row.value }}
+                  <template v-if="row.key === 'properties' && row.propertyLines?.length">
+                    <div class="space-y-1">
+                      <div v-for="(propertyLine, index) in row.propertyLines" :key="`${row.key}-${index}`">
+                        <span class="font-semibold">{{ propertyLine.label }}:</span>
+                        <span class="ml-1">{{ propertyLine.value }}</span>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    {{ row.value }}
+                  </template>
                 </td>
               </tr>
             </tbody>
@@ -44,7 +54,17 @@
                 {{ row.label }}
               </td>
               <td class="item-info-table__cell item-info-table__value">
-                {{ row.value }}
+                <template v-if="row.key === 'properties' && row.propertyLines?.length">
+                  <div class="space-y-1">
+                    <div v-for="(propertyLine, index) in row.propertyLines" :key="`${row.key}-${index}`">
+                      <span class="font-semibold">{{ propertyLine.label }}:</span>
+                      <span class="ml-1">{{ propertyLine.value }}</span>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  {{ row.value }}
+                </template>
               </td>
             </tr>
           </tbody>
@@ -108,6 +128,31 @@ const noFieldsSelected = computed(() => {
 
 const showNoDataMessage = computed(() => isEditMode.value && !hasTitle.value && noFieldsSelected.value);
 
+type PropertyLine = { label: string; value: string };
+
+const parsePropertyLines = (value: string): PropertyLine[] => {
+  return value
+    .split(';')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const separatorIndex = entry.indexOf(':');
+
+      if (separatorIndex === -1) {
+        return {
+          label: entry,
+          value: '',
+        };
+      }
+
+      return {
+        label: entry.slice(0, separatorIndex).trim(),
+        value: entry.slice(separatorIndex + 1).trim(),
+      };
+    })
+    .filter((entry) => entry.label.length > 0);
+};
+
 const visibleRows = computed(() => {
   const order =
     props.content.fieldsOrder && props.content.fieldsOrder.length
@@ -122,6 +167,7 @@ const visibleRows = computed(() => {
       key,
       label: fieldLabels.value[key],
       value: fieldValues.value[key],
+      propertyLines: key === 'properties' ? parsePropertyLines(fieldValues.value[key]) : undefined,
     }));
 
   return rows.filter((row) => {

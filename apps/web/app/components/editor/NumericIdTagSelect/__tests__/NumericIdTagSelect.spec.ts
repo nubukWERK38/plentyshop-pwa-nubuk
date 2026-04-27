@@ -13,6 +13,7 @@ describe('NumericIdTagSelect', () => {
     emits: ['update:modelValue', 'tag'],
     template: `
       <div>
+        <div data-testid="selected-model">{{ JSON.stringify(modelValue) }}</div>
         <button data-testid="emit-invalid" @click="$emit('tag', 'abc')">invalid</button>
         <button data-testid="emit-valid" @click="$emit('tag', '21')">valid</button>
         <button data-testid="remove-all" @click="$emit('update:modelValue', [])">clear</button>
@@ -51,6 +52,12 @@ describe('NumericIdTagSelect', () => {
 
     expect(wrapper.find('[data-testid="property-ids-preview"]').text()).toContain('Material');
     expect(wrapper.text()).toContain('Cotton');
+  });
+
+  it('should include property name in selected tag display model', () => {
+    const wrapper = createWrapper();
+
+    expect(wrapper.find('[data-testid="selected-model"]').text()).toContain('#10 - Material');
   });
 
   it('should show a validation error for invalid tags', async () => {
