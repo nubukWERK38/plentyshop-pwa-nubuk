@@ -1,5 +1,5 @@
 <template>
-  <div class="image-text-slider group relative w-full" data-testid="image-text-slider">
+  <div class="image-banner-neo group relative w-full" data-testid="image-banner-neo">
     <Swiper
       :modules="swiperModules"
       :slides-per-view="1"
@@ -9,7 +9,7 @@
       class="!z-0"
     >
       <SwiperSlide v-for="(slide, slideIndex) in slides" :key="slideIndex" class="!h-auto">
-        <article class="image-text-slider__slide grid gap-0 md:grid-cols-2" :data-testid="`image-text-slide-${slideIndex}`">
+        <article class="image-banner-neo__slide grid gap-0 md:grid-cols-2" :data-testid="`image-banner-neo-slide-${slideIndex}`">
           <div :class="getImageOrderClass(slide)">
             <NuxtImg
               :src="resolveSlideImage(slide)"
@@ -17,15 +17,15 @@
               class="h-full min-h-[250px] w-full object-cover md:min-h-[420px]"
               width="1024"
               height="576"
-              :data-testid="`image-text-slide-image-${slideIndex}`"
+              :data-testid="`image-banner-neo-image-${slideIndex}`"
             />
           </div>
 
           <div
-            class="image-text-slider__text flex min-h-[250px] flex-col gap-4 md:min-h-[420px]"
+            class="image-banner-neo__text flex min-h-[250px] flex-col gap-4 md:min-h-[420px]"
             :class="getTextOrderClass(slide)"
             :style="getTextAreaStyle(slide)"
-            :data-testid="`image-text-slide-text-${slideIndex}`"
+            :data-testid="`image-banner-neo-text-${slideIndex}`"
           >
             <p v-if="slide.text.subline" class="text-sm font-medium tracking-[0.1em] uppercase opacity-80">
               {{ slide.text.subline }}
@@ -38,9 +38,9 @@
             <UiButton
               v-if="slide.text.ctaLabel && slide.text.ctaLink"
               :variant="slide.text.ctaVariant"
-              class="w-fit image-text-slider__cta"
+              class="w-fit image-banner-neo__cta"
               v-bind="getCtaProps(slide)"
-              :data-testid="`image-text-slide-cta-${slideIndex}`"
+              :data-testid="`image-banner-neo-cta-${slideIndex}`"
             >
               {{ slide.text.ctaLabel }}
             </UiButton>
@@ -50,7 +50,7 @@
 
       <div
         v-if="shouldShowPagination"
-        :class="`swiper-pagination image-text-slider-pagination-${sliderId}`"
+        :class="`swiper-pagination image-banner-neo-pagination-${sliderId}`"
       />
     </Swiper>
 
@@ -58,12 +58,12 @@
       v-if="shouldShowArrows"
       type="button"
       :class="[
-        `swiper-button-prev image-text-slider-prev-${sliderId}`,
-        'image-text-slider__nav image-text-slider__nav--prev',
+        `swiper-button-prev image-banner-neo-prev-${sliderId}`,
+        'image-banner-neo__nav image-banner-neo__nav--prev',
         arrowVisibilityClass,
       ]"
       :aria-label="t('homepage.banner.ariaLabelPreviousSlide')"
-      :data-testid="`image-text-slider-prev-${sliderId}`"
+      :data-testid="`image-banner-neo-prev-${sliderId}`"
     >
       <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.8">
         <path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round" />
@@ -74,12 +74,12 @@
       v-if="shouldShowArrows"
       type="button"
       :class="[
-        `swiper-button-next image-text-slider-next-${sliderId}`,
-        'image-text-slider__nav image-text-slider__nav--next',
+        `swiper-button-next image-banner-neo-next-${sliderId}`,
+        'image-banner-neo__nav image-banner-neo__nav--next',
         arrowVisibilityClass,
       ]"
       :aria-label="t('homepage.banner.ariaLabelNextSlide')"
-      :data-testid="`image-text-slider-next-${sliderId}`"
+      :data-testid="`image-banner-neo-next-${sliderId}`"
     >
       <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.8">
         <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
@@ -92,12 +92,12 @@
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Navigation, Pagination } from 'swiper/modules';
 import type { CSSProperties } from 'vue';
-import type { ImageTextSliderProps, ImageTextSliderSlide } from './types';
+import type { ImageBannerNeoProps, ImageBannerNeoSlide } from './types';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const props = defineProps<ImageTextSliderProps>();
+const props = defineProps<ImageBannerNeoProps>();
 
 const localePath = useLocalePath();
 const NuxtLink = resolveComponent('NuxtLink');
@@ -105,7 +105,7 @@ const viewport = useViewport();
 
 const isMobile = computed(() => viewport.isLessThan('md'));
 
-const sliderId = computed(() => (props.meta.uuid || 'image-text-slider').replace(/[^a-zA-Z0-9_-]/g, ''));
+const sliderId = computed(() => (props.meta.uuid || 'image-banner-neo').replace(/[^a-zA-Z0-9_-]/g, ''));
 
 const ensureSpacing = (spacing?: { top?: number; right?: number; bottom?: number; left?: number }) => ({
   top: spacing?.top ?? 0,
@@ -114,7 +114,7 @@ const ensureSpacing = (spacing?: { top?: number; right?: number; bottom?: number
   left: spacing?.left ?? 0,
 });
 
-const ensureSlide = (slide?: Partial<ImageTextSliderSlide>): ImageTextSliderSlide => ({
+const ensureSlide = (slide?: Partial<ImageBannerNeoSlide>): ImageBannerNeoSlide => ({
   image: {
     desktop: slide?.image?.desktop || '',
     mobile: slide?.image?.mobile || '',
@@ -177,10 +177,10 @@ const paginationConfig = computed(() => {
   }
 
   return {
-    el: `.image-text-slider-pagination-${sliderId.value}`,
+    el: `.image-banner-neo-pagination-${sliderId.value}`,
     clickable: true,
-    bulletClass: 'image-text-slider__bullet',
-    bulletActiveClass: 'image-text-slider__bullet--active',
+    bulletClass: 'image-banner-neo__bullet',
+    bulletActiveClass: 'image-banner-neo__bullet--active',
     renderBullet(index: number, className: string) {
       return `<span class="${className}" data-index="${index}"></span>`;
     },
@@ -193,8 +193,8 @@ const navigationConfig = computed(() => {
   }
 
   return {
-    nextEl: `.image-text-slider-next-${sliderId.value}`,
-    prevEl: `.image-text-slider-prev-${sliderId.value}`,
+    nextEl: `.image-banner-neo-next-${sliderId.value}`,
+    prevEl: `.image-banner-neo-prev-${sliderId.value}`,
   };
 });
 
@@ -205,45 +205,45 @@ const arrowVisibilityClass = computed(() => {
   return 'opacity-0 transition-opacity duration-300 group-hover:opacity-100';
 });
 
-const getImageOrderClass = (slide: ImageTextSliderSlide) => {
+const getImageOrderClass = (slide: ImageBannerNeoSlide) => {
   return slide.desktop.imagePosition === 'left' ? 'order-1 md:order-1' : 'order-1 md:order-2';
 };
 
-const getTextOrderClass = (slide: ImageTextSliderSlide) => {
+const getTextOrderClass = (slide: ImageBannerNeoSlide) => {
   return slide.desktop.imagePosition === 'left' ? 'order-2 md:order-2' : 'order-2 md:order-1';
 };
 
-const resolveSlideImage = (slide: ImageTextSliderSlide) => {
+const resolveSlideImage = (slide: ImageBannerNeoSlide) => {
   return isMobile.value ? slide.image.mobile || slide.image.desktop : slide.image.desktop || slide.image.mobile;
 };
 
-const resolveTextAlign = (slide: ImageTextSliderSlide) => {
+const resolveTextAlign = (slide: ImageBannerNeoSlide) => {
   return isMobile.value ? slide.mobile.textAlignment : slide.desktop.textAlignment;
 };
 
-const resolvePositionX = (slide: ImageTextSliderSlide) => {
+const resolvePositionX = (slide: ImageBannerNeoSlide) => {
   return isMobile.value ? slide.mobile.textPositionX : slide.desktop.textPositionX;
 };
 
-const resolvePositionY = (slide: ImageTextSliderSlide) => {
+const resolvePositionY = (slide: ImageBannerNeoSlide) => {
   return isMobile.value ? slide.mobile.textPositionY : slide.desktop.textPositionY;
 };
 
-const resolveAlignItems = (slide: ImageTextSliderSlide): CSSProperties['alignItems'] => {
+const resolveAlignItems = (slide: ImageBannerNeoSlide): CSSProperties['alignItems'] => {
   const x = resolvePositionX(slide);
   if (x === 'center') return 'center';
   if (x === 'end') return 'flex-end';
   return 'flex-start';
 };
 
-const resolveJustifyContent = (slide: ImageTextSliderSlide): CSSProperties['justifyContent'] => {
+const resolveJustifyContent = (slide: ImageBannerNeoSlide): CSSProperties['justifyContent'] => {
   const y = resolvePositionY(slide);
   if (y === 'center') return 'center';
   if (y === 'end') return 'flex-end';
   return 'flex-start';
 };
 
-const getTextAreaStyle = (slide: ImageTextSliderSlide): CSSProperties => {
+const getTextAreaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
   const spacing = isMobile.value ? slide.mobile : slide.desktop;
 
   return {
@@ -268,7 +268,7 @@ const getTextAreaStyle = (slide: ImageTextSliderSlide): CSSProperties => {
 
 const isExternalLink = (link: string) => /^(https?:)?\/\//.test(link);
 
-const getCtaProps = (slide: ImageTextSliderSlide) => {
+const getCtaProps = (slide: ImageBannerNeoSlide) => {
   if (isExternalLink(slide.text.ctaLink)) {
     return {
       tag: 'a',
@@ -286,7 +286,7 @@ const getCtaProps = (slide: ImageTextSliderSlide) => {
 </script>
 
 <style scoped>
-.image-text-slider :deep(.swiper-pagination) {
+.image-banner-neo :deep(.swiper-pagination) {
   position: static;
   margin-top: 1.25rem;
   display: flex;
@@ -294,7 +294,7 @@ const getCtaProps = (slide: ImageTextSliderSlide) => {
   gap: 0.35rem;
 }
 
-.image-text-slider :deep(.image-text-slider__bullet) {
+.image-banner-neo :deep(.image-banner-neo__bullet) {
   width: 3.5rem;
   height: 0.14rem;
   border-radius: 999px;
@@ -304,11 +304,11 @@ const getCtaProps = (slide: ImageTextSliderSlide) => {
   transition: all 0.2s ease;
 }
 
-.image-text-slider :deep(.image-text-slider__bullet--active) {
+.image-banner-neo :deep(.image-banner-neo__bullet--active) {
   background: #1f2937;
 }
 
-.image-text-slider__nav {
+.image-banner-neo__nav {
   position: absolute;
   bottom: 0.15rem;
   z-index: 10;
@@ -324,37 +324,27 @@ const getCtaProps = (slide: ImageTextSliderSlide) => {
   color: #1f2937;
 }
 
-.image-text-slider__nav--prev {
+.image-banner-neo__nav--prev {
   left: 0;
 }
 
-.image-text-slider__nav--next {
+.image-banner-neo__nav--next {
   right: 0;
 }
 
-.image-text-slider__slide {
+.image-banner-neo__slide {
   background: #0f172a;
 }
 
-.image-text-slider__text {
+.image-banner-neo__text {
   position: relative;
 }
 
-.image-text-slider__text::before {
+.image-banner-neo__text::before {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.86), rgba(30, 41, 59, 0.72));
   pointer-events: none;
-}
-
-.image-text-slider__text > * {
-  position: relative;
-  z-index: 1;
-}
-
-.image-text-slider__cta {
-  --button-background: #d9ff00;
-  --button-text: #0b1220;
 }
 </style>

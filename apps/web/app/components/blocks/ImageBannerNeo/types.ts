@@ -1,11 +1,11 @@
-export type ImageTextSliderSpacing = {
+export type ImageBannerNeoSpacing = {
   top: number;
   right: number;
   bottom: number;
   left: number;
 };
 
-export type ImageTextSliderSlide = {
+export type ImageBannerNeoSlide = {
   image: {
     desktop: string;
     mobile: string;
@@ -25,20 +25,20 @@ export type ImageTextSliderSlide = {
     textAlignment: 'left' | 'center' | 'right';
     textPositionX: 'start' | 'center' | 'end';
     textPositionY: 'start' | 'center' | 'end';
-    margin: ImageTextSliderSpacing;
-    padding: ImageTextSliderSpacing;
+    margin: ImageBannerNeoSpacing;
+    padding: ImageBannerNeoSpacing;
   };
   mobile: {
     textAlignment: 'left' | 'center' | 'right';
     textPositionX: 'start' | 'center' | 'end';
     textPositionY: 'start' | 'center' | 'end';
-    margin: ImageTextSliderSpacing;
-    padding: ImageTextSliderSpacing;
+    margin: ImageBannerNeoSpacing;
+    padding: ImageBannerNeoSpacing;
   };
 };
 
-export type ImageTextSliderContent = {
-  slides: ImageTextSliderSlide[];
+export type ImageBannerNeoContent = {
+  slides: ImageBannerNeoSlide[];
   controls: {
     showPagination: boolean;
     showArrows: boolean;
@@ -46,10 +46,10 @@ export type ImageTextSliderContent = {
   };
 };
 
-export type ImageTextSliderProps = {
+export type ImageBannerNeoProps = {
   name: string;
   type: string;
-  content: ImageTextSliderContent;
+  content: ImageBannerNeoContent;
   configuration?: object;
   index?: number;
   meta: {
@@ -57,6 +57,6 @@ export type ImageTextSliderProps = {
   };
 };
 
-export type ImageTextSliderFormProps = {
+export type ImageBannerNeoFormProps = {
   uuid?: string;
 };

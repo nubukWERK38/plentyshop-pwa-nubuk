@@ -1,5 +1,5 @@
 <template>
-  <div class="block-slider-edit" data-testid="image-text-slider-form">
+  <div class="block-slider-edit" data-testid="image-banner-neo-form">
     <UiAccordionItem
       v-model="slidesOpen"
       summary-active-class="bg-neutral-100"
@@ -17,7 +17,7 @@
             type="button"
             class="rounded-md border px-3 py-1 text-sm"
             :class="index === activeSlideIndex ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white border-neutral-300'"
-            :data-testid="`image-text-slider-slide-tab-${index}`"
+            :data-testid="`image-banner-neo-slide-tab-${index}`"
             @click="activeSlideIndex = index"
           >
             {{ getEditorTranslation('slide-label') }} {{ index + 1 }}
@@ -28,7 +28,7 @@
           <button
             type="button"
             class="rounded-md bg-neutral-900 px-3 py-2 text-sm text-white"
-            data-testid="image-text-slider-add-slide"
+            data-testid="image-banner-neo-add-slide"
             @click="addSlide"
           >
             {{ getEditorTranslation('add-slide-label') }}
@@ -38,7 +38,7 @@
             type="button"
             class="rounded-md border border-red-300 px-3 py-2 text-sm text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
             :disabled="sliderContent.slides.length <= 1"
-            data-testid="image-text-slider-delete-slide"
+            data-testid="image-banner-neo-delete-slide"
             @click="removeActiveSlide"
           >
             {{ getEditorTranslation('remove-slide-label') }}
@@ -89,7 +89,7 @@
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('image-alt-label') }}</UiFormLabel>
-          <SfInput v-model="activeSlide.image.alt" type="text" data-testid="image-text-slider-alt" />
+          <SfInput v-model="activeSlide.image.alt" type="text" data-testid="image-banner-neo-alt" />
         </div>
       </div>
     </UiAccordionItem>
@@ -106,22 +106,22 @@
       <div v-if="activeSlide" class="space-y-4">
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('subline-label') }}</UiFormLabel>
-          <SfInput v-model="activeSlide.text.subline" type="text" data-testid="image-text-slider-subline" />
+          <SfInput v-model="activeSlide.text.subline" type="text" data-testid="image-banner-neo-subline" />
         </div>
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-label') }}</UiFormLabel>
-          <SfInput v-model="activeSlide.text.headline" type="text" data-testid="image-text-slider-headline" />
+          <SfInput v-model="activeSlide.text.headline" type="text" data-testid="image-banner-neo-headline" />
         </div>
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('cta-label') }}</UiFormLabel>
-          <SfInput v-model="activeSlide.text.ctaLabel" type="text" data-testid="image-text-slider-cta-label" />
+          <SfInput v-model="activeSlide.text.ctaLabel" type="text" data-testid="image-banner-neo-cta-label" />
         </div>
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('cta-link-label') }}</UiFormLabel>
-          <SfInput v-model="activeSlide.text.ctaLink" type="text" data-testid="image-text-slider-cta-link" />
+          <SfInput v-model="activeSlide.text.ctaLink" type="text" data-testid="image-banner-neo-cta-link" />
         </div>
 
         <div>
@@ -151,7 +151,7 @@
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('text-bg-color-label') }}</UiFormLabel>
-          <SfInput v-model="activeSlide.text.backgroundColor" type="text" data-testid="image-text-slider-bg-color" />
+          <SfInput v-model="activeSlide.text.backgroundColor" type="text" data-testid="image-banner-neo-bg-color" />
         </div>
       </div>
     </UiAccordionItem>
@@ -171,7 +171,7 @@
           <select
             v-model="activeSlide.desktop.imagePosition"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            data-testid="image-text-slider-image-position"
+            data-testid="image-banner-neo-image-position"
           >
             <option value="right">{{ getEditorTranslation('position-text-left-image-right') }}</option>
             <option value="left">{{ getEditorTranslation('position-image-left-text-right') }}</option>
@@ -183,7 +183,7 @@
           <select
             v-model="activeSlide.desktop.textAlignment"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            data-testid="image-text-slider-desktop-text-alignment"
+            data-testid="image-banner-neo-desktop-text-alignment"
           >
             <option value="left">{{ getEditorTranslation('left-label') }}</option>
             <option value="center">{{ getEditorTranslation('center-label') }}</option>
@@ -196,7 +196,7 @@
           <select
             v-model="activeSlide.desktop.textPositionX"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            data-testid="image-text-slider-desktop-position-x"
+            data-testid="image-banner-neo-desktop-position-x"
           >
             <option value="start">{{ getEditorTranslation('position-start-label') }}</option>
             <option value="center">{{ getEditorTranslation('position-center-label') }}</option>
@@ -209,7 +209,7 @@
           <select
             v-model="activeSlide.desktop.textPositionY"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            data-testid="image-text-slider-desktop-position-y"
+            data-testid="image-banner-neo-desktop-position-y"
           >
             <option value="start">{{ getEditorTranslation('position-start-label') }}</option>
             <option value="center">{{ getEditorTranslation('position-center-label') }}</option>
@@ -256,7 +256,7 @@
           <select
             v-model="activeSlide.mobile.textAlignment"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            data-testid="image-text-slider-mobile-text-alignment"
+            data-testid="image-banner-neo-mobile-text-alignment"
           >
             <option value="left">{{ getEditorTranslation('left-label') }}</option>
             <option value="center">{{ getEditorTranslation('center-label') }}</option>
@@ -269,7 +269,7 @@
           <select
             v-model="activeSlide.mobile.textPositionX"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            data-testid="image-text-slider-mobile-position-x"
+            data-testid="image-banner-neo-mobile-position-x"
           >
             <option value="start">{{ getEditorTranslation('position-start-label') }}</option>
             <option value="center">{{ getEditorTranslation('position-center-label') }}</option>
@@ -282,7 +282,7 @@
           <select
             v-model="activeSlide.mobile.textPositionY"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            data-testid="image-text-slider-mobile-position-y"
+            data-testid="image-banner-neo-mobile-position-y"
           >
             <option value="start">{{ getEditorTranslation('position-start-label') }}</option>
             <option value="center">{{ getEditorTranslation('position-center-label') }}</option>
@@ -324,12 +324,12 @@
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <UiFormLabel>{{ getEditorTranslation('show-pagination-label') }}</UiFormLabel>
-          <SfSwitch v-model="sliderContent.controls.showPagination" data-testid="image-text-slider-show-pagination" />
+          <SfSwitch v-model="sliderContent.controls.showPagination" data-testid="image-banner-neo-show-pagination" />
         </div>
 
         <div class="flex items-center justify-between">
           <UiFormLabel>{{ getEditorTranslation('show-arrows-label') }}</UiFormLabel>
-          <SfSwitch v-model="sliderContent.controls.showArrows" data-testid="image-text-slider-show-arrows" />
+          <SfSwitch v-model="sliderContent.controls.showArrows" data-testid="image-banner-neo-show-arrows" />
         </div>
 
         <div class="flex items-center justify-between">
@@ -337,7 +337,7 @@
           <SfSwitch
             v-model="sliderContent.controls.arrowsOnHover"
             :disabled="!sliderContent.controls.showArrows"
-            data-testid="image-text-slider-show-arrows-hover"
+            data-testid="image-banner-neo-show-arrows-hover"
           />
         </div>
       </div>
@@ -347,11 +347,11 @@
 
 <script setup lang="ts">
 import { SfInput, SfSwitch, SfIconCheck } from '@storefront-ui/vue';
-import type { ImageTextSliderContent, ImageTextSliderFormProps, ImageTextSliderSlide, ImageTextSliderSpacing } from './types';
+import type { ImageBannerNeoContent, ImageBannerNeoFormProps, ImageBannerNeoSlide, ImageBannerNeoSpacing } from './types';
 
 type ImageTarget = 'desktop' | 'mobile' | 'textBackground';
 
-const props = defineProps<ImageTextSliderFormProps>();
+const props = defineProps<ImageBannerNeoFormProps>();
 
 const { allBlocks: data } = useBlocks();
 const { blockUuid } = useSiteConfiguration();
@@ -367,14 +367,14 @@ const controlsOpen = ref(true);
 
 const activeSlideIndex = ref(0);
 
-const defaultSpacing = (): ImageTextSliderSpacing => ({
+const defaultSpacing = (): ImageBannerNeoSpacing => ({
   top: 0,
   right: 0,
   bottom: 0,
   left: 0,
 });
 
-const defaultSlide = (): ImageTextSliderSlide => ({
+const defaultSlide = (): ImageBannerNeoSlide => ({
   image: {
     desktop: placeholderImg,
     mobile: placeholderImg,
@@ -416,14 +416,14 @@ const defaultSlide = (): ImageTextSliderSlide => ({
   },
 });
 
-const ensureSpacing = (spacing?: Partial<ImageTextSliderSpacing>): ImageTextSliderSpacing => ({
+const ensureSpacing = (spacing?: Partial<ImageBannerNeoSpacing>): ImageBannerNeoSpacing => ({
   top: spacing?.top ?? 0,
   right: spacing?.right ?? 0,
   bottom: spacing?.bottom ?? 0,
   left: spacing?.left ?? 0,
 });
 
-const ensureSlide = (slide?: Partial<ImageTextSliderSlide>): ImageTextSliderSlide => {
+const ensureSlide = (slide?: Partial<ImageBannerNeoSlide>): ImageBannerNeoSlide => {
   const fallback = defaultSlide();
   return {
     image: {
@@ -458,7 +458,7 @@ const ensureSlide = (slide?: Partial<ImageTextSliderSlide>): ImageTextSliderSlid
   };
 };
 
-const ensureContent = (content?: Partial<ImageTextSliderContent>): ImageTextSliderContent => ({
+const ensureContent = (content?: Partial<ImageBannerNeoContent>): ImageBannerNeoContent => ({
   slides: Array.isArray(content?.slides) && content.slides.length > 0 ? content.slides.map(ensureSlide) : [defaultSlide()],
   controls: {
     showPagination: content?.controls?.showPagination !== false,
@@ -467,9 +467,9 @@ const ensureContent = (content?: Partial<ImageTextSliderContent>): ImageTextSlid
   },
 });
 
-const sliderContent = computed<ImageTextSliderContent>(() => {
+const sliderContent = computed<ImageBannerNeoContent>(() => {
   const block = findOrDeleteBlockByUuid(data.value, props.uuid || blockUuid.value);
-  const normalized = ensureContent((block?.content ?? {}) as Partial<ImageTextSliderContent>);
+  const normalized = ensureContent((block?.content ?? {}) as Partial<ImageBannerNeoContent>);
 
   if (block) {
     block.content = normalized as unknown as typeof block.content;

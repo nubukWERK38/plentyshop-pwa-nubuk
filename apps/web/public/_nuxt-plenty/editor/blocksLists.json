@@ -850,7 +850,7 @@
         "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/image_banner_left.png",
         "template": {
           "en": {
-            "name": "ImageTextSlider",
+            "name": "ImageBannerNeo",
             "type": "content",
             "meta": { "uuid": "34343434-3434-4434-8434-343434343434" },
             "content": {
@@ -895,7 +895,7 @@
             }
           },
           "de": {
-            "name": "ImageTextSlider",
+            "name": "ImageBannerNeo",
             "type": "content",
             "meta": { "uuid": "56565656-5656-4565-8565-565656565656" },
             "content": {
