@@ -72,4 +72,41 @@ describe('useItemDataTable', () => {
     expect(fieldValues.value.dimensions).toBe('550 x 650 x 330 mm');
     expect(fieldValues.value.ageRating).toBe('16 and older');
   });
+
+  it('should filter properties by configured property IDs', () => {
+    const productRef = ref<Product | null>({
+      item: {
+        id: 109,
+      },
+      variation: {},
+      variationProperties: [
+        {
+          properties: [
+            {
+              id: 10,
+              values: { value: 'Cotton' },
+              names: { name: 'Material' },
+            },
+            {
+              id: 21,
+              values: { value: 'Red' },
+              names: { name: 'Color' },
+            },
+          ],
+        },
+      ],
+    } as unknown as Product);
+
+    const selectedPropertyIds = ref<number[]>([21]);
+    const { fieldValues } = useItemDataTable(productRef, {
+      t: mockT,
+      getPropertyIds: () => selectedPropertyIds.value,
+    });
+
+    expect(fieldValues.value.properties).toBe('Color: Red');
+
+    selectedPropertyIds.value = [10];
+
+    expect(fieldValues.value.properties).toBe('Material: Cotton');
+  });
 });

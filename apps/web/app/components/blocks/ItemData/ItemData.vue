@@ -69,6 +69,7 @@ const { isEditMode } = useEditorState();
 
 const { fieldValues } = useItemDataTable(currentProduct as Ref<Product | null>, {
   t,
+  getPropertyIds: () => props.content.propertyIds,
 });
 const fieldLabels = computed<ItemDataFieldLabels>(() => ({
   itemId: t('field-itemId'),

@@ -75,9 +75,28 @@ export const formatContent = (product: Product): string => {
   return [content ?? '', unitName ?? ''].join(' ').trim();
 };
 
-export const formatVariationProperties = (product: Product): string => {
+export const getVariationPropertyId = (property: {
+  id?: number | string | null;
+  names?: { propertyId?: number | string | null } | null;
+}): number | null => {
+  const rawId = property.id ?? property.names?.propertyId;
+  const propertyId = Number(rawId);
+
+  return Number.isInteger(propertyId) && propertyId > 0 ? propertyId : null;
+};
+
+export const formatVariationProperties = (product: Product, selectedPropertyIds: number[] = []): string => {
+  const selectedIds = new Set(selectedPropertyIds);
+  const shouldFilter = selectedIds.size > 0;
+
   return (product.variationProperties ?? [])
     .flatMap((group) => group.properties ?? [])
+    .filter((property) => {
+      if (!shouldFilter) return true;
+
+      const propertyId = getVariationPropertyId(property);
+      return propertyId !== null && selectedIds.has(propertyId);
+    })
     .map((prop) => {
       const value = prop.values?.value;
       if (!value) return '';

@@ -60,6 +60,23 @@
           </div>
         </template>
       </draggable>
+
+      <EditorNumericIdTagSelect
+        v-model="propertyIdsModel"
+        class="mt-6"
+        :label="getEditorTranslation('properties-ids-label')"
+        :placeholder="getEditorTranslation('properties-ids-placeholder')"
+        :tag-placeholder="getEditorTranslation('properties-ids-tag-placeholder')"
+        :deselect-label="getEditorTranslation('properties-ids-deselect-label')"
+        :help-text="getEditorTranslation('properties-ids-help')"
+        :invalid-title="getEditorTranslation('properties-ids-invalid-title')"
+        :invalid-help-text="getEditorTranslation('properties-ids-invalid-help')"
+        :preview-title="getEditorTranslation('properties-preview-title')"
+        :preview-empty-text="getEditorTranslation('properties-preview-empty')"
+        :preview-unavailable-text="getEditorTranslation('properties-preview-unavailable')"
+        :preview-items="propertyPreviewItems"
+        data-test-id="item-data-property-ids"
+      />
     </div>
   </UiAccordionItem>
 
@@ -150,8 +167,11 @@ import {
 } from '@storefront-ui/vue';
 import dragIcon from '~/assets/icons/paths/drag.svg';
 import type { ItemDataContent, ItemDataFieldKey, ItemDataFieldLabels } from './types';
+import { getVariationPropertyId } from '~/composables/useItemDataTable/helpers/ItemDataHelpers';
+import type { NumericIdPreviewItem } from '~/components/editor/NumericIdTagSelect/types';
 
 const { allBlocks: data } = useBlocks();
+const { currentProduct } = useProducts();
 
 const { blockUuid } = useSiteConfiguration();
 const { findOrDeleteBlockByUuid } = useBlockManager();
@@ -159,6 +179,16 @@ const { findOrDeleteBlockByUuid } = useBlockManager();
 const props = defineProps<{
   uuid?: string;
 }>();
+
+interface PreviewProperty {
+  id?: number | string | null;
+  names?: { propertyId?: number | string | null; name?: string | null } | null;
+  values?: { value?: string | null } | null;
+}
+
+interface PreviewPropertyGroup {
+  properties?: PreviewProperty[];
+}
 
 const ALL_KEYS: ItemDataFieldKey[] = [
   'itemId',
@@ -183,6 +213,10 @@ if (!rawContent.text) {
   rawContent.text = { title: 'More details' };
 } else if (rawContent.text.title === undefined) {
   rawContent.text.title = 'More details';
+}
+
+if (!Array.isArray(rawContent.propertyIds)) {
+  rawContent.propertyIds = [];
 }
 
 if (!rawContent.fields) {
@@ -221,6 +255,31 @@ if (!rawContent.layout) {
 const itemTableBlock = reactive(rawContent as ItemDataContent);
 
 const { isFullWidth } = useFullWidthToggleForContent(toRef(itemTableBlock));
+
+const propertyIdsModel = computed({
+  get: () => itemTableBlock.propertyIds ?? [],
+  set: (value: number[]) => {
+    itemTableBlock.propertyIds = [...new Set(value.filter((id) => Number.isInteger(id) && id > 0))];
+  },
+});
+
+const propertyPreviewItems = computed<NumericIdPreviewItem[]>(() => {
+  const previewMap = new Map<number, NumericIdPreviewItem>();
+
+  (currentProduct.value?.variationProperties ?? [])
+    .flatMap((group: PreviewPropertyGroup) => group.properties ?? [])
+    .forEach((property: PreviewProperty) => {
+      const id = getVariationPropertyId(property);
+      if (id === null || previewMap.has(id)) return;
+
+      const label = property.names?.name ? String(property.names.name) : `#${id}`;
+      const description = property.values?.value ? String(property.values.value) : undefined;
+
+      previewMap.set(id, { id, label, description });
+    });
+
+  return [...previewMap.values()];
+});
 
 const fieldLabels: ItemDataFieldLabels = {
   itemId: getEditorTranslation('field-itemId'),
@@ -304,6 +363,16 @@ watch(isInitiallyCollapsed, (newValue) => {
     "spacing-around": "Spacing around the table",
     "display-as-collapsable": "Display as collapsable",
     "initially-collapsed": "Initially collapsed",
+    "properties-ids-label": "Property IDs",
+    "properties-ids-placeholder": "Add property IDs",
+    "properties-ids-tag-placeholder": "Press Enter to add",
+    "properties-ids-deselect-label": "Selected",
+    "properties-ids-help": "Only these property IDs are shown in the properties row. Leave the field empty to show all properties.",
+    "properties-ids-invalid-title": "Invalid property IDs",
+    "properties-ids-invalid-help": "Only positive integer IDs are allowed. Invalid entries were not added.",
+    "properties-preview-title": "Live preview",
+    "properties-preview-empty": "No property IDs selected yet.",
+    "properties-preview-unavailable": "No matching property found in the current preview product.",
 
     "field-itemId": "Item ID",
     "field-condition": "Condition",
@@ -332,6 +401,16 @@ watch(isInitiallyCollapsed, (newValue) => {
     "spacing-around": "Spacing around the table",
     "display-as-collapsable": "Display as collapsable",
     "initially-collapsed": "Initially collapsed",
+    "properties-ids-label": "Property IDs",
+    "properties-ids-placeholder": "Eigenschafts-IDs hinzufügen",
+    "properties-ids-tag-placeholder": "Mit Enter hinzufügen",
+    "properties-ids-deselect-label": "Ausgewählt",
+    "properties-ids-help": "Es werden nur diese Eigenschafts-IDs in der Eigenschaften-Zeile angezeigt. Wenn das Feld leer ist, werden alle Eigenschaften angezeigt.",
+    "properties-ids-invalid-title": "Ungültige Eigenschafts-IDs",
+    "properties-ids-invalid-help": "Es sind nur positive Ganzzahlen erlaubt. Ungültige Eingaben wurden nicht übernommen.",
+    "properties-preview-title": "Live-Vorschau",
+    "properties-preview-empty": "Es sind noch keine Eigenschafts-IDs ausgewählt.",
+    "properties-preview-unavailable": "Für diese ID wurde im aktuellen Vorschauprodukt keine passende Eigenschaft gefunden.",
 
     "field-itemId": "Item ID",
     "field-condition": "Condition",

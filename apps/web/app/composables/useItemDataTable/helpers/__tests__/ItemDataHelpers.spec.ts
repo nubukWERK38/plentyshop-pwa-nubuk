@@ -6,6 +6,7 @@ import {
   formatWeight,
   formatDimensions,
   formatVariationProperties,
+  getVariationPropertyId,
   getConditionName,
   getManufacturingCountryName,
   getManufacturerName,
@@ -220,10 +221,12 @@ describe('formatVariationProperties', () => {
         {
           properties: [
             {
+              id: 10,
               values: { value: 'Cotton' },
               names: { name: 'Material' },
             },
             {
+              id: 20,
               values: { value: 'Red' },
               names: { name: 'Color' },
             },
@@ -233,5 +236,42 @@ describe('formatVariationProperties', () => {
     } as unknown as Product;
 
     expect(formatVariationProperties(product)).toBe('Material: Cotton; Color: Red');
+  });
+
+  it('should filter properties by selected IDs', () => {
+    const product = {
+      variationProperties: [
+        {
+          properties: [
+            {
+              id: 10,
+              values: { value: 'Cotton' },
+              names: { name: 'Material' },
+            },
+            {
+              names: { propertyId: '21', name: 'Color' },
+              values: { value: 'Red' },
+            },
+          ],
+        },
+      ],
+    } as unknown as Product;
+
+    expect(formatVariationProperties(product, [21])).toBe('Color: Red');
+  });
+});
+
+describe('getVariationPropertyId', () => {
+  it('should use the property id when present', () => {
+    expect(getVariationPropertyId({ id: 15 })).toBe(15);
+  });
+
+  it('should fall back to names.propertyId', () => {
+    expect(getVariationPropertyId({ names: { propertyId: '21' } })).toBe(21);
+  });
+
+  it('should return null for invalid values', () => {
+    expect(getVariationPropertyId({ id: 0 })).toBeNull();
+    expect(getVariationPropertyId({ names: { propertyId: 'abc' } })).toBeNull();
   });
 });

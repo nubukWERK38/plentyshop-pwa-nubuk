@@ -35,6 +35,7 @@ export interface ItemDataContent {
   text: ItemDataText;
   fields: ItemDataFieldsVisibility;
   fieldsOrder: ItemDataFieldsOrder;
+  propertyIds?: number[];
   layout: ItemDataLayout;
 }
 

@@ -13,7 +13,12 @@ import {
 } from './helpers/ItemDataHelpers';
 import type { TranslateFn } from '~/composables/useItemDataTable/types';
 
-export function useItemDataTable(productRef: Ref<Product | null>, options?: { t?: TranslateFn }) {
+interface UseItemDataTableOptions {
+  t?: TranslateFn;
+  getPropertyIds?: () => number[] | undefined;
+}
+
+export function useItemDataTable(productRef: Ref<Product | null>, options?: UseItemDataTableOptions) {
   const { shouldHideZeroValues } = useEditorState();
 
   const fieldValues = computed<ItemDataFieldValues>(() => {
@@ -37,6 +42,7 @@ export function useItemDataTable(productRef: Ref<Product | null>, options?: { t?
       };
     }
     const translate = options?.t;
+    const selectedPropertyIds = options?.getPropertyIds?.() ?? [];
     const { item, variation } = product;
     const weightG = variation.weightG ?? null;
     const weightNetG = variation.weightNetG ?? null;
@@ -77,7 +83,7 @@ export function useItemDataTable(productRef: Ref<Product | null>, options?: { t?
 
       customTariffNumber: variation.customsTariffNumber ?? item.customsTariffNumber ?? '',
 
-      properties: formatVariationProperties(product),
+      properties: formatVariationProperties(product, selectedPropertyIds),
     };
   });
 
