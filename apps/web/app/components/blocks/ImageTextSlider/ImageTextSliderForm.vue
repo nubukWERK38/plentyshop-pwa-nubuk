@@ -192,6 +192,32 @@
         </div>
 
         <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('text-position-x-label') }}</UiFormLabel>
+          <select
+            v-model="activeSlide.desktop.textPositionX"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            data-testid="image-text-slider-desktop-position-x"
+          >
+            <option value="start">{{ getEditorTranslation('position-start-label') }}</option>
+            <option value="center">{{ getEditorTranslation('position-center-label') }}</option>
+            <option value="end">{{ getEditorTranslation('position-end-label') }}</option>
+          </select>
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('text-position-y-label') }}</UiFormLabel>
+          <select
+            v-model="activeSlide.desktop.textPositionY"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            data-testid="image-text-slider-desktop-position-y"
+          >
+            <option value="start">{{ getEditorTranslation('position-start-label') }}</option>
+            <option value="center">{{ getEditorTranslation('position-center-label') }}</option>
+            <option value="end">{{ getEditorTranslation('position-end-label') }}</option>
+          </select>
+        </div>
+
+        <div>
           <UiFormLabel class="mb-2">{{ getEditorTranslation('margin-label') }}</UiFormLabel>
           <div class="grid grid-cols-4 gap-2">
             <input v-model.number="activeSlide.desktop.margin.top" type="number" class="input-number" />
@@ -235,6 +261,32 @@
             <option value="left">{{ getEditorTranslation('left-label') }}</option>
             <option value="center">{{ getEditorTranslation('center-label') }}</option>
             <option value="right">{{ getEditorTranslation('right-label') }}</option>
+          </select>
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('text-position-x-label') }}</UiFormLabel>
+          <select
+            v-model="activeSlide.mobile.textPositionX"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            data-testid="image-text-slider-mobile-position-x"
+          >
+            <option value="start">{{ getEditorTranslation('position-start-label') }}</option>
+            <option value="center">{{ getEditorTranslation('position-center-label') }}</option>
+            <option value="end">{{ getEditorTranslation('position-end-label') }}</option>
+          </select>
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('text-position-y-label') }}</UiFormLabel>
+          <select
+            v-model="activeSlide.mobile.textPositionY"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            data-testid="image-text-slider-mobile-position-y"
+          >
+            <option value="start">{{ getEditorTranslation('position-start-label') }}</option>
+            <option value="center">{{ getEditorTranslation('position-center-label') }}</option>
+            <option value="end">{{ getEditorTranslation('position-end-label') }}</option>
           </select>
         </div>
 
@@ -340,6 +392,8 @@ const defaultSlide = (): ImageTextSliderSlide => ({
   desktop: {
     imagePosition: 'right',
     textAlignment: 'left',
+    textPositionX: 'start',
+    textPositionY: 'center',
     margin: defaultSpacing(),
     padding: {
       top: 32,
@@ -350,6 +404,8 @@ const defaultSlide = (): ImageTextSliderSlide => ({
   },
   mobile: {
     textAlignment: 'left',
+    textPositionX: 'start',
+    textPositionY: 'center',
     margin: defaultSpacing(),
     padding: {
       top: 20,
@@ -387,11 +443,15 @@ const ensureSlide = (slide?: Partial<ImageTextSliderSlide>): ImageTextSliderSlid
     desktop: {
       imagePosition: slide?.desktop?.imagePosition || fallback.desktop.imagePosition,
       textAlignment: slide?.desktop?.textAlignment || fallback.desktop.textAlignment,
+      textPositionX: slide?.desktop?.textPositionX || fallback.desktop.textPositionX,
+      textPositionY: slide?.desktop?.textPositionY || fallback.desktop.textPositionY,
       margin: ensureSpacing(slide?.desktop?.margin),
       padding: ensureSpacing(slide?.desktop?.padding ?? fallback.desktop.padding),
     },
     mobile: {
       textAlignment: slide?.mobile?.textAlignment || fallback.mobile.textAlignment,
+      textPositionX: slide?.mobile?.textPositionX || fallback.mobile.textPositionX,
+      textPositionY: slide?.mobile?.textPositionY || fallback.mobile.textPositionY,
       margin: ensureSpacing(slide?.mobile?.margin),
       padding: ensureSpacing(slide?.mobile?.padding ?? fallback.mobile.padding),
     },
@@ -501,6 +561,11 @@ watch(
     "position-text-left-image-right": "Text left, image right",
     "position-image-left-text-right": "Image left, text right",
     "text-alignment-label": "Text alignment",
+    "text-position-x-label": "Text position X",
+    "text-position-y-label": "Text position Y",
+    "position-start-label": "Start",
+    "position-center-label": "Center",
+    "position-end-label": "End",
     "left-label": "Left",
     "center-label": "Center",
     "right-label": "Right",
@@ -537,6 +602,11 @@ watch(
     "position-text-left-image-right": "Text links, Bild rechts",
     "position-image-left-text-right": "Bild links, Text rechts",
     "text-alignment-label": "Textausrichtung",
+    "text-position-x-label": "Textposition X",
+    "text-position-y-label": "Textposition Y",
+    "position-start-label": "Start",
+    "position-center-label": "Mitte",
+    "position-end-label": "Ende",
     "left-label": "Links",
     "center-label": "Zentriert",
     "right-label": "Rechts",

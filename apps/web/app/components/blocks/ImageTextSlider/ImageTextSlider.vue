@@ -9,12 +9,12 @@
       class="!z-0"
     >
       <SwiperSlide v-for="(slide, slideIndex) in slides" :key="slideIndex" class="!h-auto">
-        <article class="grid gap-0 md:grid-cols-2" :data-testid="`image-text-slide-${slideIndex}`">
+        <article class="image-text-slider__slide grid gap-0 md:grid-cols-2" :data-testid="`image-text-slide-${slideIndex}`">
           <div :class="getImageOrderClass(slide)">
             <NuxtImg
               :src="resolveSlideImage(slide)"
               :alt="slide.image.alt"
-              class="h-full min-h-[240px] w-full object-cover"
+              class="h-full min-h-[250px] w-full object-cover md:min-h-[420px]"
               width="1024"
               height="576"
               :data-testid="`image-text-slide-image-${slideIndex}`"
@@ -22,7 +22,7 @@
           </div>
 
           <div
-            class="flex min-h-[240px] flex-col justify-center gap-4"
+            class="image-text-slider__text flex min-h-[250px] flex-col gap-4 md:min-h-[420px]"
             :class="getTextOrderClass(slide)"
             :style="getTextAreaStyle(slide)"
             :data-testid="`image-text-slide-text-${slideIndex}`"
@@ -31,14 +31,14 @@
               {{ slide.text.subline }}
             </p>
 
-            <h2 v-if="slide.text.headline" class="text-2xl font-bold leading-tight md:text-4xl">
+            <h2 v-if="slide.text.headline" class="text-3xl font-bold leading-tight md:text-5xl">
               {{ slide.text.headline }}
             </h2>
 
             <UiButton
               v-if="slide.text.ctaLabel && slide.text.ctaLink"
               :variant="slide.text.ctaVariant"
-              class="w-fit"
+              class="w-fit image-text-slider__cta"
               v-bind="getCtaProps(slide)"
               :data-testid="`image-text-slide-cta-${slideIndex}`"
             >
@@ -132,11 +132,15 @@ const ensureSlide = (slide?: Partial<ImageTextSliderSlide>): ImageTextSliderSlid
   desktop: {
     imagePosition: slide?.desktop?.imagePosition || 'right',
     textAlignment: slide?.desktop?.textAlignment || 'left',
+    textPositionX: slide?.desktop?.textPositionX || 'start',
+    textPositionY: slide?.desktop?.textPositionY || 'center',
     margin: ensureSpacing(slide?.desktop?.margin),
     padding: ensureSpacing(slide?.desktop?.padding),
   },
   mobile: {
     textAlignment: slide?.mobile?.textAlignment || 'left',
+    textPositionX: slide?.mobile?.textPositionX || 'start',
+    textPositionY: slide?.mobile?.textPositionY || 'center',
     margin: ensureSpacing(slide?.mobile?.margin),
     padding: ensureSpacing(slide?.mobile?.padding),
   },
@@ -195,7 +199,7 @@ const navigationConfig = computed(() => {
 });
 
 const arrowVisibilityClass = computed(() => {
-  if (!controls.value?.arrowsOnHover) {
+  if (!controls.value?.arrowsOnHover || isMobile.value) {
     return 'opacity-100';
   }
   return 'opacity-0 transition-opacity duration-300 group-hover:opacity-100';
@@ -217,10 +221,34 @@ const resolveTextAlign = (slide: ImageTextSliderSlide) => {
   return isMobile.value ? slide.mobile.textAlignment : slide.desktop.textAlignment;
 };
 
+const resolvePositionX = (slide: ImageTextSliderSlide) => {
+  return isMobile.value ? slide.mobile.textPositionX : slide.desktop.textPositionX;
+};
+
+const resolvePositionY = (slide: ImageTextSliderSlide) => {
+  return isMobile.value ? slide.mobile.textPositionY : slide.desktop.textPositionY;
+};
+
+const resolveAlignItems = (slide: ImageTextSliderSlide): CSSProperties['alignItems'] => {
+  const x = resolvePositionX(slide);
+  if (x === 'center') return 'center';
+  if (x === 'end') return 'flex-end';
+  return 'flex-start';
+};
+
+const resolveJustifyContent = (slide: ImageTextSliderSlide): CSSProperties['justifyContent'] => {
+  const y = resolvePositionY(slide);
+  if (y === 'center') return 'center';
+  if (y === 'end') return 'flex-end';
+  return 'flex-start';
+};
+
 const getTextAreaStyle = (slide: ImageTextSliderSlide): CSSProperties => {
   const spacing = isMobile.value ? slide.mobile : slide.desktop;
 
   return {
+    alignItems: resolveAlignItems(slide),
+    justifyContent: resolveJustifyContent(slide),
     textAlign: resolveTextAlign(slide),
     marginTop: `${spacing.margin.top}px`,
     marginRight: `${spacing.margin.right}px`,
@@ -230,10 +258,11 @@ const getTextAreaStyle = (slide: ImageTextSliderSlide): CSSProperties => {
     paddingRight: `${spacing.padding.right}px`,
     paddingBottom: `${spacing.padding.bottom}px`,
     paddingLeft: `${spacing.padding.left}px`,
-    backgroundColor: slide.text.backgroundColor || 'transparent',
+    backgroundColor: slide.text.backgroundColor || '#1f2937',
     backgroundImage: slide.text.backgroundImage ? `url(${slide.text.backgroundImage})` : 'none',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    color: '#ffffff',
   };
 };
 
@@ -259,49 +288,73 @@ const getCtaProps = (slide: ImageTextSliderSlide) => {
 <style scoped>
 .image-text-slider :deep(.swiper-pagination) {
   position: static;
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .image-text-slider :deep(.image-text-slider__bullet) {
-  width: 2rem;
-  height: 0.2rem;
+  width: 3.5rem;
+  height: 0.14rem;
   border-radius: 999px;
-  background: #d4d4d8;
+  background: #cbd5e1;
   opacity: 1;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .image-text-slider :deep(.image-text-slider__bullet--active) {
-  background: #111827;
-  width: 2.8rem;
+  background: #1f2937;
 }
 
 .image-text-slider__nav {
   position: absolute;
-  top: 50%;
+  bottom: 0.15rem;
   z-index: 10;
-  transform: translateY(-50%);
+  transform: none;
   display: inline-flex;
-  height: 2.5rem;
-  width: 2.5rem;
+  height: 2rem;
+  width: 2rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e5e7eb;
+  border: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  color: #111827;
-  backdrop-filter: blur(4px);
+  background: transparent;
+  color: #1f2937;
 }
 
 .image-text-slider__nav--prev {
-  left: 0.75rem;
+  left: 0;
 }
 
 .image-text-slider__nav--next {
-  right: 0.75rem;
+  right: 0;
+}
+
+.image-text-slider__slide {
+  background: #0f172a;
+}
+
+.image-text-slider__text {
+  position: relative;
+}
+
+.image-text-slider__text::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.86), rgba(30, 41, 59, 0.72));
+  pointer-events: none;
+}
+
+.image-text-slider__text > * {
+  position: relative;
+  z-index: 1;
+}
+
+.image-text-slider__cta {
+  --button-background: #d9ff00;
+  --button-text: #0b1220;
 }
 </style>

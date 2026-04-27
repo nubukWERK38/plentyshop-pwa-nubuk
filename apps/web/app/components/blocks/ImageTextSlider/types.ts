@@ -23,11 +23,15 @@ export type ImageTextSliderSlide = {
   desktop: {
     imagePosition: 'left' | 'right';
     textAlignment: 'left' | 'center' | 'right';
+    textPositionX: 'start' | 'center' | 'end';
+    textPositionY: 'start' | 'center' | 'end';
     margin: ImageTextSliderSpacing;
     padding: ImageTextSliderSpacing;
   };
   mobile: {
     textAlignment: 'left' | 'center' | 'right';
+    textPositionX: 'start' | 'center' | 'end';
+    textPositionY: 'start' | 'center' | 'end';
     margin: ImageTextSliderSpacing;
     padding: ImageTextSliderSpacing;
   };
