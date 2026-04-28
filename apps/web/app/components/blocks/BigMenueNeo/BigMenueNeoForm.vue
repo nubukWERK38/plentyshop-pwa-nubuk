@@ -297,6 +297,7 @@
 <script setup lang="ts">
 import { SfInput, SfSwitch } from '@storefront-ui/vue';
 import draggable from 'vuedraggable/src/vuedraggable';
+import type { CategoryEntry } from '@plentymarkets/shop-api';
 import type {
   BigMenueNeoContent,
   BigMenueNeoCategoryLink,
@@ -313,38 +314,55 @@ const { allBlocks: data } = useBlocks();
 const { blockUuid } = useSiteConfiguration();
 const { findOrDeleteBlockByUuid } = useBlockManager();
 const { placeholderImg } = usePickerHelper();
-const { data: categoryTree, getCategoryTree } = useCategoryTree();
 
 const menusOpen = ref(true);
 const layoutOpen = ref(true);
 const collapsedTopMenus = ref<Record<string, boolean>>({});
 
-const createId = () => `bmn-${Math.random().toString(36).slice(2, 10)}`;
+const allCategoryEntries = ref<CategoryEntry[]>([]);
+const categoriesLoading = ref(false);
 
-const getNodeName = (node: any): string => {
-  if (typeof node?.name === 'string' && node.name.trim().length > 0) return node.name;
-  if (Array.isArray(node?.details)) {
-    const firstNamedDetail = node.details.find((detail: any) => typeof detail?.name === 'string' && detail.name.trim().length > 0);
-    if (firstNamedDetail?.name) return firstNamedDetail.name;
+const loadAllCategories = async () => {
+  if (categoriesLoading.value || allCategoryEntries.value.length > 0) return;
+  categoriesLoading.value = true;
+  try {
+    const sdk = useSdk();
+    let page = 1;
+    const collected: CategoryEntry[] = [];
+    while (true) {
+      const result = await sdk.plentysystems.getCategoriesSearch({ page, itemsPerPage: 200 });
+      const pageData = result?.data;
+      if (!pageData) break;
+      collected.push(...pageData.entries);
+      if (pageData.isLastPage) break;
+      page++;
+    }
+    allCategoryEntries.value = collected;
+  } catch (e) {
+    console.warn('BigMenueNeo: Kategorien konnten nicht geladen werden', e);
+  } finally {
+    categoriesLoading.value = false;
   }
-  return `#${node?.id ?? ''}`;
 };
 
-const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
-  const result: FlattenedCategoryOption[] = [];
-  const walk = (nodes: any[], prefix = '') => {
-    for (const node of nodes || []) {
-      const currentName = getNodeName(node);
-      const label = prefix ? `${prefix} > ${currentName}` : currentName;
-      result.push({ id: node.id, label });
-      if (node.children?.length) {
-        walk(node.children, label);
-      }
-    }
-  };
+const createId = () => `bmn-${Math.random().toString(36).slice(2, 10)}`;
 
-  walk(categoryTree.value || []);
-  return result;
+const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
+  if (allCategoryEntries.value.length === 0) return [];
+  const byId = new Map<number, CategoryEntry>();
+  for (const entry of allCategoryEntries.value) {
+    byId.set(entry.id, entry);
+  }
+  const getPath = (entry: CategoryEntry): string => {
+    const name = entry.details?.[0]?.name?.trim() || `#${entry.id}`;
+    if (!entry.parentCategoryId) return name;
+    const parent = byId.get(entry.parentCategoryId);
+    if (!parent) return name;
+    return `${getPath(parent)} > ${name}`;
+  };
+  return allCategoryEntries.value
+    .map((entry) => ({ id: entry.id, label: getPath(entry) }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 });
 
 const createCategoryLink = () => ({
@@ -507,9 +525,7 @@ const deleteBrandLogo = (menuId: string, brandId: string) => {
 };
 
 onMounted(async () => {
-  if (categoryTree.value.length === 0) {
-    await getCategoryTree();
-  }
+  await loadAllCategories();
 });
 </script>
 
