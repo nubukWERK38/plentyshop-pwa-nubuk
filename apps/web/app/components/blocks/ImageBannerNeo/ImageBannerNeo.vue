@@ -55,7 +55,8 @@
             <UiButton
               v-if="slide.text.ctaLabel && slide.text.ctaLink"
               :variant="slide.text.ctaVariant"
-              class="w-fit image-banner-neo__cta"
+              :class="['w-fit image-banner-neo__cta', { 'image-banner-neo__cta--custom': hasCustomCtaColors(slide) }]"
+              :style="getCtaStyle(slide)"
               v-bind="getCtaProps(slide)"
               :data-testid="`image-banner-neo-cta-${slideIndex}`"
             >
@@ -65,40 +66,45 @@
           </div>
         </article>
       </SwiperSlide>
+    </Swiper>
+
+    <div v-if="shouldShowPagination || shouldShowArrows" class="image-banner-neo__controls">
+      <button
+        v-if="shouldShowArrows"
+        type="button"
+        :class="[
+          `image-banner-neo-prev-${sliderId}`,
+          'image-banner-neo__nav image-banner-neo__nav--prev',
+          arrowVisibilityClass,
+        ]"
+        :aria-label="t('homepage.banner.ariaLabelPreviousSlide')"
+        :data-testid="`image-banner-neo-prev-${sliderId}`"
+      >
+        <FontAwesomeIcon :icon="['fas', 'chevron-left']" class="h-4 w-4" />
+      </button>
+      <span v-else class="image-banner-neo__nav-spacer" aria-hidden="true" />
 
       <div
         v-if="shouldShowPagination"
-        :class="`swiper-pagination image-banner-neo-pagination-${sliderId}`"
+        :class="`swiper-pagination image-banner-neo__pagination image-banner-neo-pagination-${sliderId}`"
       />
-    </Swiper>
+      <span v-else class="image-banner-neo__pagination-spacer" aria-hidden="true" />
 
-    <button
-      v-if="shouldShowArrows"
-      type="button"
-      :class="[
-        `image-banner-neo-prev-${sliderId}`,
-        'image-banner-neo__nav image-banner-neo__nav--prev',
-        arrowVisibilityClass,
-      ]"
-      :aria-label="t('homepage.banner.ariaLabelPreviousSlide')"
-      :data-testid="`image-banner-neo-prev-${sliderId}`"
-    >
-      <FontAwesomeIcon :icon="['fas', 'chevron-left']" class="h-4 w-4" />
-    </button>
-
-    <button
-      v-if="shouldShowArrows"
-      type="button"
-      :class="[
-        `image-banner-neo-next-${sliderId}`,
-        'image-banner-neo__nav image-banner-neo__nav--next',
-        arrowVisibilityClass,
-      ]"
-      :aria-label="t('homepage.banner.ariaLabelNextSlide')"
-      :data-testid="`image-banner-neo-next-${sliderId}`"
-    >
-      <FontAwesomeIcon :icon="['fas', 'chevron-right']" class="h-4 w-4" />
-    </button>
+      <button
+        v-if="shouldShowArrows"
+        type="button"
+        :class="[
+          `image-banner-neo-next-${sliderId}`,
+          'image-banner-neo__nav image-banner-neo__nav--next',
+          arrowVisibilityClass,
+        ]"
+        :aria-label="t('homepage.banner.ariaLabelNextSlide')"
+        :data-testid="`image-banner-neo-next-${sliderId}`"
+      >
+        <FontAwesomeIcon :icon="['fas', 'chevron-right']" class="h-4 w-4" />
+      </button>
+      <span v-else class="image-banner-neo__nav-spacer" aria-hidden="true" />
+    </div>
   </div>
 </template>
 
@@ -140,6 +146,9 @@ const ensureSlide = (slide?: Partial<ImageBannerNeoSlide>): ImageBannerNeoSlide 
     ctaLabel: slide?.text?.ctaLabel || '',
     ctaLink: slide?.text?.ctaLink || '',
     ctaVariant: slide?.text?.ctaVariant || 'primary',
+    ctaColor: slide?.text?.ctaColor || '',
+    ctaTextColor: slide?.text?.ctaTextColor || '',
+    ctaHoverColor: slide?.text?.ctaHoverColor || '',
     backgroundImage: slide?.text?.backgroundImage || '',
     backgroundColor: slide?.text?.backgroundColor || 'transparent',
     sublineColor: slide?.text?.sublineColor || '#ffffff',
@@ -288,6 +297,53 @@ const getTextAreaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
 
 const isExternalLink = (link: string) => /^(https?:)?\/\//.test(link);
 
+const toRgb = (hexColor: string) => {
+  const hex = hexColor.replace('#', '').trim();
+  if (!/^[0-9a-fA-F]{6}$/.test(hex)) return null;
+
+  return {
+    r: Number.parseInt(hex.slice(0, 2), 16),
+    g: Number.parseInt(hex.slice(2, 4), 16),
+    b: Number.parseInt(hex.slice(4, 6), 16),
+  };
+};
+
+const getReadableTextColor = (color: string) => {
+  const rgb = toRgb(color);
+  if (!rgb) return '#ffffff';
+
+  // Relative luminance approximation for choosing CTA text contrast.
+  const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+  return luminance > 0.6 ? '#111827' : '#ffffff';
+};
+
+const hasCustomCtaColors = (slide: ImageBannerNeoSlide) => {
+  return Boolean(slide.text.ctaColor || slide.text.ctaTextColor || slide.text.ctaHoverColor);
+};
+
+const getCtaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
+  if (!hasCustomCtaColors(slide)) {
+    return {};
+  }
+
+  const isPrimary = slide.text.ctaVariant === 'primary';
+  const baseColor = slide.text.ctaColor;
+  const hoverColor = slide.text.ctaHoverColor;
+  const explicitTextColor = slide.text.ctaTextColor;
+
+  const baseTextColor = explicitTextColor || (baseColor ? getReadableTextColor(baseColor) : '#ffffff');
+  const hoverTextColor = explicitTextColor || (hoverColor ? getReadableTextColor(hoverColor) : baseTextColor);
+
+  return {
+    '--ibn-cta-bg': isPrimary ? (baseColor || 'transparent') : 'transparent',
+    '--ibn-cta-border': baseColor || 'currentColor',
+    '--ibn-cta-text': isPrimary ? baseTextColor : explicitTextColor || baseColor || 'currentColor',
+    '--ibn-cta-hover-bg': hoverColor || (isPrimary ? baseColor || 'transparent' : 'transparent'),
+    '--ibn-cta-hover-border': hoverColor || baseColor || 'currentColor',
+    '--ibn-cta-hover-text': isPrimary ? hoverTextColor : explicitTextColor || hoverColor || baseColor || 'currentColor',
+  } as CSSProperties;
+};
+
 const getCtaProps = (slide: ImageBannerNeoSlide) => {
   if (isExternalLink(slide.text.ctaLink)) {
     return {
@@ -308,10 +364,21 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
 <style scoped>
 .image-banner-neo :deep(.swiper-pagination) {
   position: static;
-  margin-top: 1.25rem;
   display: flex;
   justify-content: center;
   gap: 0.35rem;
+}
+
+.image-banner-neo__controls {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 2rem 1fr 2rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.image-banner-neo__pagination {
+  grid-column: 2;
 }
 
 .image-banner-neo :deep(.image-banner-neo__bullet) {
@@ -329,10 +396,7 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
 }
 
 .image-banner-neo__nav {
-  position: absolute;
-  bottom: 0.15rem;
-  z-index: 10;
-  transform: none;
+  position: static;
   display: inline-flex;
   height: 2rem;
   width: 2rem;
@@ -345,11 +409,17 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
 }
 
 .image-banner-neo__nav--prev {
-  left: 0;
+  justify-self: start;
 }
 
 .image-banner-neo__nav--next {
-  right: 0;
+  justify-self: end;
+}
+
+.image-banner-neo__nav-spacer {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
 }
 
 .image-banner-neo__slide {
@@ -358,5 +428,18 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
 
 .image-banner-neo__text {
   position: relative;
+}
+
+.image-banner-neo__cta--custom {
+  background-color: var(--ibn-cta-bg) !important;
+  border-color: var(--ibn-cta-border) !important;
+  color: var(--ibn-cta-text) !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.image-banner-neo__cta--custom:hover {
+  background-color: var(--ibn-cta-hover-bg) !important;
+  border-color: var(--ibn-cta-hover-border) !important;
+  color: var(--ibn-cta-hover-text) !important;
 }
 </style>

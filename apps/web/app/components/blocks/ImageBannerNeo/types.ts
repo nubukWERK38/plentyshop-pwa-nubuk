@@ -17,6 +17,9 @@ export type ImageBannerNeoSlide = {
     ctaLabel: string;
     ctaLink: string;
     ctaVariant: 'primary' | 'secondary';
+    ctaColor: string;
+    ctaTextColor: string;
+    ctaHoverColor: string;
     backgroundImage: string;
     backgroundColor: string;
     sublineColor: string;

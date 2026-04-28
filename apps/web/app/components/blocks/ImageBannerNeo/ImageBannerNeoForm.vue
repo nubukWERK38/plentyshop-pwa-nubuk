@@ -150,6 +150,71 @@
         </div>
 
         <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('cta-color-label') }}</UiFormLabel>
+          <EditorColorPicker v-model="activeSlide.text.ctaColor" class="w-full">
+            <template #trigger="{ color, toggle }">
+              <SfInput v-model="activeSlide.text.ctaColor" type="text" data-testid="image-banner-neo-cta-color">
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </template>
+          </EditorColorPicker>
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('cta-text-color-label') }}</UiFormLabel>
+          <EditorColorPicker v-model="activeSlide.text.ctaTextColor" class="w-full">
+            <template #trigger="{ color, toggle }">
+              <SfInput
+                v-model="activeSlide.text.ctaTextColor"
+                type="text"
+                data-testid="image-banner-neo-cta-text-color"
+              >
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </template>
+          </EditorColorPicker>
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('cta-hover-color-label') }}</UiFormLabel>
+          <EditorColorPicker v-model="activeSlide.text.ctaHoverColor" class="w-full">
+            <template #trigger="{ color, toggle }">
+              <SfInput
+                v-model="activeSlide.text.ctaHoverColor"
+                type="text"
+                data-testid="image-banner-neo-cta-hover-color"
+              >
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </template>
+          </EditorColorPicker>
+        </div>
+
+        <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('text-bg-color-label') }}</UiFormLabel>
           <EditorColorPicker v-model="activeSlide.text.backgroundColor" class="w-full">
             <template #trigger="{ color, toggle }">
@@ -467,6 +532,9 @@ const defaultSlide = (): ImageBannerNeoSlide => ({
     ctaLabel: 'Jetzt entdecken',
     ctaLink: '/',
     ctaVariant: 'primary',
+    ctaColor: '',
+    ctaTextColor: '',
+    ctaHoverColor: '',
     backgroundImage: '',
     backgroundColor: 'transparent',
     sublineColor: '#ffffff',
@@ -525,7 +593,11 @@ const sliderContent = computed<ImageBannerNeoContent>(() => {
         if (!s.text.ctaLabel) s.text.ctaLabel = 'Jetzt entdecken';
         if (!s.text.ctaLink) s.text.ctaLink = '/';
         if (!s.text.ctaVariant) s.text.ctaVariant = 'primary';
+        if (s.text.ctaColor === undefined) s.text.ctaColor = '';
+        if (s.text.ctaTextColor === undefined) s.text.ctaTextColor = '';
+        if (s.text.ctaHoverColor === undefined) s.text.ctaHoverColor = '';
         if (s.text.backgroundImage === undefined) s.text.backgroundImage = '';
+        if (s.text.backgroundColor === undefined) s.text.backgroundColor = 'transparent';
         if (!s.text.sublineColor) s.text.sublineColor = '#ffffff';
         if (!s.text.headlineColor) s.text.headlineColor = '#ffffff';
       }
@@ -638,6 +710,9 @@ watch(
     "cta-label": "CTA label",
     "cta-link-label": "CTA link",
     "cta-variant-label": "CTA style",
+    "cta-color-label": "CTA color",
+    "cta-text-color-label": "CTA text color (optional)",
+    "cta-hover-color-label": "CTA hover color (optional)",
     "primary-label": "Primary",
     "secondary-label": "Secondary",
     "text-bg-color-label": "Text area background color",
@@ -683,6 +758,9 @@ watch(
     "cta-label": "CTA Text",
     "cta-link-label": "CTA Link",
     "cta-variant-label": "CTA Stil",
+    "cta-color-label": "CTA Farbe",
+    "cta-text-color-label": "CTA-Textfarbe (optional)",
+    "cta-hover-color-label": "CTA-Hoverfarbe (optional)",
     "primary-label": "Primary",
     "secondary-label": "Secondary",
     "text-bg-color-label": "Hintergrundfarbe Textbereich",
