@@ -471,11 +471,13 @@ const sliderContent = computed<ImageBannerNeoContent>(() => {
   const block = findOrDeleteBlockByUuid(data.value, props.uuid || blockUuid.value);
   const normalized = ensureContent((block?.content ?? {}) as Partial<ImageBannerNeoContent>);
 
-  if (block) {
-    block.content = normalized as unknown as typeof block.content;
+  if (!block) {
+    return normalized;
   }
 
-  return normalized;
+  block.content = normalized as unknown as typeof block.content;
+
+  return block.content as unknown as ImageBannerNeoContent;
 });
 
 const activeSlide = computed(() => sliderContent.value.slides[activeSlideIndex.value]);

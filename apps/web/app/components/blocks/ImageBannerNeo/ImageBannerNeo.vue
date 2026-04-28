@@ -145,7 +145,7 @@ const ensureSlide = (slide?: Partial<ImageBannerNeoSlide>): ImageBannerNeoSlide 
 
 const slides = computed(() => {
   const baseSlides = props.content?.slides ?? [];
-  return baseSlides.map((slide) => ensureSlide(slide));
+  return baseSlides.length > 0 ? baseSlides : [ensureSlide()];
 });
 
 const controls = computed(() => ({
