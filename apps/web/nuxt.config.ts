@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['@fortawesome/vue-fontawesome'],
   },
-  css: ['~/assets/richtext.css', '../../node_modules/@fortawesome/fontawesome-free/css/all.min.css'],
+  css: ['~/assets/richtext.css', '@fortawesome/fontawesome-free/css/all.min.css'],
   typescript: {
     typeCheck: false, // type checking runs via `npm run typecheck`, on build, and in CI (fitness-code-quality)
   },
