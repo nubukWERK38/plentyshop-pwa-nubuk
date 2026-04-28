@@ -219,6 +219,110 @@
             ]
           }
         }
+      },
+      {
+        "title": "Big-Menue Neo",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/navigation-thumbnail.svg",
+        "template": {
+          "en": {
+            "name": "BigMenueNeo",
+            "type": "content",
+            "meta": { "uuid": "94949494-9494-4494-8494-949494949494" },
+            "content": {
+              "menus": [
+                {
+                  "id": "menu-ebikes",
+                  "category": { "categoryId": null, "customLabel": "E-Bikes" },
+                  "columns": [
+                    {
+                      "id": "col-mtb",
+                      "category": { "categoryId": null, "customLabel": "E-Mountainbikes" },
+                      "items": [
+                        {
+                          "id": "item-fully",
+                          "category": { "categoryId": null, "customLabel": "Fullys" }
+                        },
+                        {
+                          "id": "item-hardtail",
+                          "category": { "categoryId": null, "customLabel": "Hardtails" }
+                        }
+                      ]
+                    }
+                  ],
+                  "searchTerms": [
+                    { "id": "search-1", "label": "E-Bike Fully", "link": "/" },
+                    { "id": "search-2", "label": "E-Bike Hardtail", "link": "/" }
+                  ],
+                  "brands": [
+                    {
+                      "id": "brand-1",
+                      "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                      "alt": "Brand",
+                      "link": "/"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "fullWidth": true,
+                "backgroundColor": "#ffffff",
+                "textColor": "#111827",
+                "panelBackgroundColor": "#ffffff",
+                "panelTitleColor": "#111827",
+                "panelLinkColor": "#374151"
+              }
+            }
+          },
+          "de": {
+            "name": "BigMenueNeo",
+            "type": "content",
+            "meta": { "uuid": "95959595-9595-4595-8595-959595959595" },
+            "content": {
+              "menus": [
+                {
+                  "id": "menu-ebikes",
+                  "category": { "categoryId": null, "customLabel": "E-Bikes" },
+                  "columns": [
+                    {
+                      "id": "col-mtb",
+                      "category": { "categoryId": null, "customLabel": "E-Mountainbikes" },
+                      "items": [
+                        {
+                          "id": "item-fully",
+                          "category": { "categoryId": null, "customLabel": "Fullys" }
+                        },
+                        {
+                          "id": "item-hardtail",
+                          "category": { "categoryId": null, "customLabel": "Hardtails" }
+                        }
+                      ]
+                    }
+                  ],
+                  "searchTerms": [
+                    { "id": "search-1", "label": "E-Bike Fully", "link": "/" },
+                    { "id": "search-2", "label": "E-Bike Hardtail", "link": "/" }
+                  ],
+                  "brands": [
+                    {
+                      "id": "brand-1",
+                      "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                      "alt": "Marke",
+                      "link": "/"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "fullWidth": true,
+                "backgroundColor": "#ffffff",
+                "textColor": "#111827",
+                "panelBackgroundColor": "#ffffff",
+                "panelTitleColor": "#111827",
+                "panelLinkColor": "#374151"
+              }
+            }
+          }
+        }
       }
     ]
   },
@@ -942,13 +1046,13 @@
         }
       },
       {
-        "title": "Big-Menue Neo",
-        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/navigation-thumbnail.svg",
+        "title": "Image Banner Neo",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/image_banner_left.png",
         "template": {
           "en": {
-            "name": "BigMenueNeo",
+            "name": "ImageBannerNeo",
             "type": "content",
-            "meta": { "uuid": "94949494-9494-4494-8494-949494949494" },
+            "meta": { "uuid": "34343434-3434-4434-8434-343434343434" },
             "content": {
               "menus": [
                 {
