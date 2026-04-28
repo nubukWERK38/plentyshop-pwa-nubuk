@@ -47,7 +47,7 @@
               </div>
 
               <div v-show="!isTopMenuCollapsed(menu.id)">
-                <div class="grid gap-2 md:grid-cols-3 mb-3">
+                <div class="space-y-2 mb-3">
                   <div>
                     <UiFormLabel class="mb-1">{{ getEditorTranslation('link-type-label') }}</UiFormLabel>
                     <select v-model="menu.category.linkType" class="input-field" :data-testid="`top-link-type-${index}`">
@@ -76,7 +76,7 @@
                   </div>
                 </div>
 
-              <div class="grid gap-2 md:grid-cols-3 mb-3">
+              <div class="space-y-2 mb-3">
                 <button type="button" class="action-btn" @click="addColumn(menu)">
                   {{ getEditorTranslation('add-column-label') }}
                 </button>
@@ -105,7 +105,7 @@
                         </button>
                       </div>
 
-                      <div class="grid gap-2 md:grid-cols-3 mb-2">
+                      <div class="space-y-2 mb-2">
                         <div>
                           <UiFormLabel class="mb-1">{{ getEditorTranslation('link-type-label') }}</UiFormLabel>
                           <select v-model="column.category.linkType" class="input-field">
@@ -153,7 +153,7 @@
                               </button>
                             </div>
 
-                            <div class="grid gap-2 md:grid-cols-3">
+                            <div class="space-y-2">
                               <select v-model="item.category.linkType" class="input-field">
                                 <option value="category">{{ getEditorTranslation('link-type-category-label') }}</option>
                                 <option value="manualUrl">{{ getEditorTranslation('link-type-manual-url-label') }}</option>
@@ -196,7 +196,7 @@
                           {{ getEditorTranslation('remove-label') }}
                         </button>
                       </div>
-                      <div class="grid gap-2 md:grid-cols-2">
+                      <div class="space-y-2">
                         <SfInput v-model="term.label" type="text" :placeholder="getEditorTranslation('label-placeholder')" />
                         <SfInput v-model="term.link" type="text" :placeholder="getEditorTranslation('link-placeholder')" />
                       </div>
@@ -232,7 +232,7 @@
                         @delete="deleteBrandLogo(menu.id, brand.id)"
                       />
 
-                      <div class="grid gap-2 md:grid-cols-2 mt-2">
+                      <div class="space-y-2 mt-2">
                         <SfInput v-model="brand.alt" type="text" :placeholder="getEditorTranslation('brand-alt-placeholder')" />
                         <SfInput v-model="brand.link" type="text" :placeholder="getEditorTranslation('link-placeholder')" />
                       </div>

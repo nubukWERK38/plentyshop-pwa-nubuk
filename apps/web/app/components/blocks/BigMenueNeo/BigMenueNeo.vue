@@ -6,10 +6,10 @@
       @mouseleave="closeMenu"
     >
       <nav class="big-menue-neo__top" :class="`big-menue-neo__top--${normalizedContent.layout.topMenuAlignment}`" aria-label="Big Menue Neo">
-        <button
+        <NuxtLink
           v-for="(menu, index) in normalizedContent.menus"
           :key="menu.id"
-          type="button"
+          :to="resolveCategoryTo(menu.category)"
           class="big-menue-neo__top-item"
           :class="{ 'big-menue-neo__top-item--active': isPanelOpen && index === activeMenuIndex }"
           @mouseenter="openMenu(index)"
@@ -17,38 +17,40 @@
         >
           <span class="big-menue-neo__top-label">{{ getCategoryLabel(menu.category) }}</span>
           <span class="big-menue-neo__top-caret" aria-hidden="true">▾</span>
-        </button>
+        </NuxtLink>
       </nav>
 
       <section v-if="isPanelOpen && activeMenu" class="big-menue-neo__panel" data-testid="big-menue-neo-panel">
-        <div class="big-menue-neo__columns">
-          <article v-for="column in activeColumns" :key="column.id" class="big-menue-neo__column">
-            <NuxtLink :to="resolveCategoryTo(column.category)" class="big-menue-neo__column-title">
-              {{ getCategoryLabel(column.category) }}
-            </NuxtLink>
+        <div class="big-menue-neo__panel-main">
+          <div class="big-menue-neo__columns">
+            <article v-for="column in activeColumns" :key="column.id" class="big-menue-neo__column">
+              <NuxtLink :to="resolveCategoryTo(column.category)" class="big-menue-neo__column-title">
+                {{ getCategoryLabel(column.category) }}
+              </NuxtLink>
 
-            <ul class="big-menue-neo__level-3">
-              <li v-for="item in column.items" :key="item.id">
-                <NuxtLink :to="resolveCategoryTo(item.category)" class="big-menue-neo__link">
-                  {{ getCategoryLabel(item.category) }}
-                </NuxtLink>
-              </li>
-            </ul>
-          </article>
-        </div>
+              <ul class="big-menue-neo__level-3">
+                <li v-for="item in column.items" :key="item.id">
+                  <NuxtLink :to="resolveCategoryTo(item.category)" class="big-menue-neo__link">
+                    {{ getCategoryLabel(item.category) }}
+                  </NuxtLink>
+                </li>
+              </ul>
+            </article>
+          </div>
 
-        <aside v-if="hasRightRail" class="big-menue-neo__right-rail">
-          <div v-if="activeSearchTerms.length > 0" class="big-menue-neo__box">
+          <aside v-if="activeSearchTerms.length > 0" class="big-menue-neo__right-rail">
+            <div class="big-menue-neo__box">
             <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.frequentSearches') }}</h3>
             <ul class="big-menue-neo__search-list">
               <li v-for="term in activeSearchTerms" :key="term.id">
                 <NuxtLink class="big-menue-neo__search-link" :to="term.link || '/'">{{ term.label }}</NuxtLink>
               </li>
             </ul>
-          </div>
+            </div>
+          </aside>
+        </div>
 
-          <div v-if="activeBrands.length > 0" class="big-menue-neo__box">
-            <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.topBrands') }}</h3>
+        <div v-if="activeBrands.length > 0" class="big-menue-neo__brands-wrap">
             <ul class="big-menue-neo__brand-list">
               <li v-for="brand in activeBrands" :key="brand.id">
                 <NuxtLink :to="brand.link || '/'" class="big-menue-neo__brand-link">
@@ -64,15 +66,14 @@
                 </NuxtLink>
               </li>
             </ul>
-          </div>
-        </aside>
+        </div>
       </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { CategoryTreeItem } from '@plentymarkets/shop-api';
+import type { CategoryEntry, CategoryTreeItem } from '@plentymarkets/shop-api';
 import type { BigMenueNeoContent, BigMenueNeoProps, BigMenueNeoCategoryLink } from './types';
 
 const props = defineProps<BigMenueNeoProps>();
@@ -84,6 +85,8 @@ const { t } = useI18n();
 
 const activeMenuIndex = ref<number | null>(null);
 const isPanelOpen = ref(false);
+const allCategoryEntries = ref<CategoryEntry[]>([]);
+const categoriesLoading = ref(false);
 
 const defaultContent = (): BigMenueNeoContent => ({
   menus: [
@@ -160,10 +163,6 @@ const activeMenu = computed(() => {
 const activeColumns = computed(() => activeMenu.value?.columns || []);
 const activeSearchTerms = computed(() => activeMenu.value?.searchTerms || []);
 const activeBrands = computed(() => activeMenu.value?.brands || []);
-const hasRightRail = computed(() => {
-  const menu = activeMenu.value;
-  return Boolean(menu?.searchTerms?.length || menu?.brands?.length);
-});
 
 const rootStyle = computed(() => ({
   '--bmn-bg': normalizedContent.value.layout.backgroundColor,
@@ -184,6 +183,36 @@ const findCategoryById = (nodes: CategoryTreeItem[], id: number): CategoryTreeIt
   return null;
 };
 
+const findCategoryEntryById = (id: number) => allCategoryEntries.value.find((entry) => entry.id === id) || null;
+
+const normalizePath = (path: string) => {
+  if (!path) return '/';
+  return path.startsWith('/') ? path : `/${path}`;
+};
+
+const loadAllCategories = async () => {
+  if (categoriesLoading.value || allCategoryEntries.value.length > 0) return;
+  categoriesLoading.value = true;
+  try {
+    const sdk = useSdk();
+    const collected: CategoryEntry[] = [];
+    let page = 1;
+    while (true) {
+      const result = await sdk.plentysystems.getCategoriesSearch({ page, itemsPerPage: 200 });
+      const pageData = result?.data;
+      if (!pageData) break;
+      collected.push(...pageData.entries);
+      if (pageData.isLastPage) break;
+      page++;
+    }
+    allCategoryEntries.value = collected;
+  } catch (error) {
+    console.warn('BigMenueNeo: Kategorien fuer Link-Fallback konnten nicht geladen werden', error);
+  } finally {
+    categoriesLoading.value = false;
+  }
+};
+
 const getCategoryLabel = (category: BigMenueNeoCategoryLink) => {
   if (category.customLabel?.trim()) return category.customLabel;
   if (category.linkType === 'manualUrl') {
@@ -191,7 +220,9 @@ const getCategoryLabel = (category: BigMenueNeoCategoryLink) => {
   }
   if (!category.categoryId) return t('bigMenuNeo.notConfigured');
   const match = findCategoryById(categoryTree.value || [], category.categoryId);
-  return match?.details?.[0]?.name || t('bigMenuNeo.notConfigured');
+  if (match?.details?.[0]?.name) return match.details[0].name;
+  const fallbackCategory = findCategoryEntryById(category.categoryId);
+  return fallbackCategory?.details?.[0]?.name || t('bigMenuNeo.notConfigured');
 };
 
 const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
@@ -201,8 +232,14 @@ const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
 
   if (!category.categoryId) return '/';
   const categoryTreeNode = findCategoryById(categoryTree.value || [], category.categoryId);
-  if (!categoryTreeNode) return '/';
-  return localePath(buildCategoryMenuLink(categoryTreeNode, categoryTree.value || []));
+  if (categoryTreeNode) {
+    return localePath(buildCategoryMenuLink(categoryTreeNode, categoryTree.value || []));
+  }
+  const fallbackCategory = findCategoryEntryById(category.categoryId);
+  if (fallbackCategory?.linklist) {
+    return localePath(normalizePath(fallbackCategory.linklist));
+  }
+  return '/';
 };
 
 const openMenu = (index: number) => {
@@ -232,6 +269,7 @@ onMounted(async () => {
   if (categoryTree.value.length === 0) {
     await getCategoryTree();
   }
+  await loadAllCategories();
 });
 </script>
 
@@ -278,8 +316,7 @@ onMounted(async () => {
 .big-menue-neo__top-item {
   position: relative;
   white-space: nowrap;
-  border: 0;
-  background: transparent;
+  text-decoration: none;
   color: inherit;
   font-weight: 500;
   font-size: 0.985rem;
@@ -323,13 +360,16 @@ onMounted(async () => {
 .big-menue-neo__panel {
   background: var(--bmn-panel-bg);
   border-top: 1px solid #eef2f7;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 264px;
-  gap: 2rem;
   padding: 1.25rem 1.6rem 1.4rem;
   box-shadow: 0 14px 30px rgba(17, 24, 39, 0.16);
   position: relative;
   z-index: 40;
+}
+
+.big-menue-neo__panel-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 264px;
+  gap: 2rem;
 }
 
 .big-menue-neo__columns {
@@ -407,8 +447,24 @@ onMounted(async () => {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+.big-menue-neo__search-list {
   display: grid;
   gap: 0.55rem;
+}
+
+.big-menue-neo__brands-wrap {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.big-menue-neo__brand-list {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem 1.5rem;
+  align-items: center;
 }
 
 .big-menue-neo__search-link {
@@ -423,20 +479,18 @@ onMounted(async () => {
 }
 
 .big-menue-neo__brand-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 2.65rem;
-  border: 1px solid #edf1f5;
-  border-radius: 0.4rem;
-  padding: 0.3rem;
-  background: #fff;
+  min-height: 3rem;
+  text-decoration: none;
 }
 
 .big-menue-neo__brand-image {
-  width: 100%;
-  height: auto;
+  width: auto;
+  max-width: 100%;
+  max-height: 46px;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -447,10 +501,13 @@ onMounted(async () => {
 
 @media (max-width: 1024px) {
   .big-menue-neo__panel {
-    grid-template-columns: 1fr;
     padding: 1.1rem 1rem;
     gap: 1.2rem;
     box-shadow: none;
+  }
+
+  .big-menue-neo__panel-main {
+    grid-template-columns: 1fr;
   }
 
   .big-menue-neo__columns {
@@ -464,11 +521,19 @@ onMounted(async () => {
     border-top: 1px solid #eef2f7;
     padding-top: 0.9rem;
   }
+
+  .big-menue-neo__brand-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
   .big-menue-neo__columns {
     grid-template-columns: 1fr;
+  }
+
+  .big-menue-neo__brand-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

@@ -16,6 +16,27 @@ export const useBlocks: UseBlocksReturn = () => {
     loading: false,
     isSettling: false,
   }));
+  const homepageHeaderContainer = useState<Block | null>('useBlocks-homepageHeaderContainer', () => null);
+
+  const isHomepageContext = (identifier: string | number, type: string) => type === 'immutable' && String(identifier) === 'index';
+
+  const loadHomepageHeaderContainer = async (locale: string) => {
+    if (homepageHeaderContainer.value) return homepageHeaderContainer.value;
+
+    const key = `blocks-${locale}-immutable-index-header`;
+    const { data, error } = await useAsyncData(key, () =>
+      useSdk().plentysystems.getBlocksWithGlobalBlocks({ identifier: 'index', type: 'immutable', enableGlobalBlocks: true }),
+    );
+
+    if (error.value) {
+      console.warn('Failed to fetch homepage header blocks:', error.value.message);
+      return null;
+    }
+
+    const assembledHomepage = assembleBlocks(data.value?.data || ({} as GetBlocksResponse), 'immutable', 'index');
+    homepageHeaderContainer.value = assembledHomepage.HeaderContainer ? deepClone(assembledHomepage.HeaderContainer) : null;
+    return homepageHeaderContainer.value;
+  };
 
   const setBlocks = (blocks: GetBlocksResponse) => {
     const serialized = JSON.stringify(blocks);
@@ -66,6 +87,16 @@ export const useBlocks: UseBlocksReturn = () => {
     }
 
     const assembled = assembleBlocks(data.value?.data || ({} as GetBlocksResponse), type, identifier);
+
+    if (isHomepageContext(identifier, type)) {
+      homepageHeaderContainer.value = assembled.HeaderContainer ? deepClone(assembled.HeaderContainer) : null;
+    } else {
+      const globalHeader = homepageHeaderContainer.value ?? (await loadHomepageHeaderContainer(loc.value));
+      if (globalHeader) {
+        assembled.HeaderContainer = deepClone(globalHeader);
+      }
+    }
+
     setBlocks(assembled);
     state.value.loading = false;
 
@@ -93,6 +124,11 @@ export const useBlocks: UseBlocksReturn = () => {
         type,
         identifier,
       );
+
+      if (isHomepageContext(identifier, type)) {
+        homepageHeaderContainer.value = assembled.HeaderContainer ? deepClone(assembled.HeaderContainer) : null;
+      }
+
       setBlocks(assembled);
 
       return true;
