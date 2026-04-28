@@ -356,7 +356,6 @@ const props = defineProps<ImageBannerNeoFormProps>();
 const { allBlocks: data } = useBlocks();
 const { blockUuid } = useSiteConfiguration();
 const { findOrDeleteBlockByUuid } = useBlockManager();
-const { isEditingEnabled } = useEditor();
 const { placeholderImg } = usePickerHelper();
 
 const slidesOpen = ref(true);
@@ -417,68 +416,67 @@ const defaultSlide = (): ImageBannerNeoSlide => ({
   },
 });
 
-const ensureSpacing = (spacing?: Partial<ImageBannerNeoSpacing>): ImageBannerNeoSpacing => ({
-  top: spacing?.top ?? 0,
-  right: spacing?.right ?? 0,
-  bottom: spacing?.bottom ?? 0,
-  left: spacing?.left ?? 0,
-});
-
-const ensureSlide = (slide?: Partial<ImageBannerNeoSlide>): ImageBannerNeoSlide => {
-  const fallback = defaultSlide();
-  return {
-    image: {
-      desktop: slide?.image?.desktop || fallback.image.desktop,
-      mobile: slide?.image?.mobile || fallback.image.mobile,
-      alt: slide?.image?.alt || '',
-    },
-    text: {
-      subline: slide?.text?.subline || fallback.text.subline,
-      headline: slide?.text?.headline || fallback.text.headline,
-      ctaLabel: slide?.text?.ctaLabel || fallback.text.ctaLabel,
-      ctaLink: slide?.text?.ctaLink || fallback.text.ctaLink,
-      ctaVariant: slide?.text?.ctaVariant || fallback.text.ctaVariant,
-      backgroundImage: slide?.text?.backgroundImage || '',
-      backgroundColor: slide?.text?.backgroundColor || 'transparent',
-    },
-    desktop: {
-      imagePosition: slide?.desktop?.imagePosition || fallback.desktop.imagePosition,
-      textAlignment: slide?.desktop?.textAlignment || fallback.desktop.textAlignment,
-      textPositionX: slide?.desktop?.textPositionX || fallback.desktop.textPositionX,
-      textPositionY: slide?.desktop?.textPositionY || fallback.desktop.textPositionY,
-      margin: ensureSpacing(slide?.desktop?.margin),
-      padding: ensureSpacing(slide?.desktop?.padding ?? fallback.desktop.padding),
-    },
-    mobile: {
-      textAlignment: slide?.mobile?.textAlignment || fallback.mobile.textAlignment,
-      textPositionX: slide?.mobile?.textPositionX || fallback.mobile.textPositionX,
-      textPositionY: slide?.mobile?.textPositionY || fallback.mobile.textPositionY,
-      margin: ensureSpacing(slide?.mobile?.margin),
-      padding: ensureSpacing(slide?.mobile?.padding ?? fallback.mobile.padding),
-    },
-  };
-};
-
-const ensureContent = (content?: Partial<ImageBannerNeoContent>): ImageBannerNeoContent => ({
-  slides: Array.isArray(content?.slides) && content.slides.length > 0 ? content.slides.map(ensureSlide) : [defaultSlide()],
-  controls: {
-    showPagination: content?.controls?.showPagination !== false,
-    showArrows: content?.controls?.showArrows !== false,
-    arrowsOnHover: content?.controls?.arrowsOnHover === true,
-  },
-});
-
 const sliderContent = computed<ImageBannerNeoContent>(() => {
-  const block = findOrDeleteBlockByUuid(data.value, props.uuid || blockUuid.value);
-  const normalized = ensureContent((block?.content ?? {}) as Partial<ImageBannerNeoContent>);
+  const uuid = props.uuid || blockUuid.value;
+  const rawContent = findOrDeleteBlockByUuid(data.value, uuid)?.content ?? {};
+  const content = rawContent as Partial<ImageBannerNeoContent>;
 
-  if (!block) {
-    return normalized;
+  // Ensure slides array (in-place)
+  if (!Array.isArray(content.slides) || content.slides.length === 0) {
+    content.slides = [defaultSlide()];
+  } else {
+    for (const slide of content.slides) {
+      const s = slide as Partial<ImageBannerNeoSlide>;
+      if (!s.image) {
+        s.image = { desktop: placeholderImg, mobile: placeholderImg, alt: '' };
+      } else {
+        if (!s.image.desktop) s.image.desktop = placeholderImg;
+        if (!s.image.mobile) s.image.mobile = placeholderImg;
+        if (s.image.alt === undefined) s.image.alt = '';
+      }
+      if (!s.text) {
+        s.text = defaultSlide().text;
+      } else {
+        if (!s.text.subline) s.text.subline = 'Subline';
+        if (!s.text.headline) s.text.headline = 'Headline';
+        if (!s.text.ctaLabel) s.text.ctaLabel = 'Jetzt entdecken';
+        if (!s.text.ctaLink) s.text.ctaLink = '/';
+        if (!s.text.ctaVariant) s.text.ctaVariant = 'primary';
+        if (s.text.backgroundImage === undefined) s.text.backgroundImage = '';
+        if (!s.text.backgroundColor) s.text.backgroundColor = 'transparent';
+      }
+      if (!s.desktop) {
+        s.desktop = defaultSlide().desktop;
+      } else {
+        if (!s.desktop.imagePosition) s.desktop.imagePosition = 'right';
+        if (!s.desktop.textAlignment) s.desktop.textAlignment = 'left';
+        if (!s.desktop.textPositionX) s.desktop.textPositionX = 'start';
+        if (!s.desktop.textPositionY) s.desktop.textPositionY = 'center';
+        if (!s.desktop.margin) s.desktop.margin = defaultSpacing();
+        if (!s.desktop.padding) s.desktop.padding = { top: 32, right: 32, bottom: 32, left: 32 };
+      }
+      if (!s.mobile) {
+        s.mobile = defaultSlide().mobile;
+      } else {
+        if (!s.mobile.textAlignment) s.mobile.textAlignment = 'left';
+        if (!s.mobile.textPositionX) s.mobile.textPositionX = 'start';
+        if (!s.mobile.textPositionY) s.mobile.textPositionY = 'center';
+        if (!s.mobile.margin) s.mobile.margin = defaultSpacing();
+        if (!s.mobile.padding) s.mobile.padding = { top: 20, right: 16, bottom: 20, left: 16 };
+      }
+    }
   }
 
-  block.content = normalized as unknown as typeof block.content;
+  // Ensure controls (in-place)
+  if (!content.controls) {
+    content.controls = { showPagination: true, showArrows: true, arrowsOnHover: false };
+  } else {
+    if (content.controls.showPagination === undefined) content.controls.showPagination = true;
+    if (content.controls.showArrows === undefined) content.controls.showArrows = true;
+    if (content.controls.arrowsOnHover === undefined) content.controls.arrowsOnHover = false;
+  }
 
-  return block.content as unknown as ImageBannerNeoContent;
+  return rawContent as ImageBannerNeoContent;
 });
 
 const activeSlide = computed(() => sliderContent.value.slides[activeSlideIndex.value]);
@@ -523,14 +521,6 @@ watch(
       activeSlideIndex.value = Math.max(newLength - 1, 0);
     }
   },
-);
-
-watch(
-  sliderContent,
-  () => {
-    isEditingEnabled.value = true;
-  },
-  { deep: true },
 );
 </script>
 

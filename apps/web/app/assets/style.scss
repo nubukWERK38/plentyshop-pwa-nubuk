@@ -95,8 +95,17 @@ apple-pay-button {
 .zipBox {
   filter: drop-shadow(15px -15px 0px var(--green));
 
+  ul, .rte-prose.rte-prose ul, .rte-prose.rte-prose ol {
+    padding-left: 0 !important;
+  }
+
+  p {
+    text-align: left;
+  }
+
   li {
     list-style: none;
+    text-align: left;
 
     &::before {
       font-family: 'Font Awesome 7 Free', 'Font Awesome 6 Free', 'FontAwesome';
