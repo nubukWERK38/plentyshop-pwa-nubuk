@@ -356,6 +356,7 @@ const props = defineProps<ImageBannerNeoFormProps>();
 const { allBlocks: data } = useBlocks();
 const { blockUuid } = useSiteConfiguration();
 const { findOrDeleteBlockByUuid } = useBlockManager();
+const { isEditingEnabled } = useEditor();
 const { placeholderImg } = usePickerHelper();
 
 const slidesOpen = ref(true);
@@ -522,6 +523,14 @@ watch(
       activeSlideIndex.value = Math.max(newLength - 1, 0);
     }
   },
+);
+
+watch(
+  sliderContent,
+  () => {
+    isEditingEnabled.value = true;
+  },
+  { deep: true },
 );
 </script>
 
