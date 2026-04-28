@@ -14,6 +14,7 @@ const blockTypeNames: Record<string, string> = {
   ItemData: 'Item Data',
   Banner: 'Image Banner',
   ImageBannerNeo: 'Image Banner Neo',
+  BigMenueNeo: 'Big-Menue Neo',
   UtilityBar: 'Utility Bar',
   HeaderContainer: 'Header Container',
 };

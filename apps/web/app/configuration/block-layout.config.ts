@@ -41,6 +41,7 @@ export const BLOCK_LAYOUT_RULES: Record<string, BlockLayoutRule> = {
 
   Carousel: { padding: false },
   ImageBannerNeo: { padding: false },
+  BigMenueNeo: { padding: false },
 };
 
 /**

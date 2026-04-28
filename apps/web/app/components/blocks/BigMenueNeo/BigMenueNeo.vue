@@ -1,0 +1,420 @@
+<template>
+  <div class="big-menue-neo" :style="rootStyle" data-testid="big-menue-neo">
+    <div class="big-menue-neo__container" :class="{ 'big-menue-neo__container--boxed': !normalizedContent.layout.fullWidth }">
+      <nav class="big-menue-neo__top" aria-label="Big Menue Neo">
+        <button
+          v-for="(menu, index) in normalizedContent.menus"
+          :key="menu.id"
+          type="button"
+          class="big-menue-neo__top-item"
+          :class="{ 'big-menue-neo__top-item--active': index === activeMenuIndex }"
+          @mouseenter="activeMenuIndex = index"
+          @focus="activeMenuIndex = index"
+        >
+          <span class="big-menue-neo__top-label">{{ getCategoryLabel(menu.category) }}</span>
+          <span class="big-menue-neo__top-caret" aria-hidden="true">▾</span>
+        </button>
+      </nav>
+
+      <section v-if="activeMenu" class="big-menue-neo__panel" data-testid="big-menue-neo-panel">
+        <div class="big-menue-neo__columns">
+          <article v-for="column in activeMenu.columns" :key="column.id" class="big-menue-neo__column">
+            <NuxtLink :to="resolveCategoryTo(column.category.categoryId)" class="big-menue-neo__column-title">
+              {{ getCategoryLabel(column.category) }}
+            </NuxtLink>
+
+            <ul class="big-menue-neo__level-3">
+              <li v-for="item in column.items" :key="item.id">
+                <NuxtLink :to="resolveCategoryTo(item.category.categoryId)" class="big-menue-neo__link">
+                  {{ getCategoryLabel(item.category) }}
+                </NuxtLink>
+              </li>
+            </ul>
+          </article>
+        </div>
+
+        <aside v-if="hasRightRail" class="big-menue-neo__right-rail">
+          <div v-if="activeMenu.searchTerms.length > 0" class="big-menue-neo__box">
+            <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.frequentSearches') }}</h3>
+            <ul class="big-menue-neo__search-list">
+              <li v-for="term in activeMenu.searchTerms" :key="term.id">
+                <NuxtLink class="big-menue-neo__search-link" :to="term.link || '/'">{{ term.label }}</NuxtLink>
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="activeMenu.brands.length > 0" class="big-menue-neo__box">
+            <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.topBrands') }}</h3>
+            <ul class="big-menue-neo__brand-list">
+              <li v-for="brand in activeMenu.brands" :key="brand.id">
+                <NuxtLink :to="brand.link || '/'" class="big-menue-neo__brand-link">
+                  <NuxtImg
+                    v-if="brand.image"
+                    :src="brand.image"
+                    :alt="brand.alt || 'Brand logo'"
+                    width="132"
+                    height="52"
+                    class="big-menue-neo__brand-image"
+                  />
+                  <span v-else class="big-menue-neo__brand-placeholder">{{ brand.alt || 'Brand' }}</span>
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { CategoryTreeItem } from '@plentymarkets/shop-api';
+import type { BigMenueNeoContent, BigMenueNeoProps, BigMenueNeoCategoryLink } from './types';
+
+const props = defineProps<BigMenueNeoProps>();
+
+const { data: categoryTree, getCategoryTree } = useCategoryTree();
+const { buildCategoryMenuLink } = useLocalization();
+const localePath = useLocalePath();
+const { t } = useI18n();
+
+const activeMenuIndex = ref(0);
+
+const defaultContent = (): BigMenueNeoContent => ({
+  menus: [
+    {
+      id: 'menu-1',
+      category: { categoryId: null, customLabel: 'Top-Kategorie' },
+      columns: [
+        {
+          id: 'col-1',
+          category: { categoryId: null, customLabel: 'Submenue' },
+          items: [
+            { id: 'item-1', category: { categoryId: null, customLabel: 'Ebene 3' } },
+          ],
+        },
+      ],
+      searchTerms: [],
+      brands: [],
+    },
+  ],
+  layout: {
+    fullWidth: true,
+    backgroundColor: '#ffffff',
+    textColor: '#111827',
+    panelBackgroundColor: '#ffffff',
+    panelTitleColor: '#111827',
+    panelLinkColor: '#374151',
+  },
+});
+
+const normalizedContent = computed<BigMenueNeoContent>(() => {
+  const input = props.content || defaultContent();
+  return {
+    menus: Array.isArray(input.menus) && input.menus.length > 0 ? input.menus : defaultContent().menus,
+    layout: {
+      fullWidth: input.layout?.fullWidth !== false,
+      backgroundColor: input.layout?.backgroundColor || '#ffffff',
+      textColor: input.layout?.textColor || '#111827',
+      panelBackgroundColor: input.layout?.panelBackgroundColor || '#ffffff',
+      panelTitleColor: input.layout?.panelTitleColor || '#111827',
+      panelLinkColor: input.layout?.panelLinkColor || '#374151',
+    },
+  };
+});
+
+const activeMenu = computed(() => normalizedContent.value.menus[activeMenuIndex.value] || normalizedContent.value.menus[0]);
+const hasRightRail = computed(() => {
+  const menu = activeMenu.value;
+  return Boolean(menu?.searchTerms?.length || menu?.brands?.length);
+});
+
+const rootStyle = computed(() => ({
+  '--bmn-bg': normalizedContent.value.layout.backgroundColor,
+  '--bmn-text': normalizedContent.value.layout.textColor,
+  '--bmn-panel-bg': normalizedContent.value.layout.panelBackgroundColor,
+  '--bmn-title': normalizedContent.value.layout.panelTitleColor,
+  '--bmn-link': normalizedContent.value.layout.panelLinkColor,
+}));
+
+const findCategoryById = (nodes: CategoryTreeItem[], id: number): CategoryTreeItem | null => {
+  for (const node of nodes) {
+    if (node.id === id) return node;
+    if (node.children?.length) {
+      const match = findCategoryById(node.children, id);
+      if (match) return match;
+    }
+  }
+  return null;
+};
+
+const getCategoryLabel = (category: BigMenueNeoCategoryLink) => {
+  if (category.customLabel?.trim()) return category.customLabel;
+  if (!category.categoryId) return t('bigMenuNeo.notConfigured');
+  const match = findCategoryById(categoryTree.value || [], category.categoryId);
+  return match?.details?.[0]?.name || t('bigMenuNeo.notConfigured');
+};
+
+const resolveCategoryTo = (categoryId: number | null) => {
+  if (!categoryId) return '/';
+  const category = findCategoryById(categoryTree.value || [], categoryId);
+  if (!category) return '/';
+  return localePath(buildCategoryMenuLink(category, categoryTree.value || []));
+};
+
+watch(
+  () => normalizedContent.value.menus.length,
+  (length) => {
+    if (activeMenuIndex.value > length - 1) {
+      activeMenuIndex.value = Math.max(length - 1, 0);
+    }
+  },
+);
+
+onMounted(async () => {
+  if (categoryTree.value.length === 0) {
+    await getCategoryTree();
+  }
+});
+</script>
+
+<style scoped>
+.big-menue-neo {
+  width: 100%;
+  color: var(--bmn-text);
+  background: var(--bmn-bg);
+  position: relative;
+}
+
+.big-menue-neo__container {
+  width: 100%;
+}
+
+.big-menue-neo__container--boxed {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.big-menue-neo__top {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.1rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 0.75rem;
+  min-height: 3.25rem;
+  overflow-x: auto;
+}
+
+.big-menue-neo__top-item {
+  position: relative;
+  white-space: nowrap;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: 500;
+  font-size: 0.985rem;
+  line-height: 1.2rem;
+  padding: 0.9rem 0.62rem 0.82rem;
+  border-radius: 0.125rem;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.big-menue-neo__top-item:hover {
+  background: #f8fafc;
+}
+
+.big-menue-neo__top-item--active {
+  color: #111827;
+  font-weight: 600;
+}
+
+.big-menue-neo__top-item--active::after {
+  content: '';
+  position: absolute;
+  left: 0.55rem;
+  right: 0.55rem;
+  bottom: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: #111827;
+}
+
+.big-menue-neo__top-label {
+  margin-right: 0.35rem;
+}
+
+.big-menue-neo__top-caret {
+  font-size: 0.68rem;
+  opacity: 0.75;
+  vertical-align: middle;
+}
+
+.big-menue-neo__panel {
+  background: var(--bmn-panel-bg);
+  border-top: 1px solid #eef2f7;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 264px;
+  gap: 2rem;
+  padding: 1.25rem 1.6rem 1.4rem;
+  box-shadow: 0 14px 30px rgba(17, 24, 39, 0.16);
+  position: relative;
+  z-index: 40;
+}
+
+.big-menue-neo__columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.big-menue-neo__column {
+  min-width: 0;
+}
+
+.big-menue-neo__column-title {
+  font-weight: 700;
+  color: var(--bmn-title);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  font-size: 0.99rem;
+  line-height: 1.3;
+}
+
+.big-menue-neo__level-3 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.big-menue-neo__link {
+  color: var(--bmn-link);
+  text-decoration: none;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  display: inline-block;
+  border-radius: 0.2rem;
+  padding: 0.12rem 0.22rem;
+  margin-left: -0.22rem;
+}
+
+.big-menue-neo__link:hover,
+.big-menue-neo__column-title:hover,
+.big-menue-neo__search-link:hover {
+  background: #f8fafc;
+}
+
+.big-menue-neo__right-rail {
+  display: grid;
+  gap: 0.7rem;
+  align-content: start;
+  border-left: 1px solid #eef2f7;
+  padding-left: 1rem;
+}
+
+.big-menue-neo__box {
+  border: 0;
+  border-radius: 0;
+  padding: 0.2rem 0;
+  background: transparent;
+}
+
+.big-menue-neo__box-title {
+  margin: 0 0 0.45rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.big-menue-neo__search-list,
+.big-menue-neo__brand-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.big-menue-neo__search-link {
+  color: var(--bmn-link);
+  text-decoration: none;
+  font-size: 0.86rem;
+  line-height: 1.3;
+  border-radius: 0.25rem;
+  display: inline-block;
+  padding: 0.08rem 0.2rem;
+  margin-left: -0.2rem;
+}
+
+.big-menue-neo__brand-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.65rem;
+  border: 1px solid #edf1f5;
+  border-radius: 0.4rem;
+  padding: 0.3rem;
+  background: #fff;
+}
+
+.big-menue-neo__brand-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.big-menue-neo__brand-placeholder {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+@media (max-width: 1024px) {
+  .big-menue-neo__panel {
+    grid-template-columns: 1fr;
+    padding: 1.1rem 1rem;
+    gap: 1.2rem;
+    box-shadow: none;
+  }
+
+  .big-menue-neo__columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .big-menue-neo__right-rail {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid #eef2f7;
+    padding-top: 0.9rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .big-menue-neo__columns {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<i18n lang="json">
+{
+  "en": {
+    "bigMenuNeo.notConfigured": "Not configured",
+    "bigMenuNeo.frequentSearches": "Frequent searches",
+    "bigMenuNeo.topBrands": "Top brands"
+  },
+  "de": {
+    "bigMenuNeo.notConfigured": "Nicht konfiguriert",
+    "bigMenuNeo.frequentSearches": "Haeufige Suchbegriffe",
+    "bigMenuNeo.topBrands": "Top-Marken"
+  }
+}
+</i18n>
