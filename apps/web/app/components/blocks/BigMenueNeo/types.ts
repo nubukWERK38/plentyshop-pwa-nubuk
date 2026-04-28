@@ -1,7 +1,9 @@
 import type { CategoryTreeItem } from '@plentymarkets/shop-api';
 
 export type BigMenueNeoCategoryLink = {
+  linkType: 'category' | 'manualUrl';
   categoryId: number | null;
+  manualUrl: string;
   customLabel: string;
 };
 
@@ -39,6 +41,7 @@ export type BigMenueNeoTopMenu = {
 
 export type BigMenueNeoLayout = {
   fullWidth: boolean;
+  topMenuAlignment: 'left' | 'center' | 'right';
   backgroundColor: string;
   textColor: string;
   panelBackgroundColor: string;

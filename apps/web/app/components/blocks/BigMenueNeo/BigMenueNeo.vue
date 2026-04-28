@@ -1,31 +1,35 @@
 <template>
   <div class="big-menue-neo" :style="rootStyle" data-testid="big-menue-neo">
-    <div class="big-menue-neo__container" :class="{ 'big-menue-neo__container--boxed': !normalizedContent.layout.fullWidth }">
-      <nav class="big-menue-neo__top" aria-label="Big Menue Neo">
+    <div
+      class="big-menue-neo__container"
+      :class="{ 'big-menue-neo__container--boxed': !normalizedContent.layout.fullWidth }"
+      @mouseleave="closeMenu"
+    >
+      <nav class="big-menue-neo__top" :class="`big-menue-neo__top--${normalizedContent.layout.topMenuAlignment}`" aria-label="Big Menue Neo">
         <button
           v-for="(menu, index) in normalizedContent.menus"
           :key="menu.id"
           type="button"
           class="big-menue-neo__top-item"
-          :class="{ 'big-menue-neo__top-item--active': index === activeMenuIndex }"
-          @mouseenter="activeMenuIndex = index"
-          @focus="activeMenuIndex = index"
+          :class="{ 'big-menue-neo__top-item--active': isPanelOpen && index === activeMenuIndex }"
+          @mouseenter="openMenu(index)"
+          @focus="openMenu(index)"
         >
           <span class="big-menue-neo__top-label">{{ getCategoryLabel(menu.category) }}</span>
           <span class="big-menue-neo__top-caret" aria-hidden="true">▾</span>
         </button>
       </nav>
 
-      <section v-if="activeMenu" class="big-menue-neo__panel" data-testid="big-menue-neo-panel">
+      <section v-if="isPanelOpen && activeMenu" class="big-menue-neo__panel" data-testid="big-menue-neo-panel">
         <div class="big-menue-neo__columns">
-          <article v-for="column in activeMenu.columns" :key="column.id" class="big-menue-neo__column">
-            <NuxtLink :to="resolveCategoryTo(column.category.categoryId)" class="big-menue-neo__column-title">
+          <article v-for="column in activeColumns" :key="column.id" class="big-menue-neo__column">
+            <NuxtLink :to="resolveCategoryTo(column.category)" class="big-menue-neo__column-title">
               {{ getCategoryLabel(column.category) }}
             </NuxtLink>
 
             <ul class="big-menue-neo__level-3">
               <li v-for="item in column.items" :key="item.id">
-                <NuxtLink :to="resolveCategoryTo(item.category.categoryId)" class="big-menue-neo__link">
+                <NuxtLink :to="resolveCategoryTo(item.category)" class="big-menue-neo__link">
                   {{ getCategoryLabel(item.category) }}
                 </NuxtLink>
               </li>
@@ -34,19 +38,19 @@
         </div>
 
         <aside v-if="hasRightRail" class="big-menue-neo__right-rail">
-          <div v-if="activeMenu.searchTerms.length > 0" class="big-menue-neo__box">
+          <div v-if="activeSearchTerms.length > 0" class="big-menue-neo__box">
             <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.frequentSearches') }}</h3>
             <ul class="big-menue-neo__search-list">
-              <li v-for="term in activeMenu.searchTerms" :key="term.id">
+              <li v-for="term in activeSearchTerms" :key="term.id">
                 <NuxtLink class="big-menue-neo__search-link" :to="term.link || '/'">{{ term.label }}</NuxtLink>
               </li>
             </ul>
           </div>
 
-          <div v-if="activeMenu.brands.length > 0" class="big-menue-neo__box">
+          <div v-if="activeBrands.length > 0" class="big-menue-neo__box">
             <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.topBrands') }}</h3>
             <ul class="big-menue-neo__brand-list">
-              <li v-for="brand in activeMenu.brands" :key="brand.id">
+              <li v-for="brand in activeBrands" :key="brand.id">
                 <NuxtLink :to="brand.link || '/'" class="big-menue-neo__brand-link">
                   <NuxtImg
                     v-if="brand.image"
@@ -78,19 +82,20 @@ const { buildCategoryMenuLink } = useLocalization();
 const localePath = useLocalePath();
 const { t } = useI18n();
 
-const activeMenuIndex = ref(0);
+const activeMenuIndex = ref<number | null>(null);
+const isPanelOpen = ref(false);
 
 const defaultContent = (): BigMenueNeoContent => ({
   menus: [
     {
       id: 'menu-1',
-      category: { categoryId: null, customLabel: 'Top-Kategorie' },
+      category: { linkType: 'category', categoryId: null, manualUrl: '', customLabel: 'Top-Kategorie' },
       columns: [
         {
           id: 'col-1',
-          category: { categoryId: null, customLabel: 'Submenue' },
+          category: { linkType: 'category', categoryId: null, manualUrl: '', customLabel: 'Submenue' },
           items: [
-            { id: 'item-1', category: { categoryId: null, customLabel: 'Ebene 3' } },
+            { id: 'item-1', category: { linkType: 'category', categoryId: null, manualUrl: '', customLabel: 'Ebene 3' } },
           ],
         },
       ],
@@ -100,6 +105,7 @@ const defaultContent = (): BigMenueNeoContent => ({
   ],
   layout: {
     fullWidth: true,
+    topMenuAlignment: 'left',
     backgroundColor: '#ffffff',
     textColor: '#111827',
     panelBackgroundColor: '#ffffff',
@@ -110,10 +116,34 @@ const defaultContent = (): BigMenueNeoContent => ({
 
 const normalizedContent = computed<BigMenueNeoContent>(() => {
   const input = props.content || defaultContent();
+
+  const normalizeCategory = (category?: Partial<BigMenueNeoCategoryLink>): BigMenueNeoCategoryLink => ({
+    linkType: category?.linkType === 'manualUrl' ? 'manualUrl' : 'category',
+    categoryId: category?.categoryId ?? null,
+    manualUrl: category?.manualUrl || '',
+    customLabel: category?.customLabel || '',
+  });
+
+  const menusSource = Array.isArray(input.menus) && input.menus.length > 0 ? input.menus : defaultContent().menus;
+
   return {
-    menus: Array.isArray(input.menus) && input.menus.length > 0 ? input.menus : defaultContent().menus,
+    menus: menusSource.map((menu) => ({
+      ...menu,
+      category: normalizeCategory(menu.category),
+      columns: (menu.columns || []).map((column) => ({
+        ...column,
+        category: normalizeCategory(column.category),
+        items: (column.items || []).map((item) => ({
+          ...item,
+          category: normalizeCategory(item.category),
+        })),
+      })),
+      searchTerms: menu.searchTerms || [],
+      brands: menu.brands || [],
+    })),
     layout: {
       fullWidth: input.layout?.fullWidth !== false,
+      topMenuAlignment: input.layout?.topMenuAlignment || 'left',
       backgroundColor: input.layout?.backgroundColor || '#ffffff',
       textColor: input.layout?.textColor || '#111827',
       panelBackgroundColor: input.layout?.panelBackgroundColor || '#ffffff',
@@ -123,7 +153,13 @@ const normalizedContent = computed<BigMenueNeoContent>(() => {
   };
 });
 
-const activeMenu = computed(() => normalizedContent.value.menus[activeMenuIndex.value] || normalizedContent.value.menus[0]);
+const activeMenu = computed(() => {
+  if (activeMenuIndex.value === null) return null;
+  return normalizedContent.value.menus[activeMenuIndex.value] || null;
+});
+const activeColumns = computed(() => activeMenu.value?.columns || []);
+const activeSearchTerms = computed(() => activeMenu.value?.searchTerms || []);
+const activeBrands = computed(() => activeMenu.value?.brands || []);
 const hasRightRail = computed(() => {
   const menu = activeMenu.value;
   return Boolean(menu?.searchTerms?.length || menu?.brands?.length);
@@ -150,23 +186,44 @@ const findCategoryById = (nodes: CategoryTreeItem[], id: number): CategoryTreeIt
 
 const getCategoryLabel = (category: BigMenueNeoCategoryLink) => {
   if (category.customLabel?.trim()) return category.customLabel;
+  if (category.linkType === 'manualUrl') {
+    return category.manualUrl?.trim() || t('bigMenuNeo.notConfigured');
+  }
   if (!category.categoryId) return t('bigMenuNeo.notConfigured');
   const match = findCategoryById(categoryTree.value || [], category.categoryId);
   return match?.details?.[0]?.name || t('bigMenuNeo.notConfigured');
 };
 
-const resolveCategoryTo = (categoryId: number | null) => {
-  if (!categoryId) return '/';
-  const category = findCategoryById(categoryTree.value || [], categoryId);
-  if (!category) return '/';
-  return localePath(buildCategoryMenuLink(category, categoryTree.value || []));
+const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
+  if (category.linkType === 'manualUrl') {
+    return category.manualUrl?.trim() || '/';
+  }
+
+  if (!category.categoryId) return '/';
+  const categoryTreeNode = findCategoryById(categoryTree.value || [], category.categoryId);
+  if (!categoryTreeNode) return '/';
+  return localePath(buildCategoryMenuLink(categoryTreeNode, categoryTree.value || []));
+};
+
+const openMenu = (index: number) => {
+  activeMenuIndex.value = index;
+  isPanelOpen.value = true;
+};
+
+const closeMenu = () => {
+  activeMenuIndex.value = null;
+  isPanelOpen.value = false;
 };
 
 watch(
   () => normalizedContent.value.menus.length,
   (length) => {
-    if (activeMenuIndex.value > length - 1) {
-      activeMenuIndex.value = Math.max(length - 1, 0);
+    if (!length) {
+      closeMenu();
+      return;
+    }
+    if (activeMenuIndex.value !== null && activeMenuIndex.value > length - 1) {
+      closeMenu();
     }
   },
 );
@@ -204,6 +261,18 @@ onMounted(async () => {
   padding: 0 0.75rem;
   min-height: 3.25rem;
   overflow-x: auto;
+}
+
+.big-menue-neo__top--left {
+  justify-content: flex-start;
+}
+
+.big-menue-neo__top--center {
+  justify-content: center;
+}
+
+.big-menue-neo__top--right {
+  justify-content: flex-end;
 }
 
 .big-menue-neo__top-item {

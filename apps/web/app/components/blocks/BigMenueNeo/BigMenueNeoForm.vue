@@ -27,6 +27,14 @@
                 <h3 class="font-semibold">{{ getEditorTranslation('top-menu-label') }} {{ index + 1 }}</h3>
                 <button
                   type="button"
+                  class="rounded border px-2 py-1 text-xs"
+                  :data-testid="`big-menue-neo-toggle-top-menu-${index}`"
+                  @click="toggleTopMenuCollapse(menu.id)"
+                >
+                  {{ isTopMenuCollapsed(menu.id) ? getEditorTranslation('expand-label') : getEditorTranslation('collapse-label') }}
+                </button>
+                <button
+                  type="button"
                   class="ml-auto rounded border border-red-300 px-2 py-1 text-xs text-red-600"
                   @click="removeTopMenu(index)"
                 >
@@ -34,22 +42,39 @@
                 </button>
               </div>
 
-              <div class="grid gap-2 md:grid-cols-2 mb-3">
-                <div>
-                  <UiFormLabel class="mb-1">{{ getEditorTranslation('category-label') }}</UiFormLabel>
-                  <select v-model.number="menu.category.categoryId" class="input-field" :data-testid="`top-category-${index}`">
-                    <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
-                    <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
-                      {{ category.label }}
-                    </option>
-                  </select>
-                </div>
-
-                <div>
-                  <UiFormLabel class="mb-1">{{ getEditorTranslation('custom-label') }}</UiFormLabel>
-                  <SfInput v-model="menu.category.customLabel" type="text" :data-testid="`top-custom-label-${index}`" />
-                </div>
+              <div v-if="isTopMenuCollapsed(menu.id)" class="text-xs text-neutral-500 mb-2">
+                {{ getEditorTranslation('collapsed-hint-label') }}
               </div>
+
+              <div v-show="!isTopMenuCollapsed(menu.id)">
+                <div class="grid gap-2 md:grid-cols-3 mb-3">
+                  <div>
+                    <UiFormLabel class="mb-1">{{ getEditorTranslation('link-type-label') }}</UiFormLabel>
+                    <select v-model="menu.category.linkType" class="input-field" :data-testid="`top-link-type-${index}`">
+                      <option value="category">{{ getEditorTranslation('link-type-category-label') }}</option>
+                      <option value="manualUrl">{{ getEditorTranslation('link-type-manual-url-label') }}</option>
+                    </select>
+                  </div>
+
+                  <div v-if="menu.category.linkType === 'category'">
+                    <UiFormLabel class="mb-1">{{ getEditorTranslation('category-label') }}</UiFormLabel>
+                    <select v-model.number="menu.category.categoryId" class="input-field" :data-testid="`top-category-${index}`">
+                      <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
+                      <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
+                        {{ category.label }}
+                      </option>
+                    </select>
+                  </div>
+                  <div v-else>
+                    <UiFormLabel class="mb-1">{{ getEditorTranslation('manual-url-label') }}</UiFormLabel>
+                    <SfInput v-model="menu.category.manualUrl" type="text" :placeholder="getEditorTranslation('link-placeholder')" />
+                  </div>
+
+                  <div>
+                    <UiFormLabel class="mb-1">{{ getEditorTranslation('custom-label') }}</UiFormLabel>
+                    <SfInput v-model="menu.category.customLabel" type="text" :data-testid="`top-custom-label-${index}`" />
+                  </div>
+                </div>
 
               <div class="grid gap-2 md:grid-cols-3 mb-3">
                 <button type="button" class="action-btn" @click="addColumn(menu)">
@@ -80,8 +105,16 @@
                         </button>
                       </div>
 
-                      <div class="grid gap-2 md:grid-cols-2 mb-2">
+                      <div class="grid gap-2 md:grid-cols-3 mb-2">
                         <div>
+                          <UiFormLabel class="mb-1">{{ getEditorTranslation('link-type-label') }}</UiFormLabel>
+                          <select v-model="column.category.linkType" class="input-field">
+                            <option value="category">{{ getEditorTranslation('link-type-category-label') }}</option>
+                            <option value="manualUrl">{{ getEditorTranslation('link-type-manual-url-label') }}</option>
+                          </select>
+                        </div>
+
+                        <div v-if="column.category.linkType === 'category'">
                           <UiFormLabel class="mb-1">{{ getEditorTranslation('category-label') }}</UiFormLabel>
                           <select v-model.number="column.category.categoryId" class="input-field">
                             <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
@@ -89,6 +122,10 @@
                               {{ category.label }}
                             </option>
                           </select>
+                        </div>
+                        <div v-else>
+                          <UiFormLabel class="mb-1">{{ getEditorTranslation('manual-url-label') }}</UiFormLabel>
+                          <SfInput v-model="column.category.manualUrl" type="text" :placeholder="getEditorTranslation('link-placeholder')" />
                         </div>
 
                         <div>
@@ -116,13 +153,23 @@
                               </button>
                             </div>
 
-                            <div class="grid gap-2 md:grid-cols-2">
-                              <select v-model.number="item.category.categoryId" class="input-field">
+                            <div class="grid gap-2 md:grid-cols-3">
+                              <select v-model="item.category.linkType" class="input-field">
+                                <option value="category">{{ getEditorTranslation('link-type-category-label') }}</option>
+                                <option value="manualUrl">{{ getEditorTranslation('link-type-manual-url-label') }}</option>
+                              </select>
+                              <select v-if="item.category.linkType === 'category'" v-model.number="item.category.categoryId" class="input-field">
                                 <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
                                 <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
                                   {{ category.label }}
                                 </option>
                               </select>
+                              <SfInput
+                                v-else
+                                v-model="item.category.manualUrl"
+                                type="text"
+                                :placeholder="getEditorTranslation('link-placeholder')"
+                              />
                               <SfInput v-model="item.category.customLabel" type="text" :placeholder="getEditorTranslation('custom-label')" />
                             </div>
                           </div>
@@ -193,6 +240,7 @@
                   </template>
                 </draggable>
               </div>
+              </div>
             </section>
           </template>
         </draggable>
@@ -212,6 +260,15 @@
         <div class="flex items-center justify-between">
           <UiFormLabel>{{ getEditorTranslation('full-width-label') }}</UiFormLabel>
           <SfSwitch v-model="menuContent.layout.fullWidth" />
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('top-menu-alignment-label') }}</UiFormLabel>
+          <select v-model="menuContent.layout.topMenuAlignment" class="input-field" data-testid="big-menue-neo-top-menu-alignment">
+            <option value="left">{{ getEditorTranslation('alignment-left-label') }}</option>
+            <option value="center">{{ getEditorTranslation('alignment-center-label') }}</option>
+            <option value="right">{{ getEditorTranslation('alignment-right-label') }}</option>
+          </select>
         </div>
 
         <div>
@@ -242,6 +299,7 @@ import { SfInput, SfSwitch } from '@storefront-ui/vue';
 import draggable from 'vuedraggable/src/vuedraggable';
 import type {
   BigMenueNeoContent,
+  BigMenueNeoCategoryLink,
   BigMenueNeoFormProps,
   BigMenueNeoTopMenu,
   BigMenueNeoLevel2Item,
@@ -259,14 +317,25 @@ const { data: categoryTree, getCategoryTree } = useCategoryTree();
 
 const menusOpen = ref(true);
 const layoutOpen = ref(true);
+const collapsedTopMenus = ref<Record<string, boolean>>({});
 
 const createId = () => `bmn-${Math.random().toString(36).slice(2, 10)}`;
+
+const getNodeName = (node: any): string => {
+  if (typeof node?.name === 'string' && node.name.trim().length > 0) return node.name;
+  if (Array.isArray(node?.details)) {
+    const firstNamedDetail = node.details.find((detail: any) => typeof detail?.name === 'string' && detail.name.trim().length > 0);
+    if (firstNamedDetail?.name) return firstNamedDetail.name;
+  }
+  return `#${node?.id ?? ''}`;
+};
 
 const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
   const result: FlattenedCategoryOption[] = [];
   const walk = (nodes: any[], prefix = '') => {
     for (const node of nodes || []) {
-      const label = prefix ? `${prefix} > ${node.name}` : node.name;
+      const currentName = getNodeName(node);
+      const label = prefix ? `${prefix} > ${currentName}` : currentName;
       result.push({ id: node.id, label });
       if (node.children?.length) {
         walk(node.children, label);
@@ -274,31 +343,36 @@ const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
     }
   };
 
-  const normalized = (categoryTree.value || []).map((node: any) => ({
-    id: node.id,
-    name: node.details?.[0]?.name || `#${node.id}`,
-    children: node.children || [],
-  }));
-
-  walk(normalized);
+  walk(categoryTree.value || []);
   return result;
 });
 
+const createCategoryLink = () => ({
+  linkType: 'category' as const,
+  categoryId: null,
+  manualUrl: '',
+  customLabel: '',
+});
+
+const normalizeCategoryLink = (value: any): BigMenueNeoCategoryLink => {
+  const linkType: BigMenueNeoCategoryLink['linkType'] = value?.linkType === 'manualUrl' ? 'manualUrl' : 'category';
+  return {
+    linkType,
+    categoryId: value?.categoryId ?? null,
+    manualUrl: value?.manualUrl ?? '',
+    customLabel: value?.customLabel ?? '',
+  };
+};
+
 const createLevel3 = () => ({
   id: createId(),
-  category: {
-    categoryId: null,
-    customLabel: '',
-  },
+  category: createCategoryLink(),
 });
 
 const createColumn = (): BigMenueNeoLevel2Item => ({
   id: createId(),
-  category: {
-    categoryId: null,
-    customLabel: '',
-  },
-  items: [createLevel3()],
+  category: createCategoryLink(),
+  items: [],
 });
 
 const createSearchTerm = () => ({
@@ -316,10 +390,7 @@ const createBrand = (): BigMenueNeoBrand => ({
 
 const createTopMenu = (): BigMenueNeoTopMenu => ({
   id: createId(),
-  category: {
-    categoryId: null,
-    customLabel: '',
-  },
+  category: createCategoryLink(),
   columns: [createColumn()],
   searchTerms: [createSearchTerm()],
   brands: [createBrand()],
@@ -335,18 +406,18 @@ const menuContent = computed<BigMenueNeoContent>(() => {
 
   for (const menu of content.menus) {
     if (!menu.id) menu.id = createId();
-    if (!menu.category) menu.category = { categoryId: null, customLabel: '' };
+    menu.category = normalizeCategoryLink(menu.category);
     if (!Array.isArray(menu.columns)) menu.columns = [createColumn()];
     if (!Array.isArray(menu.searchTerms)) menu.searchTerms = [];
     if (!Array.isArray(menu.brands)) menu.brands = [];
 
     for (const column of menu.columns) {
       if (!column.id) column.id = createId();
-      if (!column.category) column.category = { categoryId: null, customLabel: '' };
-      if (!Array.isArray(column.items)) column.items = [createLevel3()];
+      column.category = normalizeCategoryLink(column.category);
+      if (!Array.isArray(column.items)) column.items = [];
       for (const item of column.items) {
         if (!item.id) item.id = createId();
-        if (!item.category) item.category = { categoryId: null, customLabel: '' };
+        item.category = normalizeCategoryLink(item.category);
       }
     }
 
@@ -367,6 +438,7 @@ const menuContent = computed<BigMenueNeoContent>(() => {
   if (!content.layout) {
     content.layout = {
       fullWidth: true,
+      topMenuAlignment: 'left',
       backgroundColor: '#ffffff',
       textColor: '#111827',
       panelBackgroundColor: '#ffffff',
@@ -375,6 +447,7 @@ const menuContent = computed<BigMenueNeoContent>(() => {
     };
   } else {
     if (content.layout.fullWidth === undefined) content.layout.fullWidth = true;
+    if (!content.layout.topMenuAlignment) content.layout.topMenuAlignment = 'left';
     if (!content.layout.backgroundColor) content.layout.backgroundColor = '#ffffff';
     if (!content.layout.textColor) content.layout.textColor = '#111827';
     if (!content.layout.panelBackgroundColor) content.layout.panelBackgroundColor = '#ffffff';
@@ -388,7 +461,14 @@ const menuContent = computed<BigMenueNeoContent>(() => {
 const addTopMenu = () => menuContent.value.menus.push(createTopMenu());
 const removeTopMenu = (index: number) => {
   if (menuContent.value.menus.length <= 1) return;
+  const menuId = menuContent.value.menus[index]?.id;
+  if (menuId) delete collapsedTopMenus.value[menuId];
   menuContent.value.menus.splice(index, 1);
+};
+
+const isTopMenuCollapsed = (menuId: string) => Boolean(collapsedTopMenus.value[menuId]);
+const toggleTopMenuCollapse = (menuId: string) => {
+  collapsedTopMenus.value[menuId] = !collapsedTopMenus.value[menuId];
 };
 
 const addColumn = (menu: BigMenueNeoTopMenu) => menu.columns.push(createColumn());
@@ -399,7 +479,6 @@ const removeColumn = (menu: BigMenueNeoTopMenu, index: number) => {
 
 const addLevel3 = (column: BigMenueNeoLevel2Item) => column.items.push(createLevel3());
 const removeLevel3 = (column: BigMenueNeoLevel2Item, index: number) => {
-  if (column.items.length <= 1) return;
   column.items.splice(index, 1);
 };
 
@@ -456,43 +535,23 @@ onMounted(async () => {
 <i18n lang="json">
 {
   "en": {
-    "menus-label": "Big menus",
-    "add-top-menu-label": "Add top category",
-    "top-menu-label": "Top category",
-    "category-label": "Category",
-    "custom-label": "Custom label",
-    "add-column-label": "Add submenu",
-    "add-level3-label": "Add level 3 item",
-    "add-search-label": "Add frequent search",
-    "add-brand-label": "Add brand logo",
-    "remove-label": "Remove",
-    "submenus-label": "Submenus",
-    "submenu-label": "Submenu",
-    "level3-label": "Level 3",
-    "search-terms-label": "Frequent searches",
-    "search-term-label": "Search term",
-    "brands-label": "Brands",
-    "brand-label": "Brand",
-    "brand-logo-label": "Brand logo",
-    "brand-alt-placeholder": "Brand name",
-    "label-placeholder": "Label",
-    "link-placeholder": "Link",
-    "not-selected-label": "Not selected",
-    "layout-label": "Layout",
-    "full-width-label": "Full width",
-    "panel-bg-label": "Panel background color"
-  },
-  "de": {
     "menus-label": "Big-Menues",
     "add-top-menu-label": "Top-Kategorie hinzufuegen",
     "top-menu-label": "Top-Kategorie",
     "category-label": "Kategorie",
+    "link-type-label": "Link-Typ",
+    "link-type-category-label": "Kategorie",
+    "link-type-manual-url-label": "Manuelle URL",
+    "manual-url-label": "Manuelle URL",
     "custom-label": "Eigene Bezeichnung",
     "add-column-label": "Submenue hinzufuegen",
     "add-level3-label": "Ebene-3-Eintrag hinzufuegen",
     "add-search-label": "Haeufigen Suchbegriff hinzufuegen",
     "add-brand-label": "Markenlogo hinzufuegen",
     "remove-label": "Entfernen",
+    "expand-label": "Aufklappen",
+    "collapse-label": "Zuklappen",
+    "collapsed-hint-label": "Top-Kategorie ist zugeklappt",
     "submenus-label": "Submenues",
     "submenu-label": "Submenue",
     "level3-label": "Ebene 3",
@@ -507,6 +566,48 @@ onMounted(async () => {
     "not-selected-label": "Nicht ausgewaehlt",
     "layout-label": "Layout",
     "full-width-label": "Volle Breite",
+    "top-menu-alignment-label": "Ausrichtung Top-Menues",
+    "alignment-left-label": "Links",
+    "alignment-center-label": "Zentriert",
+    "alignment-right-label": "Rechts",
+    "panel-bg-label": "Panel-Hintergrundfarbe"
+  },
+  "de": {
+    "menus-label": "Big-Menues",
+    "add-top-menu-label": "Top-Kategorie hinzufuegen",
+    "top-menu-label": "Top-Kategorie",
+    "category-label": "Kategorie",
+    "link-type-label": "Link-Typ",
+    "link-type-category-label": "Kategorie",
+    "link-type-manual-url-label": "Manuelle URL",
+    "manual-url-label": "Manuelle URL",
+    "custom-label": "Eigene Bezeichnung",
+    "add-column-label": "Submenue hinzufuegen",
+    "add-level3-label": "Ebene-3-Eintrag hinzufuegen",
+    "add-search-label": "Haeufigen Suchbegriff hinzufuegen",
+    "add-brand-label": "Markenlogo hinzufuegen",
+    "remove-label": "Entfernen",
+    "expand-label": "Aufklappen",
+    "collapse-label": "Zuklappen",
+    "collapsed-hint-label": "Top-Kategorie ist zugeklappt",
+    "submenus-label": "Submenues",
+    "submenu-label": "Submenue",
+    "level3-label": "Ebene 3",
+    "search-terms-label": "Haeufige Suchbegriffe",
+    "search-term-label": "Suchbegriff",
+    "brands-label": "Marken",
+    "brand-label": "Marke",
+    "brand-logo-label": "Markenlogo",
+    "brand-alt-placeholder": "Markenname",
+    "label-placeholder": "Bezeichnung",
+    "link-placeholder": "Link",
+    "not-selected-label": "Nicht ausgewaehlt",
+    "layout-label": "Layout",
+    "full-width-label": "Volle Breite",
+    "top-menu-alignment-label": "Ausrichtung Top-Menues",
+    "alignment-left-label": "Links",
+    "alignment-center-label": "Zentriert",
+    "alignment-right-label": "Rechts",
     "panel-bg-label": "Panel-Hintergrundfarbe"
   }
 }
