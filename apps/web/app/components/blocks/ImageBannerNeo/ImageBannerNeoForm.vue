@@ -151,7 +151,59 @@
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('text-bg-color-label') }}</UiFormLabel>
-          <SfInput v-model="activeSlide.text.backgroundColor" type="text" data-testid="image-banner-neo-bg-color" />
+          <EditorColorPicker v-model="activeSlide.text.backgroundColor" class="w-full">
+            <template #trigger="{ color, toggle }">
+              <SfInput v-model="activeSlide.text.backgroundColor" type="text" data-testid="image-banner-neo-bg-color">
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </template>
+          </EditorColorPicker>
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('subline-color-label') }}</UiFormLabel>
+          <EditorColorPicker v-model="activeSlide.text.sublineColor" class="w-full">
+            <template #trigger="{ color, toggle }">
+              <SfInput v-model="activeSlide.text.sublineColor" type="text" data-testid="image-banner-neo-subline-color">
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </template>
+          </EditorColorPicker>
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-color-label') }}</UiFormLabel>
+          <EditorColorPicker v-model="activeSlide.text.headlineColor" class="w-full">
+            <template #trigger="{ color, toggle }">
+              <SfInput v-model="activeSlide.text.headlineColor" type="text" data-testid="image-banner-neo-headline-color">
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </template>
+          </EditorColorPicker>
         </div>
       </div>
     </UiAccordionItem>
@@ -340,6 +392,35 @@
             data-testid="image-banner-neo-show-arrows-hover"
           />
         </div>
+
+        <div class="flex items-center justify-between">
+          <UiFormLabel>{{ getEditorTranslation('full-width-label') }}</UiFormLabel>
+          <SfSwitch v-model="sliderContent.controls.fullWidth" data-testid="image-banner-neo-full-width" />
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('height-label') }}</UiFormLabel>
+          <div class="flex items-center gap-2">
+            <input
+              v-model.number="sliderContent.controls.height"
+              type="range"
+              min="200"
+              max="900"
+              step="10"
+              class="flex-1"
+              data-testid="image-banner-neo-height-slider"
+            />
+            <input
+              v-model.number="sliderContent.controls.height"
+              type="number"
+              min="200"
+              max="900"
+              class="w-20 rounded-md border border-gray-300 px-2 py-1 text-sm"
+              data-testid="image-banner-neo-height-input"
+            />
+            <span class="text-sm text-gray-500">px</span>
+          </div>
+        </div>
       </div>
     </UiAccordionItem>
   </div>
@@ -388,6 +469,8 @@ const defaultSlide = (): ImageBannerNeoSlide => ({
     ctaVariant: 'primary',
     backgroundImage: '',
     backgroundColor: 'transparent',
+    sublineColor: '#ffffff',
+    headlineColor: '#ffffff',
   },
   desktop: {
     imagePosition: 'right',
@@ -443,7 +526,8 @@ const sliderContent = computed<ImageBannerNeoContent>(() => {
         if (!s.text.ctaLink) s.text.ctaLink = '/';
         if (!s.text.ctaVariant) s.text.ctaVariant = 'primary';
         if (s.text.backgroundImage === undefined) s.text.backgroundImage = '';
-        if (!s.text.backgroundColor) s.text.backgroundColor = 'transparent';
+        if (!s.text.sublineColor) s.text.sublineColor = '#ffffff';
+        if (!s.text.headlineColor) s.text.headlineColor = '#ffffff';
       }
       if (!s.desktop) {
         s.desktop = defaultSlide().desktop;
@@ -469,11 +553,13 @@ const sliderContent = computed<ImageBannerNeoContent>(() => {
 
   // Ensure controls (in-place)
   if (!content.controls) {
-    content.controls = { showPagination: true, showArrows: true, arrowsOnHover: false };
+    content.controls = { showPagination: true, showArrows: true, arrowsOnHover: false, height: 420, fullWidth: true };
   } else {
     if (content.controls.showPagination === undefined) content.controls.showPagination = true;
     if (content.controls.showArrows === undefined) content.controls.showArrows = true;
     if (content.controls.arrowsOnHover === undefined) content.controls.arrowsOnHover = false;
+    if (content.controls.height === undefined) content.controls.height = 420;
+    if (content.controls.fullWidth === undefined) content.controls.fullWidth = true;
   }
 
   return rawContent as ImageBannerNeoContent;
@@ -555,6 +641,8 @@ watch(
     "primary-label": "Primary",
     "secondary-label": "Secondary",
     "text-bg-color-label": "Text area background color",
+    "subline-color-label": "Subline color",
+    "headline-color-label": "Headline color",
     "desktop-layout-label": "Desktop layout",
     "mobile-layout-label": "Mobile layout",
     "mobile-layout-hint": "Mobile always uses two rows: image on top and text with CTA below.",
@@ -575,7 +663,9 @@ watch(
     "controls-label": "Slider controls",
     "show-pagination-label": "Show pagination bars",
     "show-arrows-label": "Show modern arrows",
-    "show-arrows-hover-label": "Show arrows only on hover"
+    "show-arrows-hover-label": "Show arrows only on hover",
+    "full-width-label": "Full width (100vw)",
+    "height-label": "Slider height"
   },
   "de": {
     "slides-label": "Slides",
@@ -596,6 +686,8 @@ watch(
     "primary-label": "Primary",
     "secondary-label": "Secondary",
     "text-bg-color-label": "Hintergrundfarbe Textbereich",
+    "subline-color-label": "Subline-Farbe",
+    "headline-color-label": "Headline-Farbe",
     "desktop-layout-label": "Desktop Layout",
     "mobile-layout-label": "Mobile Layout",
     "mobile-layout-hint": "Mobil werden immer zwei Zeilen genutzt: Bild oben, Text mit CTA unten.",
@@ -616,7 +708,9 @@ watch(
     "controls-label": "Slider Steuerung",
     "show-pagination-label": "Pagination-Striche anzeigen",
     "show-arrows-label": "Moderne Pfeile anzeigen",
-    "show-arrows-hover-label": "Pfeile nur bei Hover anzeigen"
+    "show-arrows-hover-label": "Pfeile nur bei Hover anzeigen",
+    "full-width-label": "Volle Breite (100vw)",
+    "height-label": "Slider-Höhe"
   }
 }
 </i18n>

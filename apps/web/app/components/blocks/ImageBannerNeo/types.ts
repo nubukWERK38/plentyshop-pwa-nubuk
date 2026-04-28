@@ -19,6 +19,8 @@ export type ImageBannerNeoSlide = {
     ctaVariant: 'primary' | 'secondary';
     backgroundImage: string;
     backgroundColor: string;
+    sublineColor: string;
+    headlineColor: string;
   };
   desktop: {
     imagePosition: 'left' | 'right';
@@ -43,6 +45,8 @@ export type ImageBannerNeoContent = {
     showPagination: boolean;
     showArrows: boolean;
     arrowsOnHover: boolean;
+    height: number;
+    fullWidth: boolean;
   };
 };
 

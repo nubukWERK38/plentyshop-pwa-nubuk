@@ -1,5 +1,9 @@
 <template>
-  <div class="image-banner-neo group relative w-full" data-testid="image-banner-neo">
+  <div
+    class="image-banner-neo group relative"
+    :class="controls.fullWidth ? 'w-full' : 'max-w-screen-xl mx-auto w-full'"
+    data-testid="image-banner-neo"
+  >
     <Swiper
       :modules="swiperModules"
       :slides-per-view="1"
@@ -9,12 +13,17 @@
       class="!z-0"
     >
       <SwiperSlide v-for="(slide, slideIndex) in slides" :key="slideIndex" class="!h-auto">
-        <article class="image-banner-neo__slide grid gap-0 md:grid-cols-2" :data-testid="`image-banner-neo-slide-${slideIndex}`">
+        <article
+          class="image-banner-neo__slide grid gap-0 md:grid-cols-2"
+          :style="{ minHeight: sliderHeight }"
+          :data-testid="`image-banner-neo-slide-${slideIndex}`"
+        >
           <div :class="getImageOrderClass(slide)">
             <NuxtImg
               :src="resolveSlideImage(slide)"
               :alt="slide.image.alt"
-              class="h-full min-h-[250px] w-full object-cover md:min-h-[420px]"
+              class="h-full w-full object-cover"
+              :style="{ minHeight: sliderHeight }"
               width="1024"
               height="576"
               :data-testid="`image-banner-neo-image-${slideIndex}`"
@@ -22,16 +31,24 @@
           </div>
 
           <div
-            class="image-banner-neo__text flex min-h-[250px] flex-col gap-4 md:min-h-[420px]"
+            class="image-banner-neo__text flex flex-col gap-4"
             :class="getTextOrderClass(slide)"
             :style="getTextAreaStyle(slide)"
             :data-testid="`image-banner-neo-text-${slideIndex}`"
           >
-            <p v-if="slide.text.subline" class="text-sm font-medium tracking-[0.1em] uppercase opacity-80">
+            <p
+              v-if="slide.text.subline"
+              class="text-sm font-medium tracking-[0.1em] uppercase"
+              :style="{ color: slide.text.sublineColor || '#ffffff' }"
+            >
               {{ slide.text.subline }}
             </p>
 
-            <h2 v-if="slide.text.headline" class="text-3xl font-bold leading-tight md:text-5xl">
+            <h2
+              v-if="slide.text.headline"
+              class="text-3xl font-bold leading-tight md:text-5xl"
+              :style="{ color: slide.text.headlineColor || '#ffffff' }"
+            >
               {{ slide.text.headline }}
             </h2>
 
@@ -59,7 +76,7 @@
       v-if="shouldShowArrows"
       type="button"
       :class="[
-        `swiper-button-prev image-banner-neo-prev-${sliderId}`,
+        `image-banner-neo-prev-${sliderId}`,
         'image-banner-neo__nav image-banner-neo__nav--prev',
         arrowVisibilityClass,
       ]"
@@ -73,7 +90,7 @@
       v-if="shouldShowArrows"
       type="button"
       :class="[
-        `swiper-button-next image-banner-neo-next-${sliderId}`,
+        `image-banner-neo-next-${sliderId}`,
         'image-banner-neo__nav image-banner-neo__nav--next',
         arrowVisibilityClass,
       ]"
@@ -125,6 +142,8 @@ const ensureSlide = (slide?: Partial<ImageBannerNeoSlide>): ImageBannerNeoSlide 
     ctaVariant: slide?.text?.ctaVariant || 'primary',
     backgroundImage: slide?.text?.backgroundImage || '',
     backgroundColor: slide?.text?.backgroundColor || 'transparent',
+    sublineColor: slide?.text?.sublineColor || '#ffffff',
+    headlineColor: slide?.text?.headlineColor || '#ffffff',
   },
   desktop: {
     imagePosition: slide?.desktop?.imagePosition || 'right',
@@ -152,7 +171,11 @@ const controls = computed(() => ({
   showPagination: props.content?.controls?.showPagination !== false,
   showArrows: props.content?.controls?.showArrows !== false,
   arrowsOnHover: props.content?.controls?.arrowsOnHover === true,
+  height: props.content?.controls?.height ?? 420,
+  fullWidth: props.content?.controls?.fullWidth !== false,
 }));
+
+const sliderHeight = computed(() => `${controls.value.height}px`);
 
 const shouldShowPagination = computed(() => controls.value?.showPagination !== false && slides.value.length > 1);
 const shouldShowArrows = computed(() => controls.value?.showArrows !== false && slides.value.length > 1);
@@ -247,6 +270,7 @@ const getTextAreaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
     alignItems: resolveAlignItems(slide),
     justifyContent: resolveJustifyContent(slide),
     textAlign: resolveTextAlign(slide),
+    minHeight: sliderHeight.value,
     marginTop: `${spacing.margin.top}px`,
     marginRight: `${spacing.margin.right}px`,
     marginBottom: `${spacing.margin.bottom}px`,
@@ -259,7 +283,6 @@ const getTextAreaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
     backgroundImage: slide.text.backgroundImage ? `url(${slide.text.backgroundImage})` : 'none',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    color: '#ffffff',
   };
 };
 
@@ -335,13 +358,5 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
 
 .image-banner-neo__text {
   position: relative;
-}
-
-.image-banner-neo__text::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.86), rgba(30, 41, 59, 0.72));
-  pointer-events: none;
 }
 </style>
