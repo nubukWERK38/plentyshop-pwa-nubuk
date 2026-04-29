@@ -113,7 +113,7 @@
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gap-label') }}</UiFormLabel>
           <input
-            v-model.number="recommendedBlock.layout.gap"
+            v-model.number="layoutState.gap"
             type="number"
             min="0"
             class="input-field"
@@ -125,7 +125,7 @@
           <div>
             <UiFormLabel class="mb-1">{{ getEditorTranslation('margin-left-label') }}</UiFormLabel>
             <input
-              v-model.number="recommendedBlock.layout.marginLeft"
+              v-model.number="layoutState.marginLeft"
               type="number"
               min="0"
               class="input-field"
@@ -136,7 +136,7 @@
           <div>
             <UiFormLabel class="mb-1">{{ getEditorTranslation('margin-right-label') }}</UiFormLabel>
             <input
-              v-model.number="recommendedBlock.layout.marginRight"
+              v-model.number="layoutState.marginRight"
               type="number"
               min="0"
               class="input-field"
@@ -253,6 +253,19 @@ const categoryIdModel = computed({
 });
 
 const recommendedBlockRef = ref(recommendedBlock.value);
+
+const layoutState = computed(() => {
+  if (!recommendedBlock.value.layout) {
+    recommendedBlock.value.layout = {
+      fullWidth: false,
+      gap: 16,
+      marginLeft: 0,
+      marginRight: 0,
+    };
+  }
+
+  return recommendedBlock.value.layout;
+});
 
 const { isFullWidth } = useFullWidthToggleForContent(recommendedBlockRef);
 
