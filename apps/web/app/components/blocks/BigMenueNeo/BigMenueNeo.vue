@@ -58,8 +58,6 @@
                     v-if="brand.image"
                     :src="brand.image"
                     :alt="brand.alt || 'Brand logo'"
-                    width="132"
-                    height="52"
                     class="big-menue-neo__brand-image"
                   />
                   <span v-else class="big-menue-neo__brand-placeholder">{{ brand.alt || 'Brand' }}</span>
@@ -455,16 +453,17 @@ onMounted(async () => {
 }
 
 .big-menue-neo__brands-wrap {
-  margin-top: 1.25rem;
-  padding: 0.85rem 0 0.25rem;
+  margin-top: 1.35rem;
+  padding: 1rem 0 0.35rem;
   border-top: 1px solid #e5e7eb;
 }
 
 .big-menue-neo__brand-list {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 1.5rem 3rem;
+  gap: 1.2rem 4rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -485,21 +484,20 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 3.5rem;
+  min-width: 150px;
   text-decoration: none;
-  opacity: 0.75;
-  transition: opacity 0.18s ease;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 0.2rem;
 }
 
 .big-menue-neo__brand-link:hover {
-  opacity: 1;
+  border-bottom-color: var(--ci);
 }
 
 .big-menue-neo__brand-image {
   width: auto;
-  max-width: 160px;
-  max-height: 60px;
-  height: auto;
+  max-width: none;
+  height: 110px;
   object-fit: contain;
 }
 
@@ -537,8 +535,8 @@ onMounted(async () => {
     grid-template-columns: 1fr;
   }
 
-  .big-menue-neo__brand-list {
-    gap: 1rem 2rem;
+  .big-menue-neo__brands-wrap {
+    display: none;
   }
 }
 </style>

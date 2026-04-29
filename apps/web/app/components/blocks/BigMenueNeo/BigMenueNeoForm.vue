@@ -25,6 +25,9 @@
               <div class="flex items-center gap-2 mb-3">
                 <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
                 <h3 class="font-semibold">{{ getEditorTranslation('top-menu-label') }} {{ index + 1 }}</h3>
+              </div>
+
+              <div class="flex items-center gap-2 mb-3">
                 <button
                   type="button"
                   class="rounded border px-2 py-1 text-xs"
@@ -47,7 +50,7 @@
               </div>
 
               <div v-show="!isTopMenuCollapsed(menu.id)">
-                <div class="space-y-2 mb-3">
+                <div class="space-y-3 mb-3">
                   <div>
                     <UiFormLabel class="mb-1">{{ getEditorTranslation('link-type-label') }}</UiFormLabel>
                     <select v-model="menu.category.linkType" class="input-field" :data-testid="`top-link-type-${index}`">
@@ -75,18 +78,6 @@
                     <SfInput v-model="menu.category.customLabel" type="text" :data-testid="`top-custom-label-${index}`" />
                   </div>
                 </div>
-
-              <div class="space-y-2 mb-3">
-                <button type="button" class="action-btn" @click="addColumn(menu)">
-                  {{ getEditorTranslation('add-column-label') }}
-                </button>
-                <button type="button" class="action-btn" @click="addSearchTerm(menu)">
-                  {{ getEditorTranslation('add-search-label') }}
-                </button>
-                <button type="button" class="action-btn" @click="addBrand(menu)">
-                  {{ getEditorTranslation('add-brand-label') }}
-                </button>
-              </div>
 
               <div class="space-y-2 mb-3">
                 <h4 class="font-medium">{{ getEditorTranslation('submenus-label') }}</h4>
@@ -134,10 +125,6 @@
                         </div>
                       </div>
 
-                      <button type="button" class="action-btn mb-2" @click="addLevel3(column)">
-                        {{ getEditorTranslation('add-level3-label') }}
-                      </button>
-
                       <draggable v-model="column.items" item-key="id" handle=".drag-handle" class="space-y-2">
                         <template #item="{ element: item, index: itemIndex }">
                           <div class="rounded border p-2">
@@ -175,9 +162,17 @@
                           </div>
                         </template>
                       </draggable>
+
+                      <button type="button" class="action-btn mt-2" @click="addLevel3(column)">
+                        {{ getEditorTranslation('add-level3-label') }}
+                      </button>
                     </div>
                   </template>
                 </draggable>
+
+                <button type="button" class="action-btn" @click="addColumn(menu)">
+                  {{ getEditorTranslation('add-column-label') }}
+                </button>
               </div>
 
               <div class="space-y-2 mb-3">
@@ -203,6 +198,10 @@
                     </div>
                   </template>
                 </draggable>
+
+                <button type="button" class="action-btn" @click="addSearchTerm(menu)">
+                  {{ getEditorTranslation('add-search-label') }}
+                </button>
               </div>
 
               <div class="space-y-2">
@@ -239,6 +238,10 @@
                     </div>
                   </template>
                 </draggable>
+
+                <button type="button" class="action-btn" @click="addBrand(menu)">
+                  {{ getEditorTranslation('add-brand-label') }}
+                </button>
               </div>
               </div>
             </section>
@@ -476,7 +479,11 @@ const menuContent = computed<BigMenueNeoContent>(() => {
   return rawContent as BigMenueNeoContent;
 });
 
-const addTopMenu = () => menuContent.value.menus.push(createTopMenu());
+const addTopMenu = () => {
+  const newMenu = createTopMenu();
+  menuContent.value.menus.push(newMenu);
+  collapsedTopMenus.value[newMenu.id] = true;
+};
 const removeTopMenu = (index: number) => {
   if (menuContent.value.menus.length <= 1) return;
   const menuId = menuContent.value.menus[index]?.id;
@@ -488,6 +495,14 @@ const isTopMenuCollapsed = (menuId: string) => Boolean(collapsedTopMenus.value[m
 const toggleTopMenuCollapse = (menuId: string) => {
   collapsedTopMenus.value[menuId] = !collapsedTopMenus.value[menuId];
 };
+
+watchEffect(() => {
+  for (const menu of menuContent.value.menus) {
+    if (collapsedTopMenus.value[menu.id] === undefined) {
+      collapsedTopMenus.value[menu.id] = true;
+    }
+  }
+});
 
 const addColumn = (menu: BigMenueNeoTopMenu) => menu.columns.push(createColumn());
 const removeColumn = (menu: BigMenueNeoTopMenu, index: number) => {
@@ -540,11 +555,21 @@ onMounted(async () => {
 }
 
 .action-btn {
-  border: 1px solid #d1d5db;
+  width: 100%;
+  border: 1px solid #86efac;
   border-radius: 0.375rem;
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
-  background: #fff;
+  font-weight: 600;
+  color: #166534;
+  background: #f0fdf4;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.action-btn:hover {
+  border-color: #4ade80;
+  background: #dcfce7;
+  color: #14532d;
 }
 </style>
 
