@@ -5,9 +5,15 @@ const getFullWidthFromObject = (obj: unknown): boolean | undefined => {
   return getNestedValue<boolean>(obj, ['layout', 'fullWidth'], 'boolean');
 };
 
+const getFullWidthFromControls = (obj: unknown): boolean | undefined => {
+  return getNestedValue<boolean>(obj, ['controls', 'fullWidth'], 'boolean');
+};
+
 const hasFullWidth = (block: Block): boolean => {
   const explicit =
-    block.type === 'content' ? getFullWidthFromObject(block.content) : getFullWidthFromObject(block.configuration);
+    block.type === 'content'
+      ? getFullWidthFromObject(block.content) ?? getFullWidthFromControls(block.content)
+      : getFullWidthFromObject(block.configuration);
   if (explicit !== undefined) return explicit;
   const rule = resolveBlockLayoutRule(block.name);
   return rule.defaultFullWidth;

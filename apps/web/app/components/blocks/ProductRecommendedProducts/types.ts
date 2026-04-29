@@ -31,5 +31,8 @@ export type ProductRecommendedProductsContent = {
   };
   layout?: {
     fullWidth?: boolean;
+    gap?: number;
+    marginLeft?: number;
+    marginRight?: number;
   };
 };

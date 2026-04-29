@@ -325,6 +325,30 @@
               <SfSwitch v-model="menuContent.layout.fullWidth" />
             </div>
 
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <UiFormLabel class="mb-1">{{ getEditorTranslation('margin-left-label') }}</UiFormLabel>
+                <input
+                  v-model.number="menuContent.layout.marginLeft"
+                  type="number"
+                  min="0"
+                  class="input-field"
+                  data-testid="big-menue-neo-margin-left"
+                />
+              </div>
+
+              <div>
+                <UiFormLabel class="mb-1">{{ getEditorTranslation('margin-right-label') }}</UiFormLabel>
+                <input
+                  v-model.number="menuContent.layout.marginRight"
+                  type="number"
+                  min="0"
+                  class="input-field"
+                  data-testid="big-menue-neo-margin-right"
+                />
+              </div>
+            </div>
+
             <div>
               <UiFormLabel class="mb-1">{{ getEditorTranslation('top-menu-alignment-label') }}</UiFormLabel>
               <select v-model="menuContent.layout.topMenuAlignment" class="input-field" data-testid="big-menue-neo-top-menu-alignment">
@@ -724,6 +748,8 @@ const menuContent = computed<BigMenueNeoContent>(() => {
   if (!content.layout) {
     content.layout = {
       fullWidth: true,
+      marginLeft: 0,
+      marginRight: 0,
       topMenuAlignment: 'left',
       backgroundColor: '#ffffff',
       textColor: '#111827',
@@ -742,6 +768,8 @@ const menuContent = computed<BigMenueNeoContent>(() => {
     };
   } else {
     if (content.layout.fullWidth === undefined) content.layout.fullWidth = true;
+    if (content.layout.marginLeft === undefined) content.layout.marginLeft = 0;
+    if (content.layout.marginRight === undefined) content.layout.marginRight = 0;
     if (!content.layout.topMenuAlignment) content.layout.topMenuAlignment = 'left';
     if (!content.layout.backgroundColor) content.layout.backgroundColor = '#ffffff';
     if (!content.layout.textColor) content.layout.textColor = '#111827';
@@ -1014,6 +1042,8 @@ onMounted(async () => {
     "not-selected-label": "Nicht ausgewaehlt",
     "layout-label": "Layout",
     "full-width-label": "Volle Breite",
+    "margin-left-label": "Margin links (px)",
+    "margin-right-label": "Margin rechts (px)",
     "top-menu-alignment-label": "Ausrichtung Top-Menues",
     "alignment-left-label": "Links",
     "alignment-center-label": "Zentriert",
@@ -1066,6 +1096,8 @@ onMounted(async () => {
     "not-selected-label": "Nicht ausgewaehlt",
     "layout-label": "Layout",
     "full-width-label": "Volle Breite",
+    "margin-left-label": "Margin links (px)",
+    "margin-right-label": "Margin rechts (px)",
     "top-menu-alignment-label": "Ausrichtung Top-Menues",
     "alignment-left-label": "Links",
     "alignment-center-label": "Zentriert",

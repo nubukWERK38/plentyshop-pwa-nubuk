@@ -1,13 +1,14 @@
 <template>
-  <div ref="blockRef" v-bind="$attrs">
+  <div ref="blockRef" v-bind="$attrs" :style="blockStyle">
     <TextContent data-testid="recommended-block" class="pb-4" :text="props.content.text" :index="props.index" />
-    <ProductSlider v-if="shouldShowSlider" :items="recommendedProducts" />
+    <ProductSlider v-if="shouldShowSlider" :items="recommendedProducts" :item-gap="layoutSettings.gap" />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { ProductRecommendedProductsProps } from './types';
 import { productGetters } from '@plentymarkets/shop-api';
+import type { CSSProperties } from 'vue';
 
 const props = withDefaults(defineProps<ProductRecommendedProductsProps>(), { shouldLoad: undefined });
 
@@ -29,6 +30,17 @@ const firstCategoryId = categoryTree.value?.find((category) => category.type ===
 const categoryId = productGetters.getCategoryIds(currentProduct.value)[0] ?? '';
 
 const shouldRenderAfterUpdate = ref(false);
+
+const layoutSettings = computed(() => ({
+  gap: props.content.layout?.gap ?? 16,
+  marginLeft: props.content.layout?.marginLeft ?? 0,
+  marginRight: props.content.layout?.marginRight ?? 0,
+}));
+
+const blockStyle = computed<CSSProperties>(() => ({
+  marginLeft: `${layoutSettings.value.marginLeft}px`,
+  marginRight: `${layoutSettings.value.marginRight}px`,
+}));
 
 const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended(props.meta.uuid);
 

@@ -107,7 +107,44 @@
         <h2 data-testid="slider-button-group-title">{{ getEditorTranslation('layout-label') }}</h2>
       </template>
 
-      <EditorFullWidthToggle v-model="isFullWidth" :block-uuid="blockUuid" />
+      <div class="space-y-3 py-3">
+        <EditorFullWidthToggle v-model="isFullWidth" :block-uuid="blockUuid" />
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('gap-label') }}</UiFormLabel>
+          <input
+            v-model.number="recommendedBlock.layout.gap"
+            type="number"
+            min="0"
+            class="input-field"
+            data-testid="recommended-form-gap"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('margin-left-label') }}</UiFormLabel>
+            <input
+              v-model.number="recommendedBlock.layout.marginLeft"
+              type="number"
+              min="0"
+              class="input-field"
+              data-testid="recommended-form-margin-left"
+            />
+          </div>
+
+          <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('margin-right-label') }}</UiFormLabel>
+            <input
+              v-model.number="recommendedBlock.layout.marginRight"
+              type="number"
+              min="0"
+              class="input-field"
+              data-testid="recommended-form-margin-right"
+            />
+          </div>
+        </div>
+      </div>
     </UiAccordionItem>
   </div>
 </template>
@@ -146,8 +183,28 @@ const recommendedBlock = computed(
         categoryId: '',
         crossSellingRelation: 'Similar' as CrossSellingRelationType,
       },
+      layout: {
+        fullWidth: false,
+        gap: 16,
+        marginLeft: 0,
+        marginRight: 0,
+      },
     }) as ProductRecommendedProductsContent,
 );
+
+if (!recommendedBlock.value.layout) {
+  recommendedBlock.value.layout = {
+    fullWidth: false,
+    gap: 16,
+    marginLeft: 0,
+    marginRight: 0,
+  };
+} else {
+  if (recommendedBlock.value.layout.fullWidth === undefined) recommendedBlock.value.layout.fullWidth = false;
+  if (recommendedBlock.value.layout.gap === undefined) recommendedBlock.value.layout.gap = 16;
+  if (recommendedBlock.value.layout.marginLeft === undefined) recommendedBlock.value.layout.marginLeft = 0;
+  if (recommendedBlock.value.layout.marginRight === undefined) recommendedBlock.value.layout.marginRight = 0;
+}
 
 if (Object.keys(currentProduct.value).length) {
   recommendedBlock.value.source.itemId = productGetters.getItemId(currentProduct.value);
@@ -204,6 +261,17 @@ const selectCategoryTab = async () => {
 };
 </script>
 
+<style scoped>
+.input-field {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  background: #fff;
+}
+</style>
+
 <i18n lang="json">
 {
   "en": {
@@ -216,6 +284,9 @@ const selectCategoryTab = async () => {
     "product-id-placeholder": "Enter Product ID",
     "categories-label": "Categories",
     "layout-label": "Layout",
+    "gap-label": "Gap between products (px)",
+    "margin-left-label": "Margin left (px)",
+    "margin-right-label": "Margin right (px)",
     "cross-selling-relation-label": "Cross-selling relation",
     "cross-selling-relation-accessory": "Accessory",
     "cross-selling-relation-replacement": "Replacement part",
@@ -232,6 +303,9 @@ const selectCategoryTab = async () => {
     "product-id-label": "Product ID",
     "product-id-placeholder": "Enter Product ID",
     "categories-label": "Categories",
+    "gap-label": "Abstand zwischen Produkten (px)",
+    "margin-left-label": "Margin links (px)",
+    "margin-right-label": "Margin rechts (px)",
 
     "cross-selling-relation-label": "Cross-selling relation",
     "cross-selling-relation-accessory": "Accessory",

@@ -14,6 +14,7 @@
         :index="index"
         is-from-slider
         class="w-48 max-w-48 shrink-0"
+        :style="getItemStyle(index)"
       />
     </SfScrollable>
   </div>
@@ -38,17 +39,24 @@
 <script setup lang="ts">
 import { productGetters } from '@plentymarkets/shop-api';
 import { SfScrollable, SfLink } from '@storefront-ui/vue';
+import type { CSSProperties } from 'vue';
 import type { ProductSliderProps } from '~/components/ProductSlider/types';
 import { paths } from '~/utils/paths';
 
 const { showNetPrices } = useCart();
 const localePath = useLocalePath();
 
-defineProps<ProductSliderProps>();
+const props = withDefaults(defineProps<ProductSliderProps>(), {
+  itemGap: 16,
+});
 
 const { sliderRootRef, shouldLoadImage } = useSliderImagePreload({
   itemWidth: 192,
-  itemGap: 16,
+  itemGap: props.itemGap,
   preloadBuffer: 2,
+});
+
+const getItemStyle = (index: number): CSSProperties => ({
+  marginRight: index < (props.items?.length ?? 0) - 1 ? `${props.itemGap}px` : '0px',
 });
 </script>

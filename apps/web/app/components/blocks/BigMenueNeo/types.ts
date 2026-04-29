@@ -41,6 +41,8 @@ export type BigMenueNeoTopMenu = {
 
 export type BigMenueNeoLayout = {
   fullWidth: boolean;
+  marginLeft?: number;
+  marginRight?: number;
   topMenuAlignment: 'left' | 'center' | 'right';
   backgroundColor: string;
   textColor: string;

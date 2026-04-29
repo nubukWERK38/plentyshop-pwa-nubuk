@@ -106,6 +106,8 @@ const defaultContent = (): BigMenueNeoContent => ({
   ],
   layout: {
     fullWidth: true,
+    marginLeft: 0,
+    marginRight: 0,
     topMenuAlignment: 'left',
     backgroundColor: '#ffffff',
     textColor: '#111827',
@@ -153,6 +155,8 @@ const normalizedContent = computed<BigMenueNeoContent>(() => {
     })),
     layout: {
       fullWidth: input.layout?.fullWidth !== false,
+      marginLeft: input.layout?.marginLeft ?? 0,
+      marginRight: input.layout?.marginRight ?? 0,
       topMenuAlignment: input.layout?.topMenuAlignment || 'left',
       backgroundColor: input.layout?.backgroundColor || '#ffffff',
       textColor: input.layout?.textColor || '#111827',
@@ -203,6 +207,8 @@ const menuHasPanelContent = (menu: BigMenueNeoContent['menus'][number]) => {
 };
 
 const rootStyle = computed(() => ({
+  marginLeft: `${normalizedContent.value.layout.marginLeft ?? 0}px`,
+  marginRight: `${normalizedContent.value.layout.marginRight ?? 0}px`,
   '--bmn-bg': normalizedContent.value.layout.backgroundColor,
   '--bmn-text': normalizedContent.value.layout.textColor,
   '--bmn-panel-bg': normalizedContent.value.layout.panelBackgroundColor,
