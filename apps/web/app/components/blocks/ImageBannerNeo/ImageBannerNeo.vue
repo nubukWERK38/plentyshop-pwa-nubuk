@@ -10,6 +10,8 @@
       :loop="slides.length > 1"
       :pagination="paginationConfig"
       :navigation="navigationConfig"
+      :autoplay="autoplayConfig"
+      :speed="controls.autoplaySpeed"
       class="!z-0"
     >
       <SwiperSlide v-for="(slide, slideIndex) in slides" :key="slideIndex" class="!h-auto">
@@ -110,7 +112,7 @@
 
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import type { CSSProperties } from 'vue';
 import type { ImageBannerNeoProps, ImageBannerNeoSlide } from './types';
 import 'swiper/css';
@@ -182,6 +184,9 @@ const controls = computed(() => ({
   arrowsOnHover: props.content?.controls?.arrowsOnHover === true,
   height: props.content?.controls?.height ?? 420,
   fullWidth: props.content?.controls?.fullWidth !== false,
+  autoplay: props.content?.controls?.autoplay === true,
+  autoplayDelay: props.content?.controls?.autoplayDelay ?? 4000,
+  autoplaySpeed: props.content?.controls?.autoplaySpeed ?? 500,
 }));
 
 const sliderHeight = computed(() => `${controls.value.height}px`);
@@ -197,7 +202,19 @@ const swiperModules = computed(() => {
   if (shouldShowArrows.value) {
     modules.push(Navigation);
   }
+  if (controls.value.autoplay) {
+    modules.push(Autoplay);
+  }
   return modules;
+});
+
+const autoplayConfig = computed(() => {
+  if (!controls.value.autoplay) return false;
+  return {
+    delay: controls.value.autoplayDelay,
+    disableOnInteraction: false,
+    pauseOnMouseEnter: true,
+  };
 });
 
 const paginationConfig = computed(() => {

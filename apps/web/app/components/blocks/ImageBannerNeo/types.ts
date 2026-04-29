@@ -50,6 +50,9 @@ export type ImageBannerNeoContent = {
     arrowsOnHover: boolean;
     height: number;
     fullWidth: boolean;
+    autoplay: boolean;
+    autoplayDelay: number;
+    autoplaySpeed: number;
   };
 };
 

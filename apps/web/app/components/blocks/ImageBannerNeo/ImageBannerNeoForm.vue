@@ -486,6 +486,45 @@
             <span class="text-sm text-gray-500">px</span>
           </div>
         </div>
+
+        <div class="flex items-center justify-between">
+          <UiFormLabel>{{ getEditorTranslation('autoplay-label') }}</UiFormLabel>
+          <SfSwitch v-model="sliderContent.controls.autoplay" data-testid="image-banner-neo-autoplay" />
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('autoplay-delay-label') }}</UiFormLabel>
+          <div class="flex items-center gap-2">
+            <input
+              v-model.number="sliderContent.controls.autoplayDelay"
+              type="number"
+              min="500"
+              max="30000"
+              step="100"
+              :disabled="!sliderContent.controls.autoplay"
+              class="w-24 rounded-md border border-gray-300 px-2 py-1 text-sm disabled:opacity-40"
+              data-testid="image-banner-neo-autoplay-delay"
+            />
+            <span class="text-sm text-gray-500">ms</span>
+          </div>
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('autoplay-speed-label') }}</UiFormLabel>
+          <div class="flex items-center gap-2">
+            <input
+              v-model.number="sliderContent.controls.autoplaySpeed"
+              type="number"
+              min="100"
+              max="5000"
+              step="100"
+              :disabled="!sliderContent.controls.autoplay"
+              class="w-24 rounded-md border border-gray-300 px-2 py-1 text-sm disabled:opacity-40"
+              data-testid="image-banner-neo-autoplay-speed"
+            />
+            <span class="text-sm text-gray-500">ms</span>
+          </div>
+        </div>
       </div>
     </UiAccordionItem>
   </div>
@@ -625,13 +664,16 @@ const sliderContent = computed<ImageBannerNeoContent>(() => {
 
   // Ensure controls (in-place)
   if (!content.controls) {
-    content.controls = { showPagination: true, showArrows: true, arrowsOnHover: false, height: 420, fullWidth: true };
+    content.controls = { showPagination: true, showArrows: true, arrowsOnHover: false, height: 420, fullWidth: true, autoplay: false, autoplayDelay: 4000, autoplaySpeed: 500 };
   } else {
     if (content.controls.showPagination === undefined) content.controls.showPagination = true;
     if (content.controls.showArrows === undefined) content.controls.showArrows = true;
     if (content.controls.arrowsOnHover === undefined) content.controls.arrowsOnHover = false;
     if (content.controls.height === undefined) content.controls.height = 420;
     if (content.controls.fullWidth === undefined) content.controls.fullWidth = true;
+    if (content.controls.autoplay === undefined) content.controls.autoplay = false;
+    if (content.controls.autoplayDelay === undefined) content.controls.autoplayDelay = 4000;
+    if (content.controls.autoplaySpeed === undefined) content.controls.autoplaySpeed = 500;
   }
 
   return rawContent as ImageBannerNeoContent;
@@ -740,7 +782,10 @@ watch(
     "show-arrows-label": "Show modern arrows",
     "show-arrows-hover-label": "Show arrows only on hover",
     "full-width-label": "Full width (100vw)",
-    "height-label": "Slider height"
+    "height-label": "Slider height",
+    "autoplay-label": "Autoplay",
+    "autoplay-delay-label": "Autoplay delay (pause between slides)",
+    "autoplay-speed-label": "Transition speed"
   },
   "de": {
     "slides-label": "Slides",
@@ -788,7 +833,10 @@ watch(
     "show-arrows-label": "Moderne Pfeile anzeigen",
     "show-arrows-hover-label": "Pfeile nur bei Hover anzeigen",
     "full-width-label": "Volle Breite (100vw)",
-    "height-label": "Slider-Höhe"
+    "height-label": "Slider-Höhe",
+    "autoplay-label": "Autoplay",
+    "autoplay-delay-label": "Autoplay-Verzögerung (Pause zwischen Slides)",
+    "autoplay-speed-label": "Übergangsgeschwindigkeit"
   }
 }
 </i18n>
