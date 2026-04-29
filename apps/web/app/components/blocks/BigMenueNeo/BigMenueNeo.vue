@@ -346,17 +346,15 @@ onMounted(async () => {
   font-weight: 500;
   font-size: 0.985rem;
   line-height: 1.2rem;
-  padding: 0.9rem 0.62rem 0.78rem;
+  padding: 0.9rem 0.62rem 0.82rem;
   border-radius: 0.125rem;
-  border-bottom: 2px solid transparent;
   cursor: pointer;
-  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  transition: background-color 0.18s ease, color 0.18s ease;
 }
 
 .big-menue-neo__top-item:hover {
   background: #f8fafc;
   color: var(--bmn-hover-color);
-  border-bottom-color: var(--bmn-hover-border);
 }
 
 .big-menue-neo__top-item--active {
