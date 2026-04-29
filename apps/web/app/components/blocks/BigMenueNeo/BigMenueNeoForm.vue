@@ -50,11 +50,7 @@
                 </button>
               </div>
 
-              <div v-if="isTopMenuCollapsed(menu.id)" class="text-xs text-neutral-500 mb-2">
-                {{ getEditorTranslation('collapsed-hint-label') }}
-              </div>
-
-              <div v-show="!isTopMenuCollapsed(menu.id)">
+              <div v-if="!isTopMenuCollapsed(menu.id)">
                 <div class="space-y-3 mb-3">
                   <div>
                     <UiFormLabel class="mb-1">{{ getEditorTranslation('link-type-label') }}</UiFormLabel>
@@ -88,10 +84,25 @@
                 <h4 class="font-medium">{{ getEditorTranslation('submenus-label') }}</h4>
                 <draggable v-model="menu.columns" item-key="id" handle=".drag-handle" class="space-y-2">
                   <template #item="{ element: column, index: colIndex }">
-                    <div class="rounded border p-2">
+                    <div class="submenu-card rounded border p-2">
+                      <div class="mb-2">
+                        <div class="flex items-center gap-2">
+                          <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
+                          <span class="text-sm font-medium">{{ getEditorTranslation('submenu-label') }} {{ colIndex + 1 }}</span>
+                        </div>
+                        <p class="mt-1 pl-9 text-xs text-neutral-600">
+                          ({{ getSubmenuPreviewLabel(column.category) }})
+                        </p>
+                      </div>
+
                       <div class="flex items-center gap-2 mb-2">
-                        <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
-                        <span class="text-sm font-medium">{{ getEditorTranslation('submenu-label') }} {{ colIndex + 1 }}</span>
+                        <button
+                          type="button"
+                          class="rounded border px-2 py-1 text-xs"
+                          @click="toggleSubmenuCollapse(column.id)"
+                        >
+                          {{ isSubmenuCollapsed(column.id) ? getEditorTranslation('expand-label') : getEditorTranslation('collapse-label') }}
+                        </button>
                         <button
                           type="button"
                           class="ml-auto rounded border border-red-300 px-2 py-1 text-xs text-red-600"
@@ -101,6 +112,7 @@
                         </button>
                       </div>
 
+                      <div v-if="!isSubmenuCollapsed(column.id)" class="space-y-2">
                       <div class="space-y-2 mb-2">
                         <div>
                           <UiFormLabel class="mb-1">{{ getEditorTranslation('link-type-label') }}</UiFormLabel>
@@ -130,47 +142,52 @@
                         </div>
                       </div>
 
-                      <draggable v-model="column.items" item-key="id" handle=".drag-handle" class="space-y-2">
-                        <template #item="{ element: item, index: itemIndex }">
-                          <div class="rounded border p-2">
-                            <div class="flex items-center gap-2 mb-2">
-                              <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
-                              <span class="text-sm">{{ getEditorTranslation('level3-label') }} {{ itemIndex + 1 }}</span>
-                              <button
-                                type="button"
-                                class="ml-auto rounded border border-red-300 px-2 py-1 text-xs text-red-600"
-                                @click="removeLevel3(column, itemIndex)"
-                              >
-                                {{ getEditorTranslation('remove-label') }}
-                              </button>
-                            </div>
+                      <div class="level3-group space-y-2 rounded border border-slate-200 bg-slate-50 p-2">
+                        <p class="level3-group__title">{{ getEditorTranslation('level3-group-label') }}</p>
 
-                            <div class="space-y-2">
-                              <select v-model="item.category.linkType" class="input-field">
-                                <option value="category">{{ getEditorTranslation('link-type-category-label') }}</option>
-                                <option value="manualUrl">{{ getEditorTranslation('link-type-manual-url-label') }}</option>
-                              </select>
-                              <select v-if="item.category.linkType === 'category'" v-model.number="item.category.categoryId" class="input-field">
-                                <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
-                                <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
-                                  {{ category.label }}
-                                </option>
-                              </select>
-                              <SfInput
-                                v-else
-                                v-model="item.category.manualUrl"
-                                type="text"
-                                :placeholder="getEditorTranslation('link-placeholder')"
-                              />
-                              <SfInput v-model="item.category.customLabel" type="text" :placeholder="getEditorTranslation('custom-label')" />
-                            </div>
-                          </div>
-                        </template>
-                      </draggable>
+                        <draggable v-model="column.items" item-key="id" handle=".drag-handle" class="space-y-2">
+                          <template #item="{ element: item, index: itemIndex }">
+                            <div class="rounded border bg-white p-2">
+                              <div class="flex items-center gap-2 mb-2">
+                                <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
+                                <span class="text-sm">{{ getEditorTranslation('level3-label') }} {{ itemIndex + 1 }}</span>
+                                <button
+                                  type="button"
+                                  class="ml-auto rounded border border-red-300 px-2 py-1 text-xs text-red-600"
+                                  @click="removeLevel3(column, itemIndex)"
+                                >
+                                  {{ getEditorTranslation('remove-label') }}
+                                </button>
+                              </div>
 
-                      <button type="button" class="action-btn mt-2" @click="addLevel3(column)">
-                        {{ getEditorTranslation('add-level3-label') }}
-                      </button>
+                              <div class="space-y-2">
+                                <select v-model="item.category.linkType" class="input-field">
+                                  <option value="category">{{ getEditorTranslation('link-type-category-label') }}</option>
+                                  <option value="manualUrl">{{ getEditorTranslation('link-type-manual-url-label') }}</option>
+                                </select>
+                                <select v-if="item.category.linkType === 'category'" v-model.number="item.category.categoryId" class="input-field">
+                                  <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
+                                  <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
+                                    {{ category.label }}
+                                  </option>
+                                </select>
+                                <SfInput
+                                  v-else
+                                  v-model="item.category.manualUrl"
+                                  type="text"
+                                  :placeholder="getEditorTranslation('link-placeholder')"
+                                />
+                                <SfInput v-model="item.category.customLabel" type="text" :placeholder="getEditorTranslation('custom-label')" />
+                              </div>
+                            </div>
+                          </template>
+                        </draggable>
+
+                        <button type="button" class="action-btn mt-2" @click="addLevel3(column)">
+                          {{ getEditorTranslation('add-level3-label') }}
+                        </button>
+                      </div>
+                      </div>
                     </div>
                   </template>
                 </draggable>
@@ -184,10 +201,25 @@
                 <h4 class="font-medium">{{ getEditorTranslation('search-terms-label') }}</h4>
                 <draggable v-model="menu.searchTerms" item-key="id" handle=".drag-handle" class="space-y-2">
                   <template #item="{ element: term, index: termIndex }">
-                    <div class="rounded border p-2">
+                    <div class="submenu-card rounded border p-2">
+                      <div class="mb-2">
+                        <div class="flex items-center gap-2">
+                          <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
+                          <span class="text-sm">{{ getEditorTranslation('search-term-label') }} {{ termIndex + 1 }}</span>
+                        </div>
+                        <p class="mt-1 pl-9 text-xs text-neutral-600">
+                          ({{ getSearchTermPreviewLabel(term.label) }})
+                        </p>
+                      </div>
+
                       <div class="flex items-center gap-2 mb-2">
-                        <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
-                        <span class="text-sm">{{ getEditorTranslation('search-term-label') }} {{ termIndex + 1 }}</span>
+                        <button
+                          type="button"
+                          class="rounded border px-2 py-1 text-xs"
+                          @click="toggleSearchTermCollapse(term.id)"
+                        >
+                          {{ isSearchTermCollapsed(term.id) ? getEditorTranslation('expand-label') : getEditorTranslation('collapse-label') }}
+                        </button>
                         <button
                           type="button"
                           class="ml-auto rounded border border-red-300 px-2 py-1 text-xs text-red-600"
@@ -196,7 +228,8 @@
                           {{ getEditorTranslation('remove-label') }}
                         </button>
                       </div>
-                      <div class="space-y-2">
+
+                      <div v-if="!isSearchTermCollapsed(term.id)" class="space-y-2">
                         <SfInput v-model="term.label" type="text" :placeholder="getEditorTranslation('label-placeholder')" />
                         <SfInput v-model="term.link" type="text" :placeholder="getEditorTranslation('link-placeholder')" />
                       </div>
@@ -213,10 +246,25 @@
                 <h4 class="font-medium">{{ getEditorTranslation('brands-label') }}</h4>
                 <draggable v-model="menu.brands" item-key="id" handle=".drag-handle" class="space-y-2">
                   <template #item="{ element: brand, index: brandIndex }">
-                    <div class="rounded border p-2">
+                    <div class="submenu-card rounded border p-2">
+                      <div class="mb-2">
+                        <div class="flex items-center gap-2">
+                          <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
+                          <span class="text-sm">{{ getEditorTranslation('brand-label') }} {{ brandIndex + 1 }}</span>
+                        </div>
+                        <p class="mt-1 pl-9 text-xs text-neutral-600">
+                          ({{ getBrandPreviewLabel(brand.alt) }})
+                        </p>
+                      </div>
+
                       <div class="flex items-center gap-2 mb-2">
-                        <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
-                        <span class="text-sm">{{ getEditorTranslation('brand-label') }} {{ brandIndex + 1 }}</span>
+                        <button
+                          type="button"
+                          class="rounded border px-2 py-1 text-xs"
+                          @click="toggleBrandCollapse(brand.id)"
+                        >
+                          {{ isBrandCollapsed(brand.id) ? getEditorTranslation('expand-label') : getEditorTranslation('collapse-label') }}
+                        </button>
                         <button
                           type="button"
                           class="ml-auto rounded border border-red-300 px-2 py-1 text-xs text-red-600"
@@ -226,20 +274,22 @@
                         </button>
                       </div>
 
-                      <UiImagePicker
-                        class="big-menue-neo-form__brand-picker"
-                        :label="getEditorTranslation('brand-logo-label')"
-                        :image="brand.image"
-                        :placeholder="placeholderImg"
-                        dimensions="220 x 80"
-                        selected-image-type="desktop"
-                        @add="(payload) => handleBrandLogoAdd(payload, menu.id, brand.id)"
-                        @delete="deleteBrandLogo(menu.id, brand.id)"
-                      />
+                      <div v-if="!isBrandCollapsed(brand.id)">
+                        <UiImagePicker
+                          class="big-menue-neo-form__brand-picker"
+                          :label="getEditorTranslation('brand-logo-label')"
+                          :image="brand.image"
+                          :placeholder="placeholderImg"
+                          dimensions="220 x 80"
+                          selected-image-type="desktop"
+                          @add="(payload) => handleBrandLogoAdd(payload, menu.id, brand.id)"
+                          @delete="deleteBrandLogo(menu.id, brand.id)"
+                        />
 
-                      <div class="space-y-2 mt-2">
-                        <SfInput v-model="brand.alt" type="text" :placeholder="getEditorTranslation('brand-alt-placeholder')" />
-                        <SfInput v-model="brand.link" type="text" :placeholder="getEditorTranslation('link-placeholder')" />
+                        <div class="space-y-2 mt-2">
+                          <SfInput v-model="brand.alt" type="text" :placeholder="getEditorTranslation('brand-alt-placeholder')" />
+                          <SfInput v-model="brand.link" type="text" :placeholder="getEditorTranslation('link-placeholder')" />
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -518,6 +568,9 @@ const { placeholderImg } = usePickerHelper();
 const menusOpen = ref(true);
 const layoutOpen = ref(true);
 const collapsedTopMenus = ref<Record<string, boolean>>({});
+const collapsedSubmenus = ref<Record<string, boolean>>({});
+const collapsedSearchTerms = ref<Record<string, boolean>>({});
+const collapsedBrands = ref<Record<string, boolean>>({});
 
 const allCategoryEntries = ref<CategoryEntry[]>([]);
 const categoriesLoading = ref(false);
@@ -565,7 +618,7 @@ const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
     .sort((a, b) => a.label.localeCompare(b.label));
 });
 
-const getTopCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => {
+const getCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => {
   if (category.customLabel?.trim()) return category.customLabel.trim();
   if (category.linkType === 'manualUrl') return category.manualUrl?.trim() || getEditorTranslation('not-selected-label');
   if (!category.categoryId) return getEditorTranslation('not-selected-label');
@@ -574,6 +627,11 @@ const getTopCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => {
   const segments = option.label.split(' > ');
   return segments[segments.length - 1] || option.label;
 };
+
+const getTopCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => getCategoryPreviewLabel(category);
+const getSubmenuPreviewLabel = (category: BigMenueNeoCategoryLink) => getCategoryPreviewLabel(category);
+const getSearchTermPreviewLabel = (label: string) => label?.trim() || getEditorTranslation('not-selected-label');
+const getBrandPreviewLabel = (alt: string) => alt?.trim() || getEditorTranslation('not-selected-label');
 
 const createCategoryLink = () => ({
   linkType: 'category' as const,
@@ -704,15 +762,57 @@ const menuContent = computed<BigMenueNeoContent>(() => {
   return rawContent as BigMenueNeoContent;
 });
 
+const initializeCollapsedStates = () => {
+  for (const menu of menuContent.value.menus) {
+    if (collapsedTopMenus.value[menu.id] === undefined) {
+      collapsedTopMenus.value[menu.id] = true;
+    }
+
+    for (const column of menu.columns) {
+      if (collapsedSubmenus.value[column.id] === undefined) {
+        collapsedSubmenus.value[column.id] = true;
+      }
+    }
+
+    for (const term of menu.searchTerms) {
+      if (collapsedSearchTerms.value[term.id] === undefined) {
+        collapsedSearchTerms.value[term.id] = true;
+      }
+    }
+
+    for (const brand of menu.brands) {
+      if (collapsedBrands.value[brand.id] === undefined) {
+        collapsedBrands.value[brand.id] = true;
+      }
+    }
+  }
+};
+
 const addTopMenu = () => {
   const newMenu = createTopMenu();
   menuContent.value.menus.push(newMenu);
   collapsedTopMenus.value[newMenu.id] = true;
+  const firstColumn = newMenu.columns[0];
+  const firstSearchTerm = newMenu.searchTerms[0];
+  const firstBrand = newMenu.brands[0];
+  if (firstColumn) collapsedSubmenus.value[firstColumn.id] = true;
+  if (firstSearchTerm) collapsedSearchTerms.value[firstSearchTerm.id] = true;
+  if (firstBrand) collapsedBrands.value[firstBrand.id] = true;
 };
 const removeTopMenu = (index: number) => {
   if (menuContent.value.menus.length <= 1) return;
-  const menuId = menuContent.value.menus[index]?.id;
+  const menu = menuContent.value.menus[index];
+  const menuId = menu?.id;
   if (menuId) delete collapsedTopMenus.value[menuId];
+  for (const column of menu?.columns || []) {
+    delete collapsedSubmenus.value[column.id];
+  }
+  for (const term of menu?.searchTerms || []) {
+    delete collapsedSearchTerms.value[term.id];
+  }
+  for (const brand of menu?.brands || []) {
+    delete collapsedBrands.value[brand.id];
+  }
   menuContent.value.menus.splice(index, 1);
 };
 
@@ -721,17 +821,30 @@ const toggleTopMenuCollapse = (menuId: string) => {
   collapsedTopMenus.value[menuId] = !collapsedTopMenus.value[menuId];
 };
 
-watchEffect(() => {
-  for (const menu of menuContent.value.menus) {
-    if (collapsedTopMenus.value[menu.id] === undefined) {
-      collapsedTopMenus.value[menu.id] = true;
-    }
-  }
-});
+const isSubmenuCollapsed = (submenuId: string) => Boolean(collapsedSubmenus.value[submenuId]);
+const toggleSubmenuCollapse = (submenuId: string) => {
+  collapsedSubmenus.value[submenuId] = !collapsedSubmenus.value[submenuId];
+};
 
-const addColumn = (menu: BigMenueNeoTopMenu) => menu.columns.push(createColumn());
+const isSearchTermCollapsed = (termId: string) => Boolean(collapsedSearchTerms.value[termId]);
+const toggleSearchTermCollapse = (termId: string) => {
+  collapsedSearchTerms.value[termId] = !collapsedSearchTerms.value[termId];
+};
+
+const isBrandCollapsed = (brandId: string) => Boolean(collapsedBrands.value[brandId]);
+const toggleBrandCollapse = (brandId: string) => {
+  collapsedBrands.value[brandId] = !collapsedBrands.value[brandId];
+};
+
+const addColumn = (menu: BigMenueNeoTopMenu) => {
+  const column = createColumn();
+  menu.columns.push(column);
+  collapsedSubmenus.value[column.id] = true;
+};
 const removeColumn = (menu: BigMenueNeoTopMenu, index: number) => {
   if (menu.columns.length <= 1) return;
+  const column = menu.columns[index];
+  if (column) delete collapsedSubmenus.value[column.id];
   menu.columns.splice(index, 1);
 };
 
@@ -740,11 +853,27 @@ const removeLevel3 = (column: BigMenueNeoLevel2Item, index: number) => {
   column.items.splice(index, 1);
 };
 
-const addSearchTerm = (menu: BigMenueNeoTopMenu) => menu.searchTerms.push(createSearchTerm());
-const removeSearchTerm = (menu: BigMenueNeoTopMenu, index: number) => menu.searchTerms.splice(index, 1);
+const addSearchTerm = (menu: BigMenueNeoTopMenu) => {
+  const term = createSearchTerm();
+  menu.searchTerms.push(term);
+  collapsedSearchTerms.value[term.id] = true;
+};
+const removeSearchTerm = (menu: BigMenueNeoTopMenu, index: number) => {
+  const termId = menu.searchTerms[index]?.id;
+  if (termId) delete collapsedSearchTerms.value[termId];
+  menu.searchTerms.splice(index, 1);
+};
 
-const addBrand = (menu: BigMenueNeoTopMenu) => menu.brands.push(createBrand());
-const removeBrand = (menu: BigMenueNeoTopMenu, index: number) => menu.brands.splice(index, 1);
+const addBrand = (menu: BigMenueNeoTopMenu) => {
+  const brand = createBrand();
+  menu.brands.push(brand);
+  collapsedBrands.value[brand.id] = true;
+};
+const removeBrand = (menu: BigMenueNeoTopMenu, index: number) => {
+  const brandId = menu.brands[index]?.id;
+  if (brandId) delete collapsedBrands.value[brandId];
+  menu.brands.splice(index, 1);
+};
 
 const handleBrandLogoAdd = (
   { image }: { image: string; name: string; type: string },
@@ -765,6 +894,7 @@ const deleteBrandLogo = (menuId: string, brandId: string) => {
 };
 
 onMounted(async () => {
+  initializeCollapsedStates();
   await loadAllCategories();
 });
 </script>
@@ -819,6 +949,19 @@ onMounted(async () => {
   margin: 0.2rem 0;
 }
 
+.submenu-card {
+  background: #fcfcfd;
+}
+
+.level3-group__title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 .big-menue-neo-form__brand-picker :deep(.flex.items-start.gap-4) {
   display: block;
 }
@@ -858,6 +1001,7 @@ onMounted(async () => {
     "collapsed-hint-label": "Top-Kategorie ist zugeklappt",
     "submenus-label": "Submenues",
     "submenu-label": "Submenue",
+    "level3-group-label": "Zugehoerige Ebene-3-Menues",
     "level3-label": "Ebene 3",
     "search-terms-label": "Haeufige Suchbegriffe",
     "search-term-label": "Suchbegriff",
@@ -909,6 +1053,7 @@ onMounted(async () => {
     "collapsed-hint-label": "Top-Kategorie ist zugeklappt",
     "submenus-label": "Submenues",
     "submenu-label": "Submenue",
+    "level3-group-label": "Zugehoerige Ebene-3-Menues",
     "level3-label": "Ebene 3",
     "search-terms-label": "Haeufige Suchbegriffe",
     "search-term-label": "Suchbegriff",
