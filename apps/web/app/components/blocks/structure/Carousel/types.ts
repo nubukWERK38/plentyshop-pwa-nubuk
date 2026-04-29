@@ -15,6 +15,12 @@ export type CarouselStructureProps = {
       color: string;
       displayArrows: boolean;
       displayIndicators?: boolean;
+      autoplay?: boolean;
+      autoplayDelay?: number;
+      loop?: boolean;
+      transitionSpeed?: number;
+      globalBackgroundColor?: string;
+      globalTextColor?: string;
     };
     layout?: {
       fullWidth?: boolean;

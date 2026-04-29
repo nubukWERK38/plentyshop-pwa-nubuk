@@ -331,6 +331,8 @@ onMounted(async () => {
   color: var(--bmn-text);
   background: var(--bmn-bg);
   position: relative;
+  border-bottom: 1px solid var(--cidark, #1f2937);
+  margin-bottom: 30px;
 }
 
 .big-menue-neo__container {
@@ -347,7 +349,6 @@ onMounted(async () => {
   flex-wrap: nowrap;
   align-items: center;
   gap: 0.1rem;
-  border-bottom: 1px solid #e5e7eb;
   padding: 0 0.75rem;
   min-height: 3.25rem;
   overflow-x: auto;

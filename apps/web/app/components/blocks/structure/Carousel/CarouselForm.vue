@@ -30,11 +30,88 @@
         </template>
 
         <div class="controls">
+          <div class="mb-4 mt-4 flex items-center justify-between">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('display-arrows-label') }}</UiFormLabel>
+            <SfSwitch v-model="controls.displayArrows" />
+          </div>
+
+          <div class="mb-4 flex items-center justify-between">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('autoplay-label') }}</UiFormLabel>
+            <SfSwitch v-model="controls.autoplay" />
+          </div>
+
+          <div class="mb-4 flex items-center justify-between">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('loop-label') }}</UiFormLabel>
+            <SfSwitch v-model="controls.loop" />
+          </div>
+
+          <div class="mb-4">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('autoplay-delay-label') }}</UiFormLabel>
+            <input
+              v-model.number="controls.autoplayDelay"
+              type="number"
+              min="800"
+              step="100"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              data-testid="carousel-autoplay-delay"
+            />
+          </div>
+
+          <div class="mb-4">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('transition-speed-label') }}</UiFormLabel>
+            <input
+              v-model.number="controls.transitionSpeed"
+              type="number"
+              min="100"
+              step="50"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              data-testid="carousel-transition-speed"
+            />
+          </div>
+
           <div class="mb-6 mt-4">
             <UiFormLabel class="mb-1">{{ getEditorTranslation('controls-color-label') }}</UiFormLabel>
             <EditorColorPicker v-model="controls.color" class="w-full">
               <template #trigger="{ color, toggle }">
                 <SfInput v-model="controls.color" type="text">
+                  <template #suffix>
+                    <button
+                      type="button"
+                      class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                      :style="{ backgroundColor: color }"
+                      @mousedown.stop
+                      @click.stop="toggle"
+                    />
+                  </template>
+                </SfInput>
+              </template>
+            </EditorColorPicker>
+          </div>
+
+          <div class="mb-6">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('global-bg-color-label') }}</UiFormLabel>
+            <EditorColorPicker v-model="controls.globalBackgroundColor" class="w-full">
+              <template #trigger="{ color, toggle }">
+                <SfInput v-model="controls.globalBackgroundColor" type="text">
+                  <template #suffix>
+                    <button
+                      type="button"
+                      class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                      :style="{ backgroundColor: color }"
+                      @mousedown.stop
+                      @click.stop="toggle"
+                    />
+                  </template>
+                </SfInput>
+              </template>
+            </EditorColorPicker>
+          </div>
+
+          <div class="mb-2">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('global-text-color-label') }}</UiFormLabel>
+            <EditorColorPicker v-model="controls.globalTextColor" class="w-full">
+              <template #trigger="{ color, toggle }">
+                <SfInput v-model="controls.globalTextColor" type="text">
                   <template #suffix>
                     <button
                       type="button"
@@ -67,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { SfInput } from '@storefront-ui/vue';
+import { SfInput, SfSwitch } from '@storefront-ui/vue';
 import type { CarouselStructureProps, SlideBlock } from './types';
 
 const props = defineProps<{ uuid?: string }>();
@@ -111,7 +188,26 @@ const { isFullWidth } = useFullWidthToggleForConfig(
   { fullWidth: true },
 );
 
-const controls = computed(() => carouselStructure.value.configuration?.controls ?? { color: '', displayArrows: true });
+const controls = computed(() => carouselStructure.value.configuration?.controls ?? { color: '', displayArrows: false });
+
+const ensureControlDefaults = () => {
+  const cfg = carouselStructure.value.configuration;
+  if (!cfg.controls) {
+    cfg.controls = { color: '', displayArrows: false };
+  }
+
+  if (cfg.controls.displayIndicators === undefined) cfg.controls.displayIndicators = true;
+  if (cfg.controls.autoplay === undefined) cfg.controls.autoplay = true;
+  if (cfg.controls.autoplayDelay === undefined) cfg.controls.autoplayDelay = 4000;
+  if (cfg.controls.loop === undefined) cfg.controls.loop = true;
+  if (cfg.controls.transitionSpeed === undefined) cfg.controls.transitionSpeed = 500;
+  if (cfg.controls.globalBackgroundColor === undefined) cfg.controls.globalBackgroundColor = '';
+  if (cfg.controls.globalTextColor === undefined) cfg.controls.globalTextColor = '';
+};
+
+onMounted(() => {
+  ensureControlDefaults();
+});
 
 const currentActiveSlideIndex = computed(() => activeSlideIndex.value[resolvedUuid.value]);
 
@@ -220,7 +316,14 @@ input[type='number'] {
     "slide-label": "Slide",
     "layout-label": "Layout",
     "controls-group-label": "Controls",
+    "display-arrows-label": "Show Arrows",
+    "autoplay-label": "Auto Slide",
+    "loop-label": "Continuous Loop",
+    "autoplay-delay-label": "Auto Slide Delay (ms)",
+    "transition-speed-label": "Slide Transition Speed (ms)",
     "controls-color-label": "Slider Controls Colour",
+    "global-bg-color-label": "Global Slide Background",
+    "global-text-color-label": "Global Slide Text Colour",
     "full-width": "Enable full width",
     "full-width-tooltip": "Full width is only available for top-level blocks. This option is disabled for nested blocks (e.g., inside MultiGrid)."
   },
@@ -228,7 +331,14 @@ input[type='number'] {
     "slide-label": "Slide",
     "layout-label": "Layout",
     "controls-group-label": "Controls",
+    "display-arrows-label": "Pfeile anzeigen",
+    "autoplay-label": "Automatisch sliden",
+    "loop-label": "Dauerschleife",
+    "autoplay-delay-label": "Auto-Slide Intervall (ms)",
+    "transition-speed-label": "Uebergangsgeschwindigkeit (ms)",
     "controls-color-label": "Slider Controls Colour",
+    "global-bg-color-label": "Globaler Hintergrund",
+    "global-text-color-label": "Globale Schriftfarbe",
     "full-width": "Enable full width",
     "full-width-tooltip": "Full width is only available for top-level blocks. This option is disabled for nested blocks (e.g., inside MultiGrid)."
   }

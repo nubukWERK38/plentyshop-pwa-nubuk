@@ -93,7 +93,13 @@ const gridGapClass = computed(() => gapClassMap[configuration.layout?.gap || 'M'
 const defaultMarginBottom = computed(() => getVerticalPixels(blockSize.value));
 
 const gridInlineStyle = computed(() => ({
-  backgroundColor: configuration.layout?.backgroundColor ?? 'transparent',
+  background:
+    configuration.layout?.gradientEnabled === true
+      ? configuration.layout.gradientType === 'radial'
+        ? `radial-gradient(${configuration.layout.gradientStartColor || '#ffffff'}, ${configuration.layout.gradientEndColor || '#f3f4f6'})`
+        : `linear-gradient(${configuration.layout?.gradientAngle ?? 180}deg, ${configuration.layout.gradientStartColor || '#ffffff'}, ${configuration.layout.gradientEndColor || '#f3f4f6'})`
+      : undefined,
+  backgroundColor: configuration.layout?.gradientEnabled ? undefined : configuration.layout?.backgroundColor ?? 'transparent',
   marginTop: configuration.layout?.marginTop !== undefined ? `${configuration.layout.marginTop}px` : '0px',
   marginBottom:
     configuration.layout?.marginBottom !== undefined

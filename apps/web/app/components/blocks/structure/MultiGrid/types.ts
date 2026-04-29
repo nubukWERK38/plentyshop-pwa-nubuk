@@ -5,6 +5,11 @@ interface MultiGridLayout {
   marginBottom?: number;
   backgroundColor?: string;
   gap?: string;
+  gradientEnabled?: boolean;
+  gradientType?: 'linear' | 'radial';
+  gradientStartColor?: string;
+  gradientEndColor?: string;
+  gradientAngle?: number;
 }
 
 export type MultiGridProps = {
@@ -49,6 +54,11 @@ export type ColumnBlock = Block & {
       marginTop?: number;
       marginBottom?: number;
       backgroundColor?: string;
+      gradientEnabled?: boolean;
+      gradientType?: 'linear' | 'radial';
+      gradientStartColor?: string;
+      gradientEndColor?: string;
+      gradientAngle?: number;
       fullWidth?: boolean;
     };
   };

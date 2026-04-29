@@ -1,6 +1,6 @@
 <template>
   <div :style="utilityBarStyle">
-    <header class="relative w-full md:sticky md:shadow-md z-10">
+    <header class="relative w-full md:sticky z-10">
       <div
         v-if="viewport.isLessThan('md')"
         class="flex items-center w-full"

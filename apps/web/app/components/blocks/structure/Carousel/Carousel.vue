@@ -3,12 +3,14 @@
     <Swiper
       :id="`carousel-${index}`"
       :key="visibleContent.length"
-      :modules="enableModules ? [Pagination, Navigation] : []"
+      :modules="swiperModules"
       :slides-per-view="1"
       v-bind="carouselProps"
       :aria-roledescription="t('homepage.banner.ariaRoleDescriptionCarousel')"
       :aria-label="t('homepage.banner.ariaRoleDescriptionCarousel')"
-      :loop="true"
+      :loop="loopEnabled"
+      :speed="transitionSpeed"
+      :autoplay="autoplayConfig"
       :pagination="paginationConfig"
       :navigation="navigationConfig"
       class="!z-0 !w-full !max-h-[85vh]"
@@ -28,13 +30,15 @@
         v-bind="carouselProps"
         :aria-roledescription="t('homepage.banner.ariaRoleDescriptionSlide')"
       >
-        <slot
-          name="content"
-          :content-block="block"
-          :index="getSlideAdjustedIndex(slideIndex)"
-          :slide-index="slideIndex"
-          :lazy-loading="slideIndex > 0 ? 'lazy' : 'eager'"
-        />
+        <div class="carousel__slide-shell" :style="slideShellStyle">
+          <slot
+            name="content"
+            :content-block="block"
+            :index="getSlideAdjustedIndex(slideIndex)"
+            :slide-index="slideIndex"
+            :lazy-loading="slideIndex > 0 ? 'lazy' : 'eager'"
+          />
+        </div>
       </SwiperSlide>
       <div
         v-if="enableModules"
@@ -43,27 +47,27 @@
     </Swiper>
 
     <button
-      v-if="enableModules && handleArrows()"
+      v-if="showNavigationArrows"
       :key="`prev-${index}`"
       type="button"
       :class="`swiper-button-prev swiper-button-prev-${index}`"
       :aria-controls="`carousel-${index}`"
       :aria-label="t('homepage.banner.ariaLabelPreviousSlide')"
       :style="{
-        color: configuration.controls.color + ' !important',
+        color: controlsConfig.color + ' !important',
         '--swiper-navigation-size': navigationSize,
         visibility: swiperHeight === 0 ? 'hidden' : 'visible',
       }"
     />
     <button
-      v-if="enableModules && handleArrows()"
+      v-if="showNavigationArrows"
       :key="`next-${index}`"
       type="button"
       :class="`swiper-button-next swiper-button-next-${index}`"
       :aria-controls="`carousel-${index}`"
       :aria-label="t('homepage.banner.ariaLabelNextSlide')"
       :style="{
-        color: configuration.controls.color + ' !important',
+        color: controlsConfig.color + ' !important',
         '--swiper-navigation-size': navigationSize,
         visibility: swiperHeight === 0 ? 'hidden' : 'visible',
       }"
@@ -73,7 +77,7 @@
 
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import type { CarouselStructureProps, SlideBlock } from './types';
 import type { Swiper as SwiperType } from 'swiper';
 
@@ -92,6 +96,23 @@ const navigationSize = computed(() => {
 const visibleContent = computed(() => {
   return (content as SlideBlock[]).filter((slide) => slide.configuration?.visible !== false);
 });
+
+const controlsConfig = computed(() => ({
+  color: configuration?.controls?.color || 'rgb(var(--colors-primary-500))',
+  displayArrows: configuration?.controls?.displayArrows ?? false,
+  displayIndicators: configuration?.controls?.displayIndicators !== false,
+  autoplay: configuration?.controls?.autoplay ?? true,
+  autoplayDelay: configuration?.controls?.autoplayDelay ?? 4000,
+  loop: configuration?.controls?.loop ?? true,
+  transitionSpeed: configuration?.controls?.transitionSpeed ?? 500,
+  globalBackgroundColor: configuration?.controls?.globalBackgroundColor || '',
+  globalTextColor: configuration?.controls?.globalTextColor || '',
+}));
+
+const slideShellStyle = computed(() => ({
+  backgroundColor: controlsConfig.value.globalBackgroundColor || undefined,
+  color: controlsConfig.value.globalTextColor || undefined,
+}));
 
 const getActualIndex = (visibleIndex: number): number => {
   const contentArray = content as SlideBlock[];
@@ -120,29 +141,47 @@ const getVisibleIndex = (actualIndex: number): number => {
   return visibleIndex;
 };
 
-const handleArrows = () => {
-  const viewport = useViewport();
-  return !viewport.isLessThan('md');
-};
-
 const enableModules = computed(() => visibleContent.value.length > 1);
 let slider: SwiperType | null = null;
+const viewport = useViewport();
+
+const showNavigationArrows = computed(
+  () => enableModules.value && controlsConfig.value.displayArrows && !viewport.isLessThan('md'),
+);
+const loopEnabled = computed(() => enableModules.value && controlsConfig.value.loop);
+const transitionSpeed = computed(() => Math.max(100, controlsConfig.value.transitionSpeed));
+const autoplayConfig = computed(() =>
+  enableModules.value && controlsConfig.value.autoplay
+    ? {
+        delay: Math.max(800, controlsConfig.value.autoplayDelay),
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true,
+      }
+    : false,
+);
+const swiperModules = computed(() => {
+  if (!enableModules.value) return [];
+  const modules = [Pagination] as Array<typeof Pagination | typeof Navigation | typeof Autoplay>;
+  if (showNavigationArrows.value) modules.push(Navigation);
+  if (controlsConfig.value.autoplay) modules.push(Autoplay);
+  return modules;
+});
 
 const paginationConfig = computed(() => {
-  return enableModules.value && configuration.controls.color && configuration.controls.displayIndicators !== false
+  return enableModules.value && controlsConfig.value.color && controlsConfig.value.displayIndicators
     ? {
         el: `.swiper-pagination-${index}`,
         clickable: true,
         bulletActiveClass: 'swiper-pagination-bullet-active !bg-primary-500',
         renderBullet(index: number, className: string) {
-          return `<span key="dot-${index}" class="${className}" style="background-color: ${configuration.controls.color}!important;"></span>`;
+          return `<span key="dot-${index}" class="${className}" style="background-color: ${controlsConfig.value.color}!important;"></span>`;
         },
       }
     : false;
 });
 
 const navigationConfig = computed(() => {
-  return enableModules.value
+  return showNavigationArrows.value
     ? {
         nextEl: `.swiper-button-next-${index}`,
         prevEl: `.swiper-button-prev-${index}`,
@@ -238,7 +277,7 @@ watch(
   },
 );
 watch(
-  () => configuration.controls.color,
+  () => controlsConfig.value.color,
   (newColor, oldColor) => {
     if (slider && !slider.destroyed && newColor !== oldColor) {
       slider.pagination.render();
@@ -251,3 +290,10 @@ watch(
 <style src="./styles/navigation.min.css"></style>
 <style src="./styles/pagination.min.css"></style>
 <style src="./styles/swiper.min.css"></style>
+
+<style scoped>
+.carousel__slide-shell {
+  width: 100%;
+  min-height: 100%;
+}
+</style>
