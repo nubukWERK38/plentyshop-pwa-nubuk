@@ -24,11 +24,11 @@
         <div class="big-menue-neo__panel-main">
           <div class="big-menue-neo__columns">
             <article v-for="column in activeColumns" :key="column.id" class="big-menue-neo__column">
-              <NuxtLink :to="resolveCategoryTo(column.category)" class="big-menue-neo__column-title">
+              <NuxtLink v-if="isRenderableCategoryLink(column.category)" :to="resolveCategoryTo(column.category)" class="big-menue-neo__column-title">
                 {{ getCategoryLabel(column.category) }}
               </NuxtLink>
 
-              <ul class="big-menue-neo__level-3">
+              <ul v-if="column.items.length > 0" class="big-menue-neo__level-3">
                 <li v-for="item in column.items" :key="item.id">
                   <NuxtLink :to="resolveCategoryTo(item.category)" class="big-menue-neo__link">
                     {{ getCategoryLabel(item.category) }}
@@ -176,25 +176,28 @@ const activeMenu = computed(() => {
   if (activeMenuIndex.value === null) return null;
   return normalizedContent.value.menus[activeMenuIndex.value] || null;
 });
-const isLinkConfigured = (category: BigMenueNeoCategoryLink) =>
-  (category.linkType === 'category' && category.categoryId !== null) ||
-  (category.linkType === 'manualUrl' && !!category.manualUrl?.trim());
+const isRenderableCategoryLink = (category: BigMenueNeoCategoryLink) =>
+  !!category.customLabel?.trim() ||
+  (category.linkType === 'manualUrl' && !!category.manualUrl?.trim()) ||
+  (category.linkType === 'category' && category.categoryId !== null);
 
 const activeColumns = computed(() => {
   const columns = activeMenu.value?.columns || [];
   return columns
-    .filter((col) => isLinkConfigured(col.category))
-    .map((col) => ({
-      ...col,
-      items: col.items.filter((item) => isLinkConfigured(item.category)),
-    }));
+    .map((column) => ({
+      ...column,
+      items: (column.items || []).filter((item) => isRenderableCategoryLink(item.category)),
+    }))
+    .filter((column) => isRenderableCategoryLink(column.category) || column.items.length > 0);
 });
-const activeSearchTerms = computed(() => activeMenu.value?.searchTerms || []);
+const activeSearchTerms = computed(() => (activeMenu.value?.searchTerms || []).filter((term) => !!term.label?.trim()));
 const activeBrands = computed(() => activeMenu.value?.brands || []);
 
 const menuHasPanelContent = (menu: BigMenueNeoContent['menus'][number]) => {
-  const hasColumns = (menu.columns || []).some((col) => isLinkConfigured(col.category));
-  const hasSearchTerms = (menu.searchTerms || []).length > 0;
+  const hasColumns = (menu.columns || []).some(
+    (column) => isRenderableCategoryLink(column.category) || (column.items || []).some((item) => isRenderableCategoryLink(item.category)),
+  );
+  const hasSearchTerms = (menu.searchTerms || []).some((term) => !!term.label?.trim());
   const hasBrands = (menu.brands || []).length > 0;
   return hasColumns || hasSearchTerms || hasBrands;
 };
@@ -414,6 +417,9 @@ onMounted(async () => {
   box-shadow: 0 14px 30px rgba(17, 24, 39, 0.16);
   position: relative;
   z-index: 40;
+  max-height: min(78vh, calc(100dvh - 7.5rem));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .big-menue-neo__panel-main {

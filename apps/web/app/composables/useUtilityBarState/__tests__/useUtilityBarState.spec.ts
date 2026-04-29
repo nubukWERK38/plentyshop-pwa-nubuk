@@ -12,6 +12,9 @@ describe('useUtilityBarState', () => {
       paddingBottom: 20,
       paddingLeft: 40,
       paddingRight: 40,
+      fullWidth: true,
+      logoHeight: 40,
+      searchWidth: 620,
     });
     expect(content.value.sectionOrder?.sections).toEqual(['logo', 'search', 'actions']);
     expect(content.value.actions?.order).toEqual(['language', 'wishlist', 'cart', 'account']);
@@ -59,6 +62,9 @@ describe('useUtilityBarState', () => {
       paddingBottom: 20,
       paddingLeft: 40,
       paddingRight: 40,
+      fullWidth: true,
+      logoHeight: 40,
+      searchWidth: 620,
     });
     expect(content.value.sectionOrder?.sections).toEqual(['actions', 'logo', 'search']);
     expect(content.value.sectionVisibility).toEqual({

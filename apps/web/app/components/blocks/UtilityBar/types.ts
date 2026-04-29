@@ -3,6 +3,9 @@ export type SpacingSettings = {
   paddingBottom?: number;
   paddingLeft?: number;
   paddingRight?: number;
+  fullWidth?: boolean;
+  logoHeight?: number;
+  searchWidth?: number;
 };
 
 export type LogoSettings = {

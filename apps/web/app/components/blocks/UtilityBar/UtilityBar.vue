@@ -1,5 +1,5 @@
 <template>
-  <div :style="headerPaletteStyle">
+  <div :style="utilityBarStyle">
     <header class="relative w-full md:sticky md:shadow-md z-10">
       <div
         v-if="viewport.isLessThan('md')"
@@ -57,7 +57,8 @@
 
       <div
         v-else
-        class="flex items-center flex-nowrap w-full border-0 border-neutral-200"
+        class="utility-bar__desktop-inner flex items-center flex-nowrap w-full border-0 border-neutral-200"
+        :class="{ 'utility-bar__desktop-inner--boxed': !isUtilityBarFullWidth }"
         :style="{ backgroundColor: headerBackgroundColor, ...paddingStyles }"
         data-testid="navbar-top-desktop"
       >
@@ -89,7 +90,9 @@
           <div
             ref="iconSearchContainerRef"
             :style="getSectionColumnStyle('search')"
-            :class="isFullSearchMode || isIconSearchExpanded || isSearchClosing ? '' : 'flex-none w-10 shrink-0'"
+            :class="[
+              isFullSearchMode || isIconSearchExpanded || isSearchClosing ? 'utility-bar__search-container--expanded' : 'flex-none w-10 shrink-0',
+            ]"
           >
             <template v-if="isFullSearchMode">
               <UiSearch />
@@ -392,6 +395,20 @@ const {
 const iconColor = computed(() => content.value?.color?.iconColor || '');
 const headerBackgroundColor = computed(() => content.value?.color?.backgroundColor || '');
 const headerPaletteStyle = useGenerateTailwindPalette('header', headerBackgroundColor);
+const logoHeight = computed(() => {
+  const value = content.value?.layout?.logoHeight ?? 40;
+  return Math.max(20, Math.min(120, value));
+});
+const searchWidth = computed(() => {
+  const value = content.value?.layout?.searchWidth ?? 620;
+  return Math.max(200, Math.min(1200, value));
+});
+const isUtilityBarFullWidth = computed(() => content.value?.layout?.fullWidth !== false);
+const utilityBarStyle = computed(() => ({
+  ...(unref(headerPaletteStyle) as Record<string, string>),
+  '--utility-logo-height': `${logoHeight.value}px`,
+  '--utility-search-width': `${searchWidth.value}px`,
+}));
 
 const NuxtLink = resolveComponent('NuxtLink');
 const { localeCodes } = useI18n();
@@ -528,7 +545,24 @@ const navigateToLogin = () => {
   min-width: 172px;
 }
 
+.utility-bar__desktop-inner--boxed {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.utility-bar__search-container--expanded {
+  width: 100%;
+  max-width: var(--utility-search-width);
+}
+
 #blockified-logo :deep(img) {
   max-width: inherit !important;
+  height: var(--utility-logo-height);
+  width: auto;
+}
+
+#blockified-logo-mobile :deep(img) {
+  height: var(--utility-logo-height);
+  width: auto;
 }
 </style>

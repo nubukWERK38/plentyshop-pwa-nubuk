@@ -11,6 +11,9 @@ export const DEFAULT_LAYOUT: SpacingSettings = {
   paddingBottom: 20,
   paddingLeft: 40,
   paddingRight: 40,
+  fullWidth: true,
+  logoHeight: 40,
+  searchWidth: 620,
 };
 
 export const DEFAULT_COLOR: UtilityBarColor = {

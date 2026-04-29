@@ -9,6 +9,35 @@
     </template>
 
     <div class="space-y-4 py-4">
+      <div class="flex items-center justify-between">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('full-width-label') }}</UiFormLabel>
+        <SfSwitch v-model="fullWidth" />
+      </div>
+
+      <div>
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('logo-height-label') }}</UiFormLabel>
+        <input
+          v-model.number="logoHeight"
+          type="number"
+          min="20"
+          max="120"
+          class="w-full rounded border border-gray-300 px-2 py-2"
+          data-testid="logo-height"
+        />
+      </div>
+
+      <div>
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('search-width-label') }}</UiFormLabel>
+        <input
+          v-model.number="searchWidth"
+          type="number"
+          min="200"
+          max="1200"
+          class="w-full rounded border border-gray-300 px-2 py-2"
+          data-testid="search-width"
+        />
+      </div>
+
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('header-bg-color-label') }}</UiFormLabel>
         <EditorColorPicker v-model="headerBackgroundColor" class="w-full">
@@ -91,6 +120,7 @@
 <script setup lang="ts">
 import {
   SfInput,
+  SfSwitch,
   SfIconArrowDownward,
   SfIconArrowUpward,
   SfIconArrowBack,
@@ -130,6 +160,29 @@ const iconColor = computed({
   },
 });
 
+const fullWidth = computed({
+  get: () => content.value.layout?.fullWidth !== false,
+  set: (newValue: boolean) => {
+    content.value = { ...content.value, layout: { ...content.value.layout, fullWidth: newValue } };
+  },
+});
+
+const logoHeight = computed({
+  get: () => content.value.layout?.logoHeight ?? 40,
+  set: (newValue: number) => {
+    const next = Number.isFinite(newValue) ? Math.max(20, Math.min(120, newValue)) : 40;
+    content.value = { ...content.value, layout: { ...content.value.layout, logoHeight: next } };
+  },
+});
+
+const searchWidth = computed({
+  get: () => content.value.layout?.searchWidth ?? 620,
+  set: (newValue: number) => {
+    const next = Number.isFinite(newValue) ? Math.max(200, Math.min(1200, newValue)) : 620;
+    content.value = { ...content.value, layout: { ...content.value.layout, searchWidth: next } };
+  },
+});
+
 const paddingTop = computed({
   get: () => content.value.layout?.paddingTop ?? 0,
   set: (newValue: number) => {
@@ -163,12 +216,18 @@ const paddingRight = computed({
 {
   "en": {
     "layout-label": "Layout",
+    "full-width-label": "Use Full Width",
+    "logo-height-label": "Logo Height (px)",
+    "search-width-label": "Search Width (px)",
     "header-bg-color-label": "Header Background Color",
     "icon-color-label": "Icon Color",
     "padding-label": "Padding (px)"
   },
   "de": {
     "layout-label": "Layout",
+    "full-width-label": "Volle Breite nutzen",
+    "logo-height-label": "Logo-Hoehe (px)",
+    "search-width-label": "Suchbreite (px)",
     "header-bg-color-label": "Header Background Color",
     "icon-color-label": "Icon Color",
     "padding-label": "Padding (px)"
