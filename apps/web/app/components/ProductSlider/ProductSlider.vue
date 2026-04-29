@@ -1,8 +1,8 @@
 <template>
-  <div ref="sliderRootRef">
+  <div ref="sliderRootRef" class="w-full">
     <SfScrollable
       buttons-placement="floating"
-      class="pb-4 scrollbar-hidden"
+      class="w-full pb-4 scrollbar-hidden"
       :wrapper-class="wrapperClass"
       data-testid="product-slider"
     >
@@ -13,7 +13,7 @@
         :should-load-image="shouldLoadImage(index)"
         :index="index"
         is-from-slider
-        class="w-48 max-w-48 shrink-0"
+        class="w-44 max-w-44 shrink-0 sm:w-48 sm:max-w-48 xl:w-56 xl:max-w-56"
         :style="getItemStyle(index)"
       />
     </SfScrollable>

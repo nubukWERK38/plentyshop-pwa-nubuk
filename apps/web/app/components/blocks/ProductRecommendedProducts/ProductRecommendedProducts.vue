@@ -1,7 +1,12 @@
 <template>
-  <div ref="blockRef" v-bind="$attrs" :style="blockStyle">
+  <div ref="blockRef" v-bind="$attrs" :style="blockStyle" class="w-full">
     <TextContent data-testid="recommended-block" class="pb-4" :text="props.content.text" :index="props.index" />
-    <ProductSlider v-if="shouldShowSlider" :items="recommendedProducts" :item-gap="layoutSettings.gap" />
+    <ProductSlider
+      v-if="shouldShowSlider"
+      :items="recommendedProducts"
+      :item-gap="layoutSettings.gap"
+      wrapper-class="w-full"
+    />
   </div>
 </template>
 
