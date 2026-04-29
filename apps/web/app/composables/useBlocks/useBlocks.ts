@@ -119,11 +119,24 @@ export const useBlocks: UseBlocksReturn = () => {
         enableGlobalBlocks: true,
       });
 
-      const assembled = assembleBlocks(
-        (response?.data as unknown as GetBlocksResponse) ?? state.value.data,
-        type,
-        identifier,
-      );
+      const responseData = response?.data as unknown as GetBlocksResponse;
+
+      // If the API response doesn't include a blocks array (or it's empty),
+      // fall back to the current state to avoid overwriting unsaved content
+      // with a default template.
+      const effectiveData: GetBlocksResponse =
+        responseData && Array.isArray(responseData.blocks) && responseData.blocks.length > 0
+          ? responseData
+          : {
+              ...state.value.data,
+              ...(responseData || {}),
+              blocks:
+                Array.isArray(responseData?.blocks) && responseData.blocks.length > 0
+                  ? responseData.blocks
+                  : state.value.data.blocks ?? [],
+            };
+
+      const assembled = assembleBlocks(effectiveData, type, identifier);
 
       if (isHomepageContext(identifier, type)) {
         homepageHeaderContainer.value = assembled.HeaderContainer ? deepClone(assembled.HeaderContainer) : null;
