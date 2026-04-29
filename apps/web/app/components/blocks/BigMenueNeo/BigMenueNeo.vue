@@ -16,7 +16,7 @@
           @focus="openMenu(index)"
         >
           <span class="big-menue-neo__top-label">{{ getCategoryLabel(menu.category) }}</span>
-          <span class="big-menue-neo__top-caret" aria-hidden="true">▾</span>
+          <span v-if="menuHasPanelContent(menu)" class="big-menue-neo__top-caret" aria-hidden="true">▾</span>
         </NuxtLink>
       </nav>
 
@@ -176,9 +176,28 @@ const activeMenu = computed(() => {
   if (activeMenuIndex.value === null) return null;
   return normalizedContent.value.menus[activeMenuIndex.value] || null;
 });
-const activeColumns = computed(() => activeMenu.value?.columns || []);
+const isLinkConfigured = (category: BigMenueNeoCategoryLink) =>
+  (category.linkType === 'category' && category.categoryId !== null) ||
+  (category.linkType === 'manualUrl' && !!category.manualUrl?.trim());
+
+const activeColumns = computed(() => {
+  const columns = activeMenu.value?.columns || [];
+  return columns
+    .filter((col) => isLinkConfigured(col.category))
+    .map((col) => ({
+      ...col,
+      items: col.items.filter((item) => isLinkConfigured(item.category)),
+    }));
+});
 const activeSearchTerms = computed(() => activeMenu.value?.searchTerms || []);
 const activeBrands = computed(() => activeMenu.value?.brands || []);
+
+const menuHasPanelContent = (menu: BigMenueNeoContent['menus'][number]) => {
+  const hasColumns = (menu.columns || []).some((col) => isLinkConfigured(col.category));
+  const hasSearchTerms = (menu.searchTerms || []).length > 0;
+  const hasBrands = (menu.brands || []).length > 0;
+  return hasColumns || hasSearchTerms || hasBrands;
+};
 
 const rootStyle = computed(() => ({
   '--bmn-bg': normalizedContent.value.layout.backgroundColor,
@@ -268,6 +287,11 @@ const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
 };
 
 const openMenu = (index: number) => {
+  const menu = normalizedContent.value.menus[index];
+  if (!menu || !menuHasPanelContent(menu)) {
+    closeMenu();
+    return;
+  }
   activeMenuIndex.value = index;
   isPanelOpen.value = true;
 };
