@@ -32,7 +32,7 @@
               width="400"
               height="220"
             />
-            <p v-if="item.text" class="thumb-slider-neo__text">{{ item.text }}</p>
+            <p v-if="item.text" class="thumb-slider-neo__text" :style="tileTextStyle">{{ item.text }}</p>
           </component>
         </SwiperSlide>
       </Swiper>
@@ -82,7 +82,11 @@ const controls = computed(() => {
     slidesPerGroup: raw.slidesPerGroup ?? 1,
     tileSkew: raw.tileSkew ?? -8,
     tileBackgroundColor: raw.tileBackgroundColor ?? '#111827',
+    tileTextColor: raw.tileTextColor ?? '#ffffff',
+    tileTextAlign: raw.tileTextAlign ?? 'left',
     tileGradient: ensureGradient(raw.tileGradient),
+    tilePadding: ensureSpacing(raw.tilePadding),
+    tileTextPadding: ensureSpacing(raw.tileTextPadding),
     margin: ensureSpacing(raw.margin),
     padding: ensureSpacing(raw.padding),
   };
@@ -93,10 +97,16 @@ const contentHeader = computed(() => {
   return {
     subline: raw.subline ?? '',
     headline: raw.headline ?? '',
+    sublineAlignment: raw.sublineAlignment ?? 'left',
+    headlineAlignment: raw.headlineAlignment ?? 'left',
     sublineColor: raw.sublineColor ?? '#64748b',
     headlineColor: raw.headlineColor ?? '#0f172a',
+    sublineBackgroundColor: raw.sublineBackgroundColor ?? 'transparent',
+    headlineBackgroundColor: raw.headlineBackgroundColor ?? 'transparent',
     sublineFontSize: raw.sublineFontSize ?? 16,
     headlineFontSize: raw.headlineFontSize ?? 46,
+    sublineFontWeight: raw.sublineFontWeight ?? 500,
+    headlineFontWeight: raw.headlineFontWeight ?? 700,
     backgroundColor: raw.backgroundColor ?? 'transparent',
     gradient: ensureGradient(raw.gradient),
     margin: ensureSpacing(raw.margin),
@@ -166,19 +176,38 @@ const headerStyle = computed<CSSProperties>(() => ({
 }));
 
 const sublineStyle = computed<CSSProperties>(() => ({
+  textAlign: contentHeader.value.sublineAlignment,
   color: contentHeader.value.sublineColor,
+  backgroundColor: contentHeader.value.sublineBackgroundColor,
   fontSize: `${contentHeader.value.sublineFontSize}px`,
+  fontWeight: contentHeader.value.sublineFontWeight,
 }));
 
 const headlineStyle = computed<CSSProperties>(() => ({
+  textAlign: contentHeader.value.headlineAlignment,
   color: contentHeader.value.headlineColor,
+  backgroundColor: contentHeader.value.headlineBackgroundColor,
   fontSize: `${contentHeader.value.headlineFontSize}px`,
+  fontWeight: contentHeader.value.headlineFontWeight,
 }));
 
 const tileStyle = computed<CSSProperties>(() => ({
   background: gradientToCss(controls.value.tileGradient),
   backgroundColor: controls.value.tileGradient.enabled ? undefined : controls.value.tileBackgroundColor,
   transform: `skewX(${controls.value.tileSkew}deg)`,
+  paddingTop: `${controls.value.tilePadding.top}px`,
+  paddingRight: `${controls.value.tilePadding.right}px`,
+  paddingBottom: `${controls.value.tilePadding.bottom}px`,
+  paddingLeft: `${controls.value.tilePadding.left}px`,
+}));
+
+const tileTextStyle = computed<CSSProperties>(() => ({
+  color: controls.value.tileTextColor,
+  textAlign: controls.value.tileTextAlign,
+  paddingTop: `${controls.value.tileTextPadding.top}px`,
+  paddingRight: `${controls.value.tileTextPadding.right}px`,
+  paddingBottom: `${controls.value.tileTextPadding.bottom}px`,
+  paddingLeft: `${controls.value.tileTextPadding.left}px`,
 }));
 </script>
 
@@ -191,19 +220,16 @@ const tileStyle = computed<CSSProperties>(() => ({
   margin-bottom: 0.35rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-weight: 500;
 }
 
 .thumb-slider-neo__headline {
   margin: 0;
   line-height: 1.1;
-  font-weight: 700;
 }
 
 .thumb-slider-neo__tile {
   border-radius: 0.25rem;
   overflow: hidden;
-  padding: 0.5rem;
   transform-origin: center;
 }
 
@@ -217,7 +243,6 @@ const tileStyle = computed<CSSProperties>(() => ({
 
 .thumb-slider-neo__text {
   margin-top: 0.45rem;
-  color: #ffffff;
   font-size: 0.875rem;
   line-height: 1.25rem;
   transform: skewX(calc(var(--tw-skew-x, 0deg) * -1));
