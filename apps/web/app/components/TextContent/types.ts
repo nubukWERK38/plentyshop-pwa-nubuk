@@ -13,5 +13,17 @@ export type TextContentProps = {
     label?: string;
     link?: string;
     variant?: 'primary' | 'secondary';
+    textColor?: string;
+    backgroundColor?: string;
+    backgroundGradient?: {
+      enabled?: boolean;
+      type?: 'linear' | 'radial';
+      startColor?: string;
+      endColor?: string;
+      angle?: number;
+      radius?: number;
+      startX?: number;
+      startY?: number;
+    };
   };
 };

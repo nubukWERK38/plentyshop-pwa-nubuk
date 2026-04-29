@@ -20,6 +20,7 @@
       :variant="props.button.variant ?? 'primary'"
       :data-testid="props.testId ? 'text-button-' + props.testId : 'text-button'"
       class="mt-3 px-4 py-2 cursor-pointer"
+      :style="buttonStyle"
     >
       {{ props.button.label }}
     </UiButton>
@@ -46,4 +47,28 @@ const textAlignmentClass = computed(() => {
 
 const localePath = useLocalePath();
 const NuxtLink = resolveComponent('NuxtLink');
+
+const resolveGradient = () => {
+  const gradient = props.button?.backgroundGradient;
+  if (!gradient?.enabled) return undefined;
+
+  const start = gradient.startColor || '#2563eb';
+  const end = gradient.endColor || '#1d4ed8';
+
+  if (gradient.type === 'radial') {
+    const radius = gradient.radius ?? 100;
+    const x = gradient.startX ?? 50;
+    const y = gradient.startY ?? 50;
+    return `radial-gradient(circle ${radius}% at ${x}% ${y}%, ${start}, ${end})`;
+  }
+
+  return `linear-gradient(${gradient.angle ?? 135}deg, ${start}, ${end})`;
+};
+
+const buttonStyle = computed(() => ({
+  color: props.button?.textColor || undefined,
+  background: resolveGradient(),
+  backgroundColor: props.button?.backgroundGradient?.enabled ? undefined : props.button?.backgroundColor || undefined,
+  borderColor: props.button?.backgroundColor || props.button?.backgroundGradient?.enabled ? 'transparent' : undefined,
+}));
 </script>

@@ -81,6 +81,110 @@
         </div>
       </div>
     </fieldset>
+
+    <div class="py-2">
+      <UiFormLabel class="mb-1">{{ getEditorTranslation('button-text-color-label') }}</UiFormLabel>
+      <EditorColorPicker v-model="textCardBlock.button.textColor" class="w-full">
+        <template #trigger="{ color, toggle }">
+          <SfInput v-model="textCardBlock.button.textColor" type="text">
+            <template #suffix>
+              <button
+                type="button"
+                class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                :style="{ backgroundColor: color }"
+                @mousedown.stop
+                @click.stop="toggle"
+              />
+            </template>
+          </SfInput>
+        </template>
+      </EditorColorPicker>
+    </div>
+
+    <div class="py-2">
+      <div class="flex items-center justify-between">
+        <UiFormLabel>{{ getEditorTranslation('button-gradient-enabled-label') }}</UiFormLabel>
+        <SfSwitch v-model="textCardBlock.button.backgroundGradient.enabled" />
+      </div>
+    </div>
+
+    <template v-if="textCardBlock.button.backgroundGradient.enabled">
+      <div class="py-2">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-type-label') }}</UiFormLabel>
+        <select v-model="textCardBlock.button.backgroundGradient.type" class="input-field">
+          <option value="linear">Linear</option>
+          <option value="radial">Radial</option>
+        </select>
+      </div>
+
+      <div class="py-2">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-start-label') }}</UiFormLabel>
+        <EditorColorPicker v-model="textCardBlock.button.backgroundGradient.startColor" class="w-full">
+          <template #trigger="{ color, toggle }">
+            <SfInput v-model="textCardBlock.button.backgroundGradient.startColor" type="text">
+              <template #suffix>
+                <button
+                  type="button"
+                  class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                  :style="{ backgroundColor: color }"
+                  @mousedown.stop
+                  @click.stop="toggle"
+                />
+              </template>
+            </SfInput>
+          </template>
+        </EditorColorPicker>
+      </div>
+
+      <div class="py-2">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-end-label') }}</UiFormLabel>
+        <EditorColorPicker v-model="textCardBlock.button.backgroundGradient.endColor" class="w-full">
+          <template #trigger="{ color, toggle }">
+            <SfInput v-model="textCardBlock.button.backgroundGradient.endColor" type="text">
+              <template #suffix>
+                <button
+                  type="button"
+                  class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                  :style="{ backgroundColor: color }"
+                  @mousedown.stop
+                  @click.stop="toggle"
+                />
+              </template>
+            </SfInput>
+          </template>
+        </EditorColorPicker>
+      </div>
+
+      <div v-if="textCardBlock.button.backgroundGradient.type === 'linear'" class="py-2">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-angle-label') }}</UiFormLabel>
+        <input
+          v-model.number="textCardBlock.button.backgroundGradient.angle"
+          type="number"
+          min="0"
+          max="360"
+          class="input-field"
+        />
+      </div>
+    </template>
+
+    <div v-else class="py-2">
+      <UiFormLabel class="mb-1">{{ getEditorTranslation('button-background-color-label') }}</UiFormLabel>
+      <EditorColorPicker v-model="textCardBlock.button.backgroundColor" class="w-full">
+        <template #trigger="{ color, toggle }">
+          <SfInput v-model="textCardBlock.button.backgroundColor" type="text">
+            <template #suffix>
+              <button
+                type="button"
+                class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                :style="{ backgroundColor: color }"
+                @mousedown.stop
+                @click.stop="toggle"
+              />
+            </template>
+          </SfInput>
+        </template>
+      </EditorColorPicker>
+    </div>
   </UiAccordionItem>
 
   <UiAccordionItem
@@ -211,6 +315,20 @@ const textCardBlock = computed<TextCardContent>(() => {
   content.text.textAlignment = content.text.textAlignment ?? 'left';
 
   if (!content.button) content.button = {};
+  if (content.button.textColor === undefined) content.button.textColor = '';
+  if (content.button.backgroundColor === undefined) content.button.backgroundColor = '';
+  if (!content.button.backgroundGradient) {
+    content.button.backgroundGradient = {
+      enabled: false,
+      type: 'linear',
+      startColor: '#2563eb',
+      endColor: '#1d4ed8',
+      angle: 135,
+      radius: 100,
+      startX: 50,
+      startY: 50,
+    };
+  }
 
   if (!content.layout) {
     content.layout = {
@@ -256,6 +374,13 @@ watch([isTransparent, backgroundColor], () => {
     "button-group-label": "Button",
     "button-text-label": "Label",
     "button-link-label": "Link target",
+    "button-text-color-label": "Button text color",
+    "button-background-color-label": "Button background color",
+    "button-gradient-enabled-label": "Enable button gradient",
+    "button-gradient-type-label": "Button gradient type",
+    "button-gradient-start-label": "Button gradient start color",
+    "button-gradient-end-label": "Button gradient end color",
+    "button-gradient-angle-label": "Button gradient angle",
     "outline-label": "Outline",
     "button-variant-primary-label": "Primary",
     "button-variant-secondary-label": "Secondary",
@@ -273,6 +398,13 @@ watch([isTransparent, backgroundColor], () => {
     "button-group-label": "Button",
     "button-text-label": "Label",
     "button-link-label": "Link target",
+    "button-text-color-label": "Button Textfarbe",
+    "button-background-color-label": "Button Hintergrundfarbe",
+    "button-gradient-enabled-label": "Button Verlauf aktivieren",
+    "button-gradient-type-label": "Button Verlaufstyp",
+    "button-gradient-start-label": "Button Startfarbe Verlauf",
+    "button-gradient-end-label": "Button Endfarbe Verlauf",
+    "button-gradient-angle-label": "Button Verlaufswinkel",
     "outline-label": "Outline",
     "button-variant-primary-label": "Primary",
     "button-variant-secondary-label": "Secondary",

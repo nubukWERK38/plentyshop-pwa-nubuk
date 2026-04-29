@@ -11,6 +11,14 @@
       </template>
       <div class="px-4 py-4 mb-4">
         <div v-for="(variation, variationIndex) in category.variations" :key="variationIndex" class="mb-10">
+          <div class="mb-2 text-center">
+            <p class="text-sm font-semibold text-slate-800">
+              {{ getWidgetName(variation) }}
+            </p>
+            <p v-if="variation.title" class="text-xs text-slate-500">
+              {{ variation.title }}
+            </p>
+          </div>
           <div class="relative w-fit mx-auto">
             <NuxtImg :src="variation.image" class="block" :alt="variation.title" width="253" height="120" />
             <button
@@ -59,6 +67,7 @@
 <script setup lang="ts">
 import { SfIconAdd, SfIconWarning, SfTooltip } from '@storefront-ui/vue';
 import type { BlockListCategory, BlockTemplateVariation } from '~/composables/useBlocksList/types';
+import { getBlockDisplayName } from '~/utils/blocks/get-block-display-name';
 
 const { blocksLists, pageHasAccessToCategory, getBlocksLists } = useBlocksList();
 
@@ -86,6 +95,10 @@ const isAddDisabled = (category: BlockListCategory, variation: BlockTemplateVari
   const isForbidden = isForbiddenBlock(category, uuid);
   const isSingleInstance = isSingleInstanceOnPage(blockName);
   return isNested || isForbidden || isSingleInstance;
+};
+
+const getWidgetName = (variation: BlockTemplateVariation): string => {
+  return getBlockDisplayName(variation.template.en.name);
 };
 
 const blockPosition = computed(() => {

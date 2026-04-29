@@ -1,7 +1,7 @@
 <template>
   <div
     class="image-banner-neo group relative"
-    :class="controls.fullWidth ? 'w-full' : 'max-w-screen-xl mx-auto w-full'"
+    :class="'w-full'"
     data-testid="image-banner-neo"
   >
     <Swiper

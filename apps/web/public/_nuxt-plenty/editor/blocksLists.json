@@ -1044,6 +1044,102 @@
             }
           }
         }
+      },
+      {
+        "title": "Thumb Slider Neo",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/image_preview.png",
+        "template": {
+          "en": {
+            "name": "ThumbSliderNeo",
+            "type": "content",
+            "meta": { "uuid": "76767676-7676-4767-8767-767676767676" },
+            "content": {
+              "header": {
+                "subline": "AUF WAS WIR ABFAHREN!",
+                "headline": "Unsere Markenwelt",
+                "sublineColor": "#64748b",
+                "headlineColor": "#0f172a",
+                "sublineFontSize": 16,
+                "headlineFontSize": 46,
+                "backgroundColor": "transparent",
+                "margin": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "padding": { "top": 0, "right": 0, "bottom": 0, "left": 0 }
+              },
+              "items": [
+                {
+                  "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                  "alt": "Brand",
+                  "link": "/",
+                  "text": "Marke"
+                },
+                {
+                  "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                  "alt": "Brand",
+                  "link": "/",
+                  "text": "Marke"
+                }
+              ],
+              "controls": {
+                "fullWidth": false,
+                "autoplay": false,
+                "autoplayDelay": 3500,
+                "speed": 600,
+                "slidesPerViewDesktop": 5,
+                "slidesPerViewMobile": 2,
+                "slidesPerGroup": 1,
+                "tileSkew": -8,
+                "tileBackgroundColor": "#111827",
+                "margin": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "padding": { "top": 0, "right": 0, "bottom": 0, "left": 0 }
+              }
+            }
+          },
+          "de": {
+            "name": "ThumbSliderNeo",
+            "type": "content",
+            "meta": { "uuid": "86868686-8686-4868-8868-868686868686" },
+            "content": {
+              "header": {
+                "subline": "AUF WAS WIR ABFAHREN!",
+                "headline": "Unsere Markenwelt",
+                "sublineColor": "#64748b",
+                "headlineColor": "#0f172a",
+                "sublineFontSize": 16,
+                "headlineFontSize": 46,
+                "backgroundColor": "transparent",
+                "margin": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "padding": { "top": 0, "right": 0, "bottom": 0, "left": 0 }
+              },
+              "items": [
+                {
+                  "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                  "alt": "Brand",
+                  "link": "/",
+                  "text": "Marke"
+                },
+                {
+                  "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                  "alt": "Brand",
+                  "link": "/",
+                  "text": "Marke"
+                }
+              ],
+              "controls": {
+                "fullWidth": false,
+                "autoplay": false,
+                "autoplayDelay": 3500,
+                "speed": 600,
+                "slidesPerViewDesktop": 5,
+                "slidesPerViewMobile": 2,
+                "slidesPerGroup": 1,
+                "tileSkew": -8,
+                "tileBackgroundColor": "#111827",
+                "margin": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "padding": { "top": 0, "right": 0, "bottom": 0, "left": 0 }
+              }
+            }
+          }
+        }
       }
     ]
   },

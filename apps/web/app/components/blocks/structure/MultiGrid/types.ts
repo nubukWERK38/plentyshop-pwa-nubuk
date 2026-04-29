@@ -2,7 +2,13 @@ import type { Block } from '@plentymarkets/shop-api';
 
 interface MultiGridLayout {
   marginTop?: number;
+  marginRight?: number;
   marginBottom?: number;
+  marginLeft?: number;
+  paddingTop?: number;
+  paddingRight?: number;
+  paddingBottom?: number;
+  paddingLeft?: number;
   backgroundColor?: string;
   gap?: string;
   gradientEnabled?: boolean;
@@ -10,6 +16,9 @@ interface MultiGridLayout {
   gradientStartColor?: string;
   gradientEndColor?: string;
   gradientAngle?: number;
+  gradientRadius?: number;
+  gradientStartX?: number;
+  gradientStartY?: number;
 }
 
 export type MultiGridProps = {
@@ -52,13 +61,22 @@ export type ColumnBlock = Block & {
     layout?: {
       gap: string;
       marginTop?: number;
+      marginRight?: number;
       marginBottom?: number;
+      marginLeft?: number;
+      paddingTop?: number;
+      paddingRight?: number;
+      paddingBottom?: number;
+      paddingLeft?: number;
       backgroundColor?: string;
       gradientEnabled?: boolean;
       gradientType?: 'linear' | 'radial';
       gradientStartColor?: string;
       gradientEndColor?: string;
       gradientAngle?: number;
+      gradientRadius?: number;
+      gradientStartX?: number;
+      gradientStartY?: number;
       fullWidth?: boolean;
     };
   };

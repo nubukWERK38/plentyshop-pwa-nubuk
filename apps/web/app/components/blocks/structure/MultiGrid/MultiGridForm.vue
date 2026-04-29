@@ -39,7 +39,7 @@
 
         <div v-if="multiGridStructure.configuration.layout" class="py-2">
           <UiFormLabel>{{ getEditorTranslation('margin-label') }}</UiFormLabel>
-          <div class="grid grid-cols-2 gap-px rounded-md overflow-hidden border border-gray-300">
+          <div class="grid grid-cols-4 gap-px rounded-md overflow-hidden border border-gray-300">
             <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
               <span><SfIconArrowUpward /></span>
               <input
@@ -56,6 +56,66 @@
                 type="number"
                 class="w-12 text-center outline-none"
                 data-testid="margin-bottom"
+              />
+            </div>
+            <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
+              <span><SfIconArrowBack /></span>
+              <input
+                v-model.number="multiGridStructure.configuration.layout.marginLeft"
+                type="number"
+                class="w-12 text-center outline-none"
+                data-testid="margin-left"
+              />
+            </div>
+            <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white">
+              <span><SfIconArrowForward /></span>
+              <input
+                v-model.number="multiGridStructure.configuration.layout.marginRight"
+                type="number"
+                class="w-12 text-center outline-none"
+                data-testid="margin-right"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div v-if="multiGridStructure.configuration.layout" class="py-2">
+          <UiFormLabel>{{ getEditorTranslation('padding-label') }}</UiFormLabel>
+          <div class="grid grid-cols-4 gap-px rounded-md overflow-hidden border border-gray-300">
+            <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
+              <span><SfIconArrowUpward /></span>
+              <input
+                v-model.number="multiGridStructure.configuration.layout.paddingTop"
+                type="number"
+                class="w-12 text-center outline-none"
+                data-testid="padding-top"
+              />
+            </div>
+            <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
+              <span><SfIconArrowDownward /></span>
+              <input
+                v-model.number="multiGridStructure.configuration.layout.paddingBottom"
+                type="number"
+                class="w-12 text-center outline-none"
+                data-testid="padding-bottom"
+              />
+            </div>
+            <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
+              <span><SfIconArrowBack /></span>
+              <input
+                v-model.number="multiGridStructure.configuration.layout.paddingLeft"
+                type="number"
+                class="w-12 text-center outline-none"
+                data-testid="padding-left"
+              />
+            </div>
+            <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white">
+              <span><SfIconArrowForward /></span>
+              <input
+                v-model.number="multiGridStructure.configuration.layout.paddingRight"
+                type="number"
+                class="w-12 text-center outline-none"
+                data-testid="padding-right"
               />
             </div>
           </div>
@@ -179,6 +239,39 @@
               max="360"
             />
           </div>
+
+          <div v-if="multiGridStructure.configuration.layout.gradientType === 'radial'" class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-radius-label') }}</UiFormLabel>
+            <input
+              v-model.number="multiGridStructure.configuration.layout.gradientRadius"
+              type="number"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              min="1"
+              max="300"
+            />
+          </div>
+
+          <div v-if="multiGridStructure.configuration.layout.gradientType === 'radial'" class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-start-x-label') }}</UiFormLabel>
+            <input
+              v-model.number="multiGridStructure.configuration.layout.gradientStartX"
+              type="number"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              min="0"
+              max="100"
+            />
+          </div>
+
+          <div v-if="multiGridStructure.configuration.layout.gradientType === 'radial'" class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-start-y-label') }}</UiFormLabel>
+            <input
+              v-model.number="multiGridStructure.configuration.layout.gradientStartY"
+              type="number"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              min="0"
+              max="100"
+            />
+          </div>
         </template>
 
         <div class="flex justify-between mb-2">
@@ -212,7 +305,14 @@
 
 <script setup lang="ts">
 import type { ColumnBlock } from '~/components/blocks/structure/MultiGrid/types';
-import { SfInput, SfSwitch, SfIconArrowUpward, SfIconArrowDownward } from '@storefront-ui/vue';
+import {
+  SfInput,
+  SfSwitch,
+  SfIconArrowUpward,
+  SfIconArrowDownward,
+  SfIconArrowBack,
+  SfIconArrowForward,
+} from '@storefront-ui/vue';
 import ColumnWidthInput from '~/components/editor/ColumnWidthInput.vue';
 
 const props = defineProps<{ uuid?: string }>();
@@ -233,7 +333,13 @@ const multiGridStructure = computed(() => {
   if (!block.configuration.layout) {
     block.configuration.layout = {
       marginTop: 0,
+      marginRight: 0,
       marginBottom: defaultMarginBottom.value,
+      marginLeft: 0,
+      paddingTop: 0,
+      paddingRight: 0,
+      paddingBottom: 0,
+      paddingLeft: 0,
       backgroundColor: '#ffffff',
       gap: 'M',
       gradientEnabled: false,
@@ -241,6 +347,9 @@ const multiGridStructure = computed(() => {
       gradientStartColor: '#ffffff',
       gradientEndColor: '#f3f4f6',
       gradientAngle: 180,
+      gradientRadius: 100,
+      gradientStartX: 50,
+      gradientStartY: 50,
     };
   } else {
     if (!block.configuration.layout.backgroundColor) block.configuration.layout.backgroundColor = '#ffffff';
@@ -250,6 +359,16 @@ const multiGridStructure = computed(() => {
     if (!block.configuration.layout.gradientStartColor) block.configuration.layout.gradientStartColor = '#ffffff';
     if (!block.configuration.layout.gradientEndColor) block.configuration.layout.gradientEndColor = '#f3f4f6';
     if (block.configuration.layout.gradientAngle === undefined) block.configuration.layout.gradientAngle = 180;
+    if (block.configuration.layout.gradientRadius === undefined) block.configuration.layout.gradientRadius = 100;
+    if (block.configuration.layout.gradientStartX === undefined) block.configuration.layout.gradientStartX = 50;
+    if (block.configuration.layout.gradientStartY === undefined) block.configuration.layout.gradientStartY = 50;
+    if (block.configuration.layout.marginTop === undefined) block.configuration.layout.marginTop = 0;
+    if (block.configuration.layout.marginRight === undefined) block.configuration.layout.marginRight = 0;
+    if (block.configuration.layout.marginLeft === undefined) block.configuration.layout.marginLeft = 0;
+    if (block.configuration.layout.paddingTop === undefined) block.configuration.layout.paddingTop = 0;
+    if (block.configuration.layout.paddingRight === undefined) block.configuration.layout.paddingRight = 0;
+    if (block.configuration.layout.paddingBottom === undefined) block.configuration.layout.paddingBottom = 0;
+    if (block.configuration.layout.paddingLeft === undefined) block.configuration.layout.paddingLeft = 0;
     if (block.configuration.layout.marginBottom === undefined || block.configuration.layout.marginBottom === null) {
       block.configuration.layout.marginBottom = defaultMarginBottom.value;
     }
@@ -340,6 +459,7 @@ const layoutBackground = ref(false);
   "en": {
     "layout-settings": "Layout Settings",
     "margin-label": "Margin (px)",
+    "padding-label": "Padding (px)",
     "background-color-label": "Background Color",
     "gap-label": "Gap",
     "gap-size-none": "None",
@@ -358,11 +478,15 @@ const layoutBackground = ref(false);
     "gradient-type-label": "Gradient type",
     "gradient-start-label": "Gradient start color",
     "gradient-end-label": "Gradient end color",
-    "gradient-angle-label": "Gradient angle"
+    "gradient-angle-label": "Gradient angle",
+    "gradient-radius-label": "Gradient radius (%)",
+    "gradient-start-x-label": "Gradient start X (%)",
+    "gradient-start-y-label": "Gradient start Y (%)"
   },
   "de": {
     "layout-settings": "Layout Settings",
     "margin-label": "Margin (px)",
+    "padding-label": "Padding (px)",
     "background-color-label": "Background Color",
     "gap-label": "Gap",
     "gap-size-none": "None",
@@ -381,7 +505,10 @@ const layoutBackground = ref(false);
     "gradient-type-label": "Verlaufstyp",
     "gradient-start-label": "Startfarbe Verlauf",
     "gradient-end-label": "Endfarbe Verlauf",
-    "gradient-angle-label": "Verlaufswinkel"
+    "gradient-angle-label": "Verlaufswinkel",
+    "gradient-radius-label": "Verlaufsradius (%)",
+    "gradient-start-x-label": "Verlauf Start X (%)",
+    "gradient-start-y-label": "Verlauf Start Y (%)"
   }
 }
 </i18n>

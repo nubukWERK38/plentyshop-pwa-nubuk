@@ -92,19 +92,36 @@ const gapClassMap: Record<string, string> = {
 const gridGapClass = computed(() => gapClassMap[configuration.layout?.gap || 'M']);
 const defaultMarginBottom = computed(() => getVerticalPixels(blockSize.value));
 
+const gradientBackground = computed(() => {
+  if (configuration.layout?.gradientEnabled !== true) return undefined;
+
+  const startColor = configuration.layout.gradientStartColor || '#ffffff';
+  const endColor = configuration.layout.gradientEndColor || '#f3f4f6';
+
+  if (configuration.layout.gradientType === 'radial') {
+    const radius = configuration.layout.gradientRadius ?? 100;
+    const x = configuration.layout.gradientStartX ?? 50;
+    const y = configuration.layout.gradientStartY ?? 50;
+    return `radial-gradient(circle ${radius}% at ${x}% ${y}%, ${startColor}, ${endColor})`;
+  }
+
+  return `linear-gradient(${configuration.layout?.gradientAngle ?? 180}deg, ${startColor}, ${endColor})`;
+});
+
 const gridInlineStyle = computed(() => ({
-  background:
-    configuration.layout?.gradientEnabled === true
-      ? configuration.layout.gradientType === 'radial'
-        ? `radial-gradient(${configuration.layout.gradientStartColor || '#ffffff'}, ${configuration.layout.gradientEndColor || '#f3f4f6'})`
-        : `linear-gradient(${configuration.layout?.gradientAngle ?? 180}deg, ${configuration.layout.gradientStartColor || '#ffffff'}, ${configuration.layout.gradientEndColor || '#f3f4f6'})`
-      : undefined,
+  background: gradientBackground.value,
   backgroundColor: configuration.layout?.gradientEnabled ? undefined : configuration.layout?.backgroundColor ?? 'transparent',
   marginTop: configuration.layout?.marginTop !== undefined ? `${configuration.layout.marginTop}px` : '0px',
+  marginRight: configuration.layout?.marginRight !== undefined ? `${configuration.layout.marginRight}px` : '0px',
   marginBottom:
     configuration.layout?.marginBottom !== undefined
       ? `${configuration.layout.marginBottom}px`
       : `${defaultMarginBottom.value}px`,
+  marginLeft: configuration.layout?.marginLeft !== undefined ? `${configuration.layout.marginLeft}px` : '0px',
+  paddingTop: configuration.layout?.paddingTop !== undefined ? `${configuration.layout.paddingTop}px` : '0px',
+  paddingRight: configuration.layout?.paddingRight !== undefined ? `${configuration.layout.paddingRight}px` : '0px',
+  paddingBottom: configuration.layout?.paddingBottom !== undefined ? `${configuration.layout.paddingBottom}px` : '0px',
+  paddingLeft: configuration.layout?.paddingLeft !== undefined ? `${configuration.layout.paddingLeft}px` : '0px',
 }));
 const getGridClasses = () => {
   return gridClassFor({ mobile: 1, tablet: 12, desktop: 12 }, [gridGapClass.value ?? '', 'items-start']);
