@@ -25,7 +25,7 @@ export const BLOCK_LAYOUT_RULES: Record<string, BlockLayoutRule> = {
   CategoryData: { defaultFullWidth: false, padding: true },
   CategorySorting: { defaultFullWidth: false, padding: true },
   BlockSort: { defaultFullWidth: false, padding: true },
-  ProductRecommendedProducts: { defaultFullWidth: false, padding: true },
+  ProductRecommendedProducts: { defaultFullWidth: false, padding: false },
   ProductGrid: { defaultFullWidth: false, padding: true },
   Image: { defaultFullWidth: false, padding: true },
   ItemGrid: { defaultFullWidth: false, padding: true },
