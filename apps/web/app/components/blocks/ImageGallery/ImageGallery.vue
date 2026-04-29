@@ -92,7 +92,7 @@ const galleryWrapperStyle = computed<CSSProperties>(() => ({
   paddingRight: `${normalizedContent.value.layout.padding?.right ?? 0}px`,
   paddingBottom: `${normalizedContent.value.layout.padding?.bottom ?? 0}px`,
   paddingLeft: `${normalizedContent.value.layout.padding?.left ?? 0}px`,
-  background: gradientToCss(normalizedContent.value.layout.gradient || ensureGradient()),
+  background: gradientToCss(ensureGradient(normalizedContent.value.layout.gradient)),
   backgroundColor: normalizedContent.value.layout.gradient?.enabled
     ? undefined
     : normalizedContent.value.layout.backgroundColor,
@@ -111,7 +111,7 @@ const headerStyle = computed<CSSProperties>(() => ({
   paddingRight: `${normalizedContent.value.header?.padding?.right ?? 0}px`,
   paddingBottom: `${normalizedContent.value.header?.padding?.bottom ?? 0}px`,
   paddingLeft: `${normalizedContent.value.header?.padding?.left ?? 0}px`,
-  background: gradientToCss(normalizedContent.value.header?.gradient || ensureGradient()),
+  background: gradientToCss(ensureGradient(normalizedContent.value.header?.gradient)),
   backgroundColor: normalizedContent.value.header?.gradient?.enabled
     ? undefined
     : normalizedContent.value.header?.backgroundColor,

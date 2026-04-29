@@ -104,14 +104,14 @@
     <div class="py-2">
       <div class="flex items-center justify-between">
         <UiFormLabel>{{ getEditorTranslation('button-gradient-enabled-label') }}</UiFormLabel>
-        <SfSwitch v-model="textCardBlock.button.backgroundGradient.enabled" />
+        <SfSwitch v-model="buttonGradient.enabled" />
       </div>
     </div>
 
-    <template v-if="textCardBlock.button.backgroundGradient.enabled">
+    <template v-if="buttonGradient.enabled">
       <div class="py-2">
         <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-type-label') }}</UiFormLabel>
-        <select v-model="textCardBlock.button.backgroundGradient.type" class="input-field">
+        <select v-model="buttonGradient.type" class="input-field">
           <option value="linear">Linear</option>
           <option value="radial">Radial</option>
         </select>
@@ -119,9 +119,9 @@
 
       <div class="py-2">
         <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-start-label') }}</UiFormLabel>
-        <EditorColorPicker v-model="textCardBlock.button.backgroundGradient.startColor" class="w-full">
+        <EditorColorPicker v-model="buttonGradient.startColor" class="w-full">
           <template #trigger="{ color, toggle }">
-            <SfInput v-model="textCardBlock.button.backgroundGradient.startColor" type="text">
+            <SfInput v-model="buttonGradient.startColor" type="text">
               <template #suffix>
                 <button
                   type="button"
@@ -138,9 +138,9 @@
 
       <div class="py-2">
         <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-end-label') }}</UiFormLabel>
-        <EditorColorPicker v-model="textCardBlock.button.backgroundGradient.endColor" class="w-full">
+        <EditorColorPicker v-model="buttonGradient.endColor" class="w-full">
           <template #trigger="{ color, toggle }">
-            <SfInput v-model="textCardBlock.button.backgroundGradient.endColor" type="text">
+            <SfInput v-model="buttonGradient.endColor" type="text">
               <template #suffix>
                 <button
                   type="button"
@@ -155,10 +155,10 @@
         </EditorColorPicker>
       </div>
 
-      <div v-if="textCardBlock.button.backgroundGradient.type === 'linear'" class="py-2">
+      <div v-if="buttonGradient.type === 'linear'" class="py-2">
         <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-angle-label') }}</UiFormLabel>
         <input
-          v-model.number="textCardBlock.button.backgroundGradient.angle"
+          v-model.number="buttonGradient.angle"
           type="number"
           min="0"
           max="360"
@@ -363,6 +363,23 @@ const backgroundColor = ref(isTransparent.value ? '' : backgroundColorInit);
 
 watch([isTransparent, backgroundColor], () => {
   textCardBlock.value.layout.backgroundColor = isTransparent.value ? 'transparent' : backgroundColor.value;
+});
+
+const buttonGradient = computed(() => {
+  if (!textCardBlock.value.button.backgroundGradient) {
+    textCardBlock.value.button.backgroundGradient = {
+      enabled: false,
+      type: 'linear',
+      startColor: '#2563eb',
+      endColor: '#1d4ed8',
+      angle: 135,
+      radius: 100,
+      startX: 50,
+      startY: 50,
+    };
+  }
+
+  return textCardBlock.value.button.backgroundGradient;
 });
 </script>
 <i18n lang="json">

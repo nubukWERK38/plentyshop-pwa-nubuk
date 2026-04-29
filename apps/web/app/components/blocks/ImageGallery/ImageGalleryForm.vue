@@ -64,13 +64,13 @@
 
       <div class="flex items-center justify-between">
         <UiFormLabel>{{ getEditorTranslation('gradient-enabled-label') }}</UiFormLabel>
-        <SfSwitch v-model="uiItemImageBlock.layout.gradient.enabled" />
+        <SfSwitch v-model="layoutGradientState.enabled" />
       </div>
 
-      <template v-if="uiItemImageBlock.layout.gradient.enabled">
+      <template v-if="layoutGradientState.enabled">
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-type-label') }}</UiFormLabel>
-          <select v-model="uiItemImageBlock.layout.gradient.type" class="input-field">
+          <select v-model="layoutGradientState.type" class="input-field">
             <option value="linear">Linear</option>
             <option value="radial">Radial</option>
           </select>
@@ -78,9 +78,9 @@
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-start-label') }}</UiFormLabel>
-          <EditorColorPicker v-model="uiItemImageBlock.layout.gradient.startColor" class="w-full">
+          <EditorColorPicker v-model="layoutGradientState.startColor" class="w-full">
             <template #trigger="{ color, toggle }">
-              <SfInput v-model="uiItemImageBlock.layout.gradient.startColor" type="text">
+              <SfInput v-model="layoutGradientState.startColor" type="text">
                 <template #suffix>
                   <button
                     type="button"
@@ -97,9 +97,9 @@
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-end-label') }}</UiFormLabel>
-          <EditorColorPicker v-model="uiItemImageBlock.layout.gradient.endColor" class="w-full">
+          <EditorColorPicker v-model="layoutGradientState.endColor" class="w-full">
             <template #trigger="{ color, toggle }">
-              <SfInput v-model="uiItemImageBlock.layout.gradient.endColor" type="text">
+              <SfInput v-model="layoutGradientState.endColor" type="text">
                 <template #suffix>
                   <button
                     type="button"
@@ -114,9 +114,9 @@
           </EditorColorPicker>
         </div>
 
-        <div v-if="uiItemImageBlock.layout.gradient.type === 'linear'">
+        <div v-if="layoutGradientState.type === 'linear'">
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-angle-label') }}</UiFormLabel>
-          <input v-model.number="uiItemImageBlock.layout.gradient.angle" type="number" min="0" max="360" class="input-field" />
+          <input v-model.number="layoutGradientState.angle" type="number" min="0" max="360" class="input-field" />
         </div>
       </template>
 
@@ -142,20 +142,20 @@
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('margin-label') }}</UiFormLabel>
         <div class="grid grid-cols-4 gap-px rounded-md overflow-hidden border border-gray-300">
-          <div class="cell"><span><SfIconArrowUpward /></span><input v-model.number="uiItemImageBlock.layout.margin.top" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowDownward /></span><input v-model.number="uiItemImageBlock.layout.margin.bottom" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowBack /></span><input v-model.number="uiItemImageBlock.layout.margin.left" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowForward /></span><input v-model.number="uiItemImageBlock.layout.margin.right" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowUpward /></span><input v-model.number="layoutMarginState.top" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowDownward /></span><input v-model.number="layoutMarginState.bottom" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowBack /></span><input v-model.number="layoutMarginState.left" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowForward /></span><input v-model.number="layoutMarginState.right" type="number" class="num" /></div>
         </div>
       </div>
 
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('padding-label') }}</UiFormLabel>
         <div class="grid grid-cols-4 gap-px rounded-md overflow-hidden border border-gray-300">
-          <div class="cell"><span><SfIconArrowUpward /></span><input v-model.number="uiItemImageBlock.layout.padding.top" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowDownward /></span><input v-model.number="uiItemImageBlock.layout.padding.bottom" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowBack /></span><input v-model.number="uiItemImageBlock.layout.padding.left" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowForward /></span><input v-model.number="uiItemImageBlock.layout.padding.right" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowUpward /></span><input v-model.number="layoutPaddingState.top" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowDownward /></span><input v-model.number="layoutPaddingState.bottom" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowBack /></span><input v-model.number="layoutPaddingState.left" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowForward /></span><input v-model.number="layoutPaddingState.right" type="number" class="num" /></div>
         </div>
       </div>
     </div>
@@ -173,52 +173,52 @@
     <div class="space-y-3 py-2">
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('subline-label') }}</UiFormLabel>
-        <SfInput v-model="uiItemImageBlock.header.subline" type="text" />
+        <SfInput v-model="headerState.subline" type="text" />
       </div>
 
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-label') }}</UiFormLabel>
-        <SfInput v-model="uiItemImageBlock.header.headline" type="text" />
+        <SfInput v-model="headerState.headline" type="text" />
       </div>
 
       <div class="grid grid-cols-2 gap-2">
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('subline-size-label') }}</UiFormLabel>
-          <input v-model.number="uiItemImageBlock.header.sublineFontSize" type="number" min="10" max="80" class="input-field" />
+          <input v-model.number="headerState.sublineFontSize" type="number" min="10" max="80" class="input-field" />
         </div>
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-size-label') }}</UiFormLabel>
-          <input v-model.number="uiItemImageBlock.header.headlineFontSize" type="number" min="12" max="120" class="input-field" />
+          <input v-model.number="headerState.headlineFontSize" type="number" min="12" max="120" class="input-field" />
         </div>
       </div>
 
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('subline-color-label') }}</UiFormLabel>
-        <EditorColorPicker v-model="uiItemImageBlock.header.sublineColor" class="w-full">
+        <EditorColorPicker v-model="headerState.sublineColor" class="w-full">
           <template #trigger="{ color, toggle }">
-            <SfInput v-model="uiItemImageBlock.header.sublineColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+            <SfInput v-model="headerState.sublineColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
           </template>
         </EditorColorPicker>
       </div>
 
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-color-label') }}</UiFormLabel>
-        <EditorColorPicker v-model="uiItemImageBlock.header.headlineColor" class="w-full">
+        <EditorColorPicker v-model="headerState.headlineColor" class="w-full">
           <template #trigger="{ color, toggle }">
-            <SfInput v-model="uiItemImageBlock.header.headlineColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+            <SfInput v-model="headerState.headlineColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
           </template>
         </EditorColorPicker>
       </div>
 
       <div class="flex items-center justify-between">
         <UiFormLabel>{{ getEditorTranslation('header-gradient-enabled-label') }}</UiFormLabel>
-        <SfSwitch v-model="uiItemImageBlock.header.gradient.enabled" />
+        <SfSwitch v-model="headerGradientState.enabled" />
       </div>
 
-      <template v-if="uiItemImageBlock.header.gradient.enabled">
+      <template v-if="headerGradientState.enabled">
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-type-label') }}</UiFormLabel>
-          <select v-model="uiItemImageBlock.header.gradient.type" class="input-field">
+          <select v-model="headerGradientState.type" class="input-field">
             <option value="linear">Linear</option>
             <option value="radial">Radial</option>
           </select>
@@ -226,33 +226,33 @@
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-start-label') }}</UiFormLabel>
-          <EditorColorPicker v-model="uiItemImageBlock.header.gradient.startColor" class="w-full">
+          <EditorColorPicker v-model="headerGradientState.startColor" class="w-full">
             <template #trigger="{ color, toggle }">
-              <SfInput v-model="uiItemImageBlock.header.gradient.startColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+              <SfInput v-model="headerGradientState.startColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
             </template>
           </EditorColorPicker>
         </div>
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-end-label') }}</UiFormLabel>
-          <EditorColorPicker v-model="uiItemImageBlock.header.gradient.endColor" class="w-full">
+          <EditorColorPicker v-model="headerGradientState.endColor" class="w-full">
             <template #trigger="{ color, toggle }">
-              <SfInput v-model="uiItemImageBlock.header.gradient.endColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+              <SfInput v-model="headerGradientState.endColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
             </template>
           </EditorColorPicker>
         </div>
 
-        <div v-if="uiItemImageBlock.header.gradient.type === 'linear'">
+        <div v-if="headerGradientState.type === 'linear'">
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-angle-label') }}</UiFormLabel>
-          <input v-model.number="uiItemImageBlock.header.gradient.angle" type="number" min="0" max="360" class="input-field" />
+          <input v-model.number="headerGradientState.angle" type="number" min="0" max="360" class="input-field" />
         </div>
       </template>
 
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('header-background-label') }}</UiFormLabel>
-        <EditorColorPicker v-model="uiItemImageBlock.header.backgroundColor" class="w-full">
+        <EditorColorPicker v-model="headerState.backgroundColor" class="w-full">
           <template #trigger="{ color, toggle }">
-            <SfInput v-model="uiItemImageBlock.header.backgroundColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+            <SfInput v-model="headerState.backgroundColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
           </template>
         </EditorColorPicker>
       </div>
@@ -260,20 +260,20 @@
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('header-margin-label') }}</UiFormLabel>
         <div class="grid grid-cols-4 gap-px rounded-md overflow-hidden border border-gray-300">
-          <div class="cell"><span><SfIconArrowUpward /></span><input v-model.number="uiItemImageBlock.header.margin.top" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowDownward /></span><input v-model.number="uiItemImageBlock.header.margin.bottom" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowBack /></span><input v-model.number="uiItemImageBlock.header.margin.left" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowForward /></span><input v-model.number="uiItemImageBlock.header.margin.right" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowUpward /></span><input v-model.number="headerMarginState.top" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowDownward /></span><input v-model.number="headerMarginState.bottom" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowBack /></span><input v-model.number="headerMarginState.left" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowForward /></span><input v-model.number="headerMarginState.right" type="number" class="num" /></div>
         </div>
       </div>
 
       <div>
         <UiFormLabel class="mb-1">{{ getEditorTranslation('header-padding-label') }}</UiFormLabel>
         <div class="grid grid-cols-4 gap-px rounded-md overflow-hidden border border-gray-300">
-          <div class="cell"><span><SfIconArrowUpward /></span><input v-model.number="uiItemImageBlock.header.padding.top" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowDownward /></span><input v-model.number="uiItemImageBlock.header.padding.bottom" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowBack /></span><input v-model.number="uiItemImageBlock.header.padding.left" type="number" class="num" /></div>
-          <div class="cell"><span><SfIconArrowForward /></span><input v-model.number="uiItemImageBlock.header.padding.right" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowUpward /></span><input v-model.number="headerPaddingState.top" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowDownward /></span><input v-model.number="headerPaddingState.bottom" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowBack /></span><input v-model.number="headerPaddingState.left" type="number" class="num" /></div>
+          <div class="cell"><span><SfIconArrowForward /></span><input v-model.number="headerPaddingState.right" type="number" class="num" /></div>
         </div>
       </div>
     </div>
@@ -352,6 +352,81 @@ const uiItemImageBlock = computed<ImageGalleryContent>(() => {
   }
 
   return content as ImageGalleryContent;
+});
+
+const layoutState = computed(() => uiItemImageBlock.value.layout);
+const layoutGradientState = computed(() => {
+  if (!layoutState.value.gradient) {
+    layoutState.value.gradient = {
+      enabled: false,
+      type: 'linear',
+      startColor: '#ffffff',
+      endColor: '#e2e8f0',
+      angle: 180,
+      radius: 100,
+      startX: 50,
+      startY: 50,
+    };
+  }
+  return layoutState.value.gradient;
+});
+const layoutMarginState = computed(() => {
+  if (!layoutState.value.margin) layoutState.value.margin = defaultSpacing();
+  return layoutState.value.margin;
+});
+const layoutPaddingState = computed(() => {
+  if (!layoutState.value.padding) layoutState.value.padding = defaultSpacing();
+  return layoutState.value.padding;
+});
+
+const headerState = computed(() => {
+  if (!uiItemImageBlock.value.header) {
+    uiItemImageBlock.value.header = {
+      subline: '',
+      headline: '',
+      sublineColor: '#64748b',
+      headlineColor: '#0f172a',
+      sublineFontSize: 16,
+      headlineFontSize: 44,
+      backgroundColor: 'transparent',
+      gradient: {
+        enabled: false,
+        type: 'linear',
+        startColor: '#ffffff',
+        endColor: '#e2e8f0',
+        angle: 180,
+        radius: 100,
+        startX: 50,
+        startY: 50,
+      },
+      margin: defaultSpacing(),
+      padding: defaultSpacing(),
+    };
+  }
+  return uiItemImageBlock.value.header;
+});
+const headerGradientState = computed(() => {
+  if (!headerState.value.gradient) {
+    headerState.value.gradient = {
+      enabled: false,
+      type: 'linear',
+      startColor: '#ffffff',
+      endColor: '#e2e8f0',
+      angle: 180,
+      radius: 100,
+      startX: 50,
+      startY: 50,
+    };
+  }
+  return headerState.value.gradient;
+});
+const headerMarginState = computed(() => {
+  if (!headerState.value.margin) headerState.value.margin = defaultSpacing();
+  return headerState.value.margin;
+});
+const headerPaddingState = computed(() => {
+  if (!headerState.value.padding) headerState.value.padding = defaultSpacing();
+  return headerState.value.padding;
 });
 
 const { isFullWidth } = useFullWidthToggleForContent(uiItemImageBlock);
