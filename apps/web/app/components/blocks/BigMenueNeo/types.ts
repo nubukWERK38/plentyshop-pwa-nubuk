@@ -47,6 +47,15 @@ export type BigMenueNeoLayout = {
   panelBackgroundColor: string;
   panelTitleColor: string;
   panelLinkColor: string;
+  topLinkColor: string;
+  submenuLinkColor: string;
+  level3LinkColor: string;
+  linkHoverColor: string;
+  linkHoverBorderColor: string;
+  searchTagBackgroundColor: string;
+  searchTagTextColor: string;
+  searchTagHoverBackgroundColor: string;
+  searchTagHoverTextColor: string;
 };
 
 export type BigMenueNeoContent = {

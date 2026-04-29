@@ -22,9 +22,14 @@
         <draggable v-model="menuContent.menus" item-key="id" handle=".drag-handle" class="space-y-3">
           <template #item="{ element: menu, index }">
             <section class="rounded-md border p-3" :data-testid="`big-menue-neo-menu-${index}`">
-              <div class="flex items-center gap-2 mb-3">
-                <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
-                <h3 class="font-semibold">{{ getEditorTranslation('top-menu-label') }} {{ index + 1 }}</h3>
+              <div class="mb-3">
+                <div class="flex items-center gap-2">
+                  <button type="button" class="drag-handle cursor-grab rounded border px-2 py-1 text-xs">::</button>
+                  <h3 class="font-semibold">{{ getEditorTranslation('top-menu-label') }} {{ index + 1 }}</h3>
+                </div>
+                <p class="mt-1 pl-9 text-xs text-neutral-600">
+                  ({{ getTopCategoryPreviewLabel(menu.category) }})
+                </p>
               </div>
 
               <div class="flex items-center gap-2 mb-3">
@@ -222,6 +227,7 @@
                       </div>
 
                       <UiImagePicker
+                        class="big-menue-neo-form__brand-picker"
                         :label="getEditorTranslation('brand-logo-label')"
                         :image="brand.image"
                         :placeholder="placeholderImg"
@@ -259,39 +265,230 @@
         <h2>{{ getEditorTranslation('layout-label') }}</h2>
       </template>
 
-      <div class="space-y-3">
-        <div class="flex items-center justify-between">
-          <UiFormLabel>{{ getEditorTranslation('full-width-label') }}</UiFormLabel>
-          <SfSwitch v-model="menuContent.layout.fullWidth" />
-        </div>
+      <div class="space-y-4">
+        <section class="layout-group">
+          <h3 class="layout-group__title">{{ getEditorTranslation('layout-group-general-label') }}</h3>
 
-        <div>
-          <UiFormLabel class="mb-1">{{ getEditorTranslation('top-menu-alignment-label') }}</UiFormLabel>
-          <select v-model="menuContent.layout.topMenuAlignment" class="input-field" data-testid="big-menue-neo-top-menu-alignment">
-            <option value="left">{{ getEditorTranslation('alignment-left-label') }}</option>
-            <option value="center">{{ getEditorTranslation('alignment-center-label') }}</option>
-            <option value="right">{{ getEditorTranslation('alignment-right-label') }}</option>
-          </select>
-        </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <UiFormLabel>{{ getEditorTranslation('full-width-label') }}</UiFormLabel>
+              <SfSwitch v-model="menuContent.layout.fullWidth" />
+            </div>
 
-        <div>
-          <UiFormLabel class="mb-1">{{ getEditorTranslation('panel-bg-label') }}</UiFormLabel>
-          <EditorColorPicker v-model="menuContent.layout.panelBackgroundColor" class="w-full">
-            <template #trigger="{ color, toggle }">
-              <SfInput v-model="menuContent.layout.panelBackgroundColor" type="text">
-                <template #suffix>
-                  <button
-                    type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
-                    :style="{ backgroundColor: color }"
-                    @mousedown.stop
-                    @click.stop="toggle"
-                  />
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('top-menu-alignment-label') }}</UiFormLabel>
+              <select v-model="menuContent.layout.topMenuAlignment" class="input-field" data-testid="big-menue-neo-top-menu-alignment">
+                <option value="left">{{ getEditorTranslation('alignment-left-label') }}</option>
+                <option value="center">{{ getEditorTranslation('alignment-center-label') }}</option>
+                <option value="right">{{ getEditorTranslation('alignment-right-label') }}</option>
+              </select>
+            </div>
+
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('panel-bg-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.panelBackgroundColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.panelBackgroundColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
                 </template>
-              </SfInput>
-            </template>
-          </EditorColorPicker>
-        </div>
+              </EditorColorPicker>
+            </div>
+          </div>
+        </section>
+
+        <section class="layout-group">
+          <h3 class="layout-group__title">{{ getEditorTranslation('layout-group-links-label') }}</h3>
+
+          <div class="space-y-3">
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('top-link-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.topLinkColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.topLinkColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('submenu-link-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.submenuLinkColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.submenuLinkColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('level3-link-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.level3LinkColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.level3LinkColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+
+            <div class="layout-group__divider" />
+
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('hover-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.linkHoverColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.linkHoverColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('hover-border-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.linkHoverBorderColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.linkHoverBorderColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+          </div>
+        </section>
+
+        <section class="layout-group">
+          <h3 class="layout-group__title">{{ getEditorTranslation('layout-group-search-label') }}</h3>
+
+          <div class="space-y-3">
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('search-bg-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.searchTagBackgroundColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.searchTagBackgroundColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('search-text-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.searchTagTextColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.searchTagTextColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('search-hover-bg-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.searchTagHoverBackgroundColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.searchTagHoverBackgroundColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+
+            <div>
+              <UiFormLabel class="mb-1">{{ getEditorTranslation('search-hover-text-color-label') }}</UiFormLabel>
+              <EditorColorPicker v-model="menuContent.layout.searchTagHoverTextColor" class="w-full">
+                <template #trigger="{ color, toggle }">
+                  <SfInput v-model="menuContent.layout.searchTagHoverTextColor" type="text">
+                    <template #suffix>
+                      <button
+                        type="button"
+                        class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                        :style="{ backgroundColor: color }"
+                        @mousedown.stop
+                        @click.stop="toggle"
+                      />
+                    </template>
+                  </SfInput>
+                </template>
+              </EditorColorPicker>
+            </div>
+          </div>
+        </section>
       </div>
     </UiAccordionItem>
   </div>
@@ -367,6 +564,16 @@ const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
     .map((entry) => ({ id: entry.id, label: getPath(entry) }))
     .sort((a, b) => a.label.localeCompare(b.label));
 });
+
+const getTopCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => {
+  if (category.customLabel?.trim()) return category.customLabel.trim();
+  if (category.linkType === 'manualUrl') return category.manualUrl?.trim() || getEditorTranslation('not-selected-label');
+  if (!category.categoryId) return getEditorTranslation('not-selected-label');
+  const option = categoryOptions.value.find((entry) => entry.id === category.categoryId);
+  if (!option) return getEditorTranslation('not-selected-label');
+  const segments = option.label.split(' > ');
+  return segments[segments.length - 1] || option.label;
+};
 
 const createCategoryLink = () => ({
   linkType: 'category' as const,
@@ -465,6 +672,15 @@ const menuContent = computed<BigMenueNeoContent>(() => {
       panelBackgroundColor: '#ffffff',
       panelTitleColor: '#111827',
       panelLinkColor: '#374151',
+      topLinkColor: '#111827',
+      submenuLinkColor: '#111827',
+      level3LinkColor: '#374151',
+      linkHoverColor: '#111827',
+      linkHoverBorderColor: '#111827',
+      searchTagBackgroundColor: '#f3f4f6',
+      searchTagTextColor: '#111827',
+      searchTagHoverBackgroundColor: '#e5e7eb',
+      searchTagHoverTextColor: '#111827',
     };
   } else {
     if (content.layout.fullWidth === undefined) content.layout.fullWidth = true;
@@ -474,6 +690,15 @@ const menuContent = computed<BigMenueNeoContent>(() => {
     if (!content.layout.panelBackgroundColor) content.layout.panelBackgroundColor = '#ffffff';
     if (!content.layout.panelTitleColor) content.layout.panelTitleColor = '#111827';
     if (!content.layout.panelLinkColor) content.layout.panelLinkColor = '#374151';
+    if (!content.layout.topLinkColor) content.layout.topLinkColor = '#111827';
+    if (!content.layout.submenuLinkColor) content.layout.submenuLinkColor = '#111827';
+    if (!content.layout.level3LinkColor) content.layout.level3LinkColor = '#374151';
+    if (!content.layout.linkHoverColor) content.layout.linkHoverColor = '#111827';
+    if (!content.layout.linkHoverBorderColor) content.layout.linkHoverBorderColor = '#111827';
+    if (!content.layout.searchTagBackgroundColor) content.layout.searchTagBackgroundColor = '#f3f4f6';
+    if (!content.layout.searchTagTextColor) content.layout.searchTagTextColor = '#111827';
+    if (!content.layout.searchTagHoverBackgroundColor) content.layout.searchTagHoverBackgroundColor = '#e5e7eb';
+    if (!content.layout.searchTagHoverTextColor) content.layout.searchTagHoverTextColor = '#111827';
   }
 
   return rawContent as BigMenueNeoContent;
@@ -571,6 +796,44 @@ onMounted(async () => {
   background: #dcfce7;
   color: #14532d;
 }
+
+.layout-group {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background: #fafafa;
+}
+
+.layout-group__title {
+  margin: 0 0 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.layout-group__divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0.2rem 0;
+}
+
+.big-menue-neo-form__brand-picker :deep(.flex.items-start.gap-4) {
+  display: block;
+}
+
+.big-menue-neo-form__brand-picker :deep(.flex.items-start.gap-4 > div:first-child) {
+  width: 100%;
+  height: auto;
+  min-height: 130px;
+  margin-bottom: 0.75rem;
+}
+
+.big-menue-neo-form__brand-picker :deep(.flex.items-start.gap-4 > div:first-child img) {
+  object-fit: contain;
+  background: #fff;
+}
 </style>
 
 <i18n lang="json">
@@ -611,7 +874,20 @@ onMounted(async () => {
     "alignment-left-label": "Links",
     "alignment-center-label": "Zentriert",
     "alignment-right-label": "Rechts",
-    "panel-bg-label": "Panel-Hintergrundfarbe"
+    "panel-bg-label": "Panel-Hintergrundfarbe",
+    "top-link-color-label": "Top-Kategorie-Linkfarbe",
+    "submenu-link-color-label": "Submenue-Linkfarbe",
+    "level3-link-color-label": "Ebene-3-Linkfarbe",
+    "hover-color-label": "Hover-Schriftfarbe",
+    "hover-border-color-label": "Hover Border-Bottom-Farbe",
+    "search-bg-color-label": "Suchbegriff Hintergrundfarbe",
+    "search-text-color-label": "Suchbegriff Schriftfarbe",
+    "search-hover-bg-color-label": "Suchbegriff Hover-Hintergrundfarbe",
+    "search-hover-text-color-label": "Suchbegriff Hover-Schriftfarbe",
+    "layout-group-general-label": "Grundlayout",
+    "layout-group-links-label": "Linkfarben",
+    "layout-group-hover-label": "Hover",
+    "layout-group-search-label": "Suchbegriffe"
   },
   "de": {
     "menus-label": "Big-Menues",
@@ -649,7 +925,20 @@ onMounted(async () => {
     "alignment-left-label": "Links",
     "alignment-center-label": "Zentriert",
     "alignment-right-label": "Rechts",
-    "panel-bg-label": "Panel-Hintergrundfarbe"
+    "panel-bg-label": "Panel-Hintergrundfarbe",
+    "top-link-color-label": "Top-Kategorie-Linkfarbe",
+    "submenu-link-color-label": "Submenue-Linkfarbe",
+    "level3-link-color-label": "Ebene-3-Linkfarbe",
+    "hover-color-label": "Hover-Schriftfarbe",
+    "hover-border-color-label": "Hover Border-Bottom-Farbe",
+    "search-bg-color-label": "Suchbegriff Hintergrundfarbe",
+    "search-text-color-label": "Suchbegriff Schriftfarbe",
+    "search-hover-bg-color-label": "Suchbegriff Hover-Hintergrundfarbe",
+    "search-hover-text-color-label": "Suchbegriff Hover-Schriftfarbe",
+    "layout-group-general-label": "Grundlayout",
+    "layout-group-links-label": "Linkfarben",
+    "layout-group-hover-label": "Hover",
+    "layout-group-search-label": "Suchbegriffe"
   }
 }
 </i18n>
