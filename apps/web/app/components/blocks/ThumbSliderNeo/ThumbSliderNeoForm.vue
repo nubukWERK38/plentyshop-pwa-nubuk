@@ -125,12 +125,50 @@
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('subline-font-weight-label') }}</UiFormLabel>
-          <input v-model.number="thumbContent.header.sublineFontWeight" type="number" min="100" max="900" step="100" class="input-field" />
+          <input
+            v-model.number="thumbContent.header.sublineFontWeight"
+            type="number"
+            min="100"
+            max="900"
+            step="100"
+            class="input-field"
+          />
         </div>
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-font-weight-label') }}</UiFormLabel>
-          <input v-model.number="thumbContent.header.headlineFontWeight" type="number" min="100" max="900" step="100" class="input-field" />
+          <input
+            v-model.number="thumbContent.header.headlineFontWeight"
+            type="number"
+            min="100"
+            max="900"
+            step="100"
+            class="input-field"
+          />
+        </div>
+
+        <div class="rounded border p-3 space-y-2">
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
+            {{ getEditorTranslation('header-margin-label') }}
+          </h3>
+          <div class="grid grid-cols-4 gap-2">
+            <input v-model.number="headerMarginState.top" type="number" class="input-field" />
+            <input v-model.number="headerMarginState.right" type="number" class="input-field" />
+            <input v-model.number="headerMarginState.bottom" type="number" class="input-field" />
+            <input v-model.number="headerMarginState.left" type="number" class="input-field" />
+          </div>
+        </div>
+
+        <div class="rounded border p-3 space-y-2">
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
+            {{ getEditorTranslation('header-padding-label') }}
+          </h3>
+          <div class="grid grid-cols-4 gap-2">
+            <input v-model.number="headerPaddingState.top" type="number" min="0" class="input-field" />
+            <input v-model.number="headerPaddingState.right" type="number" min="0" class="input-field" />
+            <input v-model.number="headerPaddingState.bottom" type="number" min="0" class="input-field" />
+            <input v-model.number="headerPaddingState.left" type="number" min="0" class="input-field" />
+          </div>
         </div>
       </div>
     </UiAccordionItem>
@@ -148,7 +186,9 @@
         <div v-for="(item, index) in thumbContent.items" :key="`item-${index}`" class="rounded border p-3">
           <div class="mb-2 flex justify-between items-center">
             <p class="text-sm font-semibold">{{ getEditorTranslation('item-label') }} {{ index + 1 }}</p>
-            <button type="button" class="text-xs text-red-600" @click="removeItem(index)">{{ getEditorTranslation('remove-label') }}</button>
+            <button type="button" class="text-xs text-red-600" @click="removeItem(index)">
+              {{ getEditorTranslation('remove-label') }}
+            </button>
           </div>
 
           <UiImagePicker
@@ -190,6 +230,22 @@
           <UiFormLabel>{{ getEditorTranslation('full-width-label') }}</UiFormLabel>
           <SfSwitch v-model="thumbContent.controls.fullWidth" />
         </div>
+        <div class="flex items-center justify-between">
+          <UiFormLabel>{{ getEditorTranslation('loop-label') }}</UiFormLabel>
+          <SfSwitch v-model="thumbContent.controls.loop" />
+        </div>
+        <div class="flex items-center justify-between">
+          <UiFormLabel>{{ getEditorTranslation('show-arrows-label') }}</UiFormLabel>
+          <SfSwitch v-model="thumbContent.controls.showArrows" />
+        </div>
+        <div class="flex items-center justify-between">
+          <UiFormLabel>{{ getEditorTranslation('peek-slides-label') }}</UiFormLabel>
+          <SfSwitch v-model="thumbContent.controls.peekSlides" />
+        </div>
+        <div class="flex items-center justify-between">
+          <UiFormLabel>{{ getEditorTranslation('accent-bars-label') }}</UiFormLabel>
+          <SfSwitch v-model="thumbContent.controls.accentBars" />
+        </div>
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('delay-label') }}</UiFormLabel>
@@ -201,20 +257,115 @@
         </div>
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('slides-per-view-desktop-label') }}</UiFormLabel>
-          <input v-model.number="thumbContent.controls.slidesPerViewDesktop" type="number" min="1" max="8" class="input-field" />
+          <input
+            v-model.number="thumbContent.controls.slidesPerViewDesktop"
+            type="number"
+            min="1"
+            max="8"
+            class="input-field"
+          />
         </div>
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('slides-per-view-mobile-label') }}</UiFormLabel>
-          <input v-model.number="thumbContent.controls.slidesPerViewMobile" type="number" min="1" max="4" class="input-field" />
+          <input
+            v-model.number="thumbContent.controls.slidesPerViewMobile"
+            type="number"
+            min="1"
+            max="4"
+            class="input-field"
+          />
         </div>
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('slides-per-group-label') }}</UiFormLabel>
-          <input v-model.number="thumbContent.controls.slidesPerGroup" type="number" min="1" max="4" class="input-field" />
+          <input
+            v-model.number="thumbContent.controls.slidesPerGroup"
+            type="number"
+            min="1"
+            max="4"
+            class="input-field"
+          />
+        </div>
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('tile-gap-label') }}</UiFormLabel>
+          <input v-model.number="thumbContent.controls.tileGap" type="number" min="0" max="80" class="input-field" />
+        </div>
+        <div v-if="thumbContent.controls.peekSlides">
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('side-peek-label') }}</UiFormLabel>
+          <input
+            v-model.number="thumbContent.controls.sidePeek"
+            type="number"
+            min="0"
+            max="1.5"
+            step="0.05"
+            class="input-field"
+          />
         </div>
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('tile-skew-label') }}</UiFormLabel>
           <input v-model.number="thumbContent.controls.tileSkew" type="number" min="-30" max="30" class="input-field" />
         </div>
+
+        <div v-if="thumbContent.controls.showArrows">
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('arrow-color-label') }}</UiFormLabel>
+          <EditorColorPicker v-model="thumbContent.controls.arrowColor" class="w-full">
+            <template #trigger="{ color, toggle }">
+              <SfInput v-model="thumbContent.controls.arrowColor" type="text" class="w-full">
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </template>
+          </EditorColorPicker>
+        </div>
+
+        <template v-if="thumbContent.controls.accentBars">
+          <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-color-label') }}</UiFormLabel>
+            <EditorColorPicker v-model="thumbContent.controls.accentBarColor" class="w-full">
+              <template #trigger="{ color, toggle }">
+                <SfInput v-model="thumbContent.controls.accentBarColor" type="text" class="w-full">
+                  <template #suffix>
+                    <button
+                      type="button"
+                      class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                      :style="{ backgroundColor: color }"
+                      @mousedown.stop
+                      @click.stop="toggle"
+                    />
+                  </template>
+                </SfInput>
+              </template>
+            </EditorColorPicker>
+          </div>
+
+          <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-height-label') }}</UiFormLabel>
+            <input
+              v-model.number="thumbContent.controls.accentBarHeight"
+              type="number"
+              min="0"
+              max="120"
+              class="input-field"
+            />
+          </div>
+
+          <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-width-label') }}</UiFormLabel>
+            <input
+              v-model.number="thumbContent.controls.accentBarWidth"
+              type="number"
+              min="0"
+              max="100"
+              class="input-field"
+            />
+          </div>
+        </template>
 
         <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('tile-text-align-label') }}</UiFormLabel>
@@ -335,7 +486,9 @@
         </div>
 
         <div class="rounded border p-3 space-y-2">
-          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">{{ getEditorTranslation('tile-padding-label') }}</h3>
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
+            {{ getEditorTranslation('tile-padding-label') }}
+          </h3>
           <div>
             <UiFormLabel class="mb-1">Top</UiFormLabel>
             <input v-model.number="tilePaddingState.top" type="number" min="0" class="input-field" />
@@ -355,7 +508,9 @@
         </div>
 
         <div class="rounded border p-3 space-y-2">
-          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">{{ getEditorTranslation('tile-text-padding-label') }}</h3>
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
+            {{ getEditorTranslation('tile-text-padding-label') }}
+          </h3>
           <div>
             <UiFormLabel class="mb-1">Top</UiFormLabel>
             <input v-model.number="tileTextPaddingState.top" type="number" min="0" class="input-field" />
@@ -391,13 +546,6 @@ const { placeholderImg } = usePickerHelper();
 
 const defaultSpacing = () => ({ top: 0, right: 0, bottom: 0, left: 0 });
 
-const normalizeSpacing = (spacing?: Partial<ThumbSliderNeoContent['controls']['margin']>) => ({
-  top: spacing?.top ?? 0,
-  right: spacing?.right ?? 0,
-  bottom: spacing?.bottom ?? 0,
-  left: spacing?.left ?? 0,
-});
-
 const normalizeGradient = (gradient?: Partial<ThumbSliderNeoContent['controls']['tileGradient']>) => ({
   enabled: gradient?.enabled === true,
   type: gradient?.type ?? 'linear',
@@ -413,8 +561,8 @@ const defaultContent = (): ThumbSliderNeoContent => ({
   header: {
     subline: '',
     headline: '',
-    sublineAlignment: 'left',
-    headlineAlignment: 'left',
+    sublineAlignment: 'center',
+    headlineAlignment: 'center',
     sublineColor: '#64748b',
     headlineColor: '#0f172a',
     sublineBackgroundColor: 'transparent',
@@ -446,13 +594,23 @@ const defaultContent = (): ThumbSliderNeoContent => ({
     },
   ],
   controls: {
-    fullWidth: false,
+    fullWidth: true,
     autoplay: false,
     autoplayDelay: 3500,
     speed: 600,
+    loop: true,
+    showArrows: true,
+    arrowColor: '#ffffff',
+    accentBars: true,
+    accentBarColor: '#d7ff00',
+    accentBarHeight: 30,
+    accentBarWidth: 32,
+    peekSlides: true,
+    sidePeek: 0.45,
     slidesPerViewDesktop: 5,
     slidesPerViewMobile: 2,
     slidesPerGroup: 1,
+    tileGap: 8,
     tileSkew: -8,
     tileBackgroundColor: '#111827',
     tileTextColor: '#ffffff',
@@ -489,8 +647,8 @@ const thumbContent = computed<ThumbSliderNeoContent>(() => {
   const h = rawContent.header;
   h.subline ??= '';
   h.headline ??= '';
-  h.sublineAlignment ??= 'left';
-  h.headlineAlignment ??= 'left';
+  h.sublineAlignment ??= 'center';
+  h.headlineAlignment ??= 'center';
   h.sublineColor ??= '#64748b';
   h.headlineColor ??= '#0f172a';
   h.sublineBackgroundColor ??= 'transparent';
@@ -514,13 +672,23 @@ const thumbContent = computed<ThumbSliderNeoContent>(() => {
 
   // Controls: fill individual missing properties only
   const c = rawContent.controls;
-  c.fullWidth ??= false;
+  c.fullWidth ??= true;
   c.autoplay ??= false;
   c.autoplayDelay ??= 3500;
   c.speed ??= 600;
+  c.loop ??= true;
+  c.showArrows ??= true;
+  c.arrowColor ??= '#ffffff';
+  c.accentBars ??= true;
+  c.accentBarColor ??= '#d7ff00';
+  c.accentBarHeight ??= 30;
+  c.accentBarWidth ??= 32;
+  c.peekSlides ??= true;
+  c.sidePeek ??= 0.45;
   c.slidesPerViewDesktop ??= 5;
   c.slidesPerViewMobile ??= 2;
   c.slidesPerGroup ??= 1;
+  c.tileGap ??= 8;
   c.tileSkew ??= -8;
   c.tileBackgroundColor ??= '#111827';
   c.tileTextColor ??= '#ffffff';
@@ -542,6 +710,8 @@ const controlsOpen = ref(true);
 const tileGradientState = computed(() => thumbContent.value.controls.tileGradient ?? normalizeGradient());
 const tilePaddingState = computed(() => thumbContent.value.controls.tilePadding ?? defaultSpacing());
 const tileTextPaddingState = computed(() => thumbContent.value.controls.tileTextPadding ?? defaultSpacing());
+const headerMarginState = computed(() => thumbContent.value.header.margin ?? defaultSpacing());
+const headerPaddingState = computed(() => thumbContent.value.header.padding ?? defaultSpacing());
 
 const addItem = () => {
   thumbContent.value.items.push({ image: placeholderImg, alt: '', link: '/', text: '' });
@@ -605,6 +775,8 @@ const onDeleteImage = (index: number) => () => {
     "headline-font-size-label": "Headline font size (px)",
     "subline-font-weight-label": "Subline font weight",
     "headline-font-weight-label": "Headline font weight",
+    "header-margin-label": "Header margin (top, right, bottom, left)",
+    "header-padding-label": "Header padding (top, right, bottom, left)",
     "items-label": "Tiles",
     "item-label": "Tile",
     "add-item-label": "Add tile",
@@ -616,12 +788,22 @@ const onDeleteImage = (index: number) => () => {
     "controls-label": "Controls",
     "autoplay-label": "Autoplay",
     "full-width-label": "Full width",
+    "loop-label": "Endless loop",
+    "show-arrows-label": "Show arrows",
+    "peek-slides-label": "Show cut-off side tiles",
+    "accent-bars-label": "Show accent bars",
     "delay-label": "Autoplay delay (ms)",
     "speed-label": "Slide speed (ms)",
     "slides-per-view-desktop-label": "Tiles per view (desktop)",
     "slides-per-view-mobile-label": "Tiles per view (mobile)",
     "slides-per-group-label": "Tiles per slide",
+    "tile-gap-label": "Tile gap (px)",
+    "side-peek-label": "Side cut-off amount",
     "tile-skew-label": "Tile skew (deg)",
+    "arrow-color-label": "Arrow color",
+    "accent-bar-color-label": "Accent bar color",
+    "accent-bar-height-label": "Accent bar height (px)",
+    "accent-bar-width-label": "Accent bar width (%)",
     "tile-text-align-label": "Tile text alignment",
     "tile-background-label": "Tile background",
     "tile-gradient-enabled-label": "Enable tile gradient",
@@ -653,6 +835,8 @@ const onDeleteImage = (index: number) => () => {
     "headline-font-size-label": "Headline Schriftgroesse (px)",
     "subline-font-weight-label": "Subline Font-Weight",
     "headline-font-weight-label": "Headline Font-Weight",
+    "header-margin-label": "Header Margin (oben, rechts, unten, links)",
+    "header-padding-label": "Header Padding (oben, rechts, unten, links)",
     "items-label": "Kacheln",
     "item-label": "Kachel",
     "add-item-label": "Kachel hinzufuegen",
@@ -664,12 +848,22 @@ const onDeleteImage = (index: number) => () => {
     "controls-label": "Steuerung",
     "autoplay-label": "Autoplay",
     "full-width-label": "Volle Breite",
+    "loop-label": "Endlosschleife",
+    "show-arrows-label": "Pfeile anzeigen",
+    "peek-slides-label": "Seitliche Thumbs angeschnitten anzeigen",
+    "accent-bars-label": "Schmuck-Balken anzeigen",
     "delay-label": "Autoplay Delay (ms)",
     "speed-label": "Slide Geschwindigkeit (ms)",
     "slides-per-view-desktop-label": "Kacheln sichtbar (Desktop)",
     "slides-per-view-mobile-label": "Kacheln sichtbar (Mobile)",
     "slides-per-group-label": "Kacheln pro Slide",
+    "tile-gap-label": "Kachelabstand (px)",
+    "side-peek-label": "Seitlicher Anschnitt",
     "tile-skew-label": "Kachel-Schraege (Grad)",
+    "arrow-color-label": "Pfeilfarbe",
+    "accent-bar-color-label": "Schmuck-Balken Farbe",
+    "accent-bar-height-label": "Schmuck-Balken Hoehe (px)",
+    "accent-bar-width-label": "Schmuck-Balken Breite (%)",
     "tile-text-align-label": "Kachel Textausrichtung",
     "tile-background-label": "Kachel Hintergrund",
     "tile-gradient-enabled-label": "Kachel Verlauf aktivieren",

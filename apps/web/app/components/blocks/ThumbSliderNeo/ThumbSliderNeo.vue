@@ -1,56 +1,102 @@
 <template>
   <section class="thumb-slider-neo w-full" :style="wrapperStyle" data-testid="thumb-slider-neo">
-    <div class="thumb-slider-neo__inner" :class="controls.fullWidth ? 'w-full' : 'w-full'">
+    <div class="thumb-slider-neo__inner">
       <header v-if="headerVisible" class="thumb-slider-neo__header" :style="headerStyle">
-        <p v-if="contentHeader.subline" class="thumb-slider-neo__subline" :style="sublineStyle">{{ contentHeader.subline }}</p>
-        <h2 v-if="contentHeader.headline" class="thumb-slider-neo__headline" :style="headlineStyle">{{ contentHeader.headline }}</h2>
+        <p v-if="contentHeader.subline" class="thumb-slider-neo__subline" :style="sublineStyle">
+          {{ contentHeader.subline }}
+        </p>
+        <h2 v-if="contentHeader.headline" class="thumb-slider-neo__headline" :style="headlineStyle">
+          {{ contentHeader.headline }}
+        </h2>
       </header>
 
-      <Swiper
-        :modules="modules"
-        :slides-per-view="controls.slidesPerViewMobile"
-        :breakpoints="breakpoints"
-        :space-between="16"
-        :slides-per-group="controls.slidesPerGroup"
-        :speed="controls.speed"
-        :autoplay="autoplayConfig"
-        :loop="normalizedItems.length > controls.slidesPerViewDesktop"
-      >
-        <SwiperSlide v-for="(item, index) in normalizedItems" :key="`thumb-${index}`">
-          <component
-            :is="item.link ? NuxtLink : 'div'"
-            :to="item.link ? localePath(item.link) : undefined"
-            class="thumb-slider-neo__tile block"
-            :style="tileStyle"
-            :data-testid="`thumb-slider-neo-item-${index}`"
-          >
-            <NuxtImg
-              v-if="item.image"
-              :src="item.image"
-              :alt="item.alt"
-              class="thumb-slider-neo__image"
-              width="400"
-              height="220"
-            />
-            <p v-if="item.text" class="thumb-slider-neo__text" :style="tileTextStyle">{{ item.text }}</p>
-          </component>
-        </SwiperSlide>
-      </Swiper>
+      <div class="thumb-slider-neo__slider" :style="sliderStyle">
+        <span
+          v-if="controls.accentBars"
+          class="thumb-slider-neo__accent thumb-slider-neo__accent--top"
+          :style="accentBarStyle"
+          aria-hidden="true"
+        />
+        <span
+          v-if="controls.accentBars"
+          class="thumb-slider-neo__accent thumb-slider-neo__accent--bottom"
+          :style="accentBarStyle"
+          aria-hidden="true"
+        />
+
+        <Swiper
+          :modules="modules"
+          :slides-per-view="mobileSlidesPerView"
+          :breakpoints="breakpoints"
+          :space-between="controls.tileGap"
+          :slides-per-group="controls.slidesPerGroup"
+          :speed="controls.speed"
+          :autoplay="autoplayConfig"
+          :loop="loopEnabled"
+          :loop-additional-slides="loopAdditionalSlides"
+          :centered-slides="controls.peekSlides"
+          :navigation="navigationConfig"
+          :watch-overflow="false"
+          class="thumb-slider-neo__swiper"
+        >
+          <SwiperSlide v-for="(item, index) in renderedItems" :key="`thumb-${index}-${item.sourceIndex}`">
+            <component
+              :is="item.link ? NuxtLink : 'div'"
+              :to="item.link ? localePath(item.link) : undefined"
+              class="thumb-slider-neo__tile block"
+              :style="tileStyle"
+              :data-testid="`thumb-slider-neo-item-${index}`"
+            >
+              <NuxtImg
+                v-if="item.image"
+                :src="item.image"
+                :alt="item.alt"
+                class="thumb-slider-neo__image"
+                width="400"
+                height="220"
+              />
+              <p v-if="item.text" class="thumb-slider-neo__text" :style="tileTextStyle">{{ item.text }}</p>
+            </component>
+          </SwiperSlide>
+        </Swiper>
+
+        <button
+          v-if="showNavigationArrows"
+          type="button"
+          :class="[`thumb-slider-neo-prev-${sliderId}`, 'thumb-slider-neo__nav thumb-slider-neo__nav--prev']"
+          :style="arrowStyle"
+          aria-label="Previous slide"
+        >
+          <SfIconChevronLeft />
+        </button>
+        <button
+          v-if="showNavigationArrows"
+          type="button"
+          :class="[`thumb-slider-neo-next-${sliderId}`, 'thumb-slider-neo__nav thumb-slider-neo__nav--next']"
+          :style="arrowStyle"
+          aria-label="Next slide"
+        >
+          <SfIconChevronRight />
+        </button>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Autoplay } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
+import { SfIconChevronLeft, SfIconChevronRight } from '@storefront-ui/vue';
 import type { CSSProperties } from 'vue';
 import type { ThumbSliderNeoContent, ThumbSliderNeoProps } from './types';
 import 'swiper/css';
+import 'swiper/css/navigation';
 
 const props = defineProps<ThumbSliderNeoProps>();
 
 const localePath = useLocalePath();
 const NuxtLink = resolveComponent('NuxtLink');
+const sliderId = computed(() => (props.meta?.uuid || 'thumb-slider-neo').replace(/[^a-zA-Z0-9_-]/g, ''));
 
 const ensureSpacing = (spacing?: { top?: number; right?: number; bottom?: number; left?: number }) => ({
   top: spacing?.top ?? 0,
@@ -77,9 +123,19 @@ const controls = computed(() => {
     autoplay: raw.autoplay === true,
     autoplayDelay: raw.autoplayDelay ?? 3500,
     speed: raw.speed ?? 600,
+    loop: raw.loop !== false,
+    showArrows: raw.showArrows !== false,
+    arrowColor: raw.arrowColor ?? '#ffffff',
+    accentBars: raw.accentBars !== false,
+    accentBarColor: raw.accentBarColor ?? '#d7ff00',
+    accentBarHeight: raw.accentBarHeight ?? 30,
+    accentBarWidth: raw.accentBarWidth ?? 32,
+    peekSlides: raw.peekSlides !== false,
+    sidePeek: raw.sidePeek ?? 0.45,
     slidesPerViewDesktop: raw.slidesPerViewDesktop ?? 5,
     slidesPerViewMobile: raw.slidesPerViewMobile ?? 2,
     slidesPerGroup: raw.slidesPerGroup ?? 1,
+    tileGap: raw.tileGap ?? 8,
     tileSkew: raw.tileSkew ?? -8,
     tileBackgroundColor: raw.tileBackgroundColor ?? '#111827',
     tileTextColor: raw.tileTextColor ?? '#ffffff',
@@ -97,8 +153,8 @@ const contentHeader = computed(() => {
   return {
     subline: raw.subline ?? '',
     headline: raw.headline ?? '',
-    sublineAlignment: raw.sublineAlignment ?? 'left',
-    headlineAlignment: raw.headlineAlignment ?? 'left',
+    sublineAlignment: raw.sublineAlignment ?? 'center',
+    headlineAlignment: raw.headlineAlignment ?? 'center',
     sublineColor: raw.sublineColor ?? '#64748b',
     headlineColor: raw.headlineColor ?? '#0f172a',
     sublineBackgroundColor: raw.sublineBackgroundColor ?? 'transparent',
@@ -124,10 +180,46 @@ const normalizedItems = computed(() => {
   }));
 });
 
-const modules = [Autoplay];
+const clampNumber = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+const sidePeekDesktop = computed(() => (controls.value.peekSlides ? clampNumber(controls.value.sidePeek, 0, 1.5) : 0));
+const sidePeekMobile = computed(() => (controls.value.peekSlides ? clampNumber(controls.value.sidePeek, 0, 0.75) : 0));
+
+const desktopSlidesPerView = computed(() => controls.value.slidesPerViewDesktop + sidePeekDesktop.value);
+const mobileSlidesPerView = computed(() => controls.value.slidesPerViewMobile + sidePeekMobile.value);
+
+const minimumLoopSlides = computed(
+  () => Math.ceil(Math.max(desktopSlidesPerView.value, mobileSlidesPerView.value)) + controls.value.slidesPerGroup * 2,
+);
+
+const renderedItems = computed(() => {
+  const items = normalizedItems.value;
+  if (!controls.value.loop || items.length <= 1 || items.length >= minimumLoopSlides.value) {
+    return items.map((item, sourceIndex) => ({ ...item, sourceIndex }));
+  }
+
+  const repeats = Math.ceil(minimumLoopSlides.value / items.length);
+  return Array.from({ length: repeats }).flatMap((_, repeatIndex) =>
+    items.map((item, sourceIndex) => ({ ...item, sourceIndex, repeatIndex })),
+  );
+});
+
+const loopEnabled = computed(
+  () => controls.value.loop && renderedItems.value.length > Math.ceil(desktopSlidesPerView.value),
+);
+const loopAdditionalSlides = computed(() => (loopEnabled.value ? Math.ceil(desktopSlidesPerView.value) : 0));
+
+const showNavigationArrows = computed(() => controls.value.showArrows && renderedItems.value.length > 1);
+
+const modules = computed(() => {
+  const activeModules: (typeof Autoplay | typeof Navigation)[] = [];
+  if (controls.value.autoplay) activeModules.push(Autoplay);
+  if (showNavigationArrows.value) activeModules.push(Navigation);
+  return activeModules;
+});
 
 const autoplayConfig = computed(() => {
-  if (!controls.value.autoplay) return false;
+  if (!controls.value.autoplay || renderedItems.value.length <= 1) return false;
   return {
     delay: controls.value.autoplayDelay,
     disableOnInteraction: false,
@@ -137,9 +229,19 @@ const autoplayConfig = computed(() => {
 
 const breakpoints = computed(() => ({
   768: {
-    slidesPerView: controls.value.slidesPerViewDesktop,
+    slidesPerView: desktopSlidesPerView.value,
+    spaceBetween: controls.value.tileGap,
   },
 }));
+
+const navigationConfig = computed(() => {
+  if (!showNavigationArrows.value) return false;
+
+  return {
+    nextEl: `.thumb-slider-neo-next-${sliderId.value}`,
+    prevEl: `.thumb-slider-neo-prev-${sliderId.value}`,
+  };
+});
 
 const gradientToCss = (gradient: ReturnType<typeof ensureGradient>) => {
   if (!gradient.enabled) return undefined;
@@ -159,6 +261,16 @@ const wrapperStyle = computed<CSSProperties>(() => ({
   paddingBottom: `${controls.value.padding.bottom}px`,
   paddingLeft: `${controls.value.padding.left}px`,
 }));
+
+const sliderStyle = computed<CSSProperties>(() => {
+  if (!controls.value.accentBars) return {};
+  const accentBarHeight = Math.max(0, controls.value.accentBarHeight);
+
+  return {
+    paddingTop: `${accentBarHeight}px`,
+    paddingBottom: `${accentBarHeight}px`,
+  };
+});
 
 const headerVisible = computed(() => Boolean(contentHeader.value.subline || contentHeader.value.headline));
 
@@ -209,9 +321,23 @@ const tileTextStyle = computed<CSSProperties>(() => ({
   paddingBottom: `${controls.value.tileTextPadding.bottom}px`,
   paddingLeft: `${controls.value.tileTextPadding.left}px`,
 }));
+
+const arrowStyle = computed<CSSProperties>(() => ({
+  color: controls.value.arrowColor,
+}));
+
+const accentBarStyle = computed<CSSProperties>(() => ({
+  height: `${Math.max(0, controls.value.accentBarHeight)}px`,
+  width: `${clampNumber(controls.value.accentBarWidth, 0, 100)}%`,
+  backgroundColor: controls.value.accentBarColor,
+}));
 </script>
 
 <style scoped>
+.thumb-slider-neo {
+  overflow: hidden;
+}
+
 .thumb-slider-neo__header {
   margin-bottom: 1rem;
 }
@@ -225,6 +351,33 @@ const tileTextStyle = computed<CSSProperties>(() => ({
 .thumb-slider-neo__headline {
   margin: 0;
   line-height: 1.1;
+}
+
+.thumb-slider-neo__slider {
+  position: relative;
+}
+
+.thumb-slider-neo__swiper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.thumb-slider-neo__accent {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.thumb-slider-neo__accent--top {
+  top: 0;
+  right: 0;
+}
+
+.thumb-slider-neo__accent--bottom {
+  bottom: 0;
+  left: 0;
 }
 
 .thumb-slider-neo__tile {
@@ -246,5 +399,35 @@ const tileTextStyle = computed<CSSProperties>(() => ({
   font-size: 0.875rem;
   line-height: 1.25rem;
   transform: skewX(calc(var(--tw-skew-x, 0deg) * -1));
+}
+
+.thumb-slider-neo__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: inline-flex;
+  width: 3rem;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.45));
+  cursor: pointer;
+}
+
+.thumb-slider-neo__nav--prev {
+  left: 1rem;
+}
+
+.thumb-slider-neo__nav--next {
+  right: 1rem;
+}
+
+.thumb-slider-neo__nav :deep(svg) {
+  width: 2rem;
+  height: 2rem;
 }
 </style>
