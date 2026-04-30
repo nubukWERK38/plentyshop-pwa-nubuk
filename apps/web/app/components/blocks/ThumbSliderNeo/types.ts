@@ -29,6 +29,8 @@ export type ThumbSliderNeoHeader = {
   headlineFontSize?: number;
   sublineFontWeight?: number;
   headlineFontWeight?: number;
+  sublineMarginBottom?: number;
+  headlineMarginBottom?: number;
   backgroundColor?: string;
   gradient?: ThumbSliderNeoGradient;
   margin?: ThumbSliderNeoSpacing;

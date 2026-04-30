@@ -163,6 +163,8 @@ const contentHeader = computed(() => {
     headlineFontSize: raw.headlineFontSize ?? 46,
     sublineFontWeight: raw.sublineFontWeight ?? 500,
     headlineFontWeight: raw.headlineFontWeight ?? 700,
+    sublineMarginBottom: raw.sublineMarginBottom ?? 0,
+    headlineMarginBottom: raw.headlineMarginBottom ?? 0,
     backgroundColor: raw.backgroundColor ?? 'transparent',
     gradient: ensureGradient(raw.gradient),
     margin: ensureSpacing(raw.margin),
@@ -293,6 +295,7 @@ const sublineStyle = computed<CSSProperties>(() => ({
   backgroundColor: contentHeader.value.sublineBackgroundColor,
   fontSize: `${contentHeader.value.sublineFontSize}px`,
   fontWeight: contentHeader.value.sublineFontWeight,
+  marginBottom: `${contentHeader.value.sublineMarginBottom}px`,
 }));
 
 const headlineStyle = computed<CSSProperties>(() => ({
@@ -301,6 +304,7 @@ const headlineStyle = computed<CSSProperties>(() => ({
   backgroundColor: contentHeader.value.headlineBackgroundColor,
   fontSize: `${contentHeader.value.headlineFontSize}px`,
   fontWeight: contentHeader.value.headlineFontWeight,
+  marginBottom: `${contentHeader.value.headlineMarginBottom}px`,
 }));
 
 const tileStyle = computed<CSSProperties>(() => ({
@@ -403,27 +407,33 @@ const accentBarStyle = computed<CSSProperties>(() => ({
 
 .thumb-slider-neo__nav {
   position: absolute;
-  top: 50%;
+  top: 0;
   z-index: 2;
   display: inline-flex;
-  width: 3rem;
-  height: 3rem;
+  width: 8%;
+  min-width: 2.5rem;
+  height: 100%;
   align-items: center;
   justify-content: center;
   border: 0;
-  background: transparent;
+  background: #252525;
   color: #fff;
-  transform: translateY(-50%);
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.45));
   cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.thumb-slider-neo__nav:hover {
+  opacity: 0.85;
 }
 
 .thumb-slider-neo__nav--prev {
-  left: 1rem;
+  left: 0;
+  clip-path: polygon(0 0, 85% 0, 70% 100%, 0 100%);
 }
 
 .thumb-slider-neo__nav--next {
-  right: 1rem;
+  right: 0;
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 30% 100%);
 }
 
 .thumb-slider-neo__nav :deep(svg) {

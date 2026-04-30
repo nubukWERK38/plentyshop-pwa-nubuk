@@ -147,6 +147,16 @@
           />
         </div>
 
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('subline-margin-bottom-label') }}</UiFormLabel>
+          <input v-model.number="thumbContent.header.sublineMarginBottom" type="number" min="0" class="input-field" />
+        </div>
+
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-margin-bottom-label') }}</UiFormLabel>
+          <input v-model.number="thumbContent.header.headlineMarginBottom" type="number" min="0" class="input-field" />
+        </div>
+
         <div class="rounded border p-3 space-y-2">
           <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
             {{ getEditorTranslation('header-margin-label') }}
@@ -657,6 +667,8 @@ const thumbContent = computed<ThumbSliderNeoContent>(() => {
   h.headlineFontSize ??= 46;
   h.sublineFontWeight ??= 500;
   h.headlineFontWeight ??= 700;
+  h.sublineMarginBottom ??= 0;
+  h.headlineMarginBottom ??= 0;
   h.backgroundColor ??= 'transparent';
   if (!h.gradient) h.gradient = normalizeGradient();
   if (!h.margin) h.margin = defaultSpacing();
@@ -777,46 +789,48 @@ const onDeleteImage = (index: number) => () => {
     "headline-font-weight-label": "Headline font weight",
     "header-margin-label": "Header margin (top, right, bottom, left)",
     "header-padding-label": "Header padding (top, right, bottom, left)",
-    "items-label": "Tiles",
-    "item-label": "Tile",
-    "add-item-label": "Add tile",
+    "subline-margin-bottom-label": "Subline margin bottom (px)",
+    "headline-margin-bottom-label": "Headline margin bottom (px)",
+    "items-label": "Thumbs",
+    "item-label": "Thumb",
+    "add-item-label": "Add thumb",
     "remove-label": "Remove",
     "image-label": "Image",
     "alt-label": "Alt text",
     "link-label": "Link",
-    "text-label": "Text below tile",
+    "text-label": "Text below thumb",
     "controls-label": "Controls",
     "autoplay-label": "Autoplay",
     "full-width-label": "Full width",
     "loop-label": "Endless loop",
     "show-arrows-label": "Show arrows",
-    "peek-slides-label": "Show cut-off side tiles",
+    "peek-slides-label": "Show cut-off side thumbs",
     "accent-bars-label": "Show accent bars",
     "delay-label": "Autoplay delay (ms)",
     "speed-label": "Slide speed (ms)",
-    "slides-per-view-desktop-label": "Tiles per view (desktop)",
-    "slides-per-view-mobile-label": "Tiles per view (mobile)",
-    "slides-per-group-label": "Tiles per slide",
-    "tile-gap-label": "Tile gap (px)",
+    "slides-per-view-desktop-label": "Thumbs per view (desktop)",
+    "slides-per-view-mobile-label": "Thumbs per view (mobile)",
+    "slides-per-group-label": "Thumbs per slide",
+    "tile-gap-label": "Thumb gap (px)",
     "side-peek-label": "Side cut-off amount",
-    "tile-skew-label": "Tile skew (deg)",
+    "tile-skew-label": "Thumb skew (deg)",
     "arrow-color-label": "Arrow color",
     "accent-bar-color-label": "Accent bar color",
     "accent-bar-height-label": "Accent bar height (px)",
     "accent-bar-width-label": "Accent bar width (%)",
-    "tile-text-align-label": "Tile text alignment",
-    "tile-background-label": "Tile background",
-    "tile-gradient-enabled-label": "Enable tile gradient",
-    "tile-gradient-type-label": "Tile gradient type",
-    "tile-gradient-start-label": "Tile gradient start color",
-    "tile-gradient-end-label": "Tile gradient end color",
-    "tile-gradient-angle-label": "Tile gradient angle",
-    "tile-gradient-radius-label": "Tile gradient radius",
-    "tile-gradient-start-x-label": "Tile gradient start X",
-    "tile-gradient-start-y-label": "Tile gradient start Y",
-    "tile-text-color-label": "Tile text color",
-    "tile-padding-label": "Tile padding",
-    "tile-text-padding-label": "Tile text padding"
+    "tile-text-align-label": "Thumb text alignment",
+    "tile-background-label": "Thumb background",
+    "tile-gradient-enabled-label": "Enable thumb gradient",
+    "tile-gradient-type-label": "Thumb gradient type",
+    "tile-gradient-start-label": "Thumb gradient start color",
+    "tile-gradient-end-label": "Thumb gradient end color",
+    "tile-gradient-angle-label": "Thumb gradient angle",
+    "tile-gradient-radius-label": "Thumb gradient radius",
+    "tile-gradient-start-x-label": "Thumb gradient start X",
+    "tile-gradient-start-y-label": "Thumb gradient start Y",
+    "tile-text-color-label": "Thumb text color",
+    "tile-padding-label": "Thumb padding",
+    "tile-text-padding-label": "Thumb text padding"
   },
   "de": {
     "header-label": "Header",
@@ -837,14 +851,16 @@ const onDeleteImage = (index: number) => () => {
     "headline-font-weight-label": "Headline Font-Weight",
     "header-margin-label": "Header Margin (oben, rechts, unten, links)",
     "header-padding-label": "Header Padding (oben, rechts, unten, links)",
-    "items-label": "Kacheln",
-    "item-label": "Kachel",
-    "add-item-label": "Kachel hinzufuegen",
+    "subline-margin-bottom-label": "Subline Abstand unten (px)",
+    "headline-margin-bottom-label": "Headline Abstand unten (px)",
+    "items-label": "Thumbs",
+    "item-label": "Thumb",
+    "add-item-label": "Thumb hinzufuegen",
     "remove-label": "Entfernen",
     "image-label": "Bild",
     "alt-label": "Alt-Text",
     "link-label": "Link",
-    "text-label": "Text unter Kachel",
+    "text-label": "Text unter Thumb",
     "controls-label": "Steuerung",
     "autoplay-label": "Autoplay",
     "full-width-label": "Volle Breite",
@@ -854,29 +870,29 @@ const onDeleteImage = (index: number) => () => {
     "accent-bars-label": "Schmuck-Balken anzeigen",
     "delay-label": "Autoplay Delay (ms)",
     "speed-label": "Slide Geschwindigkeit (ms)",
-    "slides-per-view-desktop-label": "Kacheln sichtbar (Desktop)",
-    "slides-per-view-mobile-label": "Kacheln sichtbar (Mobile)",
-    "slides-per-group-label": "Kacheln pro Slide",
-    "tile-gap-label": "Kachelabstand (px)",
+    "slides-per-view-desktop-label": "Thumbs sichtbar (Desktop)",
+    "slides-per-view-mobile-label": "Thumbs sichtbar (Mobile)",
+    "slides-per-group-label": "Thumbs pro Slide",
+    "tile-gap-label": "Thumb-Abstand (px)",
     "side-peek-label": "Seitlicher Anschnitt",
-    "tile-skew-label": "Kachel-Schraege (Grad)",
+    "tile-skew-label": "Thumb-Schraege (Grad)",
     "arrow-color-label": "Pfeilfarbe",
     "accent-bar-color-label": "Schmuck-Balken Farbe",
     "accent-bar-height-label": "Schmuck-Balken Hoehe (px)",
     "accent-bar-width-label": "Schmuck-Balken Breite (%)",
-    "tile-text-align-label": "Kachel Textausrichtung",
-    "tile-background-label": "Kachel Hintergrund",
-    "tile-gradient-enabled-label": "Kachel Verlauf aktivieren",
-    "tile-gradient-type-label": "Kachel Verlaufstyp",
-    "tile-gradient-start-label": "Kachel Verlauf Startfarbe",
-    "tile-gradient-end-label": "Kachel Verlauf Endfarbe",
-    "tile-gradient-angle-label": "Kachel Verlauf Winkel",
-    "tile-gradient-radius-label": "Kachel Verlauf Radius",
-    "tile-gradient-start-x-label": "Kachel Verlauf Start X",
-    "tile-gradient-start-y-label": "Kachel Verlauf Start Y",
-    "tile-text-color-label": "Kachel Textfarbe",
-    "tile-padding-label": "Kachel Padding",
-    "tile-text-padding-label": "Kachel Text Padding"
+    "tile-text-align-label": "Thumb Textausrichtung",
+    "tile-background-label": "Thumb Hintergrund",
+    "tile-gradient-enabled-label": "Thumb Verlauf aktivieren",
+    "tile-gradient-type-label": "Thumb Verlaufstyp",
+    "tile-gradient-start-label": "Thumb Verlauf Startfarbe",
+    "tile-gradient-end-label": "Thumb Verlauf Endfarbe",
+    "tile-gradient-angle-label": "Thumb Verlauf Winkel",
+    "tile-gradient-radius-label": "Thumb Verlauf Radius",
+    "tile-gradient-start-x-label": "Thumb Verlauf Start X",
+    "tile-gradient-start-y-label": "Thumb Verlauf Start Y",
+    "tile-text-color-label": "Thumb Textfarbe",
+    "tile-padding-label": "Thumb Padding",
+    "tile-text-padding-label": "Thumb Text Padding"
   }
 }
 </i18n>
