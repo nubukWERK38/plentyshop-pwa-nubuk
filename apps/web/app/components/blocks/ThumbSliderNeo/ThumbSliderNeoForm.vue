@@ -375,6 +375,16 @@
               class="input-field"
             />
           </div>
+
+          <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-top-y-label') }}</UiFormLabel>
+            <input v-model.number="thumbContent.controls.accentBarTopY" type="number" class="input-field" />
+          </div>
+
+          <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-bottom-y-label') }}</UiFormLabel>
+            <input v-model.number="thumbContent.controls.accentBarBottomY" type="number" class="input-field" />
+          </div>
         </template>
 
         <div>
@@ -615,7 +625,9 @@ const defaultContent = (): ThumbSliderNeoContent => ({
     accentBarColor: '#d7ff00',
     accentBarHeight: 30,
     accentBarWidth: 32,
-    peekSlides: true,
+    accentBarTopY: 0,
+    accentBarBottomY: 0,
+    peekSlides: false,
     sidePeek: 0.45,
     slidesPerViewDesktop: 5,
     slidesPerViewMobile: 2,
@@ -695,7 +707,9 @@ const thumbContent = computed<ThumbSliderNeoContent>(() => {
   c.accentBarColor ??= '#d7ff00';
   c.accentBarHeight ??= 30;
   c.accentBarWidth ??= 32;
-  c.peekSlides ??= true;
+  c.accentBarTopY ??= 0;
+  c.accentBarBottomY ??= 0;
+  c.peekSlides ??= false;
   c.sidePeek ??= 0.45;
   c.slidesPerViewDesktop ??= 5;
   c.slidesPerViewMobile ??= 2;
@@ -818,6 +832,8 @@ const onDeleteImage = (index: number) => () => {
     "accent-bar-color-label": "Accent bar color",
     "accent-bar-height-label": "Accent bar height (px)",
     "accent-bar-width-label": "Accent bar width (%)",
+    "accent-bar-top-y-label": "Accent bar top position Y (px)",
+    "accent-bar-bottom-y-label": "Accent bar bottom position Y (px)",
     "tile-text-align-label": "Thumb text alignment",
     "tile-background-label": "Thumb background",
     "tile-gradient-enabled-label": "Enable thumb gradient",
@@ -880,6 +896,8 @@ const onDeleteImage = (index: number) => () => {
     "accent-bar-color-label": "Schmuck-Balken Farbe",
     "accent-bar-height-label": "Schmuck-Balken Hoehe (px)",
     "accent-bar-width-label": "Schmuck-Balken Breite (%)",
+    "accent-bar-top-y-label": "Schmuck-Balken oben Position Y (px)",
+    "accent-bar-bottom-y-label": "Schmuck-Balken unten Position Y (px)",
     "tile-text-align-label": "Thumb Textausrichtung",
     "tile-background-label": "Thumb Hintergrund",
     "tile-gradient-enabled-label": "Thumb Verlauf aktivieren",

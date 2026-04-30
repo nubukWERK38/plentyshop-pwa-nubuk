@@ -14,13 +14,13 @@
         <span
           v-if="controls.accentBars"
           class="thumb-slider-neo__accent thumb-slider-neo__accent--top"
-          :style="accentBarStyle"
+          :style="accentBarTopStyle"
           aria-hidden="true"
         />
         <span
           v-if="controls.accentBars"
           class="thumb-slider-neo__accent thumb-slider-neo__accent--bottom"
-          :style="accentBarStyle"
+          :style="accentBarBottomStyle"
           aria-hidden="true"
         />
 
@@ -131,7 +131,9 @@ const controls = computed(() => {
     accentBarColor: raw.accentBarColor ?? '#d7ff00',
     accentBarHeight: raw.accentBarHeight ?? 30,
     accentBarWidth: raw.accentBarWidth ?? 32,
-    peekSlides: raw.peekSlides !== false,
+    accentBarTopY: raw.accentBarTopY ?? 0,
+    accentBarBottomY: raw.accentBarBottomY ?? 0,
+    peekSlides: raw.peekSlides === true,
     sidePeek: raw.sidePeek ?? 0.45,
     slidesPerViewDesktop: raw.slidesPerViewDesktop ?? 5,
     slidesPerViewMobile: raw.slidesPerViewMobile ?? 2,
@@ -231,6 +233,10 @@ const autoplayConfig = computed(() => {
 });
 
 const breakpoints = computed(() => ({
+  0: {
+    slidesPerView: mobileSlidesPerView.value,
+    spaceBetween: controls.value.tileGap,
+  },
   768: {
     slidesPerView: desktopSlidesPerView.value,
     spaceBetween: controls.value.tileGap,
@@ -326,10 +332,18 @@ const arrowStyle = computed<CSSProperties>(() => ({
   color: controls.value.arrowColor,
 }));
 
-const accentBarStyle = computed<CSSProperties>(() => ({
+const accentBarTopStyle = computed<CSSProperties>(() => ({
   height: `${Math.max(0, controls.value.accentBarHeight)}px`,
   width: `${clampNumber(controls.value.accentBarWidth, 0, 100)}%`,
   backgroundColor: controls.value.accentBarColor,
+  top: `${controls.value.accentBarTopY}px`,
+}));
+
+const accentBarBottomStyle = computed<CSSProperties>(() => ({
+  height: `${Math.max(0, controls.value.accentBarHeight)}px`,
+  width: `${clampNumber(controls.value.accentBarWidth, 0, 100)}%`,
+  backgroundColor: controls.value.accentBarColor,
+  bottom: `${controls.value.accentBarBottomY}px`,
 }));
 </script>
 
