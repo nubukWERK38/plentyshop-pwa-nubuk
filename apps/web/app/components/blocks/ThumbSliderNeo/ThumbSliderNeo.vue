@@ -32,10 +32,11 @@
           :slides-per-group="controls.slidesPerGroup"
           :speed="controls.speed"
           :autoplay="autoplayConfig"
+          :initial-slide="0"
           :loop="loopEnabled"
           :rewind="rewindEnabled"
           :loop-additional-slides="loopAdditionalSlides"
-          :centered-slides="controls.peekSlides"
+          :centered-slides="false"
           :navigation="navigationConfig"
           :watch-overflow="false"
           class="thumb-slider-neo__swiper"
@@ -394,7 +395,7 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
 }
 
 .thumb-slider-neo__accent--top {
-  top: 0;
+  top: -28px;
   right: 0;
 }
 

@@ -157,29 +157,7 @@
           <input v-model.number="thumbContent.header.headlineMarginBottom" type="number" min="0" class="input-field" />
         </div>
 
-        <div class="rounded border p-3 space-y-2">
-          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
-            {{ getEditorTranslation('header-margin-label') }}
-          </h3>
-          <div class="grid grid-cols-4 gap-2">
-            <input v-model.number="headerMarginState.top" type="number" class="input-field" />
-            <input v-model.number="headerMarginState.right" type="number" class="input-field" />
-            <input v-model.number="headerMarginState.bottom" type="number" class="input-field" />
-            <input v-model.number="headerMarginState.left" type="number" class="input-field" />
-          </div>
-        </div>
 
-        <div class="rounded border p-3 space-y-2">
-          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
-            {{ getEditorTranslation('header-padding-label') }}
-          </h3>
-          <div class="grid grid-cols-4 gap-2">
-            <input v-model.number="headerPaddingState.top" type="number" min="0" class="input-field" />
-            <input v-model.number="headerPaddingState.right" type="number" min="0" class="input-field" />
-            <input v-model.number="headerPaddingState.bottom" type="number" min="0" class="input-field" />
-            <input v-model.number="headerPaddingState.left" type="number" min="0" class="input-field" />
-          </div>
-        </div>
       </div>
     </UiAccordionItem>
 
@@ -316,11 +294,6 @@
         </div>
 
         <div v-if="thumbContent.controls.showArrows">
-          <UiFormLabel class="mb-1">{{ getEditorTranslation('nav-height-label') }}</UiFormLabel>
-          <input v-model.number="thumbContent.controls.navHeight" type="number" min="0" max="600" class="input-field" />
-        </div>
-
-        <div v-if="thumbContent.controls.showArrows">
           <UiFormLabel class="mb-1">{{ getEditorTranslation('arrow-color-label') }}</UiFormLabel>
           <EditorColorPicker v-model="thumbContent.controls.arrowColor" class="w-full">
             <template #trigger="{ color, toggle }">
@@ -359,47 +332,7 @@
             </EditorColorPicker>
           </div>
 
-          <div>
-            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-height-label') }}</UiFormLabel>
-            <input
-              v-model.number="thumbContent.controls.accentBarHeight"
-              type="number"
-              min="0"
-              max="120"
-              class="input-field"
-            />
-          </div>
 
-          <div>
-            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-width-label') }}</UiFormLabel>
-            <input
-              v-model.number="thumbContent.controls.accentBarWidth"
-              type="number"
-              min="0"
-              max="100"
-              class="input-field"
-            />
-          </div>
-
-          <div>
-            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-top-y-label') }}</UiFormLabel>
-            <input v-model.number="thumbContent.controls.accentBarTopY" type="number" class="input-field" />
-          </div>
-
-          <div>
-            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-top-x-label') }}</UiFormLabel>
-            <input v-model.number="thumbContent.controls.accentBarTopX" type="number" class="input-field" />
-          </div>
-
-          <div>
-            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-bottom-y-label') }}</UiFormLabel>
-            <input v-model.number="thumbContent.controls.accentBarBottomY" type="number" class="input-field" />
-          </div>
-
-          <div>
-            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-bottom-x-label') }}</UiFormLabel>
-            <input v-model.number="thumbContent.controls.accentBarBottomX" type="number" class="input-field" />
-          </div>
         </template>
 
         <div>
