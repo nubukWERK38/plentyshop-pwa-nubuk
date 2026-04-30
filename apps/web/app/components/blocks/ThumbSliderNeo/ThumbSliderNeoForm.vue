@@ -478,39 +478,58 @@ const thumbContent = computed<ThumbSliderNeoContent>(() => {
   const uuid = props.uuid || blockUuid.value;
   const rawContent = findOrDeleteBlockByUuid(data.value, uuid)?.content as Partial<ThumbSliderNeoContent> | undefined;
 
-  if (!rawContent) {
-    const fallback = defaultContent();
-    return fallback;
-  }
+  if (!rawContent) return defaultContent();
 
+  // Only set missing top-level sections (never replace the whole object — that causes an infinite reactive loop)
   if (!rawContent.header) rawContent.header = defaultContent().header;
   if (!Array.isArray(rawContent.items) || rawContent.items.length === 0) rawContent.items = defaultContent().items;
   if (!rawContent.controls) rawContent.controls = defaultContent().controls;
 
-  rawContent.header = {
-    ...defaultContent().header,
-    ...rawContent.header,
-    gradient: normalizeGradient(rawContent.header.gradient),
-    margin: normalizeSpacing(rawContent.header.margin),
-    padding: normalizeSpacing(rawContent.header.padding),
-  };
+  // Header: fill individual missing properties only
+  const h = rawContent.header;
+  h.subline ??= '';
+  h.headline ??= '';
+  h.sublineAlignment ??= 'left';
+  h.headlineAlignment ??= 'left';
+  h.sublineColor ??= '#64748b';
+  h.headlineColor ??= '#0f172a';
+  h.sublineBackgroundColor ??= 'transparent';
+  h.headlineBackgroundColor ??= 'transparent';
+  h.sublineFontSize ??= 16;
+  h.headlineFontSize ??= 46;
+  h.sublineFontWeight ??= 500;
+  h.headlineFontWeight ??= 700;
+  h.backgroundColor ??= 'transparent';
+  if (!h.gradient) h.gradient = normalizeGradient();
+  if (!h.margin) h.margin = defaultSpacing();
+  if (!h.padding) h.padding = defaultSpacing();
 
-  rawContent.items = rawContent.items.map((item) => ({
-    image: item?.image ?? '',
-    alt: item?.alt ?? '',
-    link: item?.link ?? '/',
-    text: item?.text ?? '',
-  }));
+  // Items: fill individual missing properties only
+  rawContent.items.forEach((item) => {
+    item.image ??= '';
+    item.alt ??= '';
+    item.link ??= '/';
+    item.text ??= '';
+  });
 
-  rawContent.controls = {
-    ...defaultContent().controls,
-    ...rawContent.controls,
-    tileGradient: normalizeGradient(rawContent.controls.tileGradient),
-    tilePadding: normalizeSpacing(rawContent.controls.tilePadding),
-    tileTextPadding: normalizeSpacing(rawContent.controls.tileTextPadding),
-    margin: normalizeSpacing(rawContent.controls.margin),
-    padding: normalizeSpacing(rawContent.controls.padding),
-  };
+  // Controls: fill individual missing properties only
+  const c = rawContent.controls;
+  c.fullWidth ??= false;
+  c.autoplay ??= false;
+  c.autoplayDelay ??= 3500;
+  c.speed ??= 600;
+  c.slidesPerViewDesktop ??= 5;
+  c.slidesPerViewMobile ??= 2;
+  c.slidesPerGroup ??= 1;
+  c.tileSkew ??= -8;
+  c.tileBackgroundColor ??= '#111827';
+  c.tileTextColor ??= '#ffffff';
+  c.tileTextAlign ??= 'left';
+  if (!c.tileGradient) c.tileGradient = normalizeGradient();
+  if (!c.tilePadding) c.tilePadding = defaultSpacing();
+  if (!c.tileTextPadding) c.tileTextPadding = defaultSpacing();
+  if (!c.margin) c.margin = defaultSpacing();
+  if (!c.padding) c.padding = defaultSpacing();
 
   return rawContent as ThumbSliderNeoContent;
 });
@@ -519,26 +538,10 @@ const headerOpen = ref(true);
 const itemsOpen = ref(true);
 const controlsOpen = ref(true);
 
-const tileGradientState = computed(() => {
-  if (!thumbContent.value.controls.tileGradient) {
-    thumbContent.value.controls.tileGradient = normalizeGradient();
-  }
-  return thumbContent.value.controls.tileGradient;
-});
-
-const tilePaddingState = computed(() => {
-  if (!thumbContent.value.controls.tilePadding) {
-    thumbContent.value.controls.tilePadding = normalizeSpacing();
-  }
-  return thumbContent.value.controls.tilePadding;
-});
-
-const tileTextPaddingState = computed(() => {
-  if (!thumbContent.value.controls.tileTextPadding) {
-    thumbContent.value.controls.tileTextPadding = normalizeSpacing();
-  }
-  return thumbContent.value.controls.tileTextPadding;
-});
+// thumbContent always guarantees these are set — no writes needed inside computed
+const tileGradientState = computed(() => thumbContent.value.controls.tileGradient ?? normalizeGradient());
+const tilePaddingState = computed(() => thumbContent.value.controls.tilePadding ?? defaultSpacing());
+const tileTextPaddingState = computed(() => thumbContent.value.controls.tileTextPadding ?? defaultSpacing());
 
 const addItem = () => {
   thumbContent.value.items.push({ image: placeholderImg, alt: '', link: '/', text: '' });
