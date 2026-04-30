@@ -102,6 +102,25 @@
     </div>
 
     <div class="py-2">
+      <UiFormLabel class="mb-1">{{ getEditorTranslation('button-hover-text-color-label') }}</UiFormLabel>
+      <EditorColorPicker v-model="textCardBlock.button.hoverTextColor" class="w-full">
+        <template #trigger="{ color, toggle }">
+          <SfInput v-model="textCardBlock.button.hoverTextColor" type="text">
+            <template #suffix>
+              <button
+                type="button"
+                class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                :style="{ backgroundColor: color }"
+                @mousedown.stop
+                @click.stop="toggle"
+              />
+            </template>
+          </SfInput>
+        </template>
+      </EditorColorPicker>
+    </div>
+
+    <div class="py-2">
       <div class="flex items-center justify-between">
         <UiFormLabel>{{ getEditorTranslation('button-gradient-enabled-label') }}</UiFormLabel>
         <SfSwitch v-model="buttonGradient.enabled" />
@@ -172,6 +191,25 @@
       <EditorColorPicker v-model="textCardBlock.button.backgroundColor" class="w-full">
         <template #trigger="{ color, toggle }">
           <SfInput v-model="textCardBlock.button.backgroundColor" type="text">
+            <template #suffix>
+              <button
+                type="button"
+                class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                :style="{ backgroundColor: color }"
+                @mousedown.stop
+                @click.stop="toggle"
+              />
+            </template>
+          </SfInput>
+        </template>
+      </EditorColorPicker>
+    </div>
+
+    <div class="py-2">
+      <UiFormLabel class="mb-1">{{ getEditorTranslation('button-hover-background-color-label') }}</UiFormLabel>
+      <EditorColorPicker v-model="textCardBlock.button.hoverBackgroundColor" class="w-full">
+        <template #trigger="{ color, toggle }">
+          <SfInput v-model="textCardBlock.button.hoverBackgroundColor" type="text">
             <template #suffix>
               <button
                 type="button"
@@ -317,6 +355,8 @@ const textCardBlock = computed<TextCardContent>(() => {
   if (!content.button) content.button = {};
   if (content.button.textColor === undefined) content.button.textColor = '';
   if (content.button.backgroundColor === undefined) content.button.backgroundColor = '';
+  if (content.button.hoverTextColor === undefined) content.button.hoverTextColor = '';
+  if (content.button.hoverBackgroundColor === undefined) content.button.hoverBackgroundColor = '';
   if (!content.button.backgroundGradient) {
     content.button.backgroundGradient = {
       enabled: false,
@@ -392,7 +432,9 @@ const buttonGradient = computed(() => {
     "button-text-label": "Label",
     "button-link-label": "Link target",
     "button-text-color-label": "Button text color",
+    "button-hover-text-color-label": "Button hover text color",
     "button-background-color-label": "Button background color",
+    "button-hover-background-color-label": "Button hover background color",
     "button-gradient-enabled-label": "Enable button gradient",
     "button-gradient-type-label": "Button gradient type",
     "button-gradient-start-label": "Button gradient start color",
@@ -416,7 +458,9 @@ const buttonGradient = computed(() => {
     "button-text-label": "Label",
     "button-link-label": "Link target",
     "button-text-color-label": "Button Textfarbe",
+    "button-hover-text-color-label": "Button Hover Textfarbe",
     "button-background-color-label": "Button Hintergrundfarbe",
+    "button-hover-background-color-label": "Button Hover Hintergrundfarbe",
     "button-gradient-enabled-label": "Button Verlauf aktivieren",
     "button-gradient-type-label": "Button Verlaufstyp",
     "button-gradient-start-label": "Button Startfarbe Verlauf",

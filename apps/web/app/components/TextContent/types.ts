@@ -15,6 +15,8 @@ export type TextContentProps = {
     variant?: 'primary' | 'secondary';
     textColor?: string;
     backgroundColor?: string;
+    hoverTextColor?: string;
+    hoverBackgroundColor?: string;
     backgroundGradient?: {
       enabled?: boolean;
       type?: 'linear' | 'radial';

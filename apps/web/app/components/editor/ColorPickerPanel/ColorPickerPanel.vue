@@ -21,16 +21,12 @@
     <div v-else>
       <div class="flex gap-2">
         <button
+          v-for="shopColor in props.shopColors"
+          :key="shopColor.id"
           type="button"
           class="h-8 w-8 rounded-md border border-slate-200"
-          :style="{ backgroundColor: props.primaryColor || '#000000' }"
-          @click="emit('update:modelValue', 'rgb(var(--colors-2-primary-500))')"
-        />
-        <button
-          type="button"
-          class="h-8 w-8 rounded-md border border-slate-200"
-          :style="{ backgroundColor: props.secondaryColor || '#000000' }"
-          @click="emit('update:modelValue', 'rgb(var(--colors-2-secondary-500))')"
+          :style="{ backgroundColor: shopColor.previewColor || '#000000' }"
+          @click="emit('update:modelValue', shopColor.value)"
         />
       </div>
       <div class="mt-3">
@@ -45,8 +41,11 @@ const props = withDefaults(
   defineProps<{
     modelValue: string | undefined;
     activeTab: 'shop' | 'picker';
-    primaryColor: string | null;
-    secondaryColor: string | null;
+    shopColors: Array<{
+      id: string;
+      previewColor: string | null;
+      value: string;
+    }>;
     showShopColors?: boolean;
   }>(),
   {

@@ -16,8 +16,7 @@
       <EditorColorPickerPanel
         :model-value="modelValue"
         :active-tab="activeTab"
-        :primary-color="primaryColor"
-        :secondary-color="secondaryColor"
+        :shop-colors="shopColors"
         :show-shop-colors="props.showShopColors"
         @update:model-value="emit('update:modelValue', $event)"
         @update:active-tab="activeTab = $event"
@@ -67,9 +66,26 @@ const previewColor = computed(() => style.value.backgroundColor as string);
 
 const { getSetting: getPrimaryColorSetting } = useSiteSettings('primaryColor');
 const { getSetting: getSecondaryColorSetting } = useSiteSettings('secondaryColor');
+const { getSetting: getAccentColor1Setting } = useSiteSettings('accentColor1');
+const { getSetting: getAccentColor2Setting } = useSiteSettings('accentColor2');
+const { getSetting: getAccentColor3Setting } = useSiteSettings('accentColor3');
+const { getSetting: getAccentColor4Setting } = useSiteSettings('accentColor4');
 
 const primaryColor = computed(() => getPrimaryColorSetting());
 const secondaryColor = computed(() => getSecondaryColorSetting());
+const accentColor1 = computed(() => getAccentColor1Setting());
+const accentColor2 = computed(() => getAccentColor2Setting());
+const accentColor3 = computed(() => getAccentColor3Setting());
+const accentColor4 = computed(() => getAccentColor4Setting());
+
+const shopColors = computed(() => [
+  { id: 'primary', previewColor: primaryColor.value, value: 'rgb(var(--colors-2-primary-500))' },
+  { id: 'secondary', previewColor: secondaryColor.value, value: 'rgb(var(--colors-2-secondary-500))' },
+  { id: 'accent1', previewColor: accentColor1.value, value: 'rgb(var(--colors-2-accent1-500))' },
+  { id: 'accent2', previewColor: accentColor2.value, value: 'rgb(var(--colors-2-accent2-500))' },
+  { id: 'accent3', previewColor: accentColor3.value, value: 'rgb(var(--colors-2-accent3-500))' },
+  { id: 'accent4', previewColor: accentColor4.value, value: 'rgb(var(--colors-2-accent4-500))' },
+]);
 
 watch(
   activeId,

@@ -19,7 +19,11 @@
       :to="localePath(props.button.link)"
       :variant="props.button.variant ?? 'primary'"
       :data-testid="props.testId ? 'text-button-' + props.testId : 'text-button'"
-      class="mt-3 px-4 py-2 cursor-pointer"
+      :class="[
+        'mt-3 px-4 py-2 cursor-pointer text-content__button',
+        { 'text-content__button--hover-text': !!props.button?.hoverTextColor },
+        { 'text-content__button--hover-bg': !!props.button?.hoverBackgroundColor },
+      ]"
       :style="buttonStyle"
     >
       {{ props.button.label }}
@@ -70,5 +74,19 @@ const buttonStyle = computed(() => ({
   background: resolveGradient(),
   backgroundColor: props.button?.backgroundGradient?.enabled ? undefined : props.button?.backgroundColor || undefined,
   borderColor: props.button?.backgroundColor || props.button?.backgroundGradient?.enabled ? 'transparent' : undefined,
+  '--text-content-button-hover-text-color': props.button?.hoverTextColor || undefined,
+  '--text-content-button-hover-background-color': props.button?.hoverBackgroundColor || undefined,
 }));
 </script>
+
+<style scoped>
+.text-content__button--hover-text:hover {
+  color: var(--text-content-button-hover-text-color) !important;
+}
+
+.text-content__button--hover-bg:hover {
+  background: var(--text-content-button-hover-background-color) !important;
+  background-color: var(--text-content-button-hover-background-color) !important;
+  border-color: var(--text-content-button-hover-background-color) !important;
+}
+</style>

@@ -6,16 +6,17 @@ describe('ColorPickerPanel', () => {
     props?: Partial<{
       modelValue: string | undefined;
       activeTab: 'shop' | 'picker';
-      primaryColor: string | null;
-      secondaryColor: string | null;
+      shopColors: Array<{ id: string; previewColor: string | null; value: string }>;
     }>,
   ) => {
     return mount(ColorPickerPanel, {
       props: {
         modelValue: '#000000',
         activeTab: 'picker',
-        primaryColor: '#111111',
-        secondaryColor: '#222222',
+        shopColors: [
+          { id: 'primary', previewColor: '#111111', value: 'rgb(var(--colors-2-primary-500))' },
+          { id: 'secondary', previewColor: '#222222', value: 'rgb(var(--colors-2-secondary-500))' },
+        ],
         ...props,
       },
       global: {
@@ -74,8 +75,10 @@ describe('ColorPickerPanel', () => {
       props: {
         modelValue: '#000000',
         activeTab: 'shop',
-        primaryColor: '#ff0000',
-        secondaryColor: '#00ff00',
+        shopColors: [
+          { id: 'primary', previewColor: '#ff0000', value: 'rgb(var(--colors-2-primary-500))' },
+          { id: 'secondary', previewColor: '#00ff00', value: 'rgb(var(--colors-2-secondary-500))' },
+        ],
       },
       global: {
         stubs: {
