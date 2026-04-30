@@ -132,7 +132,10 @@ const controls = computed(() => {
     accentBarHeight: raw.accentBarHeight ?? 30,
     accentBarWidth: raw.accentBarWidth ?? 32,
     accentBarTopY: raw.accentBarTopY ?? 0,
+    accentBarTopX: raw.accentBarTopX ?? 24,
     accentBarBottomY: raw.accentBarBottomY ?? 0,
+    accentBarBottomX: raw.accentBarBottomX ?? 0,
+    navHeight: raw.navHeight ?? 173,
     peekSlides: raw.peekSlides === true,
     sidePeek: raw.sidePeek ?? 0.45,
     slidesPerViewDesktop: raw.slidesPerViewDesktop ?? 5,
@@ -309,15 +312,18 @@ const headlineStyle = computed<CSSProperties>(() => ({
   marginBottom: `${contentHeader.value.headlineMarginBottom}px`,
 }));
 
-const tileStyle = computed<CSSProperties>(() => ({
-  background: gradientToCss(controls.value.tileGradient),
-  backgroundColor: controls.value.tileGradient.enabled ? undefined : controls.value.tileBackgroundColor,
-  transform: `skewX(${controls.value.tileSkew}deg)`,
-  paddingTop: `${controls.value.tilePadding.top}px`,
-  paddingRight: `${controls.value.tilePadding.right}px`,
-  paddingBottom: `${controls.value.tilePadding.bottom}px`,
-  paddingLeft: `${controls.value.tilePadding.left}px`,
-}));
+const tileStyle = computed<CSSProperties>(() => {
+  const gap = controls.value.tileGap;
+  return {
+    background: gradientToCss(controls.value.tileGradient),
+    backgroundColor: controls.value.tileGradient.enabled ? undefined : controls.value.tileBackgroundColor,
+    transform: `skewX(${controls.value.tileSkew}deg)`,
+    paddingTop: `${controls.value.tilePadding.top}px`,
+    paddingRight: gap === 0 ? '0px' : `${controls.value.tilePadding.right}px`,
+    paddingBottom: `${controls.value.tilePadding.bottom}px`,
+    paddingLeft: gap === 0 ? '0px' : `${controls.value.tilePadding.left}px`,
+  };
+});
 
 const tileTextStyle = computed<CSSProperties>(() => ({
   color: controls.value.tileTextColor,
@@ -330,6 +336,7 @@ const tileTextStyle = computed<CSSProperties>(() => ({
 
 const arrowStyle = computed<CSSProperties>(() => ({
   color: controls.value.arrowColor,
+  height: `${controls.value.navHeight}px`,
 }));
 
 const accentBarTopStyle = computed<CSSProperties>(() => ({
@@ -337,6 +344,7 @@ const accentBarTopStyle = computed<CSSProperties>(() => ({
   width: `${clampNumber(controls.value.accentBarWidth, 0, 100)}%`,
   backgroundColor: controls.value.accentBarColor,
   top: `${controls.value.accentBarTopY}px`,
+  right: `${controls.value.accentBarTopX}px`,
 }));
 
 const accentBarBottomStyle = computed<CSSProperties>(() => ({
@@ -344,6 +352,7 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
   width: `${clampNumber(controls.value.accentBarWidth, 0, 100)}%`,
   backgroundColor: controls.value.accentBarColor,
   bottom: `${controls.value.accentBarBottomY}px`,
+  left: `${controls.value.accentBarBottomX}px`,
 }));
 </script>
 
@@ -386,11 +395,11 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
 
 .thumb-slider-neo__accent--top {
   top: 0;
-  right: 24px;
+  right: 0;
 }
 
 .thumb-slider-neo__accent--bottom {
-  bottom: 4px;
+  bottom: 0;
   left: 0;
 }
 
@@ -422,7 +431,6 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
   display: inline-flex;
   width: 8%;
   min-width: 2.5rem;
-  height: 173px;
   align-items: center;
   justify-content: center;
   border: 0;

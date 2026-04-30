@@ -60,7 +60,10 @@ export type ThumbSliderNeoContent = {
     accentBarHeight?: number;
     accentBarWidth?: number;
     accentBarTopY?: number;
+    accentBarTopX?: number;
     accentBarBottomY?: number;
+    accentBarBottomX?: number;
+    navHeight?: number;
     peekSlides?: boolean;
     sidePeek?: number;
     slidesPerViewDesktop: number;

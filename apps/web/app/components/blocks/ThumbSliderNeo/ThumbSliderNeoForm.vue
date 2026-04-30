@@ -316,6 +316,11 @@
         </div>
 
         <div v-if="thumbContent.controls.showArrows">
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('nav-height-label') }}</UiFormLabel>
+          <input v-model.number="thumbContent.controls.navHeight" type="number" min="0" max="600" class="input-field" />
+        </div>
+
+        <div v-if="thumbContent.controls.showArrows">
           <UiFormLabel class="mb-1">{{ getEditorTranslation('arrow-color-label') }}</UiFormLabel>
           <EditorColorPicker v-model="thumbContent.controls.arrowColor" class="w-full">
             <template #trigger="{ color, toggle }">
@@ -382,8 +387,18 @@
           </div>
 
           <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-top-x-label') }}</UiFormLabel>
+            <input v-model.number="thumbContent.controls.accentBarTopX" type="number" class="input-field" />
+          </div>
+
+          <div>
             <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-bottom-y-label') }}</UiFormLabel>
             <input v-model.number="thumbContent.controls.accentBarBottomY" type="number" class="input-field" />
+          </div>
+
+          <div>
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('accent-bar-bottom-x-label') }}</UiFormLabel>
+            <input v-model.number="thumbContent.controls.accentBarBottomX" type="number" class="input-field" />
           </div>
         </template>
 
@@ -626,7 +641,10 @@ const defaultContent = (): ThumbSliderNeoContent => ({
     accentBarHeight: 30,
     accentBarWidth: 32,
     accentBarTopY: 0,
+    accentBarTopX: 24,
     accentBarBottomY: 0,
+    accentBarBottomX: 0,
+    navHeight: 173,
     peekSlides: false,
     sidePeek: 0.45,
     slidesPerViewDesktop: 5,
@@ -708,7 +726,10 @@ const thumbContent = computed<ThumbSliderNeoContent>(() => {
   c.accentBarHeight ??= 30;
   c.accentBarWidth ??= 32;
   c.accentBarTopY ??= 0;
+  c.accentBarTopX ??= 24;
   c.accentBarBottomY ??= 0;
+  c.accentBarBottomX ??= 0;
+  c.navHeight ??= 173;
   c.peekSlides ??= false;
   c.sidePeek ??= 0.45;
   c.slidesPerViewDesktop ??= 5;
@@ -833,7 +854,10 @@ const onDeleteImage = (index: number) => () => {
     "accent-bar-height-label": "Accent bar height (px)",
     "accent-bar-width-label": "Accent bar width (%)",
     "accent-bar-top-y-label": "Accent bar top position Y (px)",
+    "accent-bar-top-x-label": "Accent bar top position X (px, right)",
     "accent-bar-bottom-y-label": "Accent bar bottom position Y (px)",
+    "accent-bar-bottom-x-label": "Accent bar bottom position X (px, left)",
+    "nav-height-label": "Arrow background height (px)",
     "tile-text-align-label": "Thumb text alignment",
     "tile-background-label": "Thumb background",
     "tile-gradient-enabled-label": "Enable thumb gradient",
@@ -897,7 +921,10 @@ const onDeleteImage = (index: number) => () => {
     "accent-bar-height-label": "Schmuck-Balken Hoehe (px)",
     "accent-bar-width-label": "Schmuck-Balken Breite (%)",
     "accent-bar-top-y-label": "Schmuck-Balken oben Position Y (px)",
+    "accent-bar-top-x-label": "Schmuck-Balken oben Position X (px, rechts)",
     "accent-bar-bottom-y-label": "Schmuck-Balken unten Position Y (px)",
+    "accent-bar-bottom-x-label": "Schmuck-Balken unten Position X (px, links)",
+    "nav-height-label": "Pfeil-Hintergrund Hoehe (px)",
     "tile-text-align-label": "Thumb Textausrichtung",
     "tile-background-label": "Thumb Hintergrund",
     "tile-gradient-enabled-label": "Thumb Verlauf aktivieren",
