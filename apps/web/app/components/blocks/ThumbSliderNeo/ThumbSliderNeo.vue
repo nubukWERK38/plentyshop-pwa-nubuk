@@ -33,6 +33,7 @@
           :speed="controls.speed"
           :autoplay="autoplayConfig"
           :loop="loopEnabled"
+          :rewind="rewindEnabled"
           :loop-additional-slides="loopAdditionalSlides"
           :centered-slides="controls.peekSlides"
           :navigation="navigationConfig"
@@ -206,9 +207,9 @@ const renderedItems = computed(() => {
   );
 });
 
-const loopEnabled = computed(
-  () => controls.value.loop && renderedItems.value.length > Math.ceil(desktopSlidesPerView.value),
-);
+// Swiper loop and centered slides can conflict with small data sets; use rewind for reliable "back to start" behavior.
+const loopEnabled = computed(() => false);
+const rewindEnabled = computed(() => controls.value.loop && renderedItems.value.length > 1);
 const loopAdditionalSlides = computed(() => (loopEnabled.value ? Math.ceil(desktopSlidesPerView.value) : 0));
 
 const showNavigationArrows = computed(() => controls.value.showArrows && renderedItems.value.length > 1);
@@ -264,15 +265,10 @@ const wrapperStyle = computed<CSSProperties>(() => ({
   paddingLeft: `${controls.value.padding.left}px`,
 }));
 
-const sliderStyle = computed<CSSProperties>(() => {
-  if (!controls.value.accentBars) return {};
-  const accentBarHeight = Math.max(0, controls.value.accentBarHeight);
-
-  return {
-    paddingTop: `${accentBarHeight}px`,
-    paddingBottom: `${accentBarHeight}px`,
-  };
-});
+const sliderStyle = computed<CSSProperties>(() => ({
+  // Background matches tile color so nav clip-path areas and gaps between tiles appear consistent
+  backgroundColor: controls.value.tileBackgroundColor,
+}));
 
 const headerVisible = computed(() => Boolean(contentHeader.value.subline || contentHeader.value.headline));
 
@@ -343,7 +339,7 @@ const accentBarStyle = computed<CSSProperties>(() => ({
 }
 
 .thumb-slider-neo__header {
-  margin-bottom: 1rem;
+  margin-bottom: 3.5rem;
 }
 
 .thumb-slider-neo__subline {
@@ -369,18 +365,18 @@ const accentBarStyle = computed<CSSProperties>(() => ({
 
 .thumb-slider-neo__accent {
   position: absolute;
-  z-index: 0;
+  z-index: 2;
   display: block;
   pointer-events: none;
 }
 
 .thumb-slider-neo__accent--top {
   top: 0;
-  right: 0;
+  right: 24px;
 }
 
 .thumb-slider-neo__accent--bottom {
-  bottom: 0;
+  bottom: 4px;
   left: 0;
 }
 
@@ -393,7 +389,7 @@ const accentBarStyle = computed<CSSProperties>(() => ({
 .thumb-slider-neo__image {
   display: block;
   width: 100%;
-  height: 160px;
+  height: 185px;
   object-fit: contain;
   transform: skewX(calc(var(--tw-skew-x, 0deg) * -1));
 }
@@ -412,7 +408,7 @@ const accentBarStyle = computed<CSSProperties>(() => ({
   display: inline-flex;
   width: 8%;
   min-width: 2.5rem;
-  height: 100%;
+  height: 173px;
   align-items: center;
   justify-content: center;
   border: 0;
@@ -423,17 +419,17 @@ const accentBarStyle = computed<CSSProperties>(() => ({
 }
 
 .thumb-slider-neo__nav:hover {
-  opacity: 0.85;
+  opacity: 0.75;
 }
 
 .thumb-slider-neo__nav--prev {
   left: 0;
-  clip-path: polygon(0 0, 85% 0, 70% 100%, 0 100%);
+  clip-path: polygon(0 0, 65% 0, 77% 100%, 0 100%);
 }
 
 .thumb-slider-neo__nav--next {
   right: 0;
-  clip-path: polygon(15% 0, 100% 0, 100% 100%, 30% 100%);
+  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
 .thumb-slider-neo__nav :deep(svg) {
