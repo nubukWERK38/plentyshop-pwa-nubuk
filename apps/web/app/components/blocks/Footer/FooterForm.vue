@@ -111,7 +111,7 @@
             :model-value="column[switchConfig.key] === true"
             :data-testid="`column-${index + 1}-${switchConfig.id}`"
             class="checked:bg-editor-button checked:before:hover:bg-editor-button checked:border-gray-500 checked:hover:border:bg-gray-700 hover:border-gray-700 hover:before:bg-gray-700 checked:hover:bg-gray-300 checked:hover:border-gray-400"
-            @update:model-value="column[switchConfig.key] = $event"
+            @update:model-value="setColumnSwitch(column, switchConfig.key, $event)"
           />
         </div>
       </div>
@@ -290,6 +290,10 @@ const footerLinkSwitches = FOOTER_SWITCH_DEFINITIONS.filter(
   key: switchConfig.key,
   translationKey: switchConfig.editorTranslationKey,
 }));
+
+const setColumnSwitch = (column: FooterColumn, key: string, value: unknown) => {
+  column[key] = value === true;
+};
 
 const footnoteAlignOptions = [
   { value: 'left', label: 'footnotes-align-option-left-label' },
