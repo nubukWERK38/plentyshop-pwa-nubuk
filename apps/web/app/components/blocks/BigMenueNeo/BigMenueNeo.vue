@@ -16,7 +16,6 @@
           @focus="openMenu(index)"
         >
           <span class="big-menue-neo__top-label">{{ getCategoryLabel(menu.category) }}</span>
-          <span v-if="menuHasPanelContent(menu)" class="big-menue-neo__top-caret" aria-hidden="true">▾</span>
         </NuxtLink>
       </nav>
 
@@ -378,9 +377,9 @@ onMounted(async () => {
   text-decoration: none;
   color: var(--bmn-top-link);
   font-weight: 500;
-  font-size: 0.985rem;
+  font-size: 14px;
   line-height: 1.2rem;
-  padding: 0.9rem 0.62rem 0.82rem;
+  padding: 0.9rem 1.62rem 0.82rem;
   border-radius: 0.125rem;
   cursor: pointer;
   transition: background-color 0.18s ease, color 0.18s ease;
@@ -409,6 +408,7 @@ onMounted(async () => {
 
 .big-menue-neo__top-label {
   margin-right: 0.35rem;
+  text-transform: uppercase
 }
 
 .big-menue-neo__top-caret {

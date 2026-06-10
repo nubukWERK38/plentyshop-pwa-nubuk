@@ -1,16 +1,22 @@
 <template>
-  <div ref="rootRef" class="relative py-1 z-[200] @container/search">
-    <form ref="referenceRef" role="search" class="px-px" @submit.prevent="handleSubmit">
+  <div ref="rootRef" :class="['relative z-[200] @container/search', { 'py-1': variant !== 'header' }]">
+    <form
+      ref="referenceRef"
+      role="search"
+      :class="{ 'px-px': variant !== 'header', 'header-search-form': variant === 'header' }"
+      @submit.prevent="handleSubmit"
+    >
       <SfInput
         id="search-bar"
         ref="inputReference"
         v-model="inputModel"
         data-testid="search-bar-input"
+        :class="{ 'header-search-input': variant === 'header' }"
         :aria-label="t('common.actions.search')"
         :placeholder="t('common.actions.search')"
         @focus="handleOpen"
       >
-        <template #prefix>
+        <template v-if="variant !== 'header'" #prefix>
           <SfLoaderCircular v-if="loading || loadingSuggestions" class="shrink-0" aria-hidden="true" />
           <SfIconSearch v-else class="shrink-0" aria-hidden="true" />
         </template>
@@ -19,18 +25,20 @@
             v-if="inputModel"
             type="button"
             :aria-label="t('common.actions.resetSearch')"
-            class="flex rounded-md focus-visible:outline focus-visible:outline-offset"
+            class="flex focus-visible:outline focus-visible:outline-offset"
             @click="handleReset"
           >
             <SfIconCancel aria-hidden="true" />
           </button>
+          <SfLoaderCircular v-else-if="variant === 'header' && (loading || loadingSuggestions)" class="shrink-0" aria-hidden="true" />
+          <SfIconSearch v-else-if="variant === 'header'" class="shrink-0" aria-hidden="true" />
         </template>
       </SfInput>
     </form>
 
     <section
       v-if="isDropdownVisible"
-      class="w-full grid md:shadow @2xl:grid-cols-3 bg-white absolute px-4 pt-4 rounded-md border border-neutral-100 mt-[2px] gap-8 max-h-[calc(100vh-120px)] overflow-y-auto"
+      class="w-full grid md:shadow @2xl:grid-cols-3 bg-gray absolute px-4 pt-4 border border-neutral-100 mt-[2px] gap-8 max-h-[calc(100vh-120px)] overflow-y-auto"
       aria-live="polite"
       aria-relevant="all"
       :aria-label="t('searchBar.searchSuggestions')"
@@ -56,7 +64,7 @@
             <li v-for="(category, index) in results.categories" :key="index">
               <NuxtLink :to="category.url">
                 <div
-                  class="bg-neutral-100 hover:bg-neutral-200 transition-colors duration-200 text-neutral-800 text-sm px-3 py-1.5 rounded-md"
+                  class="bg-neutral-100 hover:bg-neutral-200 transition-colors duration-200 text-neutral-800 text-sm px-3 py-1.5"
                 >
                   {{ category.label }}
                 </div>
@@ -115,6 +123,7 @@ import { debounce } from '~/utils/debounce';
 
 const props = defineProps<{
   close?: () => boolean;
+  variant?: 'default' | 'header';
 }>();
 
 const localePath = useLocalePath();
@@ -209,3 +218,50 @@ watch(
 
 onUnmounted(() => debounceInput.cancel());
 </script>
+
+<style scoped>
+.header-search-form {
+  width: 100%;
+  border: 0;
+  background: #E9E9EA !important;
+}
+.header-search-form > span {
+  border: 0;
+  border-radius: 0;
+  background: #E9E9EA !important;
+  --tw-ring-opacity: 0;
+}
+.header-search-form input {
+  border: 0;
+  border-radius: 0;
+  background: #E9E9EA !important;
+}
+
+.header-search-input {
+  width: 100%;
+}
+
+.header-search-input :deep(input) {
+  height: 39px;
+  border: 0;
+  border-radius: 0;
+  background: #e7e7e7;
+  color: #1f2933;
+  font-size: 14px;
+  padding-left: 16px;
+}
+
+.header-search-input :deep(input::placeholder) {
+  color: transparent;
+}
+
+.header-search-input :deep(input:focus) {
+  outline: 1px solid #2a5b7d;
+  outline-offset: 0;
+  box-shadow: none;
+}
+
+.header-search-input :deep(svg) {
+  color: #0f1720;
+}
+</style>

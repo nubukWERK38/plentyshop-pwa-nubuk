@@ -21,6 +21,7 @@ export interface FooterSwitchDefinition {
 export interface FooterColumn {
   title: string;
   description?: string;
+  width?: string;
   showContactLink?: boolean;
   showRegisterLink?: boolean;
   showTermsAndConditions?: boolean;
@@ -39,11 +40,19 @@ export interface FooterColors {
   footnoteText: string;
 }
 
+export interface FooterLayout {
+  backgroundImage: string;
+  contentBackground: string;
+  contentOpacity: number;
+}
+
 export interface FooterContent {
   column1: FooterColumn;
   column2: FooterColumn;
   column3: FooterColumn;
   column4: FooterColumn;
+  columns?: FooterColumn[];
+  layout?: FooterLayout;
   footnote: string;
   footnoteAlign: 'left' | 'center' | 'right';
   colors: FooterColors;

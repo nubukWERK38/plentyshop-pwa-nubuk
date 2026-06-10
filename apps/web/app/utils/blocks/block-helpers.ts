@@ -17,6 +17,11 @@ export const normalizeFooter = (block: Block): Block => {
   const defaultBlock = createFooter();
   const defaults = defaultBlock.content as Record<string, Record<string, unknown>>;
   const content = (block.content ?? {}) as Record<string, Record<string, unknown>>;
+  const legacyColumns = [content.column1, content.column2, content.column3, content.column4].map((column, index) => ({
+    ...((defaults[`column${index + 1}`] as Record<string, unknown>) ?? {}),
+    ...(column ?? {}),
+  }));
+  const columns = Array.isArray(content.columns) && content.columns.length > 0 ? content.columns : legacyColumns;
 
   return {
     ...block,
@@ -28,6 +33,8 @@ export const normalizeFooter = (block: Block): Block => {
       column2: { ...defaults.column2, ...content.column2 },
       column3: { ...defaults.column3, ...content.column3 },
       column4: { ...defaults.column4, ...content.column4 },
+      columns,
+      layout: { ...defaults.layout, ...content.layout },
       colors: { ...defaults.colors, ...content.colors },
     },
   };

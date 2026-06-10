@@ -8,6 +8,8 @@ export function createDefaultFooterContent(): FooterContent {
   return {
     column1: {
       title: t('footer.legal.label'),
+      description: '',
+      width: '1fr',
       showTermsAndConditions: true,
       showCancellationRights: true,
       showCancellationForm: true,
@@ -18,11 +20,39 @@ export function createDefaultFooterContent(): FooterContent {
     column2: {
       title: t('footer.services.label'),
       description: '',
+      width: '1fr',
       showContactLink: true,
       showRegisterLink: true,
     },
-    column3: { title: '', description: '' },
-    column4: { title: '', description: '' },
+    column3: { title: '', description: '', width: '1fr' },
+    column4: { title: '', description: '', width: '1fr' },
+    columns: [
+      {
+        title: t('footer.legal.label'),
+        description: '',
+        width: '1fr',
+        showTermsAndConditions: true,
+        showCancellationRights: true,
+        showCancellationForm: true,
+        showLegalDisclosure: true,
+        showPrivacyPolicy: true,
+        showDeclarationOfAccessibility: true,
+      },
+      {
+        title: t('footer.services.label'),
+        description: '',
+        width: '1fr',
+        showContactLink: true,
+        showRegisterLink: true,
+      },
+      { title: '', description: '', width: '1fr' },
+      { title: '', description: '', width: '1fr' },
+    ],
+    layout: {
+      backgroundImage: '',
+      contentBackground: '#161a16',
+      contentOpacity: 0.88,
+    },
     footnote: `© ${runtimeConfig.public.storename} ${new Date().getFullYear()}`,
     footnoteAlign: 'right',
     colors: {

@@ -1,5 +1,21 @@
 <template>
   <div :style="utilityBarStyle">
+    <div v-if="viewport.isGreaterOrEquals('md')" class="nubuk-service-bar">
+      <div class="nubuk-service-bar__inner">
+        <div v-for="item in serviceBarItems" :key="item" class="nubuk-service-bar__item">
+          <SfIconCheck size="xs" aria-hidden="true" />
+          <span>{{ item }}</span>
+        </div>
+        <div class="nubuk-service-bar__socials" aria-label="Social Media">
+          <a class="nubuk-service-bar__social" href="https://www.facebook.com/nubukbikes" aria-label="Facebook">
+            <FontAwesomeIcon :icon="['fab', 'facebook-f']" />
+          </a>
+          <a class="nubuk-service-bar__social" href="https://www.instagram.com/nubukbikes" aria-label="Instagram">
+            <FontAwesomeIcon :icon="['fab', 'instagram']" />
+          </a>
+        </div>
+      </div>
+    </div>
     <header class="relative w-full md:sticky z-10">
       <div
         v-if="viewport.isLessThan('md')"
@@ -57,9 +73,9 @@
 
       <div
         v-else
-        class="utility-bar__desktop-inner flex items-center flex-nowrap w-full border-0 border-neutral-200"
+        class="utility-bar__desktop-inner nubuk-utility-row flex items-center flex-nowrap w-full border-0 border-neutral-200"
         :class="{ 'utility-bar__desktop-inner--boxed': !isUtilityBarFullWidth }"
-        :style="{ backgroundColor: headerBackgroundColor, ...paddingStyles }"
+        :style="{ ...paddingStyles }"
         data-testid="navbar-top-desktop"
       >
         <UiButton
@@ -74,13 +90,13 @@
           <SfIconMenu aria-hidden="true" />
         </UiButton>
 
-        <div v-if="isSectionVisible('logo')" class="flex items-center" :style="getSectionColumnStyle('logo')">
+        <div v-if="isSectionVisible('logo')" class="nubuk-utility-row__logo flex items-center" :style="getSectionColumnStyle('logo')">
           <NuxtLink
             id="blockified-logo"
             data-testid="logo-link"
             :to="localePath(paths.home)"
             :aria-label="t('common.actions.goToHomepage')"
-            class="text-white focus-visible:outline focus-visible:outline-offset focus-visible:rounded-sm"
+            class="focus-visible:outline focus-visible:outline-offset focus-visible:rounded-sm"
           >
             <UiLogo />
           </NuxtLink>
@@ -95,7 +111,7 @@
             ]"
           >
             <template v-if="isFullSearchMode">
-              <UiSearch />
+              <UiSearch variant="header" />
             </template>
 
             <template v-else>
@@ -113,6 +129,7 @@
                   <UiSearch
                     v-if="isIconSearchExpanded"
                     class="w-[100%]"
+                    variant="header"
                     :style="{ transformOrigin: searchExpandOrigin }"
                     :close="collapseIconSearch"
                   />
@@ -135,7 +152,7 @@
         <nav
           v-if="isSectionVisible('actions')"
           :style="getSectionColumnStyle('actions')"
-          class="flex flex-row flex-nowrap"
+          class="nubuk-utility-actions flex flex-row flex-nowrap"
         >
           <template v-if="localeCodes.length > 1 && isActionVisible('language')">
             <UiButton
@@ -196,42 +213,43 @@
           </UiButton>
           <UiButton
             v-if="isActionVisible('cart')"
-            class="group relative hover:!bg-header-400 active:!bg-header-400 mr-1 -ml-0.5 rounded-md"
+            class="nubuk-action nubuk-action--cart group relative hover:!bg-header-400 active:!bg-header-400 rounded-none"
             :tag="NuxtLink"
-            :style="{ color: iconColor, order: getActionOrder('cart') }"
+            :style="{ order: getActionOrder('cart') }"
             :to="localePath(paths.cart)"
             :aria-label="t('cart.numberInCart', { count: cartItemsCount })"
             variant="tertiary"
-            square
           >
             <template #prefix>
               <SfIconShoppingCart />
               <SfBadge
+                v-if="cartItemsCount > 0"
                 :content="cartItemsCount"
                 :style="{
-                  backgroundColor: iconColor,
-                  outlineColor: headerBackgroundColor,
-                  color: headerBackgroundColor,
+                  backgroundColor: '#2d5d83',
+                  outlineColor: '#ffffff',
+                  color: '#ffffff',
                 }"
-                class="outline group-hover:outline-primary-800 group-active:outline-primary-700 flex justify-center items-center text-xs min-w-[16px] min-h-[16px]"
+                class="outline flex justify-center items-center text-xs min-w-[16px] min-h-[16px]"
                 data-testid="cart-badge"
                 placement="top-right"
                 :max="99"
               />
             </template>
+            <span class="nubuk-cart-total">{{ cartTotalFormatted }}</span>
           </UiButton>
           <SfDropdown
             v-if="isAuthorized && isActionVisible('account')"
             v-model="isAccountDropdownOpen"
             placement="bottom-end"
-            class="z-50"
+            class="z-50 nubuk-account-dropdown"
             :style="{ order: getActionOrder('account') }"
           >
             <template #trigger>
               <UiButton
                 variant="tertiary"
-                class="relative hover:bg-header-400 active:bg-header-400 rounded-md"
-                :style="{ color: iconColor, order: getActionOrder('account') }"
+                class="nubuk-action nubuk-action--account relative hover:bg-header-400 active:bg-header-400 rounded-none"
+                :style="{ order: getActionOrder('account') }"
                 :class="{ 'bg-primary-700': isAccountDropdownOpen }"
                 data-testid="account-dropdown-button"
                 @click="accountDropdownToggle()"
@@ -239,7 +257,8 @@
                 <template #prefix>
                   <SfIconPerson />
                 </template>
-                {{ user?.firstName }}
+                <span>{{ user?.firstName || 'Mein Konto' }}</span>
+                <SfIconExpandMore class="nubuk-action__chevron" size="sm" aria-hidden="true" />
               </UiButton>
             </template>
             <ul class="rounded bg-white shadow-md border border-neutral-100 text-neutral-900 min-w-[152px] py-2">
@@ -269,14 +288,17 @@
           </SfDropdown>
           <UiButton
             v-else-if="!isAuthorized && isActionVisible('account')"
-            :style="{ color: iconColor, order: getActionOrder('account') }"
-            class="group relative hover:!bg-header-400 active:!bg-header-400 mr-1 -ml-0.5 rounded-md"
+            :style="{ order: getActionOrder('account') }"
+            class="nubuk-action nubuk-action--account group relative hover:!bg-header-400 active:!bg-header-400 rounded-none"
             variant="tertiary"
             :aria-label="t('authentication.login.openLoginForm')"
-            square
             @click="navigateToLogin"
           >
-            <SfIconPerson />
+            <template #prefix>
+              <SfIconPerson />
+            </template>
+            <span>Anmelden</span>
+            <SfIconExpandMore class="nubuk-action__chevron" size="sm" aria-hidden="true" />
           </UiButton>
         </nav>
       </div>
@@ -357,8 +379,11 @@ import {
   SfListItem,
   SfModal,
   SfIconFavorite,
+  SfIconCheck,
+  SfIconExpandMore,
   useDisclosure,
 } from '@storefront-ui/vue';
+import { cartGetters } from '@plentymarkets/shop-api';
 import { onClickOutside } from '@vueuse/core';
 import LanguageSelector from '~/components/LanguageSelector/LanguageSelector.vue';
 
@@ -376,6 +401,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const isLogin = ref(true);
 const { data: cart } = useCart();
+const { format } = usePriceFormatter();
 const { wishlistItemIds } = useWishlist();
 const cartItemsCount = ref(0);
 const { open: openMegaMenu } = useMegaMenu();
@@ -409,6 +435,8 @@ const utilityBarStyle = computed(() => ({
   '--utility-logo-height': `${logoHeight.value}px`,
   '--utility-search-width': `${searchWidth.value}px`,
 }));
+const serviceBarItems = ['30 Tage Rückgaberecht', 'Ladengeschäfte mit Werkstatt', 'Kauf auf Rechnung', 'Bike Leasing'];
+const cartTotalFormatted = computed(() => format(cart.value ? cartGetters.getTotals(cart.value).total || 0 : 0));
 
 const NuxtLink = resolveComponent('NuxtLink');
 const { localeCodes } = useI18n();
@@ -543,16 +571,129 @@ const navigateToLogin = () => {
 <style scoped>
 :deep(input[data-testid='search-bar-input']) {
   min-width: 172px;
+  background: #E9E9EA !important;
+}
+
+.nubuk-service-bar {
+  background: #284f70;
+  border-top: 1px solid #1d2c36;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.nubuk-service-bar__inner {
+  display: grid;
+  grid-template-columns: repeat(4, max-content) 72px;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(36px, 6.2vw, 96px);
+  min-height: 29px;
+  padding: 0 24px;
+}
+
+.nubuk-service-bar__item,
+.nubuk-service-bar__socials,
+.nubuk-service-bar__social {
+  display: inline-flex;
+  align-items: center;
+}
+
+.nubuk-service-bar__item {
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.nubuk-service-bar__socials {
+  gap: 18px;
+}
+
+.nubuk-service-bar__social {
+  color: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.nubuk-utility-row {
+  min-height: 103px;
+  background: #ffffff !important;
+  padding: 38px 0 17px !important;
+}
+
+.nubuk-utility-row__logo {
+  min-width: 240px;
+}
+
+.nubuk-utility-actions {
+  align-items: center;
+  gap: 19px;
+  color: #2d5d83;
+}
+
+.nubuk-action {
+  min-height: 30px;
+  gap: 8px;
+  padding: 0 !important;
+  color: #2d5d83 !important;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nubuk-action:hover,
+.nubuk-action:active {
+  background: transparent !important;
+  color: #1f496a !important;
+}
+
+.nubuk-action--account {
+  order: 1 !important;
+  padding-right: 20px !important;
+  border-right: 1px solid #2f2f2f;
+}
+
+.nubuk-action--cart {
+  order: 2 !important;
+  color: #222222 !important;
+}
+
+.nubuk-action :deep(svg) {
+  width: 23px;
+  height: 23px;
+  color: #2d5d83;
+}
+
+.nubuk-action :deep(.nubuk-action__chevron) {
+  width: 16px;
+  height: 16px;
+}
+
+.nubuk-action--cart :deep(svg) {
+  color: #111111;
+}
+
+.nubuk-cart-total {
+  min-width: 56px;
+  color: #222222;
+  text-align: right;
+}
+
+.nubuk-account-dropdown {
+  display: flex;
+  order: 1 !important;
 }
 
 .utility-bar__desktop-inner--boxed {
-  max-width: 1280px;
+  max-width: 1540px;
   margin: 0 auto;
 }
 
 .utility-bar__search-container--expanded {
   width: 100%;
-  max-width: var(--utility-search-width);
+  max-width: min(var(--utility-search-width), 471px);
 }
 
 #blockified-logo :deep(img) {
@@ -564,5 +705,20 @@ const navigateToLogin = () => {
 #blockified-logo-mobile :deep(img) {
   height: var(--utility-logo-height);
   width: auto;
+}
+
+@media (max-width: 1199px) {
+  .nubuk-service-bar__inner {
+    gap: 24px;
+  }
+
+  .nubuk-utility-row {
+    padding-left: 48px !important;
+    padding-right: 48px !important;
+  }
+
+  .nubuk-utility-row__logo {
+    min-width: 200px;
+  }
 }
 </style>

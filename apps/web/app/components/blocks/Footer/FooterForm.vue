@@ -1,179 +1,140 @@
 <template>
   <div class="footer-settings-view sticky" data-testid="footer-settings-drawer">
     <UiAccordionItem
-      v-model="firstColumnOpen"
-      data-testid="first-column-section"
+      v-model="layoutOpen"
+      data-testid="footer-layout-section"
       summary-active-class="bg-neutral-100 border-t-0"
       summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
     >
       <template #summary>
-        <h2>{{ getEditorTranslation('column-1-group-label') }}</h2>
+        <h2>{{ getEditorTranslation('layout-group-label') }}</h2>
       </template>
+
       <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('column-1-title-label') }}</UiFormLabel>
-        </div>
-        <label>
-          <SfInput v-model="footerContent.column1.title" type="text" data-testid="input-title-column-1">
-            <template #suffix>
-              <label for="text-title-column-1" class="rounded-lg cursor-pointer">
-                <input
-                  id="text-title-column-1"
-                  v-model="footerContent.column1.title"
-                  type="text"
-                  class="invisible w-8"
-                />
-              </label>
-            </template>
-          </SfInput>
-        </label>
+        <UiImagePicker
+          :image="footerLayout.backgroundImage || placeholderImage"
+          :placeholder="placeholderImage"
+          :label="getEditorTranslation('background-image-label')"
+          dimensions="1920 x 650 px"
+          selected-image-type="wideScreen"
+          @add="handleBackgroundImageAdd"
+          @delete="footerLayout.backgroundImage = ''"
+        />
       </div>
 
-      <div v-for="switchConfig in columnOneSwitches" :key="switchConfig.id" class="py-2">
+      <div class="py-2">
         <div class="flex justify-between mb-2">
+          <UiFormLabel>{{ getEditorTranslation('content-background-label') }}</UiFormLabel>
+        </div>
+        <EditorColorPicker v-model="footerLayout.contentBackground" class="w-full">
+          <template #trigger="{ color, toggle }">
+            <label>
+              <SfInput v-model="footerLayout.contentBackground" type="text" data-testid="content-bg-color-select">
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </label>
+          </template>
+        </EditorColorPicker>
+      </div>
+
+      <div class="py-2">
+        <div class="flex justify-between mb-2">
+          <UiFormLabel>{{ getEditorTranslation('content-opacity-label') }}</UiFormLabel>
+        </div>
+        <SfInput
+          v-model.number="footerLayout.contentOpacity"
+          type="number"
+          min="0"
+          max="1"
+          step="0.05"
+          data-testid="content-opacity-input"
+        />
+      </div>
+
+      <div class="py-2">
+        <div class="flex justify-between mb-2">
+          <UiFormLabel>{{ getEditorTranslation('column-count-label') }}</UiFormLabel>
+        </div>
+        <SfInput
+          v-model.number="columnCount"
+          type="number"
+          min="1"
+          max="8"
+          step="1"
+          data-testid="footer-column-count-input"
+        />
+      </div>
+    </UiAccordionItem>
+
+    <UiAccordionItem
+      v-for="(column, index) in footerColumns"
+      :key="index"
+      v-model="columnOpen[index]"
+      :data-testid="`footer-column-section-${index + 1}`"
+      summary-active-class="bg-neutral-100 border-t-0"
+      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
+    >
+      <template #summary>
+        <h2>{{ getEditorTranslation('column-group-label') }} {{ index + 1 }}</h2>
+      </template>
+
+      <div class="py-2">
+        <div class="flex justify-between mb-2">
+          <UiFormLabel>{{ getEditorTranslation('column-title-label') }}</UiFormLabel>
+        </div>
+        <SfInput v-model="column.title" type="text" :data-testid="`input-title-column-${index + 1}`" />
+      </div>
+
+      <div class="py-2">
+        <div class="flex justify-between mb-2">
+          <UiFormLabel>{{ getEditorTranslation('column-width-label') }}</UiFormLabel>
+        </div>
+        <SfInput v-model="column.width" type="text" :data-testid="`input-width-column-${index + 1}`" />
+        <p class="mt-1 text-xs text-neutral-500">{{ getEditorTranslation('column-width-hint') }}</p>
+      </div>
+
+      <div class="py-2">
+        <div class="mb-2">
+          <UiFormLabel>{{ getEditorTranslation('column-links-label') }}</UiFormLabel>
+        </div>
+        <div v-for="switchConfig in footerLinkSwitches" :key="switchConfig.id" class="flex justify-between mb-2">
           <UiFormLabel class="mb-1">{{ getEditorTranslation(switchConfig.translationKey) }}</UiFormLabel>
           <SfSwitch
-            v-model="switchConfig.model.value"
-            :data-testid="switchConfig.id"
+            :model-value="column[switchConfig.key] === true"
+            :data-testid="`column-${index + 1}-${switchConfig.id}`"
             class="checked:bg-editor-button checked:before:hover:bg-editor-button checked:border-gray-500 checked:hover:border:bg-gray-700 hover:border-gray-700 hover:before:bg-gray-700 checked:hover:bg-gray-300 checked:hover:border-gray-400"
+            @update:model-value="column[switchConfig.key] = $event"
           />
         </div>
       </div>
+
       <div v-if="enableContractWithdrawalButton" class="py-2">
         <div class="flex justify-between mb-2">
           <UiFormLabel class="mb-1">
-            {{ getEditorTranslation('column-1-contract-withdrawal-button-label') }}
+            {{ getEditorTranslation('contract-withdrawal-button-label') }}
           </UiFormLabel>
           <SfSwitch
-            v-model="footerContent.column1.showCancellationForm"
-            data-testid="showCancellationForm-switch"
-            class="checked:bg-editor-button checked:before:hover:bg-editor-button checked:border-gray-500 checked:hover:border:bg-gray-700 hover:border-gray-700 hover:before:bg-gray-700 checked:hover:bg-gray-300 checked:hover:border-gray-400"
-          />
-        </div>
-      </div>
-    </UiAccordionItem>
-
-    <UiAccordionItem
-      v-model="secondColumnOpen"
-      data-testid="second-column-section"
-      summary-active-class="bg-neutral-100 border-t-0"
-      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
-    >
-      <template #summary>
-        <h2>{{ getEditorTranslation('column-2-group-label') }}</h2>
-      </template>
-      <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('column-2-title-label') }}</UiFormLabel>
-        </div>
-        <label>
-          <SfInput v-model="footerContent.column2.title" type="text" data-testid="input-title-column-2">
-            <template #suffix>
-              <label for="input-title-column-2" class="rounded-lg cursor-pointer">
-                <input
-                  id="input-title-column-2"
-                  v-model="footerContent.column2.title"
-                  type="text"
-                  class="invisible w-8"
-                />
-              </label>
-            </template>
-          </SfInput>
-        </label>
-      </div>
-
-      <div v-for="switchConfig in columnTwoSwitches" :key="switchConfig.id" class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel class="mb-1">{{ getEditorTranslation(switchConfig.translationKey) }}</UiFormLabel>
-          <SfSwitch
-            v-model="switchConfig.model.value"
-            :data-testid="switchConfig.id"
+            v-model="column.showCancellationForm"
+            :data-testid="`column-${index + 1}-withdrawal-button-switch`"
             class="checked:bg-editor-button checked:before:hover:bg-editor-button checked:border-gray-500 checked:hover:border:bg-gray-700 hover:border-gray-700 hover:before:bg-gray-700 checked:hover:bg-gray-300 checked:hover:border-gray-400"
           />
         </div>
       </div>
 
       <div class="py-2">
+        <UiFormLabel>{{ getEditorTranslation('column-html-label') }}</UiFormLabel>
         <EditorRichTextEditorForm
-          :model-value="footerContent.column2.description ?? ''"
+          :model-value="column.description ?? ''"
           :block-uuid="blockUuid"
-          @update:model-value="footerContent.column2.description = $event"
-        />
-      </div>
-    </UiAccordionItem>
-
-    <UiAccordionItem
-      v-model="thirdColumnOpen"
-      data-testid="third-column-section"
-      summary-active-class="bg-neutral-100 border-t-0"
-      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
-    >
-      <template #summary>
-        <h2>{{ getEditorTranslation('column-3-group-label') }}</h2>
-      </template>
-      <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('column-3-title-label') }}</UiFormLabel>
-        </div>
-        <label>
-          <SfInput v-model="footerContent.column3.title" type="text" data-testid="input-title-column-3">
-            <template #suffix>
-              <label for="input-title-column-3" class="rounded-lg cursor-pointer">
-                <input
-                  id="input-title-column-3"
-                  v-model="footerContent.column3.title"
-                  type="text"
-                  class="invisible w-8"
-                />
-              </label>
-            </template>
-          </SfInput>
-        </label>
-      </div>
-
-      <div class="py-2">
-        <EditorRichTextEditorForm
-          :model-value="footerContent.column3.description ?? ''"
-          :block-uuid="blockUuid"
-          @update:model-value="footerContent.column3.description = $event"
-        />
-      </div>
-    </UiAccordionItem>
-
-    <UiAccordionItem
-      v-model="fourthColumnOpen"
-      data-testid="fourth-column-section"
-      summary-active-class="bg-neutral-100 border-t-0"
-      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
-    >
-      <template #summary>
-        <h2>{{ getEditorTranslation('column-4-group-label') }}</h2>
-      </template>
-      <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('column-4-title-label') }}</UiFormLabel>
-        </div>
-        <label>
-          <SfInput v-model="footerContent.column4.title" type="text" data-testid="input-title-column-4">
-            <template #suffix>
-              <label for="input-title-column-4" class="rounded-lg cursor-pointer">
-                <input
-                  id="input-title-column-4"
-                  v-model="footerContent.column4.title"
-                  type="text"
-                  class="invisible w-8"
-                />
-              </label>
-            </template>
-          </SfInput>
-        </label>
-      </div>
-
-      <div class="py-2">
-        <EditorRichTextEditorForm
-          :model-value="footerContent.column4.description ?? ''"
-          :block-uuid="blockUuid"
-          @update:model-value="footerContent.column4.description = $event"
+          @update:model-value="column.description = $event"
         />
       </div>
     </UiAccordionItem>
@@ -191,49 +152,24 @@
         <div class="flex justify-between mb-2">
           <UiFormLabel>{{ getEditorTranslation('footnotes-text-label') }}</UiFormLabel>
         </div>
-        <label>
-          <SfInput v-model="footerContent.footnote" type="text" data-testid="input-footnote">
-            <template #suffix>
-              <label for="input-footnote" class="rounded-lg cursor-pointer">
-                <input id="input-footnote" v-model="footerContent.footnote" type="text" class="invisible w-8" />
-              </label>
-            </template>
-          </SfInput>
-        </label>
+        <SfInput v-model="footerContent.footnote" type="text" data-testid="input-footnote" />
       </div>
       <div class="py-2">
         <UiFormLabel>{{ getEditorTranslation('footnotes-align-label') }}</UiFormLabel>
 
         <div class="mt-2 w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden">
-          <div
+          <button
+            v-for="option in footnoteAlignOptions"
+            :key="option.value"
+            type="button"
             class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': footerContent.footnoteAlign === 'left' }"
-            data-testid="footnoteAlign-textbox-y-align-left"
-            @click="footerContent.footnoteAlign = 'left'"
+            :class="{ 'bg-gray-100 text-gray-900 font-semibold': footerContent.footnoteAlign === option.value }"
+            :data-testid="`footnoteAlign-textbox-y-align-${option.value}`"
+            @click="footerContent.footnoteAlign = option.value"
           >
-            <SfIconCheck class="mr-1 w-[1.1rem]" :class="{ invisible: footerContent.footnoteAlign !== 'left' }" />
-            {{ getEditorTranslation('footnotes-align-option-left-label') }}
-          </div>
-
-          <div
-            class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': footerContent.footnoteAlign === 'center' }"
-            data-testid="footnoteAlign-textbox-y-align-center"
-            @click="footerContent.footnoteAlign = 'center'"
-          >
-            <SfIconCheck class="mr-1 w-[1.1rem]" :class="{ invisible: footerContent.footnoteAlign !== 'center' }" />
-            {{ getEditorTranslation('footnotes-align-option-center-label') }}
-          </div>
-
-          <div
-            class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': footerContent.footnoteAlign === 'right' }"
-            data-testid="footnoteAlign-textbox-y-align-right"
-            @click="footerContent.footnoteAlign = 'right'"
-          >
-            <SfIconCheck class="mr-1 w-[1.1rem]" :class="{ invisible: footerContent.footnoteAlign !== 'right' }" />
-            {{ getEditorTranslation('footnotes-align-option-right-label') }}
-          </div>
+            <SfIconCheck class="mr-1 w-[1.1rem]" :class="{ invisible: footerContent.footnoteAlign !== option.value }" />
+            {{ getEditorTranslation(option.label) }}
+          </button>
         </div>
       </div>
     </UiAccordionItem>
@@ -247,83 +183,17 @@
       <template #summary>
         <h2>{{ getEditorTranslation('colors-group-label') }}</h2>
       </template>
-      <div class="py-2">
+      <div v-for="colorField in colorFields" :key="colorField.key" class="py-2">
         <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('colors-text-label') }}</UiFormLabel>
+          <UiFormLabel>{{ getEditorTranslation(colorField.label) }}</UiFormLabel>
         </div>
-        <EditorColorPicker v-model="footerContent.colors.text" class="w-full">
-          <template #trigger="{ color, toggle }">
-            <label>
-              <SfInput v-model="footerContent.colors.text" type="text" data-testid="text-color-select">
-                <template #suffix>
-                  <button
-                    type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
-                    :style="{ backgroundColor: color }"
-                    @mousedown.stop
-                    @click.stop="toggle"
-                  />
-                </template>
-              </SfInput>
-            </label>
-          </template>
-        </EditorColorPicker>
-      </div>
-      <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('colors-background-label') }}</UiFormLabel>
-        </div>
-        <EditorColorPicker v-model="footerContent.colors.background" class="w-full">
-          <template #trigger="{ color, toggle }">
-            <label>
-              <SfInput v-model="footerContent.colors.background" type="text" data-testid="bg-footer-color-select">
-                <template #suffix>
-                  <button
-                    type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
-                    :style="{ backgroundColor: color }"
-                    @mousedown.stop
-                    @click.stop="toggle"
-                  />
-                </template>
-              </SfInput>
-            </label>
-          </template>
-        </EditorColorPicker>
-      </div>
-      <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('colors-footnote-text-label') }}</UiFormLabel>
-        </div>
-        <EditorColorPicker v-model="footerContent.colors.footnoteText" class="w-full">
-          <template #trigger="{ color, toggle }">
-            <label>
-              <SfInput v-model="footerContent.colors.footnoteText" type="text" data-testid="footnote-text-color-select">
-                <template #suffix>
-                  <button
-                    type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
-                    :style="{ backgroundColor: color }"
-                    @mousedown.stop
-                    @click.stop="toggle"
-                  />
-                </template>
-              </SfInput>
-            </label>
-          </template>
-        </EditorColorPicker>
-      </div>
-      <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('colors-footnote-background-label') }}</UiFormLabel>
-        </div>
-        <EditorColorPicker v-model="footerContent.colors.footnoteBackground" class="w-full">
+        <EditorColorPicker v-model="footerContent.colors[colorField.key]" class="w-full">
           <template #trigger="{ color, toggle }">
             <label>
               <SfInput
-                v-model="footerContent.colors.footnoteBackground"
+                v-model="footerContent.colors[colorField.key]"
                 type="text"
-                data-testid="footnote-bg-color-select"
+                :data-testid="`${colorField.key}-color-select`"
               >
                 <template #suffix>
                   <button
@@ -345,144 +215,167 @@
 
 <script setup lang="ts">
 import { SfInput, SfSwitch, SfIconCheck } from '@storefront-ui/vue';
-import type { FooterContent, FooterBlock } from './types';
+import type { FooterBlock, FooterColumn, FooterContent } from './types';
 import { FOOTER_SWITCH_DEFINITIONS } from './constants';
 
 const { footer } = useBlocks();
-
 const { blockUuid } = useSiteConfiguration();
+const { enableContractWithdrawalButton } = useRuntimeConfig().public;
 
-const firstColumnOpen = ref(false);
-const secondColumnOpen = ref(false);
-const thirdColumnOpen = ref(false);
-const fourthColumnOpen = ref(false);
+const layoutOpen = ref(false);
 const footNoteOpen = ref(false);
 const footerColors = ref(false);
-const { enableContractWithdrawalButton } = useRuntimeConfig().public;
+const columnOpen = ref<boolean[]>([]);
+const placeholderImage = '/_nuxt-plenty/images/placeholder.png';
 
 const footerBlock = computed(() => footer.value as FooterBlock);
 const footerContent = computed(() => footerBlock.value?.content as FooterContent);
 
-const columnOneSwitches = FOOTER_SWITCH_DEFINITIONS.filter((config) => {
-  if (config.columnGroup !== 'legal') return false;
+const legacyColumns = () => [
+  footerContent.value.column1,
+  footerContent.value.column2,
+  footerContent.value.column3,
+  footerContent.value.column4,
+];
 
-  if (enableContractWithdrawalButton && config.key === 'showCancellationForm') {
-    return false;
+const ensureFooterShape = () => {
+  if (!footerContent.value.layout) {
+    footerContent.value.layout = {
+      backgroundImage: '',
+      contentBackground: '#161a16',
+      contentOpacity: 0.88,
+    };
   }
 
-  return true;
-}).map((switchConfig) => ({
+  if (!Array.isArray(footerContent.value.columns) || footerContent.value.columns.length === 0) {
+    footerContent.value.columns = legacyColumns().map((column) => ({ ...column, width: column.width || '1fr' }));
+  }
+};
+
+const footerColumns = computed<FooterColumn[]>(() => {
+  ensureFooterShape();
+  return footerContent.value.columns || [];
+});
+
+const footerLayout = computed(() => {
+  ensureFooterShape();
+  return footerContent.value.layout!;
+});
+
+const columnCount = computed({
+  get: () => footerColumns.value.length,
+  set: (value: number) => setColumnCount(value),
+});
+
+const setColumnCount = (value: number) => {
+  ensureFooterShape();
+  const nextCount = Math.max(1, Math.min(8, Number(value) || 1));
+  const columns = footerContent.value.columns || [];
+
+  while (columns.length < nextCount) {
+    columns.push({ title: '', description: '', width: '1fr' });
+  }
+
+  if (columns.length > nextCount) {
+    columns.splice(nextCount);
+  }
+
+  footerContent.value.columns = columns;
+};
+
+const footerLinkSwitches = FOOTER_SWITCH_DEFINITIONS.filter(
+  (switchConfig) => !(enableContractWithdrawalButton && switchConfig.key === 'showCancellationForm'),
+).map((switchConfig) => ({
   id: `${switchConfig.key}-switch`,
+  key: switchConfig.key,
   translationKey: switchConfig.editorTranslationKey,
-  model: computed({
-    get: () => footerContent.value?.column1[switchConfig.key] as boolean,
-    set: (value: boolean) => {
-      if (footerBlock.value?.content) {
-        (footerBlock.value.content as FooterContent).column1[switchConfig.key] = value;
-      }
-    },
-  }),
 }));
 
-const columnTwoSwitches = FOOTER_SWITCH_DEFINITIONS.filter((config) => config.columnGroup === 'services').map(
-  (switchConfig) => ({
-    id: `${switchConfig.key}-switch`,
-    translationKey: switchConfig.editorTranslationKey,
-    model: computed({
-      get: () => footerContent.value?.column2[switchConfig.key] as boolean,
-      set: (value: boolean) => {
-        if (footerBlock.value?.content) {
-          (footerBlock.value.content as FooterContent).column2[switchConfig.key] = value;
-        }
-      },
-    }),
-  }),
-);
+const footnoteAlignOptions = [
+  { value: 'left', label: 'footnotes-align-option-left-label' },
+  { value: 'center', label: 'footnotes-align-option-center-label' },
+  { value: 'right', label: 'footnotes-align-option-right-label' },
+] as const;
+
+const colorFields = [
+  { key: 'text', label: 'colors-text-label' },
+  { key: 'background', label: 'colors-background-label' },
+  { key: 'footnoteText', label: 'colors-footnote-text-label' },
+  { key: 'footnoteBackground', label: 'colors-footnote-background-label' },
+] as const;
+
+const handleBackgroundImageAdd = ({ image }: { image: string }) => {
+  footerLayout.value.backgroundImage = image;
+};
 </script>
 
 <i18n lang="json">
 {
   "en": {
-    "column-1-group-label": "First column",
-    "column-1-title-label": "Title",
+    "layout-group-label": "Layout",
+    "background-image-label": "Background image",
+    "content-background-label": "Content background colour",
+    "content-opacity-label": "Content background opacity",
+    "column-count-label": "Number of columns",
+    "column-group-label": "Column",
+    "column-title-label": "Title",
+    "column-width-label": "Width",
+    "column-width-hint": "Use CSS values like 1fr, 1.5fr, 280px or minmax(220px, 1fr).",
+    "column-links-label": "Links",
+    "column-html-label": "HTML content",
+    "contract-withdrawal-button-label": "Show Contract Withdrawal Button",
     "column-1-terms-and-conditions-label": "Show Terms and Conditions link",
     "column-1-cancellation-rights-label": "Show Cancellation Rights link",
     "column-1-cancellation-form-label": "Show Cancellation Form link",
-    "column-1-contract-withdrawal-button-label": "Show Contract Withdrawal Button",
     "column-1-legal-disclosure-label": "Show Legal Disclosure link",
     "column-1-privacy-policy-label": "Show Privacy Policy link",
     "column-1-declaration-of-accessibility-label": "Show Declaration of Accessibility link",
-
-    "column-2-group-label": "Second column",
-    "column-2-title-label": "Title",
     "column-2-contact-label": "Show Contact link",
     "column-2-register-label": "Show Register link",
-    "column-2-description-label": "Description",
-    "column-2-description-placeholder": "Description text for the second column",
-
-    "column-3-group-label": "Third column",
-    "column-3-title-label": "Title",
-    "column-3-description-label": "Description",
-    "column-3-description-placeholder": "Description text for the third column",
-
-    "column-4-group-label": "Fourth column",
-    "column-4-title-label": "Title",
-    "column-4-description-label": "Description",
-    "column-4-description-placeholder": "Description text for the fourth column",
-
     "footnotes-group-label": "Footnotes",
     "footnotes-text-label": "Footnotes text",
-    "footnotes-align-label": "Footnote Alignment",
+    "footnotes-align-label": "Footnote alignment",
     "footnotes-align-option-left-label": "Left",
     "footnotes-align-option-center-label": "Center",
     "footnotes-align-option-right-label": "Right",
-
     "colors-group-label": "Colour",
     "colors-text-label": "Text colour",
-    "colors-background-label": "Background colour",
-    "colors-footnote-text-label": "Footnote Text colour",
-    "colors-footnote-background-label": "Footnote Background colour"
+    "colors-background-label": "Fallback background colour",
+    "colors-footnote-text-label": "Footnote text colour",
+    "colors-footnote-background-label": "Footnote background colour"
   },
   "de": {
-    "column-1-group-label": "First column",
-    "column-1-title-label": "Title",
-    "column-1-terms-and-conditions-label": "Show the link to Terms and Conditions",
-    "column-1-cancellation-rights-label": "Show the link to Cancellation Rights",
-    "column-1-cancellation-form-label": "Show Cancellation Form link",
-    "column-1-contract-withdrawal-button-label": "Show Contract Withdrawal Button",
-    "column-1-legal-disclosure-label": "Show the link to Legal Disclosure",
-    "column-1-privacy-policy-label": "Show the link to Privacy Policy",
-    "column-1-declaration-of-accessibility-label": "Show the link to Declaration of Accessibility",
-
-    "column-2-group-label": "Second column",
-    "column-2-title-label": "Title",
-    "column-2-show-contact-link-label": "Show the link to contact form",
-    "column-2-show-register-link-label": "Show the link to register form",
-    "column-2-description-label": "Description",
-    "column-2-description-placeholder": "Description text for the second column",
-
-    "column-3-group-label": "Third column",
-    "column-3-title-label": "Title",
-    "column-3-description-label": "Description",
-    "column-3-description-placeholder": "Description text for the third column",
-
-    "column-4-group-label": "Fourth column",
-    "column-4-title-label": "Title",
-    "column-4-description-label": "Description",
-    "column-4-description-placeholder": "Description text for the fourth column",
-
-    "footnotes-group-label": "Footnotes",
-    "footnotes-text-label": "Footnotes text",
-    "footnotes-align-label": "Footnote Alignment",
-    "footnotes-align-option-left-label": "Left",
-    "footnotes-align-option-center-label": "Center",
-    "footnotes-align-option-right-label": "Right",
-
-    "colors-group-label": "Colour",
-    "colors-text-label": "Text colour",
-    "colors-background-label": "Background color",
-    "colors-footnote-text-label": "Footnote Text colour",
-    "colors-footnote-background-label": "Footnote Background colour"
+    "layout-group-label": "Layout",
+    "background-image-label": "Hintergrundbild",
+    "content-background-label": "Hintergrundfarbe Inhalt",
+    "content-opacity-label": "Deckkraft Inhaltshintergrund",
+    "column-count-label": "Anzahl der Spalten",
+    "column-group-label": "Spalte",
+    "column-title-label": "Titel",
+    "column-width-label": "Breite",
+    "column-width-hint": "CSS-Werte wie 1fr, 1.5fr, 280px oder minmax(220px, 1fr) verwenden.",
+    "column-links-label": "Links",
+    "column-html-label": "HTML-Inhalt",
+    "contract-withdrawal-button-label": "Vertragsruecktritt-Button anzeigen",
+    "column-1-terms-and-conditions-label": "AGB-Link anzeigen",
+    "column-1-cancellation-rights-label": "Widerrufsrecht-Link anzeigen",
+    "column-1-cancellation-form-label": "Widerrufsformular-Link anzeigen",
+    "column-1-legal-disclosure-label": "Impressum-Link anzeigen",
+    "column-1-privacy-policy-label": "Datenschutz-Link anzeigen",
+    "column-1-declaration-of-accessibility-label": "Barrierefreiheitserklaerung-Link anzeigen",
+    "column-2-contact-label": "Kontakt-Link anzeigen",
+    "column-2-register-label": "Registrieren-Link anzeigen",
+    "footnotes-group-label": "Fußnote",
+    "footnotes-text-label": "Fußnotentext",
+    "footnotes-align-label": "Ausrichtung Fußnote",
+    "footnotes-align-option-left-label": "Links",
+    "footnotes-align-option-center-label": "Zentriert",
+    "footnotes-align-option-right-label": "Rechts",
+    "colors-group-label": "Farben",
+    "colors-text-label": "Textfarbe",
+    "colors-background-label": "Fallback-Hintergrundfarbe",
+    "colors-footnote-text-label": "Textfarbe Fußnote",
+    "colors-footnote-background-label": "Hintergrundfarbe Fußnote"
   }
 }
 </i18n>

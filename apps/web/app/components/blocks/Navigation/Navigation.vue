@@ -37,7 +37,7 @@
             <span>{{ categoryTreeGetters.getName(menuNode) }}</span>
             <SfIconChevronRight
               aria-hidden="true"
-              class="rotate-90 text-neutral-500 group-hover:text-neutral-700 group-active:text-neutral-900"
+              class="nubuk-nav-chevron rotate-90 text-neutral-500 group-hover:text-neutral-700 group-active:text-neutral-900"
               :style="categoryButtonStyle"
             />
           </NuxtLink>
@@ -268,7 +268,7 @@ const triggerReference = ref();
 const tappedCategories = ref<Map<number, boolean>>(new Map());
 const TOUCH_DETECTION_THRESHOLD = 500;
 const categoryButtonClasses =
-  'inline-flex items-center justify-center gap-2 font-medium text-base rounded-md py-2 px-4 group mr-2 nav-hover-bg active:!bg-neutral-300';
+  'nubuk-nav-button inline-flex items-center justify-center gap-1 font-normal text-sm rounded-none py-0 px-4 group nav-hover-bg active:!bg-neutral-100';
 let removeHook: () => void;
 
 const trapFocusOptions = {
@@ -304,11 +304,11 @@ const navigationRootStyle = computed(() => ({
 const navigationContainerClasses = computed(() => {
   switch (resolvedContent.value.text.textAlignment) {
     case 'center':
-      return 'flex flex-wrap justify-center border-b nav-border border-b-solid';
+      return 'nubuk-navigation-list flex flex-wrap justify-center border-b nav-border border-b-solid';
     case 'right':
-      return 'flex flex-wrap justify-end border-b nav-border border-b-solid';
+      return 'nubuk-navigation-list flex flex-wrap justify-end border-b nav-border border-b-solid';
     default:
-      return 'flex flex-wrap justify-start border-b nav-border border-b-solid';
+      return 'nubuk-navigation-list flex flex-wrap justify-start border-b nav-border border-b-solid';
   }
 });
 
@@ -519,6 +519,26 @@ useTrapFocus(drawerReference, trapFocusOptions);
 </script>
 
 <style scoped>
+.nubuk-navigation-list {
+  min-height: 37px;
+  align-items: center;
+  gap: clamp(6px, 1.15vw, 18px);
+}
+
+.nubuk-nav-button {
+  min-height: 37px;
+  color: #20252a;
+  font-size: 14px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.nubuk-nav-chevron {
+  display: none;
+}
+
 .nav-hover-bg:hover {
   background-color: var(--nav-hover-bg);
 }

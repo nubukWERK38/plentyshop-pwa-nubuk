@@ -42,10 +42,13 @@ export function createUtilityBar(): Block {
     },
     content: {
       layout: {
-        paddingTop: 20,
-        paddingBottom: 20,
-        paddingLeft: 40,
-        paddingRight: 40,
+        paddingTop: 38,
+        paddingBottom: 17,
+        paddingLeft: 226,
+        paddingRight: 226,
+        fullWidth: true,
+        logoHeight: 41,
+        searchWidth: 471,
       },
       sectionOrder: {
         sections: ['logo', 'search', 'actions'],
@@ -56,17 +59,17 @@ export function createUtilityBar(): Block {
         actions: true,
       },
       color: {
-        iconColor: '#ffffff',
-        backgroundColor: 'rgb(var(--colors-2-primary-500))',
+        iconColor: '#2d5d83',
+        backgroundColor: '#ffffff',
       },
       search: {
         displayMode: 'full',
       },
       actions: {
-        order: ['language', 'wishlist', 'cart', 'account'],
+        order: ['account', 'cart', 'language', 'wishlist'],
         visibility: {
-          language: true,
-          wishlist: true,
+          language: false,
+          wishlist: false,
           cart: true,
           account: true,
         },
@@ -85,13 +88,13 @@ export function createNavigation(): Block {
     },
     content: {
       layout: {
-        paddingTop: 20,
-        paddingBottom: 20,
+        paddingTop: 0,
+        paddingBottom: 0,
         paddingLeft: 20,
         paddingRight: 20,
       },
       text: {
-        textAlignment: 'left',
+        textAlignment: 'center',
       },
       color: {
         backgroundColor: '#ffffff',

@@ -79,4 +79,30 @@ describe('createFooter', () => {
     expect(content.colors?.footnoteBackground).toBeDefined();
     expect(content.colors?.footnoteText).toBeDefined();
   });
+
+  it('should have configurable footer layout', () => {
+    const footer = createFooter();
+    const content = footer.content as {
+      layout?: {
+        backgroundImage?: string;
+        contentBackground?: string;
+        contentOpacity?: number;
+      };
+    };
+
+    expect(content.layout?.backgroundImage).toBeDefined();
+    expect(content.layout?.contentBackground).toBeDefined();
+    expect(content.layout?.contentOpacity).toBeDefined();
+  });
+
+  it('should have dynamic column configuration', () => {
+    const footer = createFooter();
+    const content = footer.content as {
+      columns?: Array<{ title?: string; description?: string; width?: string }>;
+    };
+
+    expect(content.columns).toHaveLength(4);
+    expect(content.columns?.[0]?.description).toBeDefined();
+    expect(content.columns?.[0]?.width).toBeDefined();
+  });
 });

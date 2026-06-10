@@ -1,96 +1,63 @@
 <template>
   <footer
     v-if="resolvedContent"
-    class="pt-10"
-    :style="{
-      backgroundColor: resolvedContent.colors?.background,
-      color: resolvedContent.colors?.text,
-    }"
+    class="footer-block"
+    :style="footerStyle"
     data-testid="footer"
   >
-    <div class="px-4 md:px-6 pb-10 max-w-screen-3xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div v-if="hasColumn1Content" class="max-w-[280px] break-words">
-          <div class="ml-4 text-lg font-medium leading-7">
-            {{ resolvedContent.column1?.title }}
-          </div>
-          <ul>
-            <SfListItem
-              v-for="switchConfig in getColumnSwitches(resolvedContent.column1)"
-              :key="switchConfig.id"
-              class="py-2 !bg-transparent typography-text-sm"
-            >
-              <SfLink
-                :tag="NuxtLink"
-                :style="{ color: resolvedContent.colors?.text || undefined }"
-                class="no-underline text-neutral-600 hover:underline active:underline"
-                variant="secondary"
-                :to="localePath(switchConfig.link)"
-              >
-                {{ switchConfig.translationKey }}
-              </SfLink>
-            </SfListItem>
-          </ul>
-          <div v-if="hasColumn1Button" class="px-4 pt-2 flex">
-            <UiButton
-              :tag="NuxtLink"
-              :to="localePath(paths.cancellationForm)"
-              size="sm"
-              class="text-xs leading-5"
-              data-testid="footer-cancellation-button"
-            >
-              {{ t('legal.withdrawButton') }}
-            </UiButton>
-          </div>
-        </div>
-
-        <div
-          v-for="(column, i) in [resolvedContent.column2, resolvedContent.column3, resolvedContent.column4]"
-          :key="i"
-          class="max-w-[280px] break-words"
-        >
-          <div class="ml-4 text-lg font-medium leading-7">
-            {{ column?.title }}
-          </div>
-          <div v-if="getColumnSwitches(column).length" class="text-sm">
-            <ul>
+    <div class="footer-block__inner">
+      <div class="footer-block__content" :style="contentPanelStyle">
+        <div class="footer-block__content-bg" :style="contentBackgroundStyle" />
+        <div class="footer-block__columns" :style="columnsStyle">
+          <div v-for="(column, i) in visibleColumns" :key="i" class="footer-block__column">
+            <div v-if="column?.title" class="footer-block__title">
+              {{ column.title }}
+            </div>
+            <ul v-if="getColumnSwitches(column).length" class="footer-block__links">
               <SfListItem
                 v-for="switchConfig in getColumnSwitches(column)"
                 :key="switchConfig.id"
-                class="inline-flex items-center gap-2 w-full hover:bg-neutral-100 active:bg-neutral-200 cursor-pointer focus-visible:outline focus-visible:outline-offset focus-visible:relative focus-visible:z-10 px-4 py-2 !bg-transparent typography-text-sm"
+                class="footer-block__link-item !bg-transparent typography-text-sm"
               >
                 <SfLink
                   :tag="NuxtLink"
+                  :style="{ color: resolvedContent.colors?.text || undefined }"
+                  class="footer-block__link no-underline hover:underline active:underline"
                   variant="secondary"
-                  class="no-underline text-neutral-900 hover:cursor-pointer hover:underline active:underline"
-                  :style="{ color: resolvedContent.colors?.text }"
                   :to="localePath(switchConfig.link)"
                 >
                   {{ switchConfig.translationKey }}
                 </SfLink>
               </SfListItem>
             </ul>
+            <div
+              v-if="column?.description"
+              class="footer-block__html no-preflight"
+              v-html="column.description"
+            />
+            <div v-if="hasColumnButton(column)" class="pt-2 flex">
+              <UiButton
+                :tag="NuxtLink"
+                :to="localePath(paths.cancellationForm)"
+                size="sm"
+                class="text-xs leading-5"
+                data-testid="footer-cancellation-button"
+              >
+                {{ t('legal.withdrawButton') }}
+              </UiButton>
+            </div>
           </div>
-          <TextContent
-            v-if="column?.description"
-            v-bind="mapToTextContentProps({ htmlDescription: column.description })"
-          />
         </div>
       </div>
-    </div>
-    <div>
       <div
         v-if="resolvedContent.footnote && resolvedContent.footnote.trim() !== ''"
-        class="text-sm py-10 md:py-6 px-10 no-preflight"
+        class="footer-block__footnote no-preflight"
         :class="{
           'text-left': resolvedContent.footnoteAlign === 'left',
           'text-center': resolvedContent.footnoteAlign === 'center',
           'text-right': resolvedContent.footnoteAlign === 'right',
         }"
-        :style="{
-          color: resolvedContent.colors?.footnoteText,
-          backgroundColor: resolvedContent.colors?.footnoteBackground,
-        }"
+        :style="footnoteStyle"
         v-html="resolvedContent.footnote"
       />
     </div>
@@ -121,15 +88,57 @@ const resolvedContent = computed(() => {
   const content = props.content ?? footer.value?.content;
   return (content ?? null) as FooterContent | null;
 });
-const hasColumn1Button = computed(() => {
-  return !!(enableContractWithdrawalButton && resolvedContent.value?.column1?.showCancellationForm);
+const footerStyle = computed(() => ({
+  backgroundColor: resolvedContent.value?.colors?.background,
+  backgroundImage: resolvedContent.value?.layout?.backgroundImage
+    ? `url(${resolvedContent.value.layout.backgroundImage})`
+    : undefined,
+  color: resolvedContent.value?.colors?.text,
+}));
+
+const legacyColumns = computed(() => {
+  if (!resolvedContent.value) return [];
+  return [
+    resolvedContent.value.column1,
+    resolvedContent.value.column2,
+    resolvedContent.value.column3,
+    resolvedContent.value.column4,
+  ];
 });
 
-const hasColumn1Content = computed(() => {
-  if (!resolvedContent.value?.column1) return false;
+const columns = computed(() =>
+  resolvedContent.value?.columns?.length ? resolvedContent.value.columns : legacyColumns.value,
+);
 
-  return getColumnSwitches(resolvedContent.value.column1).length > 0 || hasColumn1Button.value;
-});
+const visibleColumns = computed(() =>
+  columns.value.filter((column) => {
+    if (!column) return false;
+    return Boolean(column.title || column.description || getColumnSwitches(column).length || hasColumnButton(column));
+  }),
+);
+
+const columnsStyle = computed(() => ({
+  gridTemplateColumns: visibleColumns.value.map((column) => column.width?.trim() || '1fr').join(' '),
+}));
+
+const contentPanelStyle = computed(() => ({
+  color: resolvedContent.value?.colors?.text,
+}));
+
+const contentBackgroundStyle = computed(() => ({
+  backgroundColor: resolvedContent.value?.layout?.contentBackground || 'transparent',
+  opacity: `${Math.max(0, Math.min(1, Number(resolvedContent.value?.layout?.contentOpacity ?? 1)))}`,
+}));
+
+const footnoteStyle = computed(() => ({
+  color: resolvedContent.value?.colors?.footnoteText,
+  backgroundColor: resolvedContent.value?.colors?.footnoteBackground,
+}));
+
+const hasColumnButton = (column: FooterColumn) => {
+  return !!(enableContractWithdrawalButton && column?.showCancellationForm);
+};
+
 const getColumnSwitches = (column: FooterColumn) => {
   return FOOTER_SWITCH_DEFINITIONS.filter((switchConfig) => {
     if (column[switchConfig.key] !== true) return false;
@@ -143,3 +152,91 @@ const getColumnSwitches = (column: FooterColumn) => {
   }));
 };
 </script>
+
+<style scoped>
+.footer-block {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 72px 16px 0;
+}
+
+.footer-block__inner {
+  width: min(100%, 1470px);
+  margin: 0 auto;
+}
+
+.footer-block__content {
+  position: relative;
+  overflow: hidden;
+  padding: 34px 42px 30px;
+}
+
+.footer-block__content-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.footer-block__columns {
+  position: relative;
+  display: grid;
+  gap: 36px;
+}
+
+.footer-block__column {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.footer-block__title {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+}
+
+.footer-block__links {
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.footer-block__link-item {
+  padding: 2px 0 !important;
+}
+
+.footer-block__link {
+  color: inherit;
+  font-size: 14px;
+}
+
+.footer-block__html {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.footer-block__html :deep(a) {
+  color: inherit;
+}
+
+.footer-block__footnote {
+  margin-top: 34px;
+  padding: 14px 16px;
+  font-size: 14px;
+}
+
+@media (max-width: 767px) {
+  .footer-block {
+    padding-top: 32px;
+  }
+
+  .footer-block__content {
+    padding: 28px 22px;
+  }
+
+  .footer-block__columns {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
