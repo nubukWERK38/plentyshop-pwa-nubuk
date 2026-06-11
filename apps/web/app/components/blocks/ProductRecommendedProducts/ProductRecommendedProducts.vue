@@ -1,7 +1,7 @@
 <template>
   <section ref="blockRef" class="product-recommended-products w-screen" :style="sectionStyle">
     <div v-bind="$attrs" :style="blockStyle" class="product-recommended-products__inner w-full">
-      <TextContent data-testid="recommended-block" class="pb-4" :text="props.content.text" :index="props.index" />
+      <TextContent data-testid="recommended-block" class="product-recommended-products__text pb-4" :text="props.content.text" :index="props.index" />
 
       <div v-if="tabsEnabled" class="product-recommended-products__tabs" data-testid="recommended-source-tabs">
         <button
@@ -236,7 +236,7 @@ watch(
 }
 
 .product-recommended-products :deep(.product-recommended-products__card [data-testid='productcard-name']) {
-  font-weight: 700;
+  font-weight: 300;
   color: #111827;
 }
 

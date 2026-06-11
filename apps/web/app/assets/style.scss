@@ -137,3 +137,36 @@ apple-pay-button {
  list-style: none;
  padding-left: 0;
 }
+
+.image-text-box__text p strong,
+.image-text-box__text p {
+  color: #fff;
+}
+.image-text-box__text p {
+  font-size: 16px !important;
+}
+.image-text-box__text p strong {
+  font-size: 35px !important;
+}
+.image-text-box__text a::after {
+	content: "\f061";
+	font-family: FontAwesome;
+	margin-left: 10px;
+}
+h1, .h1 {
+	font-size: 48px;
+}
+.product-recommended-products__text p {
+	font-size: 14px;
+	text-transform: uppercase;
+	font-weight: 300;
+	font-family: "Noto Sans",sans-serif !important;
+	color: #fff;
+	letter-spacing: .2rem;
+}
+.product-recommended-products__text .h1 {
+	font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}

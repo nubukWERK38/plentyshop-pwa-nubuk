@@ -2,7 +2,7 @@
   <section class="image-text-box" data-testid="image-text-box">
     <div v-if="isSideBySide" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
       <div :class="imageOrderClass">
-        <div v-if="hasImage" class="w-full overflow-hidden rounded-md bg-neutral-100">
+        <div v-if="hasImage" class="w-full overflow-hidden  bg-neutral-100">
           <NuxtImg
             v-if="content.image.mobile"
             :src="content.image.mobile"
@@ -22,12 +22,12 @@
       </div>
       <div :class="textOrderClass">
         <div class="space-y-4">
-          <div v-if="hasText" class="prose max-w-none" v-html="content.text.html"></div>
+          <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
           <component
             :is="buttonTag"
             v-if="hasButton"
             v-bind="buttonProps"
-            class="inline-flex items-center rounded px-4 py-2 font-medium"
+            class="inline-flex items-center  px-4 py-2 font-medium"
             :style="buttonStyle"
           >
             {{ content.button.label }}
@@ -37,7 +37,7 @@
     </div>
 
     <div v-else-if="isInside" class="relative">
-      <div v-if="hasImage" class="w-full overflow-hidden rounded-md bg-neutral-100">
+      <div v-if="hasImage" class="w-full overflow-hidden bg-neutral-100">
         <NuxtImg
           v-if="content.image.mobile"
           :src="content.image.mobile"
@@ -54,14 +54,14 @@
           height="720"
         />
       </div>
-      <div class="absolute inset-0 p-5 flex" :class="insideAlignClasses">
-        <div class="space-y-4 max-w-full bg-white/90 p-4 rounded-md shadow-sm">
-          <div v-if="hasText" class="prose max-w-none" v-html="content.text.html"></div>
+      <div class="absolute inset-0 p-10 flex" :class="insideAlignClasses">
+        <div class="image-text-box__text">
+          <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
           <component
             :is="buttonTag"
             v-if="hasButton"
             v-bind="buttonProps"
-            class="inline-flex items-center rounded px-4 py-2 font-medium"
+            class="inline-flex items-center  px-4 py-2 font-medium"
             :style="buttonStyle"
           >
             {{ content.button.label }}
@@ -71,7 +71,7 @@
     </div>
 
     <div v-else-if="isOverlay" class="relative pb-10">
-      <div v-if="hasImage" class="w-full overflow-hidden rounded-md bg-neutral-100">
+      <div v-if="hasImage" class="w-full overflow-hidden  bg-neutral-100">
         <NuxtImg
           v-if="content.image.mobile"
           :src="content.image.mobile"
@@ -88,14 +88,14 @@
           height="720"
         />
       </div>
-      <div class="relative z-10 -mt-10 mx-4 md:mx-8 bg-white p-4 md:p-6 rounded-md shadow-md">
+      <div class="relative z-10 -mt-10 mx-4 md:mx-8 bg-white p-4 md:p-6 shadow-md">
         <div class="space-y-4">
-          <div v-if="hasText" class="prose max-w-none" v-html="content.text.html"></div>
+          <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
           <component
             :is="buttonTag"
             v-if="hasButton"
             v-bind="buttonProps"
-            class="inline-flex items-center rounded px-4 py-2 font-medium"
+            class="inline-flex items-center  px-4 py-2 font-medium"
             :style="buttonStyle"
           >
             {{ content.button.label }}
@@ -106,19 +106,19 @@
 
     <div v-else>
       <div v-if="isAbove" class="space-y-4 mb-4">
-        <div v-if="hasText" class="prose max-w-none" v-html="content.text.html"></div>
+        <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
         <component
           :is="buttonTag"
           v-if="hasButton"
           v-bind="buttonProps"
-          class="inline-flex items-center rounded px-4 py-2 font-medium"
+          class="inline-flex items-center  px-4 py-2 font-medium"
           :style="buttonStyle"
         >
           {{ content.button.label }}
         </component>
       </div>
 
-      <div v-if="hasImage" class="w-full overflow-hidden rounded-md bg-neutral-100">
+      <div v-if="hasImage" class="w-full overflow-hidden  bg-neutral-100">
         <NuxtImg
           v-if="content.image.mobile"
           :src="content.image.mobile"
@@ -137,12 +137,12 @@
       </div>
 
       <div v-if="isBelow" class="space-y-4 mt-4">
-        <div v-if="hasText" class="prose max-w-none" v-html="content.text.html"></div>
+        <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
         <component
           :is="buttonTag"
           v-if="hasButton"
           v-bind="buttonProps"
-          class="inline-flex items-center rounded px-4 py-2 font-medium"
+          class="inline-flex items-center  px-4 py-2 font-medium"
           :style="buttonStyle"
         >
           {{ content.button.label }}

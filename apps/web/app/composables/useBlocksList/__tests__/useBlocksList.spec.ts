@@ -64,7 +64,7 @@ describe('useBlocksList', () => {
 
       await getBlocksLists();
 
-      expect(globalThis.fetch).toHaveBeenCalledWith('/_nuxt-plenty/editor/blocksLists.json', {
+      expect(globalThis.fetch).toHaveBeenCalledWith(expect.stringMatching(/^\/_nuxt-plenty\/editor\/blocksLists\.json\?v=\d+$/), {
         cache: 'no-store',
       });
       expect(blocksLists.value).toEqual(mockSimpleBlocksList);
@@ -96,7 +96,7 @@ describe('useBlocksList', () => {
 
       const template = await getBlockTemplateByLanguage('banners', 0, 'en');
 
-      expect(globalThis.fetch).toHaveBeenCalledWith('/_nuxt-plenty/editor/blocksLists.json', {
+      expect(globalThis.fetch).toHaveBeenCalledWith(expect.stringMatching(/^\/_nuxt-plenty\/editor\/blocksLists\.json\?v=\d+$/), {
         cache: 'no-store',
       });
       expect(template).toEqual(mockExpectedEnglishTemplate);
