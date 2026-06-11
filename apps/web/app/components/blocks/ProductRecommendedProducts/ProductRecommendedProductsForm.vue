@@ -526,10 +526,15 @@ const layoutState = computed(() => {
 
 const layoutGradientState = computed(() => {
   if (!layoutState.value.gradient) layoutState.value.gradient = defaultGradient();
-  layoutState.value.gradient = {
-    ...defaultGradient(),
-    ...layoutState.value.gradient,
-  };
+  const defaults = defaultGradient();
+  if (layoutState.value.gradient.enabled === undefined) layoutState.value.gradient.enabled = defaults.enabled;
+  if (!layoutState.value.gradient.type) layoutState.value.gradient.type = defaults.type;
+  if (!layoutState.value.gradient.startColor) layoutState.value.gradient.startColor = defaults.startColor;
+  if (!layoutState.value.gradient.endColor) layoutState.value.gradient.endColor = defaults.endColor;
+  if (layoutState.value.gradient.angle === undefined) layoutState.value.gradient.angle = defaults.angle;
+  if (layoutState.value.gradient.radius === undefined) layoutState.value.gradient.radius = defaults.radius;
+  if (layoutState.value.gradient.startX === undefined) layoutState.value.gradient.startX = defaults.startX;
+  if (layoutState.value.gradient.startY === undefined) layoutState.value.gradient.startY = defaults.startY;
   return layoutState.value.gradient;
 });
 
