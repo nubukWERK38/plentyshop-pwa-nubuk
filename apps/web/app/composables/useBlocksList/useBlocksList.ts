@@ -30,7 +30,9 @@ export const useBlocksList: UseBlocksListReturn = () => {
    */
   const getBlocksLists = async () => {
     try {
-      const response = await fetch('/_nuxt-plenty/editor/blocksLists.json');
+      const response = await fetch('/_nuxt-plenty/editor/blocksLists.json', {
+        cache: 'no-store',
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
