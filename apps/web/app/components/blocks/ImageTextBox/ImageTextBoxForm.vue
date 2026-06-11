@@ -40,7 +40,7 @@
 
       <div class="space-y-4 py-3">
         <EditorRichTextEditorForm
-          :model-value="blockContent.text.html"
+          :model-value="blockContent.text.html || ''"
           :text-align="blockContent.text.alignX || 'center'"
           @update:model-value="blockContent.text.html = $event"
         />
