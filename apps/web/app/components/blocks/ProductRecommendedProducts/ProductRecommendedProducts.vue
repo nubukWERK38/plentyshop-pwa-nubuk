@@ -1,6 +1,6 @@
 <template>
   <section ref="blockRef" class="product-recommended-products w-screen" :style="sectionStyle">
-    <div v-bind="$attrs" :style="blockStyle" class="w-full">
+    <div v-bind="$attrs" :style="blockStyle" class="product-recommended-products__inner w-full">
       <TextContent data-testid="recommended-block" class="pb-4" :text="props.content.text" :index="props.index" />
 
       <div v-if="tabsEnabled" class="product-recommended-products__tabs" data-testid="recommended-source-tabs">
@@ -22,6 +22,7 @@
         :items="recommendedProducts"
         :item-gap="layoutSettings.gap"
         :visible-items="layoutSettings.visibleItems"
+        card-class="product-recommended-products__card"
         wrapper-class="w-full"
       />
     </div>
@@ -168,7 +169,19 @@ watch(
 
 <style scoped>
 .product-recommended-products {
-  margin-left: calc(50% - 50vw);
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  padding: 3rem 0 3.375rem;
+  color: #ffffff;
+}
+
+.product-recommended-products__inner {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
 .product-recommended-products__tabs {
@@ -194,7 +207,46 @@ watch(
 
 .product-recommended-products__tab--active {
   opacity: 1;
-  color: rgb(var(--colors-2-primary-500) / 1);
+  color: #c8ff00;
+}
+
+.product-recommended-products :deep(.product-recommended-products__card) {
+  min-height: 512px;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  color: #111827;
+  box-shadow: none;
+}
+
+.product-recommended-products :deep(.product-recommended-products__card:hover) {
+  box-shadow: none;
+}
+
+.product-recommended-products :deep(.product-recommended-products__card .size-48) {
+  width: 100%;
+  height: 342px;
+  padding: 2rem 1.25rem 1rem;
+}
+
+.product-recommended-products :deep(.product-recommended-products__card > div:last-child) {
+  min-height: 170px;
+  padding: 1rem 1.25rem 1.5rem;
+  border-top: 0;
+}
+
+.product-recommended-products :deep(.product-recommended-products__card [data-testid='productcard-name']) {
+  font-weight: 700;
+  color: #111827;
+}
+
+.product-recommended-products :deep(.product-recommended-products__card [data-testid='product-card-vertical-price']) {
+  color: #ff3434;
+}
+
+.product-recommended-products :deep(.product-recommended-products__card button),
+.product-recommended-products :deep(.product-recommended-products__card a) {
+  border-radius: 0;
 }
 
 @media (max-width: 767px) {

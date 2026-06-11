@@ -13,7 +13,7 @@
         :should-load-image="shouldLoadImage(index)"
         :index="index"
         is-from-slider
-        class="product-slider__item w-44 max-w-44 shrink-0 sm:w-48 sm:max-w-48 xl:w-56 xl:max-w-56"
+        :class="['product-slider__item w-44 max-w-44 shrink-0 sm:w-48 sm:max-w-48 xl:w-56 xl:max-w-56', cardClass]"
         :style="getItemStyle(index)"
       />
     </SfScrollable>
@@ -49,6 +49,7 @@ const localePath = useLocalePath();
 const props = withDefaults(defineProps<ProductSliderProps>(), {
   itemGap: 16,
   visibleItems: undefined,
+  cardClass: '',
 });
 
 const { sliderRootRef, shouldLoadImage } = useSliderImagePreload({

@@ -5,4 +5,5 @@ export type ProductSliderProps = {
   wrapperClass?: string | Record<string, unknown> | unknown[];
   itemGap?: number;
   visibleItems?: number;
+  cardClass?: string;
 };
