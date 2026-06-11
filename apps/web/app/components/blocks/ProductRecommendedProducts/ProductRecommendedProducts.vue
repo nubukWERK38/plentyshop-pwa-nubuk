@@ -180,7 +180,7 @@ watch(
 .product-recommended-products__inner {
   width: 100%;
   max-width: 1440px;
-  margin: 0 auto;
+  margin: 0 auto !important;
   padding: 0 1.5rem;
 }
 

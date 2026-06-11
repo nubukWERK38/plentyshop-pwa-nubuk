@@ -1167,6 +1167,68 @@
       }
     ]
   },
+  "image-text-box": {
+    "category": "image-text-box",
+    "accessControl": ["content", "productCategory", "product"],
+    "title": "Image Text Box",
+    "blockName": "ImageTextBox",
+    "variations": [
+      {
+        "title": "Image Text Box",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/image_preview.png",
+        "template": {
+          "en": {
+            "name": "ImageTextBox",
+            "type": "content",
+            "meta": { "uuid": "9f20b9f2-4c8d-4f2a-8da4-f4ad71f1a9b1" },
+            "content": {
+              "image": {
+                "desktop": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                "mobile": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                "alt": ""
+              },
+              "text": {
+                "html": "<p>Text that supports HTML formatting</p>",
+                "position": "below",
+                "alignY": "center",
+                "alignX": "center"
+              },
+              "button": {
+                "label": "Button",
+                "link": "/",
+                "backgroundColor": "#111827",
+                "textColor": "#ffffff"
+              }
+            }
+          },
+          "de": {
+            "name": "ImageTextBox",
+            "type": "content",
+            "meta": { "uuid": "bea31b46-b64d-4d6f-8f4f-524cf0b343d5" },
+            "content": {
+              "image": {
+                "desktop": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                "mobile": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/placeholder-image.png",
+                "alt": ""
+              },
+              "text": {
+                "html": "<p>Text mit HTML-Formatierung</p>",
+                "position": "below",
+                "alignY": "center",
+                "alignX": "center"
+              },
+              "button": {
+                "label": "Button",
+                "link": "/",
+                "backgroundColor": "#111827",
+                "textColor": "#ffffff"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
   "image": {
     "category": "image",
     "accessControl": ["content", "productCategory", "product"],
