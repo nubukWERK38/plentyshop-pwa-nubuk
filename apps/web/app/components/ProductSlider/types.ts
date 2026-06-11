@@ -4,4 +4,5 @@ export type ProductSliderProps = {
   items?: Product[];
   wrapperClass?: string | Record<string, unknown> | unknown[];
   itemGap?: number;
+  visibleItems?: number;
 };

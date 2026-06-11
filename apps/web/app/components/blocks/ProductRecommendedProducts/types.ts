@@ -1,5 +1,28 @@
 export type CrossSellingRelationType = 'Accessory' | 'ReplacementPart' | 'Similar' | 'Bundle';
 
+export type ProductRecommendedProductsSource = {
+  type: 'category' | 'cross_selling';
+  categoryId: string;
+  itemId: string;
+  crossSellingRelation: CrossSellingRelationType;
+};
+
+export type ProductRecommendedProductsGradient = {
+  enabled?: boolean;
+  type?: 'linear' | 'radial';
+  startColor?: string;
+  endColor?: string;
+  angle?: number;
+  radius?: number;
+  startX?: number;
+  startY?: number;
+};
+
+export type ProductRecommendedProductsTab = {
+  label: string;
+  source: ProductRecommendedProductsSource;
+};
+
 export type ProductRecommendedProductsProps = {
   name: string;
   type: string;
@@ -15,12 +38,7 @@ export type ProductRecommendedProductsProps = {
 export type ProductRecommendedProductsContent = {
   index?: number;
   cacheKey?: string;
-  source: {
-    type: 'category' | 'cross_selling';
-    categoryId: string;
-    itemId: string;
-    crossSellingRelation: CrossSellingRelationType;
-  };
+  source: ProductRecommendedProductsSource;
   text: {
     pretitle?: string;
     title?: string;
@@ -34,5 +52,12 @@ export type ProductRecommendedProductsContent = {
     gap?: number;
     marginLeft?: number;
     marginRight?: number;
+    backgroundColor?: string;
+    gradient?: ProductRecommendedProductsGradient;
+    visibleItems?: number;
+  };
+  tabs?: {
+    enabled?: boolean;
+    items?: ProductRecommendedProductsTab[];
   };
 };

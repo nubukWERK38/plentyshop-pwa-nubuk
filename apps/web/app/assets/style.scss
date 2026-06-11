@@ -116,3 +116,24 @@ apple-pay-button {
     }
   }
 }
+
+.footer-block p {
+  margin-bottom: 10px
+}
+.footer-block p:has(.fa) {
+  display: flex;
+  gap: 0 5px;
+}
+
+.footer-block .fa {
+  color: #D1FF00;
+
+}
+.footer-block__html .d-flex {
+  display: flex;
+  gap: 40px
+}
+.footer-block__html ul.list-unstyled {
+ list-style: none;
+ padding-left: 0;
+}

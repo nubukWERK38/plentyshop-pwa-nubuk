@@ -194,6 +194,20 @@ export const createProduct = (): Block[] => {
           categoryId: '',
           crossSellingRelation: 'Similar',
         },
+        layout: {
+          fullWidth: false,
+          gap: 16,
+          marginLeft: 0,
+          marginRight: 0,
+          backgroundColor: 'transparent',
+          gradient: {
+            enabled: false,
+            type: 'linear',
+            startColor: '#ffffff',
+            endColor: '#e2e8f0',
+            angle: 180,
+          },
+        },
       },
     },
   ] as Block[];

@@ -13,7 +13,7 @@
         :should-load-image="shouldLoadImage(index)"
         :index="index"
         is-from-slider
-        class="w-44 max-w-44 shrink-0 sm:w-48 sm:max-w-48 xl:w-56 xl:max-w-56"
+        class="product-slider__item w-44 max-w-44 shrink-0 sm:w-48 sm:max-w-48 xl:w-56 xl:max-w-56"
         :style="getItemStyle(index)"
       />
     </SfScrollable>
@@ -48,6 +48,7 @@ const localePath = useLocalePath();
 
 const props = withDefaults(defineProps<ProductSliderProps>(), {
   itemGap: 16,
+  visibleItems: undefined,
 });
 
 const { sliderRootRef, shouldLoadImage } = useSliderImagePreload({
@@ -56,7 +57,23 @@ const { sliderRootRef, shouldLoadImage } = useSliderImagePreload({
   preloadBuffer: 2,
 });
 
-const getItemStyle = (index: number): CSSProperties => ({
-  marginRight: index < (props.items?.length ?? 0) - 1 ? `${props.itemGap}px` : '0px',
+const visibleItems = computed(() => {
+  if (props.visibleItems === undefined || props.visibleItems === null) return undefined;
+  return Math.max(1, Math.min(Number(props.visibleItems) || 1, 12));
 });
+
+const getItemStyle = (index: number): CSSProperties => {
+  const style: CSSProperties = {
+    marginRight: index < (props.items?.length ?? 0) - 1 ? `${props.itemGap}px` : '0px',
+  };
+
+  if (visibleItems.value !== undefined) {
+    const width = `calc((100% - (${visibleItems.value - 1} * ${props.itemGap}px)) / ${visibleItems.value})`;
+    style.width = width;
+    style.maxWidth = width;
+    style.flexBasis = width;
+  }
+
+  return style;
+};
 </script>

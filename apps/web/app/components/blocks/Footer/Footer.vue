@@ -32,7 +32,7 @@
             </ul>
             <div
               v-if="column?.description"
-              class="footer-block__html no-preflight"
+              class="footer-block__html"
               v-html="column.description"
             />
             <div v-if="hasColumnButton(column)" class="pt-2 flex">
@@ -158,7 +158,9 @@ const getColumnSwitches = (column: FooterColumn) => {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  padding: 72px 16px 0;
+  padding: 72px 100px 0;
+      max-width: 1540px;
+    margin: 0 auto;
 }
 
 .footer-block__inner {
@@ -170,7 +172,9 @@ const getColumnSwitches = (column: FooterColumn) => {
   position: relative;
   overflow: hidden;
   padding: 34px 42px 30px;
+  color: #fff !important;
 }
+
 
 .footer-block__content-bg {
   position: absolute;
@@ -195,6 +199,7 @@ const getColumnSwitches = (column: FooterColumn) => {
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: 0.08em;
+  min-height: 22px;
 }
 
 .footer-block__links {
