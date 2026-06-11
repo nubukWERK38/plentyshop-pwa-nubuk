@@ -46,7 +46,7 @@
           </div>
         </div>
         <div
-          v-if="isNestedMultigrid(category, targetUuid)"
+          v-if="category.variations.some((variation) => isTooDeeplyNestedLayout(variation, targetUuid))"
           class="mx-4 mt-4 mb-4 flex items-start gap-2 text-sm text-neutral-600"
         >
           <SfIconWarning class="mt-0.5 shrink-0 text-yellow-500" />
@@ -77,8 +77,12 @@ const { closeSiteConfigurationDrawer } = useSiteConfiguration();
 const { multigridColumnUuid, visiblePlaceholder, addNewBlock, getBlockDepth, blockExistsOnPage } = useBlockManager();
 
 const targetUuid = computed(() => multigridColumnUuid.value || visiblePlaceholder.value.uuid);
-const isNestedMultigrid = (category: BlockListCategory, uuid: string) => {
-  return category.blockName === 'MultiGrid' && getBlockDepth(uuid) > 0;
+const isLayoutVariation = (variation: BlockTemplateVariation) => {
+  return ['MultiGrid', 'ColumnLayout'].includes(variation.template.en.name);
+};
+
+const isTooDeeplyNestedLayout = (variation: BlockTemplateVariation, uuid: string) => {
+  return isLayoutVariation(variation) && getBlockDepth(uuid) > 1;
 };
 const isForbiddenBlock = (category: BlockListCategory, uuid: string) => {
   return ['BannerCarousel', 'ImageText'].includes(category.blockName) && getBlockDepth(uuid) > 0;
@@ -91,7 +95,7 @@ const isSingleInstanceOnPage = (blockName: string) => {
 };
 const isAddDisabled = (category: BlockListCategory, variation: BlockTemplateVariation, uuid: string): boolean => {
   const blockName = variation.template.en.name;
-  const isNested = isNestedMultigrid(category, uuid);
+  const isNested = isTooDeeplyNestedLayout(variation, uuid);
   const isForbidden = isForbiddenBlock(category, uuid);
   const isSingleInstance = isSingleInstanceOnPage(blockName);
   return isNested || isForbidden || isSingleInstance;

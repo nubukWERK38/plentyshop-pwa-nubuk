@@ -477,6 +477,78 @@
             ]
           }
         }
+      },
+      {
+        "title": "Column Layout 6-6",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/two-column-grid.png",
+        "template": {
+          "en": {
+            "name": "ColumnLayout",
+            "type": "structure",
+            "meta": { "uuid": "a2316577-95bf-41b3-afbf-08ccd257c06c" },
+            "configuration": {
+              "columns": 2,
+              "columnWidths": [6, 6],
+              "layout": {
+                "gap": "M",
+                "fullWidth": false
+              }
+            },
+            "content": [
+              {
+                "name": "EmptyGridBlock",
+                "type": "content",
+                "meta": {
+                  "uuid": "f6f6e8aa-46e0-4df7-8ad5-b6a4a20fdfd2"
+                },
+                "parent_slot": 0,
+                "content": []
+              },
+              {
+                "name": "EmptyGridBlock",
+                "type": "content",
+                "meta": {
+                  "uuid": "5f6e2086-0570-4542-8ef1-e1b5f495f307"
+                },
+                "parent_slot": 1,
+                "content": []
+              }
+            ]
+          },
+          "de": {
+            "name": "ColumnLayout",
+            "type": "structure",
+            "meta": { "uuid": "a2316577-95bf-41b3-afbf-08ccd257c06c" },
+            "configuration": {
+              "columns": 2,
+              "columnWidths": [6, 6],
+              "layout": {
+                "gap": "M",
+                "fullWidth": false
+              }
+            },
+            "content": [
+              {
+                "name": "EmptyGridBlock",
+                "type": "content",
+                "meta": {
+                  "uuid": "f6f6e8aa-46e0-4df7-8ad5-b6a4a20fdfd2"
+                },
+                "parent_slot": 0,
+                "content": []
+              },
+              {
+                "name": "EmptyGridBlock",
+                "type": "content",
+                "meta": {
+                  "uuid": "5f6e2086-0570-4542-8ef1-e1b5f495f307"
+                },
+                "parent_slot": 1,
+                "content": []
+              }
+            ]
+          }
+        }
       }
     ]
   },

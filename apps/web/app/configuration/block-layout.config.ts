@@ -20,6 +20,7 @@ export const BLOCK_LAYOUT_RULES: Record<string, BlockLayoutRule> = {
   Footer: { container: false, padding: false },
 
   MultiGrid: { defaultFullWidth: false, padding: false },
+  ColumnLayout: { defaultFullWidth: false, padding: false },
   NewsletterSubscribe: { defaultFullWidth: false, padding: true },
   TextCard: { defaultFullWidth: false, padding: true },
   CategoryData: { defaultFullWidth: false, padding: true },

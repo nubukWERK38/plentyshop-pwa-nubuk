@@ -7,6 +7,7 @@ const blockTypeNames: Record<string, string> = {
   CustomerReview: 'Customer reviews',
   ProductLegalInformation: 'Legal Information',
   MultiGrid: 'Layout',
+  ColumnLayout: 'Columns',
   Footer: 'Footer',
   ItemText: 'Item Details',
   CategoryData: 'Category Data',
