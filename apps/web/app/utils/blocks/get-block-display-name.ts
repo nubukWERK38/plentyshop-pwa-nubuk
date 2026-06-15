@@ -3,6 +3,7 @@ const blockTypeNames: Record<string, string> = {
   NewsletterSubscribe: 'Newsletter',
   ProductRecommendedProducts: 'Product Gallery',
   TextCard: 'Rich Text',
+  Tabs: 'Tabs',
   AnnouncementBar: 'Announcement Bar',
   CustomerReview: 'Customer reviews',
   ProductLegalInformation: 'Legal Information',

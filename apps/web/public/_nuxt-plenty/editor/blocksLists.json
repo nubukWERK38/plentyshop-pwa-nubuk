@@ -1694,6 +1694,64 @@
             }
           }
         }
+      },
+      {
+        "title": "Tabs",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/rich_text.png",
+        "template": {
+          "en": {
+            "name": "Tabs",
+            "type": "content",
+            "meta": { "uuid": "2a1d4c8b-5e6f-47a1-9b2c-3d4e5f607182" },
+            "content": {
+              "items": [
+                {
+                  "title": "First tab",
+                  "html": "<p>Content that supports HTML formatting</p>"
+                },
+                {
+                  "title": "Second tab",
+                  "html": "<p>More content that supports HTML formatting</p>"
+                }
+              ],
+              "layout": {
+                "fullWidth": false,
+                "additionalClasses": "",
+                "htmlId": "",
+                "paddingTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0
+              }
+            }
+          },
+          "de": {
+            "name": "Tabs",
+            "type": "content",
+            "meta": { "uuid": "3b2e5d9c-6f70-48b2-a0c3-4e5f60718293" },
+            "content": {
+              "items": [
+                {
+                  "title": "Erster Tab",
+                  "html": "<p>Inhalt mit HTML-Formatierung</p>"
+                },
+                {
+                  "title": "Zweiter Tab",
+                  "html": "<p>Weiterer Inhalt mit HTML-Formatierung</p>"
+                }
+              ],
+              "layout": {
+                "fullWidth": false,
+                "additionalClasses": "",
+                "htmlId": "",
+                "paddingTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0
+              }
+            }
+          }
+        }
       }
     ]
   },
