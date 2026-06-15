@@ -293,7 +293,19 @@ const columnLayoutStructure = computed(() => {
   const existingBlock = findOrDeleteBlockByUuid(data.value, resolvedUuid.value) as ColumnLayoutBlock | undefined;
   const block = existingBlock || fallbackStructure.value;
 
-  if (!Array.isArray(block.configuration?.columnWidths) || block.configuration.columnWidths.length === 0) {
+  if (!block.configuration) {
+    block.configuration = {
+      visible: true,
+      columns: 2,
+      columnWidths: [6, 6],
+    };
+  }
+
+  if (!Array.isArray(block.content)) {
+    block.content = [];
+  }
+
+  if (!Array.isArray(block.configuration.columnWidths) || block.configuration.columnWidths.length === 0) {
     block.configuration.columnWidths = [6, 6];
   }
 

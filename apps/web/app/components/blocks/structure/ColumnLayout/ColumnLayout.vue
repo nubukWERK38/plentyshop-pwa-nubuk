@@ -56,7 +56,13 @@
 import type { Block } from '@plentymarkets/shop-api';
 import type { ColumnLayoutProps } from '~/components/blocks/structure/ColumnLayout/types';
 
-const { content, configuration } = defineProps<ColumnLayoutProps>();
+const props = defineProps<ColumnLayoutProps>();
+const content = computed(() => (Array.isArray(props.content) ? props.content : []));
+const configuration = computed(() => ({
+  columns: props.configuration?.columns,
+  columnWidths: Array.isArray(props.configuration?.columnWidths) ? props.configuration.columnWidths : [6, 6],
+  layout: props.configuration?.layout,
+}));
 
 const hoveredRowUuid = ref<string | null>(null);
 const { setHoveredBlock, clearHoveredBlock } = useTableOfContents();
@@ -91,7 +97,7 @@ const gapClassMap: Record<string, string> = {
   XL: 'gap-y-5 md:gap-x-5 md:gap-y-0',
 };
 
-const gridGapClass = computed(() => gapClassMap[configuration.layout?.gap || 'M']);
+const gridGapClass = computed(() => gapClassMap[configuration.value.layout?.gap || 'M']);
 
 const clampColumnCount = (count: number) => {
   if (!Number.isFinite(count)) return 1;
@@ -156,28 +162,32 @@ const normalizeWidthsToTwelve = (inputWidths: number[], count: number): number[]
 };
 
 const columnCount = computed(() => {
-  const configuredColumns = configuration.columns;
+  const configuredColumns = configuration.value.columns;
   if (Number.isFinite(configuredColumns)) return clampColumnCount(Number(configuredColumns));
 
-  const byWidths = configuration.columnWidths?.length || 1;
+  const byWidths = configuration.value.columnWidths?.length || 1;
   return clampColumnCount(byWidths);
 });
 
-const columnWidths = computed(() => normalizeWidthsToTwelve(configuration.columnWidths || [], columnCount.value));
+const columnWidths = computed(() => normalizeWidthsToTwelve(configuration.value.columnWidths || [], columnCount.value));
 
 const gridInlineStyle = computed(() => ({
-  backgroundColor: configuration.layout?.backgroundColor ?? 'transparent',
-  marginTop: configuration.layout?.marginTop !== undefined ? `${configuration.layout.marginTop}px` : '0px',
-  marginRight: configuration.layout?.marginRight !== undefined ? `${configuration.layout.marginRight}px` : '0px',
+  backgroundColor: configuration.value.layout?.backgroundColor ?? 'transparent',
+  marginTop: configuration.value.layout?.marginTop !== undefined ? `${configuration.value.layout.marginTop}px` : '0px',
+  marginRight:
+    configuration.value.layout?.marginRight !== undefined ? `${configuration.value.layout.marginRight}px` : '0px',
   marginBottom:
-    configuration.layout?.marginBottom !== undefined
-      ? `${configuration.layout.marginBottom}px`
+    configuration.value.layout?.marginBottom !== undefined
+      ? `${configuration.value.layout.marginBottom}px`
       : `${defaultMarginBottom.value}px`,
-  marginLeft: configuration.layout?.marginLeft !== undefined ? `${configuration.layout.marginLeft}px` : '0px',
-  paddingTop: configuration.layout?.paddingTop !== undefined ? `${configuration.layout.paddingTop}px` : '0px',
-  paddingRight: configuration.layout?.paddingRight !== undefined ? `${configuration.layout.paddingRight}px` : '0px',
-  paddingBottom: configuration.layout?.paddingBottom !== undefined ? `${configuration.layout.paddingBottom}px` : '0px',
-  paddingLeft: configuration.layout?.paddingLeft !== undefined ? `${configuration.layout.paddingLeft}px` : '0px',
+  marginLeft: configuration.value.layout?.marginLeft !== undefined ? `${configuration.value.layout.marginLeft}px` : '0px',
+  paddingTop: configuration.value.layout?.paddingTop !== undefined ? `${configuration.value.layout.paddingTop}px` : '0px',
+  paddingRight:
+    configuration.value.layout?.paddingRight !== undefined ? `${configuration.value.layout.paddingRight}px` : '0px',
+  paddingBottom:
+    configuration.value.layout?.paddingBottom !== undefined ? `${configuration.value.layout.paddingBottom}px` : '0px',
+  paddingLeft:
+    configuration.value.layout?.paddingLeft !== undefined ? `${configuration.value.layout.paddingLeft}px` : '0px',
 }));
 
 const getGridClasses = () => {
@@ -209,7 +219,7 @@ const showOverlay = computed(
 const columns = computed<Block[][]>(() => {
   const slots = Array.from({ length: columnCount.value }, () => [] as Block[]);
 
-  content.forEach((block) => {
+  content.value.forEach((block) => {
     if (typeof block.parent_slot !== 'number') return;
     if (block.parent_slot < 0 || block.parent_slot >= columnCount.value) return;
     slots[block.parent_slot]!.push(block);

@@ -17,10 +17,10 @@ interface ColumnLayoutAppearance {
 export type ColumnLayoutProps = {
   name: string;
   type: string;
-  content: Block[];
-  configuration: {
+  content?: Block[];
+  configuration?: {
     columns?: number;
-    columnWidths: number[];
+    columnWidths?: number[];
     layout?: ColumnLayoutAppearance;
   };
   meta: {

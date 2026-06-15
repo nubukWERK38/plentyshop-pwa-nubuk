@@ -31,7 +31,7 @@ export const useBlockManager = () => {
 
   const { isEditingEnabled } = useEditor();
   const { getBlockTemplateByLanguage } = useBlocksList();
-  const { openDrawerWithView, closeBlocksConfigurationDrawer } = useSiteConfiguration();
+  const { openDrawerWithView, closeBlocksConfigurationDrawer, blocksConfigurationDrawerOpen } = useSiteConfiguration();
   const { send } = useNotification();
 
   const currentBlock = ref<Block | null>(null);
@@ -133,7 +133,9 @@ export const useBlockManager = () => {
 
     const selectedUuid = useState<string>('toc-selected-uuid');
     selectedUuid.value = newBlock.meta.uuid;
-    openDrawerWithView('TableOfContents');
+    if (!blocksConfigurationDrawerOpen.value) {
+      openDrawerWithView('TableOfContents');
+    }
   };
 
   const scrollIntoBlockView = (

@@ -14,6 +14,18 @@ describe('ColumnLayout block', () => {
     expect(wrapper.findAll('[data-testid="column-layout-column"]').length).toBe(2);
   });
 
+  it('should render fallback columns when configuration is missing', () => {
+    const wrapper = mount(ColumnLayout, {
+      props: {
+        ...mockColumnLayoutProps,
+        configuration: undefined,
+        content: [],
+      },
+    });
+
+    expect(wrapper.findAll('[data-testid="column-layout-column"]').length).toBe(2);
+  });
+
   it('should normalize column widths to 12 grid units', () => {
     const wrapper = mount(ColumnLayout, {
       props: {
