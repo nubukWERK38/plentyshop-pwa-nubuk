@@ -132,18 +132,24 @@ const normalizeWidthsToTwelve = (inputWidths: number[], count: number): number[]
     .sort((left, right) => right.fraction - left.fraction);
 
   for (let index = 0; index < fractions.length && remainder > 0; index += 1) {
-    floored[fractions[index]!.index] += 1;
+    const fraction = fractions[index];
+    if (!fraction) continue;
+
+    const targetIndex = fraction.index;
+    floored[targetIndex] = (floored[targetIndex] ?? 0) + 1;
     remainder -= 1;
   }
 
   for (let index = 0; index < floored.length; index += 1) {
-    if (floored[index]! > 0) continue;
+    const currentValue = floored[index] ?? 0;
+    if (currentValue > 0) continue;
 
     const donorIndex = floored.findIndex((value) => value > 1);
     if (donorIndex === -1) break;
 
-    floored[donorIndex] -= 1;
-    floored[index] += 1;
+    const donorValue = floored[donorIndex] ?? 0;
+    floored[donorIndex] = donorValue - 1;
+    floored[index] = currentValue + 1;
   }
 
   return floored;

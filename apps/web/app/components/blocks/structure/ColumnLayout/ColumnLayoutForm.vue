@@ -215,18 +215,24 @@ const normalizeWidthsToTwelve = (inputWidths: number[], count: number): number[]
     .sort((left, right) => right.fraction - left.fraction);
 
   for (let index = 0; index < fractions.length && remainder > 0; index += 1) {
-    floored[fractions[index]!.index] += 1;
+    const fraction = fractions[index];
+    if (!fraction) continue;
+
+    const targetIndex = fraction.index;
+    floored[targetIndex] = (floored[targetIndex] ?? 0) + 1;
     remainder -= 1;
   }
 
   for (let index = 0; index < floored.length; index += 1) {
-    if (floored[index]! > 0) continue;
+    const currentValue = floored[index] ?? 0;
+    if (currentValue > 0) continue;
 
     const donorIndex = floored.findIndex((value) => value > 1);
     if (donorIndex === -1) break;
 
-    floored[donorIndex] -= 1;
-    floored[index] += 1;
+    const donorValue = floored[donorIndex] ?? 0;
+    floored[donorIndex] = donorValue - 1;
+    floored[index] = currentValue + 1;
   }
 
   return floored;
@@ -239,6 +245,20 @@ const createEmptyGridBlock = (slot: number): Block => ({
   parent_slot: slot,
   meta: {
     uuid: uuidv4(),
+  },
+});
+
+const createDefaultColumnLayoutBlock = (): ColumnLayoutBlock => ({
+  name: 'ColumnLayout',
+  type: 'structure',
+  meta: {
+    uuid: uuidv4(),
+  },
+  content: [],
+  configuration: {
+    visible: true,
+    columns: 2,
+    columnWidths: [6, 6],
   },
 });
 
@@ -268,13 +288,8 @@ const syncSlotContent = (structure: ColumnLayoutBlock, columnsCount: number) => 
 };
 
 const columnLayoutStructure = computed(() => {
-  const block = (findOrDeleteBlockByUuid(data.value, resolvedUuid.value) as ColumnLayoutBlock) || ({
-    content: [],
-    configuration: {
-      columns: 2,
-      columnWidths: [6, 6],
-    },
-  } as ColumnLayoutBlock);
+  const existingBlock = findOrDeleteBlockByUuid(data.value, resolvedUuid.value) as ColumnLayoutBlock | undefined;
+  const block = existingBlock || createDefaultColumnLayoutBlock();
 
   if (!Array.isArray(block.configuration?.columnWidths) || block.configuration.columnWidths.length === 0) {
     block.configuration.columnWidths = [6, 6];

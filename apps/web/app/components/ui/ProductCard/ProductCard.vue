@@ -128,7 +128,7 @@
       <div class="mt-auto flex w-full items-end justify-between gap-4 pt-6">
         <div v-if="hasComparablePrice" class="flex flex-col text-xs font-normal leading-none text-neutral-500">
           <span class="font-semibold uppercase">UVP</span>
-          <span class="mt-1">{{ format(crossedPrice) }}</span>
+          <span class="mt-1">{{ format(crossedPrice ?? 0) }}</span>
         </div>
         <div v-else aria-hidden="true" />
 
