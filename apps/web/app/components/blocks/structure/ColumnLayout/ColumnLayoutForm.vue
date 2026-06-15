@@ -150,7 +150,7 @@
         </div>
       </div>
 
-      <EditorFullWidthToggle v-model="isFullWidth" :block-uuid="resolvedUuid" />
+      <EditorFullWidthToggle v-if="resolvedUuid" v-model="isFullWidth" :block-uuid="resolvedUuid" />
     </UiAccordionItem>
   </div>
 </template>
@@ -262,6 +262,8 @@ const createDefaultColumnLayoutBlock = (): ColumnLayoutBlock => ({
   },
 });
 
+const fallbackStructure = ref<ColumnLayoutBlock>(createDefaultColumnLayoutBlock());
+
 const syncSlotContent = (structure: ColumnLayoutBlock, columnsCount: number) => {
   if (!Array.isArray(structure.content)) {
     structure.content = [];
@@ -289,7 +291,7 @@ const syncSlotContent = (structure: ColumnLayoutBlock, columnsCount: number) => 
 
 const columnLayoutStructure = computed(() => {
   const existingBlock = findOrDeleteBlockByUuid(data.value, resolvedUuid.value) as ColumnLayoutBlock | undefined;
-  const block = existingBlock || createDefaultColumnLayoutBlock();
+  const block = existingBlock || fallbackStructure.value;
 
   if (!Array.isArray(block.configuration?.columnWidths) || block.configuration.columnWidths.length === 0) {
     block.configuration.columnWidths = [6, 6];
