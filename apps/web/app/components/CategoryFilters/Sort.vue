@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col">
     <CategoryFiltersSortSections
       v-for="facet in visibleFacets"
       :key="facet.id"
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { facetGetters } from '@plentymarkets/shop-api';
+import { type FilterGroup, facetGetters } from '@plentymarkets/shop-api';
 import { SfIconExpandMore } from '@storefront-ui/vue';
 import type { CategoryFiltersProps } from '~/components/CategoryFilters/types';
 import type { SortFilterContent } from '~/components/blocks/SortFilter/types';
@@ -50,11 +50,28 @@ const customizedFiltersProps = computed(() => {
   };
 });
 
+const preferredDynamicFacetNames = ['rahmengrosse', 'plattform', 'farbe', 'antrieb'];
+const normalizeFacetName = (name: string) =>
+  name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\u00df/g, 'ss')
+    .replace(/[^a-z0-9]/g, '');
+const getDynamicFacetOrder = (facet: FilterGroup) => {
+  const index = preferredDynamicFacetNames.indexOf(normalizeFacetName(facetGetters.getName(facet) ?? ''));
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+};
+
 const baseFacets = computed(() => {
   if (!isCustomized.value) {
     return props.facets;
   }
-  return props.facets.filter((f) => facetGetters.getType(f) === 'dynamic');
+
+  return props.facets
+    .filter((f) => facetGetters.getType(f) === 'dynamic')
+    .slice()
+    .sort((first, second) => getDynamicFacetOrder(first) - getDynamicFacetOrder(second));
 });
 
 const visibleFacets = computed(() => {

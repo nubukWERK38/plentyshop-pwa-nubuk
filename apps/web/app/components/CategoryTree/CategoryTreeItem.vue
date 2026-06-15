@@ -1,25 +1,23 @@
 <template>
-  <SfListItem
+  <li
     v-if="name.length > 0"
-    size="lg"
-    :class="['md:py-1.5', { 'bg-primary-100 hover:bg-primary-100 active:bg-primary-100 font-medium': selected }]"
+    :class="['border-b border-neutral-200', { 'ml-5': nested }]"
     data-testid="category-tree-item"
   >
-    <NuxtLink :to="localePath(href)">
-      <span class="flex gap-2 items-center">
-        <span class="text-base md:text-sm capitalize flex items-center" data-testid="list-item-menu-label">
-          <slot />
+    <NuxtLink :to="localePath(href)" class="flex min-h-11 items-center justify-between gap-2 py-2 text-primary-500">
+      <span class="flex min-w-0 items-center gap-2">
+        <SfIconChevronRight size="sm" class="shrink-0 text-neutral-900" />
+        <span class="truncate text-sm font-normal" data-testid="list-item-menu-label">
           {{ name }}
         </span>
-        <SfCounter v-if="Number(count) > -1" class="md:text-sm font-normal">{{ count }}</SfCounter>
       </span>
-      <SfIconCheck v-if="selected" size="sm" class="text-primary-500" />
+      <SfIconAdd v-if="hasChildren" size="sm" class="shrink-0 text-primary-700" />
     </NuxtLink>
-  </SfListItem>
+  </li>
 </template>
 
 <script setup lang="ts">
-import { SfCounter, SfIconCheck, SfListItem } from '@storefront-ui/vue';
+import { SfIconAdd, SfIconChevronRight } from '@storefront-ui/vue';
 import type { CategoryTreeItemType } from '~/components/CategoryTree/types';
 
 const localePath = useLocalePath();

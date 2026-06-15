@@ -9,4 +9,6 @@ export type CategoryTreeItemType = {
   href: string;
   selected?: boolean;
   count?: number;
+  hasChildren?: boolean;
+  nested?: boolean;
 };

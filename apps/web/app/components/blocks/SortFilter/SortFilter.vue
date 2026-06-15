@@ -1,7 +1,11 @@
 <template>
   <div v-if="showSortAndFilter" data-testid="category-sort-filter">
     <CategorySidebar class="sidebar w-full" :is-open="isOpen" @close="close">
-      <template v-for="key in props.content?.filtersOrder" :key="key">
+      <h2 class="mb-2 border-b border-neutral-900 pb-4 text-lg font-bold text-neutral-900">
+        {{ t('common.labels.filters') }}
+      </h2>
+
+      <template v-for="key in orderedFilterKeys" :key="key">
         <template v-if="key === 'category' && props.content?.fields.category">
           <CategoryTree v-if="productsCatalog.category" :category="productsCatalog.category" />
         </template>
@@ -17,7 +21,6 @@
         <template v-if="key === 'itemRating' && props.content?.fields.itemRating">
           <CategoryFiltersSort
             v-if="productsCatalog.facets && facetGetters.hasFilters(productsCatalog.facets)"
-            class="mb-1"
             :facets="productsCatalog.facets"
             :configuration="content"
             :render-key="key"
@@ -27,7 +30,6 @@
         <template v-if="key === 'manufacturer' && props.content?.fields.manufacturer">
           <CategoryFiltersSort
             v-if="productsCatalog.facets && facetGetters.hasFilters(productsCatalog.facets)"
-            class="mb-1"
             :facets="productsCatalog.facets"
             :configuration="content"
             :render-key="key"
@@ -37,7 +39,6 @@
         <template v-if="key === 'price' && props.content?.fields.price">
           <CategoryFiltersSort
             v-if="productsCatalog.facets && facetGetters.hasFilters(productsCatalog.facets)"
-            class="mb-1"
             :facets="productsCatalog.facets"
             :configuration="content"
             :render-key="key"
@@ -47,7 +48,6 @@
         <template v-if="key === 'availability' && props.content?.fields.availability">
           <CategoryFiltersSort
             v-if="productsCatalog.facets && facetGetters.hasFilters(productsCatalog.facets)"
-            class="mb-1"
             :facets="productsCatalog.facets"
             :configuration="content"
             :render-key="key"
@@ -57,7 +57,6 @@
         <template v-if="key === 'customizedFilters' && props.content?.fields.customizedFilters">
           <CategoryFiltersSort
             v-if="productsCatalog.facets && facetGetters.hasFilters(productsCatalog.facets)"
-            class="mb-1"
             :facets="productsCatalog.facets"
             :configuration="content"
             :render-key="key"
@@ -83,7 +82,7 @@
 
 <script setup lang="ts">
 import { facetGetters } from '@plentymarkets/shop-api';
-import type { SortFilterProps, SortFilterFieldsVisibility } from './types';
+import type { SortFilterProps, SortFilterFieldsVisibility, SortFilterFieldKey } from './types';
 import { SfIconTune, useDisclosure } from '@storefront-ui/vue';
 
 const { data: productsCatalog } = useProducts();
@@ -99,6 +98,15 @@ const clientPreview = computed(() => isInEditorClient.value);
 
 const showAllFiltersImmediately = computed(() => props.content?.showAllFiltersImmediately ?? true);
 const numberOfFiltersToShowInitially = computed(() => props.content?.numberOfFiltersToShowInitially ?? 0);
+const preferredFilterOrder: SortFilterFieldKey[] = ['manufacturer', 'price', 'availability', 'customizedFilters'];
+const orderedFilterKeys = computed(() => {
+  const configuredOrder = props.content?.filtersOrder ?? [];
+  const preferredKeys = preferredFilterOrder.filter((key) => configuredOrder.includes(key));
+  const categoryKey = configuredOrder.includes('category') ? ['category'] : [];
+  const remainingKeys = configuredOrder.filter((key) => !preferredFilterOrder.includes(key) && key !== 'category');
+
+  return [...preferredKeys, ...categoryKey, ...remainingKeys];
+});
 
 watch(
   () => props.content?.fields,

@@ -2,15 +2,15 @@
   <div v-if="shouldRenderFacet">
     <SfAccordionItem v-if="facet" v-model="open">
       <template #summary>
-        <div class="flex justify-between py-1 px-4 mb-2 select-none bg-primary-50/50">
-          <div class="py-1 rounded-none uppercase typography-headline-6 font-bold tracking-widest select-none">
+        <div class="flex min-h-11 items-center justify-between border-b border-neutral-200 py-3 select-none">
+          <div class="text-sm font-bold text-neutral-900 select-none">
             {{ facetGetters.getName(facet) }}
           </div>
 
-          <SfIconChevronLeft :class="['text-neutral-500', open ? 'rotate-90' : '-rotate-90']" />
+          <SfIconChevronLeft :class="['text-neutral-900', open ? 'rotate-90' : '-rotate-90']" size="sm" />
         </div>
       </template>
-      <div v-if="facetGetters.getType(facet) === 'feedback'">
+      <div v-if="facetGetters.getType(facet) === 'feedback'" class="py-3">
         <SfListItem v-for="(filter, index) in sortedReviews(facet)" :key="index" tag="label" class="mb-3" size="sm">
           <div class="flex items-center space-x-2">
             <span class="pt-1 flex items-center">
@@ -39,7 +39,7 @@
         </SfListItem>
       </div>
 
-      <form v-else-if="facetGetters.getType(facet) === 'price'" class="mb-4 px-4" @submit.prevent="updatePriceFilter">
+      <form v-else-if="facetGetters.getType(facet) === 'price'" class="py-3" @submit.prevent="updatePriceFilter">
         <div class="mb-3">
           <label for="min">
             <UiFormLabel class="text-start">{{ t('common.labels.min') }}</UiFormLabel>
@@ -76,14 +76,14 @@
         </div>
       </form>
 
-      <div v-else class="mb-3">
+      <div v-else class="py-3">
         <SfListItem
           v-for="(filter, index) in facetGetters.getFilters(facet)"
           :key="index"
           tag="label"
           size="sm"
           :data-testid="'category-filter-' + index"
-          class="px-1.5 bg-transparent hover:bg-transparent"
+          class="px-0 bg-transparent hover:bg-transparent"
         >
           <template #prefix>
             <SfCheckbox
@@ -123,7 +123,7 @@ import type { Filters } from '~/composables';
 import type { SortFilterContent } from '~/components/blocks/SortFilter/types';
 const { getFacetsFromURL, updateFilters, updatePrices } = useCategoryFilter();
 
-const open = ref(true);
+const open = ref(false);
 const props = defineProps<FilterProps>();
 const filters = facetGetters.getFilters(props.facet ?? ({} as FilterGroup)) as Filter[];
 const models = ref({} as Filters);

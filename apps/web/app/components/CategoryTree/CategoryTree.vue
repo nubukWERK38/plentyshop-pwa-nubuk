@@ -1,38 +1,35 @@
 <template>
   <div
     v-if="parent || (categoryTreeItem && categoryTreeGetters.getItems(categoryTreeItem)?.length)"
-    class="category-tree"
+    class="category-tree mt-4"
   >
     <div
-      class="py-2 px-4 mb-4 bg-primary-50/50 typography-headline-6 font-bold text-neutral-900 uppercase tracking-widest rounded-none select-none"
+      class="border-b border-neutral-900 pb-4 text-lg font-bold text-neutral-900 select-none"
       data-testid="category-tree"
     >
-      {{ t('common.labels.category') }}
+      {{ t('common.labels.categories') }}
     </div>
-    <template v-if="parent">
+
+    <ul v-if="categoryTreeItem" class="mb-4" data-testid="categories">
       <CategoryTreeItem
-        :name="categoryTreeGetters.getName(parent)"
-        :href="localePath(buildCategoryMenuLink(parent, categoryTree))"
-        :count="categoryTreeGetters.getCount(parent)"
-      >
-        <SfIconArrowBack size="sm" class="text-neutral-500 mr-2" />
-      </CategoryTreeItem>
-    </template>
-    <ul v-if="categoryTreeItem" class="mb-4 md:mt-2" data-testid="categories">
+        :name="categoryTreeGetters.getName(categoryTreeItem)"
+        :href="localePath(buildCategoryMenuLink(categoryTreeItem, categoryTree))"
+        :has-children="hasChildren(categoryTreeItem)"
+      />
       <CategoryTreeItem
         v-for="(categoryItem, index) in categoryTreeGetters.getItems(categoryTreeItem)"
         :key="index"
         :name="categoryTreeGetters.getName(categoryItem)"
         :href="localePath(buildCategoryMenuLink(categoryItem, categoryTree))"
-        :count="categoryTreeGetters.getCount(categoryItem)"
+        :has-children="hasChildren(categoryItem)"
+        nested
       />
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { categoryGetters, categoryTreeGetters } from '@plentymarkets/shop-api';
-import { SfIconArrowBack } from '@storefront-ui/vue';
+import { type CategoryTreeItem, categoryGetters, categoryTreeGetters } from '@plentymarkets/shop-api';
 import type { CategoryTreeProps } from '~/components/CategoryTree/types';
 
 const props = defineProps<CategoryTreeProps>();
@@ -47,4 +44,5 @@ const categoryTreeItem = computed(() =>
 const parent = computed(() =>
   categoryTreeGetters.findCategoryById(categoryTree.value, categoryGetters.getParentId(props.category)),
 );
+const hasChildren = (category: CategoryTreeItem) => Boolean(categoryTreeGetters.getItems(category)?.length);
 </script>
