@@ -41,9 +41,21 @@
         class="no-preflight [&>p:first-child]:mt-0 [&>p:last-child]:mb-0"
         v-html="activeItem.html"
       />
-        <template v-for="block in activeItem.blocks" :key="block.meta?.uuid">
-          <component :is="getBlockComponent(block.name)" v-if="getBlockComponent(block.name)" v-bind="block" />
-        </template>
+
+      <div v-for="block in activeItem.blocks" :key="block.meta?.uuid" :data-uuid="block.meta?.uuid" class="group relative">
+        <ClientOnly>
+          <button
+            v-if="shouldEnableEditorFeatures"
+            type="button"
+            class="absolute right-2 top-2 z-20 rounded bg-white/95 border border-neutral-300 px-2 py-1 text-xs shadow opacity-0 group-hover:opacity-100 transition"
+            @click.stop="openDrawerWithView('blocksSettings', block)"
+          >
+            Edit
+          </button>
+        </ClientOnly>
+
+        <component :is="getBlockComponent(block.name)" v-if="getBlockComponent(block.name)" v-bind="block" />
+      </div>
     </div>
   </div>
 </template>
@@ -54,6 +66,8 @@ import type { TabsItem, TabsProps } from './types';
 const getBlockComponent = (name: string) => getCachedBlockComponent(name);
 
 const props = defineProps<TabsProps>();
+const { openDrawerWithView } = useSiteConfiguration();
+const { shouldEnableEditorFeatures } = useEditorState();
 
 const normalizedItems = computed<TabsItem[]>(() => {
   const items = props.content?.items ?? [];

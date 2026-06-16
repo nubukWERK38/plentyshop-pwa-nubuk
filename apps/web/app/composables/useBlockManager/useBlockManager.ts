@@ -48,6 +48,25 @@ export const useBlockManager = () => {
     multigridColumnUuid.value = uuid;
   };
 
+  const getNestedChildArrays = (block: Block): Block[][] => {
+    const nested: Block[][] = [];
+
+    if (Array.isArray(block.content) && block.content.length) {
+      nested.push(block.content);
+    }
+
+    const tabsItems = (block.content as { items?: Array<{ blocks?: Block[] }> } | undefined)?.items;
+    if (Array.isArray(tabsItems)) {
+      for (const item of tabsItems) {
+        if (Array.isArray(item?.blocks) && item.blocks.length) {
+          nested.push(item.blocks);
+        }
+      }
+    }
+
+    return nested;
+  };
+
   const addNewBlock = async (category: string, variationIndex: number, targetUuid: string, position: BlockPosition) => {
     if (!pageBlocks.value) return;
 
@@ -234,8 +253,8 @@ export const useBlockManager = () => {
       if (block.meta?.uuid === targetUuid) {
         return { parent: blocks, index };
       }
-      if (Array.isArray(block.content) && block.content.length) {
-        const result = findBlockParent(block.content, targetUuid);
+      for (const childArray of getNestedChildArrays(block)) {
+        const result = findBlockParent(childArray, targetUuid);
         if (result) return result;
       }
     }
@@ -245,11 +264,7 @@ export const useBlockManager = () => {
   const blockContainsUuid = (block: Block, targetUuid: string): boolean => {
     if (block.meta?.uuid === targetUuid) return true;
 
-    return (
-      block.type === 'structure' &&
-      Array.isArray(block.content) &&
-      block.content.some((child) => blockContainsUuid(child, targetUuid))
-    );
+    return getNestedChildArrays(block).some((children) => children.some((child) => blockContainsUuid(child, targetUuid)));
   };
 
   const getRootParent = (blocks: Block[], targetUuid: string): Block | null => {
@@ -259,8 +274,8 @@ export const useBlockManager = () => {
   const setUuid = (blocks: Block[]) => {
     for (const block of blocks) {
       block.meta.uuid = uuid();
-      if (Array.isArray(block.content)) {
-        setUuid(block.content);
+      for (const childArray of getNestedChildArrays(block)) {
+        setUuid(childArray);
       }
     }
   };
@@ -277,8 +292,8 @@ export const useBlockManager = () => {
         }
         return block;
       }
-      if (Array.isArray(block.content)) {
-        const result = findOrDeleteBlockByUuid(block.content, targetUuid, deleteBlock);
+      for (const childArray of getNestedChildArrays(block)) {
+        const result = findOrDeleteBlockByUuid(childArray, targetUuid, deleteBlock);
         if (result) return result;
       }
     }
@@ -352,8 +367,8 @@ export const useBlockManager = () => {
     const search = (blocks: Block[], targetUuid: string, depth: number): number => {
       for (const block of blocks) {
         if (block.meta.uuid === targetUuid) return depth;
-        if (block.type === 'structure' && Array.isArray(block.content)) {
-          const found = search(block.content, targetUuid, depth + 1);
+        for (const childArray of getNestedChildArrays(block)) {
+          const found = search(childArray, targetUuid, depth + 1);
           if (found !== -1) return found;
         }
       }
@@ -399,7 +414,11 @@ export const useBlockManager = () => {
 
   const blockExistsOnPage = (blockName: string): boolean => {
     const checkBlocks = (blocks: Block[]): boolean =>
-      blocks.some((block) => block.name === blockName || (Array.isArray(block.content) && checkBlocks(block.content)));
+      blocks.some(
+        (block) =>
+          block.name === blockName ||
+          getNestedChildArrays(block).some((childArray) => checkBlocks(childArray)),
+      );
     return checkBlocks(allBlocks.value);
   };
 
