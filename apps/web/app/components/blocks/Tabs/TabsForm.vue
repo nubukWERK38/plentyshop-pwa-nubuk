@@ -53,10 +53,41 @@
             </div>
           </div>
         </div>
-        <div v-if="blockPickerTabIndex === index" class="mb-2 border border-neutral-200 rounded bg-white max-h-60 overflow-y-auto">
-          <button v-for="(category, catKey) in blocksLists" :key="catKey" type="button" class="w-full text-left px-3 py-2 text-sm hover:bg-neutral-100 border-b border-neutral-100 last:border-b-0" @click="addBlockFromCategory(index, category.category, 0)">
-            {{ category.title }}
-          </button>
+        <div v-if="blockPickerTabIndex === index" class="mb-2 border border-neutral-200 rounded bg-white">
+          <div class="p-2 border-b border-neutral-200">
+            <SfInput
+              v-model="blockPickerSearch"
+              type="text"
+              :placeholder="getEditorTranslation('block-search-placeholder')"
+              data-testid="tabs-block-search"
+            />
+          </div>
+          <div class="max-h-60 overflow-y-auto">
+            <template v-if="filteredPickerCategories.length > 0">
+              <div
+                v-for="category in filteredPickerCategories"
+                :key="category.key"
+                class="border-b border-neutral-100 last:border-b-0"
+              >
+                <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-neutral-500 bg-neutral-50">
+                  {{ category.title }}
+                </p>
+                <button
+                  v-for="item in category.variations"
+                  :key="`${category.key}-${item.variationIndex}`"
+                  type="button"
+                  class="w-full text-left px-3 py-2 text-sm hover:bg-neutral-100"
+                  @click="addBlockFromCategory(index, category.category, item.variationIndex)"
+                >
+                  {{ getWidgetName(item.variation) }}
+                  <span v-if="item.variation.title" class="text-neutral-500"> - {{ item.variation.title }}</span>
+                </button>
+              </div>
+            </template>
+            <p v-else class="px-3 py-3 text-sm text-neutral-500">
+              {{ getEditorTranslation('block-search-empty') }}
+            </p>
+          </div>
         </div>
         <UiButton class="w-full" variant="secondary" :data-testid="`tabs-add-block-${index}`" @click="toggleBlockPicker(index)">
           {{ blockPickerTabIndex === index ? getEditorTranslation('cancel-label') : getEditorTranslation('add-block-label') }}
@@ -88,6 +119,8 @@
 import { SfInput } from '@storefront-ui/vue';
 import { v4 as uuidv4 } from 'uuid';
 import type { Block } from '@plentymarkets/shop-api';
+import type { BlockTemplateVariation } from '~/composables/useBlocksList/types';
+import { getBlockDisplayName } from '~/utils/blocks/get-block-display-name';
 import type { TabsContent, TabsFormProps } from './types';
 
 const props = defineProps<TabsFormProps>();
@@ -96,7 +129,7 @@ const { allBlocks: data } = useBlocks();
 
 const { blockUuid } = useSiteConfiguration();
 const { findOrDeleteBlockByUuid } = useBlockManager();
-const { blocksLists, getBlocksLists, getBlockTemplateByLanguage } = useBlocksList();
+const { blocksLists, getBlocksLists, getBlockTemplateByLanguage, pageHasAccessToCategory } = useBlocksList();
 const { $i18n } = useNuxtApp();
 
 await getBlocksLists();
@@ -184,9 +217,49 @@ const removeTabBlock = (tabIndex: number, blockIndex: number) => {
 };
 
 const blockPickerTabIndex = ref<number | null>(null);
+const blockPickerSearch = ref('');
+
+const filteredPickerCategories = computed(() => {
+  const query = blockPickerSearch.value.trim().toLowerCase();
+
+  return Object.entries(blocksLists.value)
+    .filter(([, category]) => pageHasAccessToCategory(category))
+    .map(([key, category]) => {
+      const variations = category.variations
+        .map((variation, variationIndex) => ({ variation, variationIndex }))
+        .filter((item) => {
+          if (!query) return true;
+
+          const widgetName = getWidgetName(item.variation).toLowerCase();
+          const variationTitle = (item.variation.title ?? '').toLowerCase();
+          const categoryTitle = category.title.toLowerCase();
+
+          return (
+            widgetName.includes(query) ||
+            variationTitle.includes(query) ||
+            categoryTitle.includes(query)
+          );
+        });
+
+      return {
+        key,
+        title: category.title,
+        category: category.category,
+        variations,
+      };
+    })
+    .filter((category) => category.variations.length > 0);
+});
 
 const toggleBlockPicker = (tabIndex: number) => {
-  blockPickerTabIndex.value = blockPickerTabIndex.value === tabIndex ? null : tabIndex;
+  if (blockPickerTabIndex.value === tabIndex) {
+    blockPickerTabIndex.value = null;
+    blockPickerSearch.value = '';
+    return;
+  }
+
+  blockPickerTabIndex.value = tabIndex;
+  blockPickerSearch.value = '';
 };
 
 const addBlockFromCategory = async (tabIndex: number, category: string, variationIndex: number) => {
@@ -197,6 +270,11 @@ const addBlockFromCategory = async (tabIndex: number, category: string, variatio
   template.meta = { ...template.meta, uuid: uuidv4() };
   item.blocks.push(template);
   blockPickerTabIndex.value = null;
+  blockPickerSearch.value = '';
+};
+
+const getWidgetName = (variation: BlockTemplateVariation): string => {
+  return getBlockDisplayName(variation.template.en.name);
 };
 
 const { isFullWidth } = useFullWidthToggleForContent(tabsBlock);
@@ -219,6 +297,8 @@ const layoutOpen = ref(true);
     "html-label": "HTML Content",
     "html-placeholder": "Content that supports HTML formatting",
     "blocks-label": "Nested Blocks",
+    "block-search-placeholder": "Search blocks",
+    "block-search-empty": "No blocks match your search.",
     "add-block-label": "Add Block",
     "cancel-label": "Cancel",
     "layout-group-label": "Layout",
@@ -239,6 +319,8 @@ const layoutOpen = ref(true);
     "html-label": "HTML Inhalt",
     "html-placeholder": "Inhalt mit HTML-Formatierung",
     "blocks-label": "Verschachtelte Bloecke",
+    "block-search-placeholder": "Bloecke suchen",
+    "block-search-empty": "Keine passenden Bloecke gefunden.",
     "add-block-label": "Block hinzufuegen",
     "cancel-label": "Abbrechen",
     "layout-group-label": "Layout",
