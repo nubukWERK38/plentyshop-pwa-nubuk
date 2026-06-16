@@ -264,28 +264,38 @@ const createDefaultColumnLayoutBlock = (): ColumnLayoutBlock => ({
 
 const fallbackStructure = ref<ColumnLayoutBlock>(createDefaultColumnLayoutBlock());
 
-const syncSlotContent = (structure: ColumnLayoutBlock, columnsCount: number) => {
-  if (!Array.isArray(structure.content)) {
-    structure.content = [];
-  }
+const arraysEqual = (left: number[], right: number[]) =>
+  left.length === right.length && left.every((value, index) => value === right[index]);
 
-  structure.content = structure.content.filter((block) => {
+const syncSlotContent = (structure: ColumnLayoutBlock, columnsCount: number) => {
+  const currentContent = Array.isArray(structure.content) ? structure.content : [];
+
+  let nextContent = currentContent.filter((block) => {
     if (typeof block.parent_slot !== 'number') return false;
     return block.parent_slot >= 0 && block.parent_slot < columnsCount;
   });
 
   for (let slot = 0; slot < columnsCount; slot += 1) {
-    const blocksInSlot = structure.content.filter((block) => block.parent_slot === slot);
+    const blocksInSlot = nextContent.filter((block) => block.parent_slot === slot);
     const hasRealBlock = blocksInSlot.some((block) => block.name !== 'EmptyGridBlock');
 
     if (hasRealBlock) {
-      structure.content = structure.content.filter((block) => !(block.parent_slot === slot && block.name === 'EmptyGridBlock'));
+      nextContent = nextContent.filter((block) => !(block.parent_slot === slot && block.name === 'EmptyGridBlock'));
       continue;
     }
 
     if (blocksInSlot.length === 0) {
-      structure.content.push(createEmptyGridBlock(slot));
+      nextContent.push(createEmptyGridBlock(slot));
     }
+  }
+
+  const didChange =
+    structure.content !== currentContent ||
+    currentContent.length !== nextContent.length ||
+    currentContent.some((block, index) => block !== nextContent[index]);
+
+  if (didChange) {
+    structure.content = nextContent;
   }
 };
 
@@ -312,7 +322,10 @@ const columnLayoutStructure = computed(() => {
   const configuredColumns = block.configuration.columns ?? block.configuration.columnWidths.length;
   const normalizedColumns = clampColumnCount(configuredColumns || 1);
   block.configuration.columns = normalizedColumns;
-  block.configuration.columnWidths = normalizeWidthsToTwelve(block.configuration.columnWidths, normalizedColumns);
+  const normalizedWidths = normalizeWidthsToTwelve(block.configuration.columnWidths, normalizedColumns);
+  if (!arraysEqual(block.configuration.columnWidths, normalizedWidths)) {
+    block.configuration.columnWidths = normalizedWidths;
+  }
 
   if (!block.configuration.layout) {
     block.configuration.layout = {
@@ -371,7 +384,7 @@ const gapOptions = ['None', 'S', 'M', 'L', 'XL'];
 const gapBtnClasses =
   'py-2 leading-6 px-4 gap-2 !hover:bg-gray-100 inline-flex items-center justify-center font-medium text-base focus-visible:outline focus-visible:outline-offset rounded-md disabled:text-disabled-500 disabled:bg-disabled-300 disabled:shadow-none disabled:ring-0 disabled:cursor-not-allowed';
 
-const layoutSettings = ref(false);
+const layoutSettings = ref(true);
 </script>
 
 <i18n lang="json">
