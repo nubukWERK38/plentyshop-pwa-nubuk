@@ -1,4 +1,3 @@
-export type TabsItem = {
 import type { Block } from '@plentymarkets/shop-api';
 
 export type TabsItem = {

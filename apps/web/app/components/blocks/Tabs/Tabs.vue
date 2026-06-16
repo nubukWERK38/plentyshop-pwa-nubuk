@@ -49,7 +49,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Block } from '@plentymarkets/shop-api';
 import type { TabsItem, TabsProps } from './types';
 
 const getBlockComponent = (name: string) => getCachedBlockComponent(name);
@@ -61,10 +60,9 @@ const normalizedItems = computed<TabsItem[]>(() => {
   return items.map((item) => ({
     title: item?.title ?? '',
     html: item?.html ?? '',
+    blocks: item?.blocks ?? [],
   }));
-      blocks: item?.blocks ?? [],
-    }));
-  });
+});
 
 const activeTabIndex = ref(0);
 
