@@ -210,10 +210,15 @@ const getBlockActions = () => ({
 const enableActions = computed(() => attrs.enableActions === true);
 
 const blockHasData = (block: Block): boolean => !!block.content && Object.keys(block.content).length > 0;
+const isNestedStructureBlock = (block: Block): boolean => block.type === 'structure' && Array.isArray(block.content);
 
 const showOverlay = computed(
   () => (block: Block) =>
-    enableActions.value && shouldEnableEditorFeatures.value && !isDragging.value && blockHasData(block),
+    enableActions.value &&
+    shouldEnableEditorFeatures.value &&
+    !isDragging.value &&
+    blockHasData(block) &&
+    !isNestedStructureBlock(block),
 );
 
 const columns = computed<Block[][]>(() => {

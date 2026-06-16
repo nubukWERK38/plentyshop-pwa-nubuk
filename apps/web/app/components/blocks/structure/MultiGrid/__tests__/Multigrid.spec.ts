@@ -108,8 +108,7 @@ describe('MultiGrid block', () => {
     const grid = wrapper.find('[data-testid="multi-grid-structure"]');
     const style = grid.attributes('style');
     expect(style).toContain('background-color: #ABCDEF');
-    expect(style).toContain('margin-top: 20px');
-    expect(style).toContain('margin-bottom: 10px');
+    expect(style).toContain('margin: 20px 0px 10px');
   });
 
   it('should apply responsive grid classes for a two-column grid', () => {
@@ -187,5 +186,54 @@ describe('MultiGrid block', () => {
 
     const secondColBlock = columns[1].find('.group\\/row');
     expect(secondColBlock.attributes('data-uuid')).toBe('c');
+  });
+
+  it('should not render a covering row overlay for nested structure blocks', () => {
+    const wrapper = mount(MultiGrid, {
+      attrs: {
+        enableActions: true,
+      },
+      props: {
+        name: 'MultiGrid',
+        type: 'structure',
+        content: [
+          {
+            name: 'ColumnLayout',
+            type: 'structure',
+            content: [
+              {
+                name: 'EmptyGridBlock',
+                type: 'content',
+                content: [],
+                meta: { uuid: 'empty-column' },
+                parent_slot: 0,
+              },
+            ],
+            configuration: {
+              columns: 1,
+              columnWidths: [12],
+            },
+            meta: { uuid: 'nested-column-layout' },
+            parent_slot: 0,
+          },
+        ],
+        configuration: {
+          columnWidths: [6, 6],
+        },
+        meta: { uuid: 'test-multigrid' },
+      },
+      global: {
+        stubs: {
+          ClientOnly: {
+            template: '<slot />',
+          },
+          UiBlockActions: {
+            template: '<div data-testid="multigrid-actions-stub" />',
+          },
+        },
+      },
+    });
+
+    expect(wrapper.find('[data-testid="multigrid-actions-stub"]').exists()).toBe(false);
   });
 });
