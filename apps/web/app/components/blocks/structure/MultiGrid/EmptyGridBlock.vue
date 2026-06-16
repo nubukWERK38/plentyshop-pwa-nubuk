@@ -27,12 +27,13 @@ import type { EmptyGridBlockProps } from '~/components/blocks/structure/MultiGri
 const props = defineProps<EmptyGridBlockProps>();
 const { isEditMode } = useEditorState();
 const { multigridColumnUuid, updateMultigridColumnUuid, visiblePlaceholder } = useBlockManager();
-const { openDrawerWithView, siteConfigurationDrawerOpen } = useSiteConfiguration();
+const { openDrawerWithView, closeBlocksConfigurationDrawer, siteConfigurationDrawerOpen } = useSiteConfiguration();
 
 const isActiveColumn = computed(() => multigridColumnUuid.value === props.meta.uuid);
 
 const addBlockToColumn = () => {
   updateMultigridColumnUuid(props.meta.uuid);
+  closeBlocksConfigurationDrawer();
   openDrawerWithView('blocksList');
   visiblePlaceholder.value = { uuid: '', position: 'top' };
 };
