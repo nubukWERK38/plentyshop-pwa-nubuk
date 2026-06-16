@@ -41,12 +41,18 @@
         class="no-preflight [&>p:first-child]:mt-0 [&>p:last-child]:mb-0"
         v-html="activeItem.html"
       />
+        <template v-for="block in activeItem.blocks" :key="block.meta?.uuid">
+          <component :is="getBlockComponent(block.name)" v-if="getBlockComponent(block.name)" v-bind="block" />
+        </template>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Block } from '@plentymarkets/shop-api';
 import type { TabsItem, TabsProps } from './types';
+
+const getBlockComponent = (name: string) => getCachedBlockComponent(name);
 
 const props = defineProps<TabsProps>();
 
@@ -56,7 +62,9 @@ const normalizedItems = computed<TabsItem[]>(() => {
     title: item?.title ?? '',
     html: item?.html ?? '',
   }));
-});
+      blocks: item?.blocks ?? [],
+    }));
+  });
 
 const activeTabIndex = ref(0);
 

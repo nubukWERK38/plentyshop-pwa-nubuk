@@ -68,6 +68,53 @@
         />
       </div>
     </div>
+
+        <div class="py-2">
+          <UiFormLabel>{{ getEditorTranslation('blocks-label') }}</UiFormLabel>
+          <div v-if="item.blocks && item.blocks.length > 0" class="mb-2 space-y-1">
+            <div
+              v-for="(block, blockIndex) in item.blocks"
+              :key="block.meta?.uuid"
+              class="flex items-center justify-between px-3 py-2 border border-neutral-200 rounded bg-neutral-50"
+            >
+              <span class="text-sm text-neutral-700">{{ block.name }}</span>
+              <div class="flex items-center gap-1">
+                <UiButton
+                  size="sm"
+                  variant="tertiary"
+                  :disabled="blockIndex === 0"
+                  @click="moveTabBlock(index, blockIndex, blockIndex - 1)"
+                >
+                  {{ getEditorTranslation('move-up-label') }}
+                </UiButton>
+                <UiButton
+                  size="sm"
+                  variant="tertiary"
+                  :disabled="blockIndex === item.blocks!.length - 1"
+                  @click="moveTabBlock(index, blockIndex, blockIndex + 1)"
+                >
+                  {{ getEditorTranslation('move-down-label') }}
+                </UiButton>
+                <UiButton
+                  size="sm"
+                  variant="tertiary"
+                  @click="removeTabBlock(index, blockIndex)"
+                >
+                  {{ getEditorTranslation('remove-item-label') }}
+                </UiButton>
+              </div>
+            </div>
+          </div>
+          <UiButton
+            class="w-full"
+            variant="secondary"
+            :data-testid="`tabs-add-block-${index}`"
+            @click="openBlockPickerForTab(index)"
+          >
+            {{ getEditorTranslation('add-block-label') }}
+          </UiButton>
+        </div>
+      </div>
   </UiAccordionItem>
 
   <UiAccordionItem
@@ -106,6 +153,8 @@
 
 <script setup lang="ts">
 import { SfInput } from '@storefront-ui/vue';
+import { v4 as uuidv4 } from 'uuid';
+import type { Block } from '@plentymarkets/shop-api';
 import type { TabsContent, TabsFormProps } from './types';
 
 const props = defineProps<TabsFormProps>();
@@ -118,6 +167,7 @@ const { findOrDeleteBlockByUuid } = useBlockManager();
 const createDefaultItem = () => ({
   title: 'Tab item',
   html: '<p>Tab content</p>',
+    blocks: [] as Block[],
 });
 
 const tabsBlock = computed<TabsContent>(() => {
@@ -130,12 +180,15 @@ const tabsBlock = computed<TabsContent>(() => {
 
   content.items.forEach((item, index) => {
     if (!item) {
-      content.items![index] = { title: '', html: '' };
+        content.items![index] = { title: '', html: '', blocks: [] };
       return;
     }
 
     item.title = item.title ?? '';
     item.html = item.html ?? '';
+      if (!Array.isArray(item.blocks)) {
+        item.blocks = [];
+      }
   });
 
   if (!content.layout) {
