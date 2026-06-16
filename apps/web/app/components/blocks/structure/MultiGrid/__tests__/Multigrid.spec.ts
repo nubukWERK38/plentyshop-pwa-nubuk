@@ -210,6 +210,7 @@ describe('MultiGrid block', () => {
               },
             ],
             configuration: {
+              visible: true,
               columns: 1,
               columnWidths: [12],
             },
