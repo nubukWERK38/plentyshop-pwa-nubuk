@@ -8,24 +8,29 @@
   >
     <div
       v-if="normalizedItems.length > 0"
-      class="flex gap-2 border-b border-b-neutral-200 p-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      class="flex gap-2 overflow-x-auto px-0 py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       role="tablist"
       aria-label="Tabs"
     >
-      <UiButton
+      <button
         v-for="(item, index) in normalizedItems"
         :id="`tabs-tab-${index}`"
         :key="index"
         type="button"
         role="tab"
-        :variant="isActiveTab(index) ? 'primary' : 'secondary'"
+        :class="[
+          'min-w-[185px] border-b px-0 pb-4 pt-2 text-left text-sm font-semibold uppercase leading-5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900',
+          isActiveTab(index)
+            ? 'border-neutral-900 text-neutral-900'
+            : 'border-neutral-300 text-neutral-400 hover:border-neutral-500 hover:text-neutral-600',
+        ]"
         :aria-selected="isActiveTab(index)"
         :aria-controls="`tabs-panel-${index}`"
         :data-testid="`tabs-item-${index}`"
         @click="setActiveTab(index)"
       >
         {{ item.title }}
-      </UiButton>
+      </button>
     </div>
 
     <div

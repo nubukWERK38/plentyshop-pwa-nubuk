@@ -1,5 +1,17 @@
 ﻿<template>
+  <div v-if="editingBlock" class="space-y-0">
+    <component
+      :is="editingBlockForm"
+      v-if="editingBlockForm"
+      ref="innerFormRef"
+      :uuid="editingBlock.meta.uuid"
+      @set-edit-title="handleInnerSetEditTitle"
+      @clear-edit-title="handleInnerClearEditTitle"
+    />
+  </div>
+
   <UiAccordionItem
+    v-else
     v-model="itemsOpen"
     data-testid="tabs-items-settings"
     summary-active-class="bg-neutral-100 border-t-0"
@@ -44,9 +56,21 @@
       <div class="py-2">
         <UiFormLabel>{{ getEditorTranslation('blocks-label') }}</UiFormLabel>
         <div v-if="item.blocks && item.blocks.length > 0" class="mb-2 space-y-1">
-          <div v-for="(block, blockIndex) in item.blocks" :key="block.meta?.uuid" class="flex items-center justify-between px-3 py-2 border border-neutral-200 rounded bg-neutral-50">
+          <div
+            v-for="(block, blockIndex) in item.blocks"
+            :key="block.meta?.uuid"
+            class="flex items-center justify-between px-3 py-2 border border-neutral-200 rounded bg-neutral-50"
+          >
             <span class="text-sm text-neutral-700">{{ block.name }}</span>
             <div class="flex items-center gap-1">
+              <UiButton
+                size="sm"
+                variant="tertiary"
+                :data-testid="`tabs-edit-block-${index}-${blockIndex}`"
+                @click="editTabBlock(index, blockIndex)"
+              >
+                {{ getEditorTranslation('edit-label') }}
+              </UiButton>
               <UiButton size="sm" variant="tertiary" :disabled="blockIndex === 0" @click="moveTabBlock(index, blockIndex, blockIndex - 1)">{{ getEditorTranslation('move-up-label') }}</UiButton>
               <UiButton size="sm" variant="tertiary" :disabled="blockIndex === item.blocks!.length - 1" @click="moveTabBlock(index, blockIndex, blockIndex + 1)">{{ getEditorTranslation('move-down-label') }}</UiButton>
               <UiButton size="sm" variant="tertiary" @click="removeTabBlock(index, blockIndex)">{{ getEditorTranslation('remove-item-label') }}</UiButton>
@@ -96,7 +120,13 @@
     </div>
   </UiAccordionItem>
 
-  <UiAccordionItem v-model="layoutOpen" data-testid="tabs-layout-settings" summary-active-class="bg-neutral-100 border-t-0" summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b">
+  <UiAccordionItem
+    v-if="!editingBlock"
+    v-model="layoutOpen"
+    data-testid="tabs-layout-settings"
+    summary-active-class="bg-neutral-100 border-t-0"
+    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
+  >
     <template #summary>
       <h2>{{ getEditorTranslation('layout-group-label') }}</h2>
     </template>
@@ -124,6 +154,10 @@ import { getBlockDisplayName } from '~/utils/blocks/get-block-display-name';
 import type { TabsContent, TabsFormProps } from './types';
 
 const props = defineProps<TabsFormProps>();
+const emit = defineEmits<{
+  'set-edit-title': [title: string];
+  'clear-edit-title': [];
+}>();
 
 const { allBlocks: data } = useBlocks();
 
@@ -271,6 +305,8 @@ const addBlockFromCategory = async (tabIndex: number, category: string, variatio
   item.blocks.push(template);
   blockPickerTabIndex.value = null;
   blockPickerSearch.value = '';
+  await nextTick();
+  editTabBlock(tabIndex, item.blocks.length - 1);
 };
 
 const getWidgetName = (variation: BlockTemplateVariation): string => {
@@ -279,8 +315,66 @@ const getWidgetName = (variation: BlockTemplateVariation): string => {
 
 const { isFullWidth } = useFullWidthToggleForContent(tabsBlock);
 
+const editingTabIndex = ref<number | undefined>(undefined);
+const editingBlockIndex = ref<number | undefined>(undefined);
+const editingBlockName = ref<string | undefined>(undefined);
+const innerFormRef = ref<{ exitEditMode?: (shouldEmit?: boolean) => boolean | undefined } | null>(null);
+const isInnerFormSubEditing = ref(false);
+
+const editingBlock = computed(() => {
+  if (editingTabIndex.value === undefined || editingBlockIndex.value === undefined) return null;
+  return tabsBlock.value.items[editingTabIndex.value]?.blocks?.[editingBlockIndex.value] ?? null;
+});
+
+const editingBlockForm = computed(() => {
+  if (!editingBlockName.value) return null;
+
+  const loader = getBlockFormLoader(editingBlockName.value);
+  return loader ? defineAsyncComponent(loader) : null;
+});
+
+const editTabBlock = (tabIndex: number, blockIndex: number) => {
+  const block = tabsBlock.value.items[tabIndex]?.blocks?.[blockIndex];
+  if (!block) return;
+
+  editingTabIndex.value = tabIndex;
+  editingBlockIndex.value = blockIndex;
+  editingBlockName.value = block.name;
+  isInnerFormSubEditing.value = false;
+  emit('set-edit-title', getBlockDisplayName(block.name));
+};
+
+const handleInnerSetEditTitle = (title: string) => {
+  isInnerFormSubEditing.value = true;
+  emit('set-edit-title', title);
+};
+
+const handleInnerClearEditTitle = () => {
+  isInnerFormSubEditing.value = false;
+  if (editingBlockName.value) emit('set-edit-title', getBlockDisplayName(editingBlockName.value));
+};
+
+const exitEditMode = (shouldEmit = true): boolean => {
+  if (isInnerFormSubEditing.value && innerFormRef.value?.exitEditMode) {
+    innerFormRef.value.exitEditMode(false);
+    isInnerFormSubEditing.value = false;
+    if (editingBlockName.value) emit('set-edit-title', getBlockDisplayName(editingBlockName.value));
+    return false;
+  }
+
+  editingTabIndex.value = undefined;
+  editingBlockIndex.value = undefined;
+  editingBlockName.value = undefined;
+  if (shouldEmit) emit('clear-edit-title');
+  return true;
+};
+
 const itemsOpen = ref(true);
 const layoutOpen = ref(true);
+
+defineExpose({
+  exitEditMode,
+});
 </script>
 
 <i18n lang="json">
@@ -297,6 +391,7 @@ const layoutOpen = ref(true);
     "html-label": "HTML Content",
     "html-placeholder": "Content that supports HTML formatting",
     "blocks-label": "Nested Blocks",
+    "edit-label": "Edit",
     "block-search-placeholder": "Search blocks",
     "block-search-empty": "No blocks match your search.",
     "add-block-label": "Add Block",
@@ -319,6 +414,7 @@ const layoutOpen = ref(true);
     "html-label": "HTML Inhalt",
     "html-placeholder": "Inhalt mit HTML-Formatierung",
     "blocks-label": "Verschachtelte Bloecke",
+    "edit-label": "Bearbeiten",
     "block-search-placeholder": "Bloecke suchen",
     "block-search-empty": "Keine passenden Bloecke gefunden.",
     "add-block-label": "Block hinzufuegen",
