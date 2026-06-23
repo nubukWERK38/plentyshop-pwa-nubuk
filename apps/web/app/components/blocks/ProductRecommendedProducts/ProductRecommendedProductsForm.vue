@@ -27,7 +27,8 @@
         <h2>{{ getEditorTranslation('source-label') }}</h2>
       </template>
 
-      <fieldset class="py-2">
+      <template v-if="!tabsEnabled">
+        <fieldset class="py-2">
         <legend class="text-sm font-medium text-black">
           {{ getEditorTranslation('source-type-label') }}
         </legend>
@@ -58,7 +59,7 @@
         </div>
       </fieldset>
 
-      <div v-if="recommendedBlock.source.type === 'cross_selling'" class="py-4">
+        <div v-if="recommendedBlock.source.type === 'cross_selling'" class="py-4">
         <UiFormLabel>{{ getEditorTranslation('product-id-label') }}</UiFormLabel>
         <SfInput
           :model-value="recommendedBlock.source.itemId"
@@ -87,7 +88,7 @@
         </div>
       </div>
 
-      <div v-else class="py-4">
+        <div v-else class="py-4">
         <UiFormLabel>{{ getEditorTranslation('categories-label') }}</UiFormLabel>
 
         <EditorCategorySelect
@@ -96,6 +97,8 @@
           data-testid="recommended-form-categories"
         />
       </div>
+
+      </template>
 
       <div class="space-y-4 border-t border-gray-200 py-4">
         <div class="flex items-center justify-between">
@@ -545,10 +548,22 @@ const tabsState = computed(() => {
   return recommendedBlock.value.tabs;
 });
 
+const createTab = (source: ProductRecommendedProductsSource): ProductRecommendedProductsTab => ({
+  label: getEditorTranslation('new-tab-label'),
+  source: defaultSource({
+    ...source,
+    categoryId: source.categoryId || firstCategoryId,
+  }),
+});
+
 const tabsEnabled = computed({
   get: () => tabsState.value.enabled === true,
   set: (enabled: boolean) => {
     tabsState.value.enabled = enabled;
+
+    if (enabled && !tabsState.value.items?.length) {
+      tabsState.value.items = [createTab(recommendedBlock.value.source)];
+    }
   },
 });
 
@@ -560,21 +575,21 @@ const tabsItems = computed<ProductRecommendedProductsTab[]>({
 });
 
 const addTab = () => {
+  if (!tabsItems.value.length) {
+    tabsEnabled.value = true;
+    return;
+  }
+
   tabsEnabled.value = true;
-  tabsItems.value = [
-    ...tabsItems.value,
-    {
-      label: getEditorTranslation('new-tab-label'),
-      source: defaultSource({
-        ...recommendedBlock.value.source,
-        categoryId: recommendedBlock.value.source.categoryId || firstCategoryId,
-      }),
-    },
-  ];
+  tabsItems.value = [...tabsItems.value, createTab(defaultSource({ categoryId: firstCategoryId }))];
 };
 
 const removeTab = (tabIndex: number) => {
   tabsItems.value = tabsItems.value.filter((_, index) => index !== tabIndex);
+
+  if (!tabsItems.value.length) {
+    tabsEnabled.value = false;
+  }
 };
 
 const { isFullWidth } = useFullWidthToggleForContent(recommendedBlockRef);
