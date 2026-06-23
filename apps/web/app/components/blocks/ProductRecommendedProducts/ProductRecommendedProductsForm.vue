@@ -386,38 +386,46 @@ const defaultGradient = (): ProductRecommendedProductsGradient => ({
   startY: 50,
 });
 
-const recommendedBlock = computed(
-  () =>
-    (findOrDeleteBlockByUuid(data.value, resolvedUuid.value)?.content || {
-      text: {
-        pretitle: '',
-        title: '',
-        subtitle: '',
-        htmlDescription: '',
-        color: '#000000',
-        textAlignment: 'left',
-      },
-      source: {
-        type: 'category',
-        categoryId: '',
-        itemId: '',
-        crossSellingRelation: 'Similar' as CrossSellingRelationType,
-      },
-      layout: {
-        fullWidth: false,
-        gap: 16,
-        marginLeft: 0,
-        marginRight: 0,
-        backgroundColor: 'transparent',
-        gradient: defaultGradient(),
-        visibleItems: undefined,
-      },
-      tabs: {
-        enabled: false,
-        items: [],
-      },
-    }) as ProductRecommendedProductsContent,
-);
+const createDefaultContent = (): ProductRecommendedProductsContent => ({
+  text: {
+    pretitle: '',
+    title: '',
+    subtitle: '',
+    htmlDescription: '',
+    color: '#000000',
+    textAlignment: 'left',
+  },
+  source: {
+    type: 'category',
+    categoryId: '',
+    itemId: '',
+    crossSellingRelation: 'Similar' as CrossSellingRelationType,
+  },
+  layout: {
+    fullWidth: false,
+    gap: 16,
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: 'transparent',
+    gradient: defaultGradient(),
+    visibleItems: undefined,
+  },
+  tabs: {
+    enabled: false,
+    items: [],
+  },
+});
+
+const recommendedBlock = ref<ProductRecommendedProductsContent>(createDefaultContent());
+
+watchEffect(() => {
+  const blockContent = findOrDeleteBlockByUuid(data.value, resolvedUuid.value)?.content as
+    | ProductRecommendedProductsContent
+    | undefined;
+  if (blockContent) {
+    recommendedBlock.value = blockContent;
+  }
+});
 
 if (!recommendedBlock.value.source) {
   recommendedBlock.value.source = defaultSource();
@@ -505,7 +513,7 @@ const categoryIdModel = computed({
   },
 });
 
-const recommendedBlockRef = ref(recommendedBlock.value);
+const recommendedBlockRef = recommendedBlock;
 
 const layoutState = computed(() => {
   if (!recommendedBlock.value.layout) {
@@ -549,30 +557,32 @@ const tabsState = computed(() => {
   return recommendedBlock.value.tabs;
 });
 
-const tabsEnabled = ref(tabsState.value.enabled === true);
-const tabsItems = ref<ProductRecommendedProductsTab[]>([...(tabsState.value.items ?? [])]);
-
-watch(tabsEnabled, (enabled) => {
-  tabsState.value.enabled = enabled;
+const tabsEnabled = computed({
+  get: () => tabsState.value.enabled === true,
+  set: (enabled: boolean) => {
+    tabsState.value.enabled = enabled;
+  },
 });
 
-watch(
-  tabsItems,
-  (items) => {
+const tabsItems = computed<ProductRecommendedProductsTab[]>({
+  get: () => tabsState.value.items ?? [],
+  set: (items) => {
     tabsState.value.items = items;
   },
-  { deep: true },
-);
+});
 
 const addTab = () => {
-  tabsItems.value.push({
-    label: getEditorTranslation('new-tab-label'),
-    source: defaultSource({ categoryId: firstCategoryId }),
-  });
+  tabsItems.value = [
+    ...tabsItems.value,
+    {
+      label: getEditorTranslation('new-tab-label'),
+      source: defaultSource({ categoryId: firstCategoryId }),
+    },
+  ];
 };
 
 const removeTab = (tabIndex: number) => {
-  tabsItems.value.splice(tabIndex, 1);
+  tabsItems.value = tabsItems.value.filter((_, index) => index !== tabIndex);
 };
 
 const { isFullWidth } = useFullWidthToggleForContent(recommendedBlockRef);
