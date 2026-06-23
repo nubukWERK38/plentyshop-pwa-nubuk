@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-lg md:rounded-md md:border md:border-neutral-100" data-testid="order-summary">
+  <div class="order-summary" data-testid="order-summary">
     <div class="flex justify-between items-end py-2 px-4 md:px-6 md:pt-6 md:pb-4">
       <h2 class="typography-headline-4 font-bold md:typography-headline-3">{{ t('common.labels.orderSummary') }}</h2>
       <p class="typography-text-base font-medium" data-testid="total-in-cart">

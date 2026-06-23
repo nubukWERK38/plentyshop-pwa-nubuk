@@ -2,7 +2,7 @@
   <fieldset class="md:mx-4 my-6" data-testid="checkout-payment">
     <legend class="text-neutral-900 text-lg font-bold mb-4">{{ t('checkout.payment.heading') }}</legend>
     <div v-if="paymentMethods?.list && paymentMethods.list.length > 0" class="grid gap-4 grid-cols-2">
-      <label v-for="paymentMethod in paymentMethods.list" :key="paymentMethod.id" class="relative">
+      <label v-for="paymentMethod in paymentMethods.list" :key="paymentMethod.id" class="relative" :id="'payment-method-' + paymentMethod.id">
         <input
           type="radio"
           name="payment_method"
@@ -20,7 +20,7 @@
               paymentMethod.id,
             ),
           }"
-          class="h-20 flex flex-col items-center justify-center py-4 px-4 cursor-pointer rounded-md border border-neutral-200 -outline-offset-2 hover:border-primary-50 hover:bg-primary-50 active:border-primary-100 active:bg-primary-50 peer-checked:outline peer-checked:outline-2 peer-checked:outline-primary-500 peer-disabled:opacity-50 peer-disabled:bg-neutral-100 peer-disabled:border-neutral-200 peer-disabled:cursor-not-allowed peer-disabled:[&_img]:grayscale"
+          class="h-20 flex flex-col items-center justify-center py-4 px-4 cursor-pointer border border-neutral-200 -outline-offset-2 hover:border-primary-50 hover:bg-primary-50 active:border-primary-100 active:bg-primary-50 peer-checked:outline peer-checked:outline-2 peer-checked:outline-primary-500 peer-disabled:opacity-50 peer-disabled:bg-neutral-100 peer-disabled:border-neutral-200 peer-disabled:cursor-not-allowed peer-disabled:[&_img]:grayscale"
         >
           <span v-if="paymentMethod.id === -1">
             <SfIconCreditCard class="mr-2" />
@@ -33,7 +33,7 @@
     </div>
     <div
       v-else
-      class="flex items-start bg-warning-100 shadow-md pr-2 pl-4 ring-1 ring-warning-200 typography-text-sm md:typography-text-base py-1 rounded-md"
+      class="flex items-start bg-warning-100 shadow-md pr-2 pl-4 ring-1 ring-warning-200 typography-text-sm md:typography-text-base py-1"
       data-testid="no-payment-method-available"
     >
       <SfIconWarning class="mt-2 mr-2 text-warning-700 shrink-0" />

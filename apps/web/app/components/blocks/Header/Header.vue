@@ -70,19 +70,7 @@
             square
           >
             <template #prefix>
-              <SfIconShoppingCart />
-              <SfBadge
-                :content="cartItemsCount"
-                :style="{
-                  backgroundColor: resolvedIconColor,
-                  outlineColor: resolvedBackgroundColor,
-                  color: resolvedBackgroundColor,
-                }"
-                class="outline group-hover:outline-primary-800 group-active:outline-primary-700 flex justify-center items-center text-xs min-w-[16px] min-h-[16px]"
-                data-testid="cart-badge"
-                placement="top-right"
-                :max="99"
-              />
+              <SfIconShoppingCart />              
             </template>
           </UiButton>
           <SfDropdown v-if="isAuthorized" v-model="isAccountDropdownOpen" placement="bottom-end" class="z-50">

@@ -68,6 +68,15 @@
                         {{ category.label }}
                       </option>
                     </select>
+                    <UiFormLabel class="mb-1 mt-2">{{ getEditorTranslation('category-id-label') }}</UiFormLabel>
+                    <input
+                      :value="toCategoryIdInputValue(menu.category.categoryId)"
+                      type="number"
+                      min="1"
+                      class="input-field"
+                      :placeholder="getEditorTranslation('category-id-placeholder')"
+                      @input="updateCategoryId(menu.category, ($event.target as HTMLInputElement).value)"
+                    />
                   </div>
                   <div v-else>
                     <UiFormLabel class="mb-1">{{ getEditorTranslation('manual-url-label') }}</UiFormLabel>
@@ -130,6 +139,15 @@
                               {{ category.label }}
                             </option>
                           </select>
+                          <UiFormLabel class="mb-1 mt-2">{{ getEditorTranslation('category-id-label') }}</UiFormLabel>
+                          <input
+                            :value="toCategoryIdInputValue(column.category.categoryId)"
+                            type="number"
+                            min="1"
+                            class="input-field"
+                            :placeholder="getEditorTranslation('category-id-placeholder')"
+                            @input="updateCategoryId(column.category, ($event.target as HTMLInputElement).value)"
+                          />
                         </div>
                         <div v-else>
                           <UiFormLabel class="mb-1">{{ getEditorTranslation('manual-url-label') }}</UiFormLabel>
@@ -171,6 +189,15 @@
                                     {{ category.label }}
                                   </option>
                                 </select>
+                                <input
+                                  v-if="item.category.linkType === 'category'"
+                                  :value="toCategoryIdInputValue(item.category.categoryId)"
+                                  type="number"
+                                  min="1"
+                                  class="input-field"
+                                  :placeholder="getEditorTranslation('category-id-placeholder')"
+                                  @input="updateCategoryId(item.category, ($event.target as HTMLInputElement).value)"
+                                />
                                 <SfInput
                                   v-else
                                   v-model="item.category.manualUrl"
@@ -599,6 +626,12 @@ const collapsedBrands = ref<Record<string, boolean>>({});
 const allCategoryEntries = ref<CategoryEntry[]>([]);
 const categoriesLoading = ref(false);
 
+const normalizeCategoryId = (value: unknown): number | null => {
+  if (value === null || value === undefined || value === '') return null;
+  const parsedValue = typeof value === 'number' ? value : Number(String(value).trim());
+  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
+};
+
 const loadAllCategories = async () => {
   if (categoriesLoading.value || allCategoryEntries.value.length > 0) return;
   categoriesLoading.value = true;
@@ -645,11 +678,18 @@ const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
 const getCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => {
   if (category.customLabel?.trim()) return category.customLabel.trim();
   if (category.linkType === 'manualUrl') return category.manualUrl?.trim() || getEditorTranslation('not-selected-label');
-  if (!category.categoryId) return getEditorTranslation('not-selected-label');
-  const option = categoryOptions.value.find((entry) => entry.id === category.categoryId);
+  const normalizedCategoryId = normalizeCategoryId(category.categoryId);
+  if (!normalizedCategoryId) return getEditorTranslation('not-selected-label');
+  const option = categoryOptions.value.find((entry) => entry.id === normalizedCategoryId);
   if (!option) return getEditorTranslation('not-selected-label');
   const segments = option.label.split(' > ');
   return segments[segments.length - 1] || option.label;
+};
+
+const toCategoryIdInputValue = (value: number | null) => (value === null ? '' : String(value));
+
+const updateCategoryId = (category: BigMenueNeoCategoryLink, rawValue: string) => {
+  category.categoryId = normalizeCategoryId(rawValue);
 };
 
 const getTopCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => getCategoryPreviewLabel(category);
@@ -668,7 +708,7 @@ const normalizeCategoryLink = (value: any): BigMenueNeoCategoryLink => {
   const linkType: BigMenueNeoCategoryLink['linkType'] = value?.linkType === 'manualUrl' ? 'manualUrl' : 'category';
   return {
     linkType,
-    categoryId: value?.categoryId ?? null,
+    categoryId: normalizeCategoryId(value?.categoryId),
     manualUrl: value?.manualUrl ?? '',
     customLabel: value?.customLabel ?? '',
   };
@@ -1018,6 +1058,8 @@ onMounted(async () => {
     "link-type-category-label": "Kategorie",
     "link-type-manual-url-label": "Manuelle URL",
     "manual-url-label": "Manuelle URL",
+    "category-id-label": "Kategorie-ID",
+    "category-id-placeholder": "Kategorie-ID eingeben",
     "custom-label": "Eigene Bezeichnung",
     "add-column-label": "Submenue hinzufuegen",
     "add-level3-label": "Ebene-3-Eintrag hinzufuegen",
@@ -1072,6 +1114,8 @@ onMounted(async () => {
     "link-type-category-label": "Kategorie",
     "link-type-manual-url-label": "Manuelle URL",
     "manual-url-label": "Manuelle URL",
+    "category-id-label": "Kategorie-ID",
+    "category-id-placeholder": "Kategorie-ID eingeben",
     "custom-label": "Eigene Bezeichnung",
     "add-column-label": "Submenue hinzufuegen",
     "add-level3-label": "Ebene-3-Eintrag hinzufuegen",

@@ -221,20 +221,7 @@
             variant="tertiary"
           >
             <template #prefix>
-              <SfIconShoppingCart />
-              <SfBadge
-                v-if="cartItemsCount > 0"
-                :content="cartItemsCount"
-                :style="{
-                  backgroundColor: '#2d5d83',
-                  outlineColor: '#ffffff',
-                  color: '#ffffff',
-                }"
-                class="outline flex justify-center items-center text-xs min-w-[16px] min-h-[16px]"
-                data-testid="cart-badge"
-                placement="top-right"
-                :max="99"
-              />
+              <SfIconShoppingCart />              
             </template>
             <span class="nubuk-cart-total">{{ cartTotalFormatted }}</span>
           </UiButton>

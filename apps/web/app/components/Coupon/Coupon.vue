@@ -1,14 +1,7 @@
 <template>
   <div class="border-b border-neutral-200">
-    <SfAccordionItem v-if="!cartGetters.getCouponDiscount(cart)" v-model="openedCoupon" data-testid="couponZone">
-      <template #summary>
-        <div :class="['flex justify-between font-medium p-3', { 'my-4 bg-gray-100 rounded-md': openedCoupon }]">
-          <p class="pl-3">{{ t('coupon.title') }}</p>
-          <SfIconChevronLeft
-            :class="['text-neutral-500', { 'rotate-90': openedCoupon, '-rotate-90': !openedCoupon }]"
-          />
-        </div>
-      </template>
+    <div v-if="!cartGetters.getCouponDiscount(cart)" data-testid="couponZone" class="my-4">
+      
       <div class="flex mb-4">
         <div class="flex-grow mr-2" data-testid="couponCode">
           <SfInput
@@ -34,7 +27,7 @@
           </span>
         </UiButton>
       </div>
-    </SfAccordionItem>
+    </div>
     <div v-else class="flex justify-between my-4">
       <div class="text-primary-800 font-medium flex items-center">{{ couponCode }}</div>
       <div>
@@ -58,8 +51,7 @@
 
 <script setup lang="ts">
 import { cartGetters } from '@plentymarkets/shop-api';
-import { SfAccordionItem, SfIconChevronLeft, SfIconClose, SfInput, SfLoaderCircular } from '@storefront-ui/vue';
-const openedCoupon = ref(false);
+import { SfIconClose, SfInput, SfLoaderCircular } from '@storefront-ui/vue';
 const couponCode = ref('');
 const { addCoupon, deleteCoupon, loading } = useCoupon();
 const { data: cart } = useCart();
@@ -71,6 +63,5 @@ const handleDeleteCoupon = async () => {
 
 onMounted(() => {
   couponCode.value = cartGetters.getCouponCode(cart.value);
-  openedCoupon.value = cartGetters.getCouponDiscount(cart.value) !== 0;
 });
 </script>

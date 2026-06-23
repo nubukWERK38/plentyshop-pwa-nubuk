@@ -15,7 +15,7 @@
             :disabled="disabled"
             tag="label"
             children-tag="div"
-            class="border rounded-md items-start select-none"
+            class="border items-start select-none"
             @click.prevent="updateShippingMethod(shippingProviderGetters.getParcelServicePresetId(method))"
           >
             <template #prefix>
@@ -30,8 +30,8 @@
               />
             </template>
             <div class="flex items-center flex-row gap-2">
-              <span>{{ shippingProviderGetters.getShippingMethodName(method) }}</span>
-              <span class="ml-auto">{{ getShippingAmount(shippingProviderGetters.getShippingAmount(method)) }}</span>
+              <span class="shippingName">{{ shippingProviderGetters.getShippingMethodName(method) }}</span>
+              <span class="ml-auto text-nowrap shippingCost">{{ getShippingAmount(shippingProviderGetters.getShippingAmount(method)) }}</span>
             </div>
             <div v-if="getDeliveryDays(shippingProviderGetters.getParcelServicePresetId(method))">
               <span class="text-sm">
@@ -47,7 +47,7 @@
 
         <div
           v-else
-          class="flex items-start bg-warning-100 shadow-md pr-2 pl-4 ring-1 ring-warning-200 typography-text-sm md:typography-text-base py-1 rounded-md"
+          class="flex items-start bg-warning-100 shadow-md pr-2 pl-4 ring-1 ring-warning-200 typography-text-sm md:typography-text-base py-1"
           data-testid="no-shipping-method-available"
         >
           <SfIconWarning class="mt-2 mr-2 text-warning-700 shrink-0" />
@@ -63,7 +63,7 @@
     <div
       v-else
       data-testid="shipping-method-no-address-set"
-      class="mt-4 bg-gray-200 shadow-md p-4 ring-1 ring-gray-300 text-gray-700 typography-text-sm md:typography-text-base rounded-md"
+      class="mt-4 bg-gray-200 shadow-md p-4 ring-1 ring-gray-300 text-gray-700 typography-text-sm md:typography-text-base"
     >
       {{ t('shipping.noShippingMethodsNoAddress') }}
     </div>

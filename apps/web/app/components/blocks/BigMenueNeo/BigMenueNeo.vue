@@ -125,12 +125,18 @@ const defaultContent = (): BigMenueNeoContent => ({
   },
 });
 
+const normalizeCategoryId = (value: unknown): number | null => {
+  if (value === null || value === undefined || value === '') return null;
+  const parsedValue = typeof value === 'number' ? value : Number(String(value).trim());
+  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
+};
+
 const normalizedContent = computed<BigMenueNeoContent>(() => {
   const input = props.content || defaultContent();
 
   const normalizeCategory = (category?: Partial<BigMenueNeoCategoryLink>): BigMenueNeoCategoryLink => ({
     linkType: category?.linkType === 'manualUrl' ? 'manualUrl' : 'category',
-    categoryId: category?.categoryId ?? null,
+    categoryId: normalizeCategoryId(category?.categoryId),
     manualUrl: category?.manualUrl || '',
     customLabel: category?.customLabel || '',
   });
@@ -282,12 +288,13 @@ const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
     return category.manualUrl?.trim() || '/';
   }
 
-  if (!category.categoryId) return '/';
-  const categoryTreeNode = findCategoryById(categoryTree.value || [], category.categoryId);
+  const normalizedCategoryId = normalizeCategoryId(category.categoryId);
+  if (!normalizedCategoryId) return '/';
+  const categoryTreeNode = findCategoryById(categoryTree.value || [], normalizedCategoryId);
   if (categoryTreeNode) {
     return localePath(buildCategoryMenuLink(categoryTreeNode, categoryTree.value || []));
   }
-  const fallbackCategory = findCategoryEntryById(category.categoryId);
+  const fallbackCategory = findCategoryEntryById(normalizedCategoryId);
   if (fallbackCategory?.linklist) {
     return localePath(normalizePath(fallbackCategory.linklist));
   }

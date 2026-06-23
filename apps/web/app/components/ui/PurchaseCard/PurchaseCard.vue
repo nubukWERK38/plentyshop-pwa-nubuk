@@ -1,6 +1,6 @@
 <template>
   <form
-    class="md:rounded-md"
+    class="purchase-card md:rounded-md"
     :class="{ 'md:shadow-lg': configuration?.dropShadow, 'md:border md:border-neutral-100': configuration?.borders }"
     :style="inlineStyle"
     data-testid="purchase-card"
@@ -8,19 +8,36 @@
   >
     <div class="relative">
       <div class="drift-zoom-image">
-        <section class="p-4 xl:p-6">
+        <section class="purchase-card__content p-4 xl:p-5">
           <template v-for="key in configuration?.fieldsOrder" :key="key">
             <template v-if="key === 'itemName' && configuration?.fields.itemName">
-              <h1 class="font-bold typography-headline-4 break-word" data-testid="product-name">
+              <div v-if="brandLogo || brandName" class="purchase-card__brand" data-testid="product-brand">
+                <NuxtImg
+                  v-if="brandLogo"
+                  :src="brandLogo"
+                  :alt="brandName || t('manufacturer.logoAlt')"
+                  class="purchase-card__brand-logo"
+                  loading="lazy"
+                />
+                <span v-else>{{ brandName }}</span>
+              </div>
+              <h1 class="purchase-card__name font-bold break-word" data-testid="product-name">
                 {{ productGetters.getName(product) }}
               </h1>
+              <p v-if="variationNumber" class="purchase-card__article-number">Artikelnummer {{ variationNumber }}</p>
             </template>
             <template v-if="key === 'price' && configuration?.fields.price">
-              <div class="flex space-x-2">
-                <Price :price="priceWithProperties" :crossed-price="crossedPrice" />
+              <div class="purchase-card__price-block">
+                <div v-if="hasComparablePrice" class="purchase-card__rrp">UVP {{ format(crossedPrice ?? 0) }}</div>
+                <div class="purchase-card__price-row">
+                  <span class="purchase-card__price" data-testid="price">
+                    {{ format(priceWithProperties) }} {{ t('common.labels.asterisk') }}
+                  </span>
+                  <span v-if="discountPercentage" class="purchase-card__discount">{{ discountPercentage }}%</span>
+                </div>
                 <div
                   v-if="(productBundleGetters?.getBundleDiscount(product) ?? 0) > 0 && showBundleComponents"
-                  class="m-auto"
+                  class="mt-2"
                 >
                   <UiTag :size="'sm'" :variant="'secondary'">{{
                     t('product.bundleSavings', { percent: productBundleGetters.getBundleDiscount(product) })
@@ -28,6 +45,7 @@
                 </div>
               </div>
               <LowestPrice :product="product" />
+              <div v-if="unitContentLabel" class="purchase-card__unit-content">Inhalt {{ unitContentLabel }}</div>
               <BasePrice
                 v-if="productGetters.showPricePerUnit(product)"
                 :base-price="basePriceSingleValue"
@@ -39,7 +57,10 @@
               <UiBadges class="mb-2" :product="product" :use-availability="false" :use-tags="true" />
             </template>
             <template v-if="key === 'availability' && configuration?.fields.availability">
-              <UiBadges class="mb-2" :product="product" :use-availability="true" :use-tags="false" />
+              <div v-if="availabilityName" class="purchase-card__availability" data-testid="badges">
+                <span class="purchase-card__availability-dot" aria-hidden="true" />
+                <span>{{ availabilityName }}</span>
+              </div>
             </template>
             <template v-if="key === 'variationProperties' && configuration?.fields.variationProperties">
               <div class="mb-2 variation-properties">
@@ -110,7 +131,20 @@
               <BundleOrderItems v-if="product.bundleComponents && showBundleComponents" :product="product" />
             </template>
             <template v-if="key === 'orderProperties' && configuration?.fields.orderProperties">
-              <OrderProperties :product="product" />
+              <details v-if="hasOrderProperties" class="purchase-card__leasing-panel">
+                <summary class="purchase-card__leasing-summary">
+                  <span class="purchase-card__leasing-copy">
+                    <span class="purchase-card__leasing-title">{{ leasingTitle }}</span>
+                    <span v-if="leasingDescription" class="purchase-card__leasing-description">
+                      {{ leasingDescription }}
+                    </span>
+                  </span>
+                  <SfIconExpandMore class="purchase-card__leasing-chevron" aria-hidden="true" />
+                </summary>
+                <div class="purchase-card__leasing-options">
+                  <OrderProperties :product="product" />
+                </div>
+              </details>
             </template>
             <template v-if="key === 'graduatedPrices' && configuration?.fields.graduatedPrices">
               <GraduatedPriceList :product="product" :count="quantitySelectorValue" />
@@ -121,12 +155,12 @@
                 v-if="product && productGetters.possibleUnitCombination(product).length > 1"
                 :product="product"
               />
-              <div class="mt-4">
-                <div class="flex flex-col md:flex-row flex-wrap gap-4">
+              <div class="purchase-card__cart-section mt-4">
+                <div class="purchase-card__cart-row flex flex-col md:flex-row flex-wrap gap-4">
                   <UiQuantitySelector
                     :min-value="productGetters.getMinimumOrderQuantity(product)"
                     :value="quantitySelectorValue"
-                    class="min-w-[145px] flex-grow-0 flex-shrink-0 basis-0"
+                    class="purchase-card__quantity min-w-[92px] flex-grow-0 flex-shrink-0 basis-0"
                     @change-quantity="changeQuantity"
                   />
                   <div
@@ -146,7 +180,7 @@
                       type="submit"
                       data-testid="add-to-cart"
                       size="lg"
-                      class="w-full h-full"
+                      class="purchase-card__cart-button w-full h-full"
                       :disabled="loading || !productGetters.isSalable(product)"
                     >
                       <template #prefix>
@@ -217,8 +251,22 @@
 </template>
 
 <script setup lang="ts">
-import { productGetters, reviewGetters, productBundleGetters } from '@plentymarkets/shop-api';
-import { SfCounter, SfRating, SfIconShoppingCart, SfLoaderCircular, SfTooltip, SfLink } from '@storefront-ui/vue';
+import {
+  productGetters,
+  reviewGetters,
+  productBundleGetters,
+  manufacturerGetters,
+  productPropertyGetters,
+} from '@plentymarkets/shop-api';
+import {
+  SfCounter,
+  SfRating,
+  SfIconShoppingCart,
+  SfLoaderCircular,
+  SfTooltip,
+  SfLink,
+  SfIconExpandMore,
+} from '@storefront-ui/vue';
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';
 import { paths } from '~/utils/paths';
@@ -287,6 +335,7 @@ const showBundleComponents = computed(() => {
 
 const { showNetPrices } = useCart();
 const viewport = useViewport();
+const { format } = usePriceFormatter();
 const { getCombination } = useProductAttributes();
 const { getPropertiesForCart, getPropertiesPrice } = useProductOrderProperties();
 const { validateAllFields, invalidFields, resetInvalidFields } = useValidatorAggregator('properties');
@@ -305,6 +354,74 @@ const { reviewArea } = useProductReviews(Number(productGetters.getId(props?.prod
 const { getSetting: getNotifyMeSetting } = useSiteSettings('showNotifyMe');
 const showNotifyMe = computed(() => getNotifyMeSetting().toString() === 'true');
 const localePath = useLocalePath();
+
+const manufacturer = computed(() => productGetters.getManufacturer(props.product));
+const brandName = computed(
+  () =>
+    manufacturerGetters.getManufacturerExternalName(manufacturer.value) ||
+    manufacturerGetters.getManufacturerNameExternal(manufacturer.value) ||
+    manufacturerGetters.getManufacturerName(manufacturer.value),
+);
+
+const getNormalizedBrandLogo = (value: unknown): string => {
+  if (typeof value === 'string') return value;
+
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const normalized = getNormalizedBrandLogo(entry);
+      if (normalized) return normalized;
+    }
+    return '';
+  }
+
+  if (value && typeof value === 'object') {
+    const candidate = value as Record<string, unknown>;
+
+    for (const key of ['url', 'src', 'path', 'fullPath', 'logo', 'logoUrl']) {
+      const normalized = getNormalizedBrandLogo(candidate[key]);
+      if (normalized) return normalized;
+    }
+  }
+
+  return '';
+};
+
+const brandLogo = computed(() => {
+  const getterLogo = getNormalizedBrandLogo(manufacturerGetters.getManufacturerLogo(manufacturer.value));
+  if (getterLogo) return getterLogo;
+
+  return getNormalizedBrandLogo(manufacturer.value);
+});
+const variationNumber = computed(() => productGetters.getVariationNumber(props.product));
+const availabilityName = computed(() => productGetters.getAvailabilityName(props.product));
+const orderPropertiesGroups = computed(() =>
+  Object.values(productPropertyGetters.getOrderPropertiesGroups(props.product)),
+);
+const firstOrderPropertiesGroup = computed(() => orderPropertiesGroups.value[0]);
+const hasOrderProperties = computed(() =>
+  orderPropertiesGroups.value.some((group) => (group.orderProperties?.length ?? 0) > 0),
+);
+const leasingTitle = computed(() => {
+  const group = firstOrderPropertiesGroup.value;
+
+  return group ? productPropertyGetters.getOrderPropertyGroupName(group) || 'Fahrradleasing' : 'Fahrradleasing';
+});
+const leasingDescription = computed(() => {
+  const group = firstOrderPropertiesGroup.value;
+
+  return group
+    ? productPropertyGetters.getOrderPropertyGroupDescription(group) ||
+        'Du moechtest Dein Bike bei uns leasen? Waehle hier gleich einen gewuenschten Leasingpartner aus:'
+    : '';
+});
+const unitContentLabel = computed(() => {
+  const content = productGetters.getUnitContent(props.product);
+  const unitName = productGetters.getUnitName(props.product);
+
+  if (!content || !unitName) return '';
+
+  return `${content} ${unitName}`;
+});
 
 const inlineStyle = computed(() => {
   const layout = props?.configuration?.layout || ({} as PriceCardPadding);
@@ -336,6 +453,18 @@ const priceWithProperties = computed(
       productGetters.getPrice(props?.product) ||
       0) + getPropertiesPrice(props?.product),
 );
+
+const hasComparablePrice = computed(
+  () =>
+    Boolean(crossedPrice.value) &&
+    Math.round(priceWithProperties.value * 100) / 100 !== Math.round(Number(crossedPrice.value) * 100) / 100,
+);
+
+const discountPercentage = computed(() => {
+  if (!hasComparablePrice.value || !crossedPrice.value) return 0;
+
+  return Math.round((priceWithProperties.value / crossedPrice.value - 1) * 100);
+});
 
 const basePriceSingleValue = computed(
   () =>
@@ -427,3 +556,238 @@ const scrollToReviews = () => {
   }
 };
 </script>
+
+<style scoped>
+.purchase-card {
+  color: #071625;
+  box-shadow: none;
+}
+
+.purchase-card__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.purchase-card__brand {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  margin-bottom: 14px;
+  color: #050505;
+  font-size: 2rem;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.purchase-card__brand-logo {
+  width: auto;
+  max-width: 240px;
+  max-height: 48px;
+  object-fit: contain;
+}
+
+.purchase-card__name {
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+  line-height: 1.18;
+}
+
+.purchase-card__article-number {
+  margin-bottom: 16px;
+  color: #4b5563;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.purchase-card__availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  margin: 18px 0;
+  color: #071625;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.purchase-card__availability-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 999px;
+  background: #ff9d00;
+}
+
+.purchase-card__leasing-panel {
+  margin-bottom: 18px;
+  background: #e8e8e8;
+}
+
+.purchase-card__leasing-summary {
+  display: flex;
+  min-height: 122px;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+}
+
+.purchase-card__leasing-summary::-webkit-details-marker {
+  display: none;
+}
+
+.purchase-card__leasing-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.purchase-card__leasing-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.purchase-card__leasing-description {
+  color: #071625;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.purchase-card__leasing-chevron {
+  flex: 0 0 auto;
+  transition: transform 0.2s ease;
+}
+
+.purchase-card__leasing-panel[open] .purchase-card__leasing-chevron {
+  transform: rotate(180deg);
+}
+
+.purchase-card__leasing-options {
+  padding: 0 20px 18px;
+}
+
+.purchase-card__leasing-panel :deep(.order-properties__group) {
+  margin: 0;
+}
+
+.purchase-card__leasing-panel :deep(.order-properties__group-heading),
+.purchase-card__leasing-panel :deep(.order-properties__group-description) {
+  display: none;
+}
+
+.purchase-card__leasing-panel :deep(.order-properties__row) {
+  margin-top: 10px;
+}
+
+.purchase-card__price-block {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.purchase-card__rrp {
+  color: #a9afb8;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.purchase-card__price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.purchase-card__price {
+  color: #ef4444;
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.purchase-card__discount {
+  display: inline-flex;
+  min-width: 76px;
+  min-height: 35px;
+  align-items: center;
+  justify-content: center;
+  background: #ef4b55;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.purchase-card__unit-content {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: #a9afb8;
+  font-size: 1rem;
+}
+
+.purchase-card__cart-row {
+  align-items: stretch;
+}
+
+.purchase-card__quantity {
+  width: 92px;
+  min-width: 92px;
+}
+
+.purchase-card__quantity :deep(.rounded-md) {
+  border-radius: 0;
+}
+
+.purchase-card__cart-button {
+  min-height: 56px;
+  border-radius: 0;
+  background: #c7ff00 !important;
+  color: #000 !important;
+  font-weight: 800;
+}
+
+.purchase-card__cart-button:hover,
+.purchase-card__cart-button:active {
+  background: #b6ef00 !important;
+  color: #000 !important;
+}
+
+.purchase-card :deep(select) {
+  min-height: 48px;
+  border-radius: 0;
+  background-color: #e8e8e8;
+  border-color: #d9d9d9;
+  color: #071625;
+}
+
+.purchase-card :deep(label[for^='attribute-']) {
+  display: block;
+  padding: 7px 14px 0;
+  color: #071625;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.purchase-card :deep(label[for^='attribute-'] + select),
+.purchase-card :deep(label[for^='attribute-'] + div select) {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+@media (max-width: 767px) {
+  .purchase-card__brand {
+    font-size: 1.75rem;
+  }
+
+  .purchase-card__cart-row {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+}
+</style>

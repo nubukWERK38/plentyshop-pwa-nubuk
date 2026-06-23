@@ -22,7 +22,7 @@
               ? productImageGetters.getImageName(orderGetters.getOrderVariationFirstImage(props.order, props.orderItem))
               : null
           "
-          class="h-auto border rounded-md border-neutral-200"
+          class="h-auto"
           width="300"
           height="300"
           loading="lazy"

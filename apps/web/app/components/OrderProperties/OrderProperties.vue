@@ -1,17 +1,21 @@
 <template>
-  <div v-for="(group, groupIndex) in orderPropertiesGroups" :key="`group-${groupIndex}`" class="mt-5 mb-4">
-    <div class="font-semibold">
+  <div
+    v-for="(group, groupIndex) in orderPropertiesGroups"
+    :key="`group-${groupIndex}`"
+    class="order-properties__group mt-5 mb-4"
+  >
+    <div class="order-properties__group-heading font-semibold">
       {{ productPropertyGetters.getOrderPropertyGroupName(group) }}
     </div>
 
-    <div class="font-normal typography-text-sm mb-2">
+    <div class="order-properties__group-description font-normal typography-text-sm mb-2">
       {{ productPropertyGetters.getOrderPropertyGroupDescription(group) }}
     </div>
 
     <div
       v-for="(productProperty, propIndex) in group.orderProperties"
       :key="`group-prop-${propIndex}`"
-      class="mt-2 flex items-center"
+      class="order-properties__row mt-2 flex items-center"
     >
       <!-- ClientOnly until fixed: https://github.com/nuxt/nuxt/issues/23768#issuecomment-1849023053 -->
       <Component

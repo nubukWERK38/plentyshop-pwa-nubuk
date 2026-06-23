@@ -36,8 +36,7 @@
         <UiDivider class="w-screen md:w-auto -mx-4 md:mx-0" />
         <CustomerReference />
         <CustomerWish />
-        <UiDivider class="w-screen md:w-auto -mx-4 md:mx-0 mb-10" />
-        <CheckoutGeneralTerms />
+        
       </div>
       <div class="col-span-6 xl:col-span-5">
         <div v-for="(cartItem, index) in cart?.items" :key="cartItem.id">
@@ -47,7 +46,9 @@
           <SfLoaderCircular v-if="cartLoading" class="absolute top-[130px] right-0 left-0 m-auto z-[999]" size="2xl" />
           <Coupon />
           <OrderSummary v-if="cart" :cart="cart" class="mt-4">
-            <CheckoutExportDeliveryHint v-if="cart.isExportDelivery" />
+            <CheckoutExportDeliveryHint v-if="cart.isExportDelivery" />            
+        <CheckoutGeneralTerms />
+        <UiDivider class="w-screen md:w-auto -mx-4 md:mx-0 mt-5 mb-10" />
             <PaymentButtons />
             <ModuleComponentRendering area="checkout.afterBuyButton" />
           </OrderSummary>
@@ -68,7 +69,6 @@ defineI18nRoute({
 });
 
 definePageMeta({
-  layout: 'simplified-header-and-footer',
   pageType: 'static',
   middleware: ['reject-empty-checkout'],
 });

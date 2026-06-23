@@ -17,7 +17,7 @@
           width="300"
           height="300"
           loading="lazy"
-          class="w-full h-auto border rounded-md border-neutral-200"
+          class="w-full h-auto"
         />
         <SfLoaderCircular v-if="!imageLoaded" class="absolute" size="sm" />
       </SfLink>
@@ -55,7 +55,7 @@
           </ul>
           <div
             v-if="cartItem.basketItemOrderParams.length > 0"
-            class="text-xs font-normal leading-5 sm:typography-text-sm text-neutral-700"
+            id="orderparams" class="text-xs font-normal leading-5 sm:typography-text-sm text-neutral-700"
           >
             <div class="text-[15px]">{{ t('orderProperties.additionalCostsPerItem') }}:</div>
             <CartOrderProperty
