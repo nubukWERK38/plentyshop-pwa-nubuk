@@ -111,10 +111,10 @@
       <div class="space-y-4 py-3">
         <div class="flex items-center justify-between">
           <UiFormLabel>{{ getEditorTranslation('tabs-enabled-label') }}</UiFormLabel>
-          <SfSwitch v-model="tabsState.enabled" data-testid="recommended-form-tabs-enabled" />
+          <SfSwitch v-model="tabsEnabled" data-testid="recommended-form-tabs-enabled" />
         </div>
 
-        <template v-if="tabsState.enabled">
+        <template v-if="tabsEnabled">
           <div
             v-for="(tab, tabIndex) in tabsItems"
             :key="tabIndex"
@@ -549,20 +549,30 @@ const tabsState = computed(() => {
   return recommendedBlock.value.tabs;
 });
 
-const tabsItems = computed<ProductRecommendedProductsTab[]>(() => tabsState.value.items ?? []);
+const tabsEnabled = ref(tabsState.value.enabled === true);
+const tabsItems = ref<ProductRecommendedProductsTab[]>([...(tabsState.value.items ?? [])]);
+
+watch(tabsEnabled, (enabled) => {
+  tabsState.value.enabled = enabled;
+});
+
+watch(
+  tabsItems,
+  (items) => {
+    tabsState.value.items = items;
+  },
+  { deep: true },
+);
 
 const addTab = () => {
-  tabsState.value.items = [
-    ...(tabsState.value.items ?? []),
-    {
-      label: getEditorTranslation('new-tab-label'),
-      source: defaultSource({ categoryId: firstCategoryId }),
-    },
-  ];
+  tabsItems.value.push({
+    label: getEditorTranslation('new-tab-label'),
+    source: defaultSource({ categoryId: firstCategoryId }),
+  });
 };
 
 const removeTab = (tabIndex: number) => {
-  tabsState.value.items = tabsItems.value.filter((_, index) => index !== tabIndex);
+  tabsItems.value.splice(tabIndex, 1);
 };
 
 const { isFullWidth } = useFullWidthToggleForContent(recommendedBlockRef);

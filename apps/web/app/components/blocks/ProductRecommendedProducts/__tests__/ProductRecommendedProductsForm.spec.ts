@@ -198,4 +198,80 @@ describe('ProductRecommendedProductsForm', () => {
     expect(wrapper.text()).toContain('source-label');
     expect(wrapper.find('[data-testid="full-width-toggle-stub"]').exists()).toBe(true);
   });
+
+  it('adds a new tab when clicking add tab', async () => {
+    useBlockManagerMock.mockReturnValue({
+      findOrDeleteBlockByUuid: vi.fn(() =>
+        buildBlock({
+          text: {
+            htmlDescription: '',
+            textAlignment: 'left',
+          },
+          source: {
+            type: 'category',
+            categoryId: '12',
+            itemId: '',
+            crossSellingRelation: 'Similar',
+          },
+          layout: {
+            fullWidth: false,
+            gap: 16,
+            marginLeft: 0,
+            marginRight: 0,
+            backgroundColor: 'transparent',
+          },
+          tabs: {
+            enabled: true,
+            items: [],
+          },
+        }),
+      ),
+    });
+
+    const wrapper = mount(ProductRecommendedProductsForm, {
+      props: {
+        uuid: 'recommended-block-uuid',
+      },
+      global: {
+        stubs: {
+          UiAccordionItem: {
+            template: '<section><slot name="summary" /><slot /></section>',
+          },
+          EditorRichTextEditorForm: {
+            template: '<div data-testid="rich-text-editor-stub" />',
+          },
+          EditorCategorySelect: {
+            template: '<div data-testid="category-select-stub" />',
+          },
+          UiFormLabel: {
+            template: '<label><slot /></label>',
+          },
+          SfInput: {
+            template: '<input />',
+          },
+          SfSwitch: {
+            template: '<input type="checkbox" />',
+          },
+          SfIconCheck: true,
+          Multiselect: {
+            template: '<div data-testid="multiselect-stub" />',
+          },
+          EditorFullWidthToggle: {
+            template: '<div data-testid="full-width-toggle-stub" />',
+          },
+          EditorColorPicker: {
+            template: '<div><slot name="trigger" :color="\'#ffffff\'" :toggle="() => {}" /></div>',
+          },
+        },
+      },
+    });
+
+    expect(wrapper.findAll('button').filter((button) => button.text() === 'remove-tab-label')).toHaveLength(0);
+
+    const addTabButton = wrapper.findAll('button').find((button) => button.text() === 'add-tab-label');
+    expect(addTabButton).toBeDefined();
+    await addTabButton?.trigger('click');
+
+    expect(wrapper.findAll('button').filter((button) => button.text() === 'remove-tab-label')).toHaveLength(1);
+  });
 });
