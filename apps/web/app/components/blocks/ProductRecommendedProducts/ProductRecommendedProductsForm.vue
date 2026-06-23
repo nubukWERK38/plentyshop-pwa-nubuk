@@ -556,14 +556,18 @@ const createTab = (source: ProductRecommendedProductsSource): ProductRecommended
   }),
 });
 
+const ensureInitialTab = () => {
+  if (!tabsState.value.items?.length) {
+    tabsState.value.items = [createTab(recommendedBlock.value.source)];
+  }
+};
+
 const tabsEnabled = computed({
   get: () => tabsState.value.enabled === true,
   set: (enabled: boolean) => {
     tabsState.value.enabled = enabled;
 
-    if (enabled && !tabsState.value.items?.length) {
-      tabsState.value.items = [createTab(recommendedBlock.value.source)];
-    }
+    if (enabled) ensureInitialTab();
   },
 });
 
@@ -575,12 +579,13 @@ const tabsItems = computed<ProductRecommendedProductsTab[]>({
 });
 
 const addTab = () => {
+  tabsState.value.enabled = true;
+
   if (!tabsItems.value.length) {
-    tabsEnabled.value = true;
+    tabsItems.value = [createTab(recommendedBlock.value.source)];
     return;
   }
 
-  tabsEnabled.value = true;
   tabsItems.value = [...tabsItems.value, createTab(defaultSource({ categoryId: firstCategoryId }))];
 };
 
@@ -591,6 +596,14 @@ const removeTab = (tabIndex: number) => {
     tabsEnabled.value = false;
   }
 };
+
+watch(
+  () => tabsState.value.enabled,
+  (enabled) => {
+    if (enabled) ensureInitialTab();
+  },
+  { immediate: true },
+);
 
 const { isFullWidth } = useFullWidthToggleForContent(recommendedBlockRef);
 
