@@ -96,19 +96,8 @@
           data-testid="recommended-form-categories"
         />
       </div>
-    </UiAccordionItem>
 
-    <UiAccordionItem
-      v-model="tabsOpen"
-      summary-active-class="bg-neutral-100"
-      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
-      data-testid="open-recommended-products-form-tabs"
-    >
-      <template #summary>
-        <h2>{{ getEditorTranslation('tabs-label') }}</h2>
-      </template>
-
-      <div class="space-y-4 py-3">
+      <div class="space-y-4 border-t border-gray-200 py-4">
         <div class="flex items-center justify-between">
           <UiFormLabel>{{ getEditorTranslation('tabs-enabled-label') }}</UiFormLabel>
           <SfSwitch v-model="tabsEnabled" data-testid="recommended-form-tabs-enabled" />
@@ -190,11 +179,11 @@
               />
             </div>
           </div>
-
-          <button type="button" class="input-field text-left" @click="addTab">
-            {{ getEditorTranslation('add-tab-label') }}
-          </button>
         </template>
+
+        <button type="button" class="input-field text-left" @click="addTab">
+          {{ getEditorTranslation('add-tab-label') }}
+        </button>
       </div>
     </UiAccordionItem>
 
@@ -477,7 +466,6 @@ const debouncedFn = useDebounceFn((event: Event) => {
 
 const sourceOpen = ref(false);
 const textsOpen = ref(false);
-const tabsOpen = ref(false);
 const crossSellingOptions = [
   { value: 'Accessory', label: getEditorTranslation('cross-selling-relation-accessory') },
   { value: 'ReplacementPart', label: getEditorTranslation('cross-selling-relation-replacement') },
@@ -572,11 +560,15 @@ const tabsItems = computed<ProductRecommendedProductsTab[]>({
 });
 
 const addTab = () => {
+  tabsEnabled.value = true;
   tabsItems.value = [
     ...tabsItems.value,
     {
       label: getEditorTranslation('new-tab-label'),
-      source: defaultSource({ categoryId: firstCategoryId }),
+      source: defaultSource({
+        ...recommendedBlock.value.source,
+        categoryId: recommendedBlock.value.source.categoryId || firstCategoryId,
+      }),
     },
   ];
 };
