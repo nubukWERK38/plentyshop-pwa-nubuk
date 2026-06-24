@@ -180,14 +180,14 @@ h1, .h1 {
     margin-bottom: 0;
 }
 
-.category-subcategories {
+#category-subcategories {
     display: flex;
   flex-wrap: wrap;
   gap: 10px;
   padding-left: 0;
   list-style: none;
 }
-.category-subcategories li a {
+#category-subcategories li a {
 	text-transform: uppercase;
 	font-size: 14px;
 	font-weight: 300;
