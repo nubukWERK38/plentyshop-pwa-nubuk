@@ -19,11 +19,13 @@
           <li
             v-for="(subcategory, index) in subcategories"
             :id="`category-subcategory-item-${index}`"
-            :key="`${subcategory}-${index}`"
+            :key="`${subcategory.name}-${index}`"
             :class="`category-subcategory-item category-subcategory-item--${index}`"
             data-testid="category-subcategory-item"
           >
-            {{ subcategory }}
+            <NuxtLink :to="subcategory.link" class="underline-offset-2 hover:underline">
+              {{ subcategory.name }}
+            </NuxtLink>
           </li>
         </ul>
       </template>
@@ -57,6 +59,7 @@ import type {
   CategoryDataFieldKey,
   CategoryDataFieldsVisibility,
   CategoryData,
+  CategoryDataSubcategory,
 } from '~/components/blocks/CategoryData/types';
 
 const props = defineProps<{
@@ -64,7 +67,7 @@ const props = defineProps<{
   fieldsOrder: CategoryDataFieldKey[];
   texts: CategoryData;
   showSubcategories: boolean;
-  subcategories: string[];
+  subcategories: CategoryDataSubcategory[];
 }>();
 
 const renderOrder = computed<CategoryDataFieldKey[]>(() =>

@@ -56,3 +56,8 @@ export interface CategoryData {
   description2: string;
   shortDescription: string;
 }
+
+export type CategoryDataSubcategory = {
+  name: string;
+  link: string;
+};

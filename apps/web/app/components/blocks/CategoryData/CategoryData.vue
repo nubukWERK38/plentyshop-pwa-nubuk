@@ -27,7 +27,7 @@
           :fields-order="props.content.fieldsOrder"
           :texts="texts"
           :show-subcategories="props.content.showSubcategories ?? false"
-          :subcategories="directSubcategoryNames"
+          :subcategories="directSubcategories"
         />
       </div>
     </template>
@@ -86,7 +86,7 @@
               :fields-order="props.content.fieldsOrder"
               :texts="texts"
               :show-subcategories="props.content.showSubcategories ?? false"
-              :subcategories="directSubcategoryNames"
+              :subcategories="directSubcategories"
             />
           </div>
         </div>
@@ -96,8 +96,8 @@
 </template>
 
 <script setup lang="ts">
-import { type Category, type CategoryEntry, categoryGetters } from '@plentymarkets/shop-api';
-import type { CategoryData, CategoryDataProps } from '~/components/blocks/CategoryData/types';
+import { type Category, type CategoryEntry, categoryGetters, categoryTreeGetters } from '@plentymarkets/shop-api';
+import type { CategoryData, CategoryDataProps, CategoryDataSubcategory } from '~/components/blocks/CategoryData/types';
 import type { CategoryDetails } from '@plentymarkets/shop-api/server/types';
 import FieldsOrder from './FieldsOrder.vue';
 
@@ -107,6 +107,9 @@ const props = defineProps<CategoryDataProps>();
 const sdk = useSdk();
 const { hexToRgba, getTextAlignment, getContentPosition, isMobile } = useBlockContentHelper();
 const { data: productsCatalog } = useProducts();
+const { data: categoryTree } = useCategoryTree();
+const { buildCategoryMenuLink } = useLocalization();
+const localePath = useLocalePath();
 const category = computed(() => productsCatalog.value.category || ({} as Category));
 const enabledText = computed(
   () =>
@@ -124,33 +127,57 @@ const shouldShowTextBlock = computed(
 const details = computed(() => categoryGetters.getCategoryDetails(category.value) || ({} as CategoryDetails));
 const fetchedDirectSubcategories = ref<CategoryEntry[]>([]);
 
-const getCategoryNameFromEntry = (entry: CategoryEntry): string => {
-  return entry.details?.[0]?.name ?? '';
-};
-
-const getCategoryNameFromNode = (categoryNode: Category): string => {
-  const detailsData = categoryGetters.getCategoryDetails(categoryNode) as CategoryDetails | undefined;
-  if (detailsData?.name) {
-    return detailsData.name;
+const getSubcategoryLink = (categoryId?: number | string) => {
+  const numericCategoryId = Number(categoryId);
+  if (!numericCategoryId) {
+    return '';
   }
 
-  const fallbackDetails = (categoryNode as Category & { details?: CategoryDetails[] }).details;
-  return fallbackDetails?.[0]?.name ?? '';
+  const categoryTreeItem = categoryTreeGetters.findCategoryById(categoryTree.value, numericCategoryId);
+  if (!categoryTreeItem) {
+    return '';
+  }
+
+  return localePath(buildCategoryMenuLink(categoryTreeItem, categoryTree.value));
 };
 
-const directSubcategoryNames = computed<string[]>(() => {
+const getSubcategoryFromEntry = (entry: CategoryEntry): CategoryDataSubcategory => {
+  return {
+    name: entry.details?.[0]?.name ?? '',
+    link: getSubcategoryLink(entry.id),
+  };
+};
+
+const getSubcategoryFromNode = (categoryNode: Category): CategoryDataSubcategory => {
+  const detailsData = categoryGetters.getCategoryDetails(categoryNode) as CategoryDetails | undefined;
+  const fallbackDetails = (categoryNode as Category & { details?: CategoryDetails[] }).details;
+
+  if (detailsData?.name) {
+    return {
+      name: detailsData.name,
+      link: getSubcategoryLink(categoryGetters.getId(categoryNode)),
+    };
+  }
+
+  return {
+    name: fallbackDetails?.[0]?.name ?? '',
+    link: getSubcategoryLink(categoryGetters.getId(categoryNode)),
+  };
+};
+
+const directSubcategories = computed<CategoryDataSubcategory[]>(() => {
   const categoryWithChildren = category.value as Category & { children?: Category[] };
   const inlineChildren = (categoryWithChildren.children ?? [])
-    .map(getCategoryNameFromNode)
-    .filter((name) => Boolean(name?.trim()));
+    .map(getSubcategoryFromNode)
+    .filter((subcategory) => Boolean(subcategory.name?.trim()) && Boolean(subcategory.link));
 
   if (inlineChildren.length > 0) {
     return inlineChildren;
   }
 
   return fetchedDirectSubcategories.value
-    .map(getCategoryNameFromEntry)
-    .filter((name) => Boolean(name?.trim()));
+    .map(getSubcategoryFromEntry)
+    .filter((subcategory) => Boolean(subcategory.name?.trim()) && Boolean(subcategory.link));
 });
 
 const loadDirectSubcategories = async () => {
