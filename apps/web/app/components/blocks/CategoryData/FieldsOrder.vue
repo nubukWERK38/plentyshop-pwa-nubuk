@@ -14,8 +14,15 @@
           v-if="showSubcategories && subcategories.length"
           class="mt-3 ml-5 list-disc"
           data-testid="category-subcategories"
+          id="category-subcategories"
         >
-          <li v-for="subcategory in subcategories" :key="subcategory" data-testid="category-subcategory-item">
+          <li
+            v-for="(subcategory, index) in subcategories"
+            :id="`category-subcategory-item-${index}`"
+            :key="`${subcategory}-${index}`"
+            :class="`category-subcategory-item category-subcategory-item--${index}`"
+            data-testid="category-subcategory-item"
+          >
             {{ subcategory }}
           </li>
         </ul>
