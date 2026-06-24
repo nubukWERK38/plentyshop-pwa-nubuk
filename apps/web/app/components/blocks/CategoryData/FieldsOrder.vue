@@ -1,14 +1,25 @@
 <template>
   <template v-for="key in renderOrder" :key="key">
     <template v-if="fields?.[key]">
-      <h1
-        v-if="key === 'name' && texts.name"
-        id="category-headline"
-        class="font-bold typography-headline-3 md:typography-headline-2"
-        data-testid="category-name"
-      >
-        {{ texts.name }}
-      </h1>
+      <template v-if="key === 'name' && texts.name">
+        <h1
+          id="category-headline"
+          class="font-bold"
+          data-testid="category-name"
+        >
+          {{ texts.name }}
+        </h1>
+
+        <ul
+          v-if="showSubcategories && subcategories.length"
+          class="mt-3 ml-5 list-disc"
+          data-testid="category-subcategories"
+        >
+          <li v-for="subcategory in subcategories" :key="subcategory" data-testid="category-subcategory-item">
+            {{ subcategory }}
+          </li>
+        </ul>
+      </template>
 
       <div
         v-else-if="key === 'description1' && texts.description1"
@@ -45,6 +56,8 @@ const props = defineProps<{
   fields: CategoryDataFieldsVisibility;
   fieldsOrder: CategoryDataFieldKey[];
   texts: CategoryData;
+  showSubcategories: boolean;
+  subcategories: string[];
 }>();
 
 const renderOrder = computed<CategoryDataFieldKey[]>(() =>

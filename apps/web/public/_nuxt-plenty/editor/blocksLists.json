@@ -2673,5 +2673,33 @@
         }
       }
     ]
+  },
+  "breadcrumbsWidget": {
+    "category": "breadcrumbsWidget",
+    "accessControl": ["productCategory"],
+    "title": "Breadcrumbs",
+    "blockName": "BreadcrumbsWidget",
+    "variations": [
+      {
+        "title": "Category Breadcrumbs",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/navigation-thumbnail.svg",
+        "template": {
+          "en": {
+            "name": "BreadcrumbsWidget",
+            "type": "content",
+            "meta": { "uuid": "c4d11f0a-6298-4eb8-a2e8-c0c9d4f31f5f", "isGlobalTemplate": false },
+            "parent_slot": 0,
+            "content": {}
+          },
+          "de": {
+            "name": "BreadcrumbsWidget",
+            "type": "content",
+            "meta": { "uuid": "c4d11f0a-6298-4eb8-a2e8-c0c9d4f31f60", "isGlobalTemplate": false },
+            "parent_slot": 0,
+            "content": {}
+          }
+        }
+      }
+    ]
   }
 }

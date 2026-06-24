@@ -20,6 +20,7 @@ export function createCategory(): Block[] {
           description2: false,
           shortDescription: false,
         },
+        showSubcategories: false,
         fieldsOrder: ['name', 'description1', 'description2', 'shortDescription'],
         fieldsDisabled: [],
         displayCategoryImage: 'off',

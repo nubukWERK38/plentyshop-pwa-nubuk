@@ -26,6 +26,8 @@
           :fields="props.content.fields"
           :fields-order="props.content.fieldsOrder"
           :texts="texts"
+          :show-subcategories="props.content.showSubcategories ?? false"
+          :subcategories="directSubcategoryNames"
         />
       </div>
     </template>
@@ -83,6 +85,8 @@
               :fields="props.content.fields"
               :fields-order="props.content.fieldsOrder"
               :texts="texts"
+              :show-subcategories="props.content.showSubcategories ?? false"
+              :subcategories="directSubcategoryNames"
             />
           </div>
         </div>
@@ -92,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Category, categoryGetters } from '@plentymarkets/shop-api';
+import { type Category, type CategoryEntry, categoryGetters } from '@plentymarkets/shop-api';
 import type { CategoryData, CategoryDataProps } from '~/components/blocks/CategoryData/types';
 import type { CategoryDetails } from '@plentymarkets/shop-api/server/types';
 import FieldsOrder from './FieldsOrder.vue';
@@ -100,6 +104,7 @@ import FieldsOrder from './FieldsOrder.vue';
 const runtimeConfig = useRuntimeConfig();
 
 const props = defineProps<CategoryDataProps>();
+const sdk = useSdk();
 const { hexToRgba, getTextAlignment, getContentPosition, isMobile } = useBlockContentHelper();
 const { data: productsCatalog } = useProducts();
 const category = computed(() => productsCatalog.value.category || ({} as Category));
@@ -117,6 +122,80 @@ const shouldShowTextBlock = computed(
 );
 
 const details = computed(() => categoryGetters.getCategoryDetails(category.value) || ({} as CategoryDetails));
+const fetchedDirectSubcategories = ref<CategoryEntry[]>([]);
+
+const getCategoryNameFromEntry = (entry: CategoryEntry): string => {
+  return entry.details?.[0]?.name ?? '';
+};
+
+const getCategoryNameFromNode = (categoryNode: Category): string => {
+  const detailsData = categoryGetters.getCategoryDetails(categoryNode) as CategoryDetails | undefined;
+  if (detailsData?.name) {
+    return detailsData.name;
+  }
+
+  const fallbackDetails = (categoryNode as Category & { details?: CategoryDetails[] }).details;
+  return fallbackDetails?.[0]?.name ?? '';
+};
+
+const directSubcategoryNames = computed<string[]>(() => {
+  const categoryWithChildren = category.value as Category & { children?: Category[] };
+  const inlineChildren = (categoryWithChildren.children ?? [])
+    .map(getCategoryNameFromNode)
+    .filter((name) => Boolean(name?.trim()));
+
+  if (inlineChildren.length > 0) {
+    return inlineChildren;
+  }
+
+  return fetchedDirectSubcategories.value
+    .map(getCategoryNameFromEntry)
+    .filter((name) => Boolean(name?.trim()));
+});
+
+const loadDirectSubcategories = async () => {
+  const categoryId = Number(category.value?.id);
+  if (!categoryId || !props.content.showSubcategories) {
+    fetchedDirectSubcategories.value = [];
+    return;
+  }
+
+  const collected: CategoryEntry[] = [];
+  let page = 1;
+
+  while (true) {
+    const result = await sdk.plentysystems.getCategoriesSearch({
+      parentCategoryId: categoryId,
+      page,
+      itemsPerPage: 200,
+      with: 'details',
+    });
+
+    const pageData = result?.data;
+    if (!pageData) {
+      break;
+    }
+
+    collected.push(...(pageData.entries ?? []));
+
+    if (pageData.isLastPage) {
+      break;
+    }
+
+    page++;
+  }
+
+  fetchedDirectSubcategories.value = collected;
+};
+
+watch(
+  () => [category.value?.id, props.content.showSubcategories],
+  () => {
+    void loadDirectSubcategories();
+  },
+  { immediate: true },
+);
+
 const texts = computed<CategoryData>(() => {
   const fields = props.content.fields || {};
   const detailsText = details.value || ({} as CategoryDetails);

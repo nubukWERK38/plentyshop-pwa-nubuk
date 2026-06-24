@@ -63,6 +63,25 @@
             ).
           </span>
         </div>
+
+        <div class="py-2">
+          <UiFormLabel>{{ getEditorTranslation('show-subcategories-label') }}</UiFormLabel>
+          <div class="mt-2 flex items-center gap-6">
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+              <input v-model="categoryDataBlock.showSubcategories" type="radio" :value="true" name="show-subcategories" />
+              <span>{{ getEditorTranslation('show-subcategories-yes') }}</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+              <input
+                v-model="categoryDataBlock.showSubcategories"
+                type="radio"
+                :value="false"
+                name="show-subcategories"
+              />
+              <span>{{ getEditorTranslation('show-subcategories-no') }}</span>
+            </label>
+          </div>
+        </div>
       </div>
     </UiAccordionItem>
 
@@ -541,6 +560,9 @@ const { isFullWidth } = useFullWidthToggleForContent(categoryDataBlock);
     "category-description-2": "Category description 2",
     "short-description": "Short description",
     "drag-reorder-aria": "Drag to reorder",
+    "show-subcategories-label": "Show direct subcategories",
+    "show-subcategories-yes": "Yes",
+    "show-subcategories-no": "No",
     "padding-label": "Padding",
 
     "image-label": "Image",
@@ -604,6 +626,9 @@ const { isFullWidth } = useFullWidthToggleForContent(categoryDataBlock);
     "category-description-2": "Category description 2",
     "short-description": "Short description",
     "drag-reorder-aria": "Drag to reorder",
+    "show-subcategories-label": "Show direct subcategories",
+    "show-subcategories-yes": "Yes",
+    "show-subcategories-no": "No",
     "padding-label": "Padding",
 
     "image-label": "Image",

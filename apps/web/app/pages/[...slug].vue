@@ -1,7 +1,6 @@
 <template>
   <NuxtLayout
     name="default"
-    :breadcrumbs="breadcrumbs"
     class="relative"
     :class="{ 'pointer-events-none opacity-50': loading }"
   >
@@ -17,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { categoryGetters, categoryTreeGetters } from '@plentymarkets/shop-api';
+import { categoryGetters } from '@plentymarkets/shop-api';
 import type { Locale } from '#i18n';
 import { SfLoaderCircular } from '@storefront-ui/vue';
 
@@ -33,7 +32,6 @@ const { setBlocksListContext } = useBlocksList();
 const { getFacetsFromURL } = useCategoryFilter();
 const { data: productsCatalog, loading } = useProducts();
 const routeDataReady = useState<Promise<void> | null>('routeDataReady');
-const { data: categoryTree } = useCategoryTree();
 const { buildCategoryLanguagePath } = useLocalization();
 
 const identifier = computed(() =>
@@ -46,20 +44,6 @@ definePageMeta({
   type: 'category',
   isBlockified: true,
   identifier: 0,
-});
-
-const breadcrumbs = computed(() => {
-  if (productsCatalog.value.category) {
-    const breadcrumb = categoryTreeGetters.generateBreadcrumbFromCategory(
-      categoryTree.value,
-      categoryGetters.getId(productsCatalog.value.category),
-    );
-    breadcrumb.unshift({ name: t('common.labels.home'), link: '/' });
-
-    return breadcrumb;
-  }
-
-  return [];
 });
 
 const canonicalDb = productsCatalog.value.category?.details?.[0]?.canonicalLink;

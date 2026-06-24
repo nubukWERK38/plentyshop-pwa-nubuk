@@ -5,6 +5,12 @@ import { CategoryMock } from '../../../../../__tests__/__mocks__/category.mock';
 import type { CategoryDetails } from '@plentymarkets/shop-api';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 
+const { useEditorStateMock } = vi.hoisted(() => ({
+  useEditorStateMock: vi.fn(),
+}));
+
+mockNuxtImport('useEditorState', () => useEditorStateMock);
+
 vi.mock('@plentymarkets/shop-api', () => {
   return {
     categoryGetters: {
@@ -22,6 +28,7 @@ const mockProps: CategoryDataProps = {
   type: 'content',
   content: {
     name: 'Category name',
+    showSubcategories: false,
     fields: {
       name: true,
       description1: false,
@@ -55,6 +62,11 @@ const mockProps: CategoryDataProps = {
 describe('CategoryData', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    useEditorStateMock.mockReturnValue({
+      isEditMode: ref(true),
+      isPreviewMode: ref(false),
+      isLiveMode: ref(false),
+    });
   });
 
   mockNuxtImport('useProducts', () => {

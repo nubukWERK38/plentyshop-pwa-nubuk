@@ -18,6 +18,7 @@ export type CategoryDataProps = {
 
 export type CategoryDataContent = {
   name: string;
+  showSubcategories?: boolean;
   fields: CategoryDataFieldsVisibility;
   fieldsOrder: CategoryDataFieldKey[];
   fieldsDisabled: CategoryDataFieldKey[];

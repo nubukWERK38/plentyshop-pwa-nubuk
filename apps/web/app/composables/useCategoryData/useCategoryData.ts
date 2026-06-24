@@ -17,6 +17,9 @@ export const useCategoryData = () => {
     if (block?.image && typeof block.image.fillMode === 'undefined') {
       block.image.fillMode = 'fill';
     }
+    if (block && typeof block.showSubcategories === 'undefined') {
+      block.showSubcategories = false;
+    }
     return block;
   });
 
