@@ -62,7 +62,12 @@
 
                   <div v-if="menu.category.linkType === 'category'">
                     <UiFormLabel class="mb-1">{{ getEditorTranslation('category-label') }}</UiFormLabel>
-                    <select v-model.number="menu.category.categoryId" class="input-field" :data-testid="`top-category-${index}`">
+                    <select
+                      v-model.number="menu.category.categoryId"
+                      class="input-field"
+                      :data-testid="`top-category-${index}`"
+                      @change="updateCategorySelection(menu.category)"
+                    >
                       <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
                       <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
                         {{ category.label }}
@@ -133,7 +138,11 @@
 
                         <div v-if="column.category.linkType === 'category'">
                           <UiFormLabel class="mb-1">{{ getEditorTranslation('category-label') }}</UiFormLabel>
-                          <select v-model.number="column.category.categoryId" class="input-field">
+                          <select
+                            v-model.number="column.category.categoryId"
+                            class="input-field"
+                            @change="updateCategorySelection(column.category)"
+                          >
                             <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
                             <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
                               {{ category.label }}
@@ -183,7 +192,12 @@
                                   <option value="category">{{ getEditorTranslation('link-type-category-label') }}</option>
                                   <option value="manualUrl">{{ getEditorTranslation('link-type-manual-url-label') }}</option>
                                 </select>
-                                <select v-if="item.category.linkType === 'category'" v-model.number="item.category.categoryId" class="input-field">
+                                <select
+                                  v-if="item.category.linkType === 'category'"
+                                  v-model.number="item.category.categoryId"
+                                  class="input-field"
+                                  @change="updateCategorySelection(item.category)"
+                                >
                                   <option :value="null">{{ getEditorTranslation('not-selected-label') }}</option>
                                   <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
                                     {{ category.label }}
@@ -632,6 +646,11 @@ const normalizeCategoryId = (value: unknown): number | null => {
   return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
 };
 
+const normalizePath = (path: string) => {
+  if (!path) return '';
+  return path.startsWith('/') ? path : `/${path}`;
+};
+
 const loadAllCategories = async () => {
   if (categoriesLoading.value || allCategoryEntries.value.length > 0) return;
   categoriesLoading.value = true;
@@ -640,7 +659,7 @@ const loadAllCategories = async () => {
     let page = 1;
     const collected: CategoryEntry[] = [];
     while (true) {
-      const result = await sdk.plentysystems.getCategoriesSearch({ page, itemsPerPage: 200 });
+      const result = await sdk.plentysystems.getCategoriesSearch({ page, itemsPerPage: 200, with: 'details,clients' });
       const pageData = result?.data;
       if (!pageData) break;
       collected.push(...pageData.entries);
@@ -670,8 +689,25 @@ const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
     if (!parent) return name;
     return `${getPath(parent)} > ${name}`;
   };
+  const getUrlPath = (entry: CategoryEntry): string => {
+    const previewUrl = entry.details?.[0]?.previewUrl?.trim();
+    if (previewUrl) {
+      try {
+        return normalizePath(new URL(previewUrl).pathname);
+      } catch {
+        if (previewUrl.startsWith('/')) return previewUrl;
+      }
+    }
+
+    const slug = entry.details?.[0]?.nameUrl?.trim();
+    if (!slug) return '';
+    if (!entry.parentCategoryId) return normalizePath(slug);
+    const parent = byId.get(entry.parentCategoryId);
+    const parentPath = parent ? getUrlPath(parent) : '';
+    return normalizePath([parentPath.replace(/^\/|\/$/g, ''), slug].filter(Boolean).join('/'));
+  };
   return allCategoryEntries.value
-    .map((entry) => ({ id: entry.id, label: getPath(entry) }))
+    .map((entry) => ({ id: entry.id, label: getPath(entry), path: getUrlPath(entry) }))
     .sort((a, b) => a.label.localeCompare(b.label));
 });
 
@@ -689,7 +725,21 @@ const getCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => {
 const toCategoryIdInputValue = (value: number | null) => (value === null ? '' : String(value));
 
 const updateCategoryId = (category: BigMenueNeoCategoryLink, rawValue: string) => {
-  category.categoryId = normalizeCategoryId(rawValue);
+  const categoryId = normalizeCategoryId(rawValue);
+  category.categoryId = categoryId;
+  category.categoryPath = categoryId ? categoryOptions.value.find((option) => option.id === categoryId)?.path || '' : '';
+};
+
+const updateCategorySelection = (category: BigMenueNeoCategoryLink) => {
+  const categoryId = normalizeCategoryId(category.categoryId);
+  category.categoryId = categoryId;
+  category.categoryPath = categoryId ? categoryOptions.value.find((option) => option.id === categoryId)?.path || '' : '';
+};
+
+const syncCategoryPath = (category: BigMenueNeoCategoryLink) => {
+  const categoryId = normalizeCategoryId(category.categoryId);
+  if (category.linkType !== 'category' || !categoryId || category.categoryPath?.trim()) return;
+  category.categoryPath = categoryOptions.value.find((option) => option.id === categoryId)?.path || '';
 };
 
 const getTopCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => getCategoryPreviewLabel(category);
@@ -700,6 +750,7 @@ const getBrandPreviewLabel = (alt: string) => alt?.trim() || getEditorTranslatio
 const createCategoryLink = () => ({
   linkType: 'category' as const,
   categoryId: null,
+  categoryPath: '',
   manualUrl: '',
   customLabel: '',
 });
@@ -709,6 +760,7 @@ const normalizeCategoryLink = (value: any): BigMenueNeoCategoryLink => {
   return {
     linkType,
     categoryId: normalizeCategoryId(value?.categoryId),
+    categoryPath: value?.categoryPath ?? '',
     manualUrl: value?.manualUrl ?? '',
     customLabel: value?.customLabel ?? '',
   };
@@ -829,6 +881,18 @@ const menuContent = computed<BigMenueNeoContent>(() => {
 
   return rawContent as BigMenueNeoContent;
 });
+
+const syncConfiguredCategoryPaths = () => {
+  for (const menu of menuContent.value.menus) {
+    syncCategoryPath(menu.category);
+    for (const column of menu.columns || []) {
+      syncCategoryPath(column.category);
+      for (const item of column.items || []) {
+        syncCategoryPath(item.category);
+      }
+    }
+  }
+};
 
 const initializeCollapsedStates = () => {
   for (const menu of menuContent.value.menus) {
@@ -964,7 +1028,13 @@ const deleteBrandLogo = (menuId: string, brandId: string) => {
 onMounted(async () => {
   initializeCollapsedStates();
   await loadAllCategories();
+  syncConfiguredCategoryPaths();
 });
+
+watch(
+  () => categoryOptions.value.length,
+  () => syncConfiguredCategoryPaths(),
+);
 </script>
 
 <style scoped>

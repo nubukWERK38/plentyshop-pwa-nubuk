@@ -571,7 +571,6 @@ const scrollToReviews = () => {
 .purchase-card__brand {
   display: flex;
   align-items: center;
-  min-height: 40px;
   margin-bottom: 14px;
   color: #050505;
   font-size: 2rem;
@@ -581,12 +580,6 @@ const scrollToReviews = () => {
   text-transform: uppercase;
 }
 
-.purchase-card__brand-logo {
-  width: auto;
-  max-width: 240px;
-  max-height: 48px;
-  object-fit: contain;
-}
 
 .purchase-card__name {
   margin-bottom: 8px;

@@ -3,6 +3,7 @@ import type { CategoryTreeItem } from '@plentymarkets/shop-api';
 export type BigMenueNeoCategoryLink = {
   linkType: 'category' | 'manualUrl';
   categoryId: number | null;
+  categoryPath?: string;
   manualUrl: string;
   customLabel: string;
 };
@@ -83,6 +84,7 @@ export type BigMenueNeoFormProps = {
 export type FlattenedCategoryOption = {
   id: number;
   label: string;
+  path?: string;
 };
 
 export type CategoryLookupMap = Map<number, CategoryTreeItem>;

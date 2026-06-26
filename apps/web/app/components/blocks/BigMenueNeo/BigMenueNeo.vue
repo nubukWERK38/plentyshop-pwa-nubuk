@@ -89,13 +89,13 @@ const defaultContent = (): BigMenueNeoContent => ({
   menus: [
     {
       id: 'menu-1',
-      category: { linkType: 'category', categoryId: null, manualUrl: '', customLabel: 'Top-Kategorie' },
+      category: { linkType: 'category', categoryId: null, categoryPath: '', manualUrl: '', customLabel: 'Top-Kategorie' },
       columns: [
         {
           id: 'col-1',
-          category: { linkType: 'category', categoryId: null, manualUrl: '', customLabel: 'Submenue' },
+          category: { linkType: 'category', categoryId: null, categoryPath: '', manualUrl: '', customLabel: 'Submenue' },
           items: [
-            { id: 'item-1', category: { linkType: 'category', categoryId: null, manualUrl: '', customLabel: 'Ebene 3' } },
+            { id: 'item-1', category: { linkType: 'category', categoryId: null, categoryPath: '', manualUrl: '', customLabel: 'Ebene 3' } },
           ],
         },
       ],
@@ -137,6 +137,7 @@ const normalizedContent = computed<BigMenueNeoContent>(() => {
   const normalizeCategory = (category?: Partial<BigMenueNeoCategoryLink>): BigMenueNeoCategoryLink => ({
     linkType: category?.linkType === 'manualUrl' ? 'manualUrl' : 'category',
     categoryId: normalizeCategoryId(category?.categoryId),
+    categoryPath: category?.categoryPath || '',
     manualUrl: category?.manualUrl || '',
     customLabel: category?.customLabel || '',
   });
@@ -248,24 +249,98 @@ const normalizePath = (path: string) => {
   return path.startsWith('/') ? path : `/${path}`;
 };
 
-const loadAllCategories = async () => {
-  if (categoriesLoading.value || allCategoryEntries.value.length > 0) return;
+const getCategoryEntrySlug = (entry: CategoryEntry) => entry.details?.[0]?.nameUrl?.trim() || '';
+
+const getCategoryEntryPreviewPath = (entry: CategoryEntry) => {
+  const previewUrl = entry.details?.[0]?.previewUrl?.trim();
+  if (!previewUrl) return '';
+
+  try {
+    return new URL(previewUrl).pathname;
+  } catch {
+    return previewUrl.startsWith('/') ? previewUrl : '';
+  }
+};
+
+const buildCategoryEntryPath = (entry: CategoryEntry): string => {
+  const previewPath = getCategoryEntryPreviewPath(entry);
+  if (previewPath) return normalizePath(previewPath);
+
+  const pathSegments: string[] = [];
+  let currentEntry: CategoryEntry | null = entry;
+  const visitedIds = new Set<number>();
+
+  while (currentEntry && !visitedIds.has(currentEntry.id)) {
+    visitedIds.add(currentEntry.id);
+    const slug = getCategoryEntrySlug(currentEntry);
+    if (slug) {
+      pathSegments.unshift(slug);
+    }
+    currentEntry = currentEntry.parentCategoryId ? findCategoryEntryById(currentEntry.parentCategoryId) : null;
+  }
+
+  return pathSegments.length > 0 ? normalizePath(pathSegments.join('/')) : '/';
+};
+
+const addCategoryEntries = (entries: CategoryEntry[]) => {
+  const categoryEntriesById = new Map(allCategoryEntries.value.map((entry) => [entry.id, entry]));
+  for (const entry of entries) {
+    categoryEntriesById.set(entry.id, entry);
+  }
+  allCategoryEntries.value = Array.from(categoryEntriesById.values());
+};
+
+const collectConfiguredCategoryIds = () => {
+  const categoryIds = new Set<number>();
+  const addCategoryId = (category: BigMenueNeoCategoryLink) => {
+    const categoryId = normalizeCategoryId(category.categoryId);
+    if (category.linkType === 'category' && categoryId) {
+      categoryIds.add(categoryId);
+    }
+  };
+
+  for (const menu of normalizedContent.value.menus) {
+    addCategoryId(menu.category);
+    for (const column of menu.columns || []) {
+      addCategoryId(column.category);
+      for (const item of column.items || []) {
+        addCategoryId(item.category);
+      }
+    }
+  }
+
+  return Array.from(categoryIds);
+};
+
+const loadCategoryEntryById = async (categoryId: number, visitedIds = new Set<number>()) => {
+  if (visitedIds.has(categoryId) || findCategoryEntryById(categoryId)) return;
+  visitedIds.add(categoryId);
+
+  const sdk = useSdk();
+  const result = await sdk.plentysystems.getCategoryById({
+    categoryId,
+    itemsPerPage: 1,
+    with: 'details,clients',
+  });
+  const categoryEntry = result?.data?.entries?.[0];
+  if (!categoryEntry) return;
+
+  addCategoryEntries([categoryEntry]);
+
+  if (categoryEntry.parentCategoryId) {
+    await loadCategoryEntryById(categoryEntry.parentCategoryId, visitedIds);
+  }
+};
+
+const loadConfiguredCategories = async () => {
+  if (categoriesLoading.value) return;
   categoriesLoading.value = true;
   try {
-    const sdk = useSdk();
-    const collected: CategoryEntry[] = [];
-    let page = 1;
-    while (true) {
-      const result = await sdk.plentysystems.getCategoriesSearch({ page, itemsPerPage: 200 });
-      const pageData = result?.data;
-      if (!pageData) break;
-      collected.push(...pageData.entries);
-      if (pageData.isLastPage) break;
-      page++;
+    for (const categoryId of collectConfiguredCategoryIds()) {
+      await loadCategoryEntryById(categoryId);
     }
-    allCategoryEntries.value = collected;
   } catch (error) {
-    console.warn('BigMenueNeo: Kategorien fuer Link-Fallback konnten nicht geladen werden', error);
+    console.warn('BigMenueNeo: Konfigurierte Kategorien konnten nicht geladen werden', error);
   } finally {
     categoriesLoading.value = false;
   }
@@ -290,13 +365,17 @@ const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
 
   const normalizedCategoryId = normalizeCategoryId(category.categoryId);
   if (!normalizedCategoryId) return '/';
+  if (category.categoryPath?.trim()) {
+    return localePath(normalizePath(category.categoryPath.trim()));
+  }
   const categoryTreeNode = findCategoryById(categoryTree.value || [], normalizedCategoryId);
   if (categoryTreeNode) {
     return localePath(buildCategoryMenuLink(categoryTreeNode, categoryTree.value || []));
   }
-  const fallbackCategory = findCategoryEntryById(normalizedCategoryId);
-  if (fallbackCategory?.linklist) {
-    return localePath(normalizePath(fallbackCategory.linklist));
+  const fallbackCategoryEntry = findCategoryEntryById(normalizedCategoryId);
+  if (fallbackCategoryEntry) {
+    const fallbackPath = buildCategoryEntryPath(fallbackCategoryEntry);
+    return localePath(fallbackPath);
   }
   return '/';
 };
@@ -329,11 +408,22 @@ watch(
   },
 );
 
+if (categoryTree.value.length === 0) {
+  await getCategoryTree();
+}
+await loadConfiguredCategories();
+
+watch(
+  () => collectConfiguredCategoryIds().join(','),
+  () => {
+    void loadConfiguredCategories();
+  },
+);
+
 onMounted(async () => {
   if (categoryTree.value.length === 0) {
     await getCategoryTree();
   }
-  await loadAllCategories();
 });
 </script>
 
