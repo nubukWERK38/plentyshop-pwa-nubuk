@@ -51,7 +51,8 @@ export const useProducts: UseProductsReturn = (category = '') => {
    * ```
    */
   const fetchProducts: FetchProducts = async (params: FacetSearchCriteria) => {
-    const { $i18n } = useNuxtApp();
+    const nuxtApp = useNuxtApp();
+    const { $i18n } = nuxtApp;
     const { isInEditor } = useEditorState();
     const { pageBlocks, setupFakeBlocks } = useBlocks();
 
@@ -87,15 +88,20 @@ export const useProducts: UseProductsReturn = (category = '') => {
 
     const identifier = category || params.categoryUrlPath || params.categoryId;
 
-    const { data } = await useAsyncData(`useProducts-${identifier}-${JSON.stringify(params)}`, () =>
-      useSdk().plentysystems.getFacet(params),
-    );
+    const result =
+      import.meta.client && !nuxtApp.isHydrating
+        ? await useSdk().plentysystems.getFacet(params)
+        : (
+            await useAsyncData(`useProducts-${identifier}-${JSON.stringify(params)}`, () =>
+              useSdk().plentysystems.getFacet(params),
+            )
+          ).data.value;
 
     state.value.productsPerPage = params.itemsPerPage || defaults.DEFAULT_ITEMS_PER_PAGE;
 
-    if (data.value?.data) {
-      data.value.data.pagination.perPageOptions = defaults.PER_PAGE_STEPS;
-      state.value.data = data.value.data;
+    if (result?.data) {
+      result.data.pagination.perPageOptions = defaults.PER_PAGE_STEPS;
+      state.value.data = result.data;
       handlePreviewProducts(state, $i18n.locale.value);
     }
 

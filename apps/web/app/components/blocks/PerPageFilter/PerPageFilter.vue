@@ -1,8 +1,13 @@
 <template>
-  <section data-testid="category-per-page" aria-label="Show products per page" :style="layoutStyle">
+  <section
+    data-testid="category-per-page"
+    aria-label="Show products per page"
+    :style="layoutStyle"
+    :class="useSelectionModeCompact ? 'relative z-10 flex justify-end mb-4 pointer-events-none' : ''"
+  >
     <CategoryItemsPerPage
       :key="useSelectionModeCompact ? 'ph' : 'no-ph'"
-      class="mb-6"
+      :class="useSelectionModeCompact ? 'pointer-events-auto' : 'mb-6'"
       :selection-mode-compact="useSelectionModeCompact"
       :total-products="productsCatalog.pagination?.totals ?? 0"
     />

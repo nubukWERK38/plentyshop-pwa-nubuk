@@ -4,7 +4,7 @@
       v-for="(column, colIndex) in columns"
       :key="colIndex"
       :class="getColumnClasses(colIndex)"
-      class="group/col relative z-[1]"
+      class="group/col relative"
       data-testid="column-layout-column"
     >
       <div
@@ -180,8 +180,10 @@ const gridInlineStyle = computed(() => ({
     configuration.value.layout?.marginBottom !== undefined
       ? `${configuration.value.layout.marginBottom}px`
       : `${defaultMarginBottom.value}px`,
-  marginLeft: configuration.value.layout?.marginLeft !== undefined ? `${configuration.value.layout.marginLeft}px` : '0px',
-  paddingTop: configuration.value.layout?.paddingTop !== undefined ? `${configuration.value.layout.paddingTop}px` : '0px',
+  marginLeft:
+    configuration.value.layout?.marginLeft !== undefined ? `${configuration.value.layout.marginLeft}px` : '0px',
+  paddingTop:
+    configuration.value.layout?.paddingTop !== undefined ? `${configuration.value.layout.paddingTop}px` : '0px',
   paddingRight:
     configuration.value.layout?.paddingRight !== undefined ? `${configuration.value.layout.paddingRight}px` : '0px',
   paddingBottom:
@@ -195,7 +197,7 @@ const getGridClasses = () => {
 };
 
 const getColumnClasses = (colIndex: number) => {
-  return [`col-span-${columnWidths.value[colIndex] || 1}`];
+  return [`col-span-${columnWidths.value[colIndex] || 1}`, colIndex === 0 ? 'z-[2]' : 'z-[1]'];
 };
 
 const getBlockActions = () => ({

@@ -5,7 +5,11 @@
       :class="{ 'big-menue-neo__container--boxed': !normalizedContent.layout.fullWidth }"
       @mouseleave="closeMenu"
     >
-      <nav class="big-menue-neo__top" :class="`big-menue-neo__top--${normalizedContent.layout.topMenuAlignment}`" aria-label="Big Menue Neo">
+      <nav
+        class="big-menue-neo__top"
+        :class="`big-menue-neo__top--${normalizedContent.layout.topMenuAlignment}`"
+        aria-label="Big Menue Neo"
+      >
         <NuxtLink
           v-for="(menu, index) in normalizedContent.menus"
           :key="menu.id"
@@ -23,7 +27,11 @@
         <div class="big-menue-neo__panel-main">
           <div class="big-menue-neo__columns">
             <article v-for="column in activeColumns" :key="column.id" class="big-menue-neo__column">
-              <NuxtLink v-if="isRenderableCategoryLink(column.category)" :to="resolveCategoryTo(column.category)" class="big-menue-neo__column-title">
+              <NuxtLink
+                v-if="isRenderableCategoryLink(column.category)"
+                :to="resolveCategoryTo(column.category)"
+                class="big-menue-neo__column-title"
+              >
                 {{ getCategoryLabel(column.category) }}
               </NuxtLink>
 
@@ -39,30 +47,30 @@
 
           <aside v-if="activeSearchTerms.length > 0" class="big-menue-neo__right-rail">
             <div class="big-menue-neo__box">
-            <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.frequentSearches') }}</h3>
-            <ul class="big-menue-neo__search-list">
-              <li v-for="term in activeSearchTerms" :key="term.id">
-                <NuxtLink class="big-menue-neo__search-link" :to="term.link || '/'">{{ term.label }}</NuxtLink>
-              </li>
-            </ul>
+              <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.frequentSearches') }}</h3>
+              <ul class="big-menue-neo__search-list">
+                <li v-for="term in activeSearchTerms" :key="term.id">
+                  <NuxtLink class="big-menue-neo__search-link" :to="term.link || '/'">{{ term.label }}</NuxtLink>
+                </li>
+              </ul>
             </div>
           </aside>
         </div>
 
         <div v-if="activeBrands.length > 0" class="big-menue-neo__brands-wrap">
-            <ul class="big-menue-neo__brand-list">
-              <li v-for="brand in activeBrands" :key="brand.id">
-                <NuxtLink :to="brand.link || '/'" class="big-menue-neo__brand-link">
-                  <NuxtImg
-                    v-if="brand.image"
-                    :src="brand.image"
-                    :alt="brand.alt || 'Brand logo'"
-                    class="big-menue-neo__brand-image"
-                  />
-                  <span v-else class="big-menue-neo__brand-placeholder">{{ brand.alt || 'Brand' }}</span>
-                </NuxtLink>
-              </li>
-            </ul>
+          <ul class="big-menue-neo__brand-list">
+            <li v-for="brand in activeBrands" :key="brand.id">
+              <NuxtLink :to="brand.link || '/'" class="big-menue-neo__brand-link">
+                <NuxtImg
+                  v-if="brand.image"
+                  :src="brand.image"
+                  :alt="brand.alt || 'Brand logo'"
+                  class="big-menue-neo__brand-image"
+                />
+                <span v-else class="big-menue-neo__brand-placeholder">{{ brand.alt || 'Brand' }}</span>
+              </NuxtLink>
+            </li>
+          </ul>
         </div>
       </section>
     </div>
@@ -87,13 +95,37 @@ const defaultContent = (): BigMenueNeoContent => ({
   menus: [
     {
       id: 'menu-1',
-      category: { linkType: 'category', categoryId: null, categoryName: '', categoryPath: '', manualUrl: '', customLabel: 'Top-Kategorie' },
+      category: {
+        linkType: 'category',
+        categoryId: null,
+        categoryName: '',
+        categoryPath: '',
+        manualUrl: '',
+        customLabel: 'Top-Kategorie',
+      },
       columns: [
         {
           id: 'col-1',
-          category: { linkType: 'category', categoryId: null, categoryName: '', categoryPath: '', manualUrl: '', customLabel: 'Submenue' },
+          category: {
+            linkType: 'category',
+            categoryId: null,
+            categoryName: '',
+            categoryPath: '',
+            manualUrl: '',
+            customLabel: 'Submenue',
+          },
           items: [
-            { id: 'item-1', category: { linkType: 'category', categoryId: null, categoryName: '', categoryPath: '', manualUrl: '', customLabel: 'Ebene 3' } },
+            {
+              id: 'item-1',
+              category: {
+                linkType: 'category',
+                categoryId: null,
+                categoryName: '',
+                categoryPath: '',
+                manualUrl: '',
+                customLabel: 'Ebene 3',
+              },
+            },
           ],
         },
       ],
@@ -204,7 +236,9 @@ const activeBrands = computed(() => activeMenu.value?.brands || []);
 
 const menuHasPanelContent = (menu: BigMenueNeoContent['menus'][number]) => {
   const hasColumns = (menu.columns || []).some(
-    (column) => isRenderableCategoryLink(column.category) || (column.items || []).some((item) => isRenderableCategoryLink(item.category)),
+    (column) =>
+      isRenderableCategoryLink(column.category) ||
+      (column.items || []).some((item) => isRenderableCategoryLink(item.category)),
   );
   const hasSearchTerms = (menu.searchTerms || []).some((term) => !!term.label?.trim());
   const hasBrands = (menu.brands || []).length > 0;
@@ -378,7 +412,9 @@ onMounted(async () => {
   padding: 0.9rem 1.62rem 0.82rem;
   border-radius: 0.125rem;
   cursor: pointer;
-  transition: background-color 0.18s ease, color 0.18s ease;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
 }
 
 .big-menue-neo__top-item:hover {
@@ -404,7 +440,7 @@ onMounted(async () => {
 
 .big-menue-neo__top-label {
   margin-right: 0.35rem;
-  text-transform: uppercase
+  text-transform: uppercase;
 }
 
 .big-menue-neo__top-caret {
@@ -450,7 +486,9 @@ onMounted(async () => {
   font-size: 0.99rem;
   line-height: 1.3;
   border-bottom: 2px solid transparent;
-  transition: color 0.18s ease, border-color 0.18s ease;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
 }
 
 .big-menue-neo__level-3 {
@@ -471,7 +509,10 @@ onMounted(async () => {
   padding: 0.12rem 0.22rem 0.08rem;
   border-bottom: 2px solid transparent;
   margin-left: -0.22rem;
-  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease;
 }
 
 .big-menue-neo__link:hover,
@@ -550,7 +591,9 @@ onMounted(async () => {
   display: inline-block;
   padding: 0.18rem 0.42rem;
   margin-left: 0;
-  transition: color 0.18s ease, background-color 0.18s ease;
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease;
 }
 
 .big-menue-neo__search-link:hover {

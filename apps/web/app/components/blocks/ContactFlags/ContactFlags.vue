@@ -18,6 +18,10 @@ import { createDefaultContactFlagsContent } from './defaults';
 
 const props = defineProps<ContactFlagsProps>();
 
+defineOptions({
+  inheritAttrs: false,
+});
+
 const defaultContent = createDefaultContactFlagsContent();
 
 const content = computed<ContactFlagsContent>(() => ({

@@ -22,7 +22,7 @@
               </UiButton>
             </template>
             <ol class="px-4 py-2 rounded-md shadow-md border-neutral-100 bg-white" data-testid="breadcrumbs-dropdown">
-              <li v-for="item in breadcrumbs" :key="item.name" class="py-2 last-of-type:hidden">
+              <li v-for="item in visibleBreadcrumbs" :key="item.name" class="py-2 last-of-type:hidden">
                 <SfLink
                   :tag="NuxtLink"
                   :to="localePath(item.link)"
@@ -37,12 +37,12 @@
         </NuxtLazyHydrate>
       </li>
       <li
-        v-for="(item, index) in breadcrumbs"
+        v-for="(item, index) in visibleBreadcrumbs"
         :key="item.name"
         class="peer hidden sm:flex items-center peer-[:nth-of-type(even)]:before:content-['/'] peer-[:nth-of-type(even)]:before:px-2 peer-[:nth-of-type(even)]:before:leading-5 last-of-type:flex last-of-type:before:font-normal last-of-type:before:text-neutral-500 text-neutral-500 last-of-type:text-neutral-900 last-of-type:font-medium"
       >
         <SfLink
-          v-if="index < breadcrumbs.length - 1"
+          v-if="index < visibleBreadcrumbs.length - 1"
           :tag="NuxtLink"
           :to="localePath(item.link)"
           variant="secondary"
@@ -63,6 +63,7 @@ import { SfDropdown, SfLink, SfIconMoreHoriz } from '@storefront-ui/vue';
 import type { BreadcrumbsProps } from '~/components/ui/Breadcrumbs/types';
 
 const props = defineProps<BreadcrumbsProps>();
+const hiddenRootCategoryName = 'Produkte Neuer Shop';
 
 const localePath = useLocalePath();
 const dropdownOpened = ref(false);
@@ -75,10 +76,11 @@ const toggle = () => {
 
 const NuxtLink = resolveComponent('NuxtLink');
 const route = useRoute();
+const visibleBreadcrumbs = computed(() => props.breadcrumbs.filter((item) => item.name !== hiddenRootCategoryName));
 const structuredData = computed(() => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
-  itemListElement: props.breadcrumbs.map((item, index) => ({
+  itemListElement: visibleBreadcrumbs.value.map((item, index) => ({
     '@type': 'ListItem',
     position: index + 1,
     item: {
@@ -89,7 +91,7 @@ const structuredData = computed(() => ({
 }));
 
 useHead(() => ({
-  script: props.breadcrumbs.length
+  script: visibleBreadcrumbs.value.length
     ? [
         {
           type: 'application/ld+json',

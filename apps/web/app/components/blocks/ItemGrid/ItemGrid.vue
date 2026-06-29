@@ -73,6 +73,7 @@
 import { productGetters } from '@plentymarkets/shop-api';
 import { SfLink } from '@storefront-ui/vue';
 import type { ItemGridProps } from '~/components/blocks/ItemGrid/types';
+import type { SortContent } from '~/components/blocks/Sort/types';
 
 const { getFacetsFromURL } = useCategoryFilter();
 
@@ -80,6 +81,7 @@ const viewport = useViewport();
 const localePath = useLocalePath();
 const { showNetPrices } = useCart();
 const { data: productsCatalog, productsPerPage } = useProducts();
+const { pageBlocks } = useBlocks();
 
 const props = defineProps<ItemGridProps>();
 const products = computed(() => productsCatalog.value.products || []);
@@ -88,7 +90,11 @@ const itemsPerPage = computed(() => Number(productsPerPage.value) || 0);
 const maxVisiblePages = computed(() => (viewport.isGreaterOrEquals('lg') ? 5 : 2));
 const currentPage = computed(() => getFacetsFromURL().page ?? 1);
 const categoryId = computed(() => getFacetsFromURL().categoryUrlPath ?? null);
-const categoryToolbarShowsItemCount = useState<boolean>('category-toolbar-shows-item-count', () => false);
+const categoryToolbarShowsItemCount = computed(() =>
+  pageBlocks.value.some(
+    (block) => block.name === 'Sort' && (block.content as Partial<SortContent>)?.settings?.selectionModeCompact,
+  ),
+);
 const showStandaloneItemCount = computed(() => props.content?.showItemCount && !categoryToolbarShowsItemCount.value);
 
 const gridClasses = computed(() =>

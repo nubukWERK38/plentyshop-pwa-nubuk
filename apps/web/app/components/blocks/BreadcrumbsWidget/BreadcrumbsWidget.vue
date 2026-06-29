@@ -9,6 +9,7 @@ import { categoryGetters, categoryTreeGetters } from '@plentymarkets/shop-api';
 
 const { data: productsCatalog } = useProducts();
 const { data: categoryTree } = useCategoryTree();
+const hiddenRootCategoryName = 'Produkte Neuer Shop';
 
 const breadcrumbs = computed(() => {
   if (!productsCatalog.value.category) {
@@ -21,6 +22,6 @@ const breadcrumbs = computed(() => {
   );
 
   categoryBreadcrumbs.unshift({ name: t('common.labels.home'), link: '/' });
-  return categoryBreadcrumbs;
+  return categoryBreadcrumbs.filter((item) => item.name !== hiddenRootCategoryName);
 });
 </script>

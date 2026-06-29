@@ -1,5 +1,9 @@
 <template>
-  <div :class="selectionModeCompact ? 'w-auto' : 'w-full'" data-testid="category-items-per-page">
+  <div
+    :class="selectionModeCompact ? 'max-w-full' : 'w-full'"
+    :style="selectionModeCompact ? { width: '140px' } : undefined"
+    data-testid="category-items-per-page"
+  >
     <div
       v-if="!selectionModeCompact"
       class="bg-primary-50/50 mb-4 px-4 py-2 rounded-none uppercase typography-headline-6 font-bold tracking-widest select-none"
@@ -11,7 +15,7 @@
         id="perPage"
         v-model="selected"
         :aria-label="t('common.labels.perPage')"
-        :class="selectionModeCompact ? 'w-[140px] max-w-full text-sm' : 'w-full'"
+        :class="selectionModeCompact ? 'w-full text-sm' : 'w-full'"
         @change="updateItemsPerPage(Number(selected))"
       >
         <option v-if="selectionModeCompact" value="" disabled hidden>

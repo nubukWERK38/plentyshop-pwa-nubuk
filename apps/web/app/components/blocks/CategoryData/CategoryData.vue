@@ -4,7 +4,7 @@
       v-if="props.content.displayCategoryImage === 'off' || (!imageUrl && props.content.displayCategoryImage !== 'off')"
     >
       <div
-        v-if="shouldShowTextBlock"
+        v-if="shouldShowTextBlock || shouldRenderInlineBreadcrumb"
         data-testid="text-card"
         :class="['w-full']"
         :style="{
@@ -13,7 +13,7 @@
         }"
       >
         <div
-          v-if="showNoTextMessage"
+          v-if="showNoTextMessage && !shouldRenderInlineBreadcrumb"
           class="text-center"
           role="alert"
           aria-live="polite"
@@ -21,8 +21,15 @@
         >
           {{ getEditorTranslation('no-text-fields-selected') }}
         </div>
+        <div
+          v-if="shouldRenderInlineBreadcrumb"
+          :class="{ 'mb-10': detailsReady }"
+          data-testid="category-data-breadcrumbs"
+        >
+          <UiBreadcrumbs :breadcrumbs="breadcrumbs" />
+        </div>
         <FieldsOrder
-          v-else-if="detailsReady"
+          v-if="detailsReady"
           :fields="props.content.fields"
           :fields-order="props.content.fieldsOrder"
           :texts="texts"
@@ -111,6 +118,7 @@ const { data: categoryTree } = useCategoryTree();
 const { buildCategoryMenuLink } = useLocalization();
 const localePath = useLocalePath();
 const category = computed(() => productsCatalog.value.category || ({} as Category));
+const hiddenRootCategoryName = 'Produkte Neuer Shop';
 const enabledText = computed(
   () =>
     (props.content.fields.name && details.value.name) ||
@@ -165,6 +173,19 @@ const getSubcategoryFromNode = (categoryNode: Category): CategoryDataSubcategory
   };
 };
 
+const categoryTreeSubcategories = computed<CategoryDataSubcategory[]>(() => {
+  const categoryId = Number(category.value?.id);
+  if (!categoryId) return [];
+
+  const categoryTreeItem = categoryTreeGetters.findCategoryById(categoryTree.value, categoryId) as
+    | (Category & { children?: Category[] })
+    | null;
+
+  return (categoryTreeItem?.children ?? [])
+    .map(getSubcategoryFromNode)
+    .filter((subcategory) => Boolean(subcategory.name?.trim()) && Boolean(subcategory.link));
+});
+
 const directSubcategories = computed<CategoryDataSubcategory[]>(() => {
   const categoryWithChildren = category.value as Category & { children?: Category[] };
   const inlineChildren = (categoryWithChildren.children ?? [])
@@ -175,6 +196,10 @@ const directSubcategories = computed<CategoryDataSubcategory[]>(() => {
     return inlineChildren;
   }
 
+  if (categoryTreeSubcategories.value.length > 0) {
+    return categoryTreeSubcategories.value;
+  }
+
   return fetchedDirectSubcategories.value
     .map(getSubcategoryFromEntry)
     .filter((subcategory) => Boolean(subcategory.name?.trim()) && Boolean(subcategory.link));
@@ -182,7 +207,12 @@ const directSubcategories = computed<CategoryDataSubcategory[]>(() => {
 
 const loadDirectSubcategories = async () => {
   const categoryId = Number(category.value?.id);
-  if (!categoryId || !props.content.showSubcategories) {
+  if (
+    !categoryId ||
+    !props.content.showSubcategories ||
+    isLiveMode.value ||
+    categoryTreeSubcategories.value.length > 0
+  ) {
     fetchedDirectSubcategories.value = [];
     return;
   }
@@ -191,12 +221,18 @@ const loadDirectSubcategories = async () => {
   let page = 1;
 
   while (true) {
-    const result = await sdk.plentysystems.getCategoriesSearch({
-      parentCategoryId: categoryId,
-      page,
-      itemsPerPage: 200,
-      with: 'details',
-    });
+    let result;
+    try {
+      result = await sdk.plentysystems.getCategoriesSearch({
+        parentCategoryId: categoryId,
+        page,
+        itemsPerPage: 200,
+        with: 'details',
+      });
+    } catch {
+      fetchedDirectSubcategories.value = [];
+      return;
+    }
 
     const pageData = result?.data;
     if (!pageData) {
@@ -216,7 +252,7 @@ const loadDirectSubcategories = async () => {
 };
 
 watch(
-  () => [category.value?.id, props.content.showSubcategories],
+  () => [category.value?.id, props.content.showSubcategories, categoryTreeSubcategories.value.length, isLiveMode.value],
   () => {
     void loadDirectSubcategories();
   },
@@ -238,6 +274,40 @@ const detailsReady = computed(() => {
   const textsData = texts.value;
   return !!(textsData.name || textsData.description1 || textsData.description2 || textsData.shortDescription);
 });
+const breadcrumbs = computed(() => {
+  if (!productsCatalog.value.category) return [];
+
+  const categoryBreadcrumbs = categoryTreeGetters.generateBreadcrumbFromCategory(
+    categoryTree.value,
+    categoryGetters.getId(productsCatalog.value.category),
+  );
+
+  categoryBreadcrumbs.unshift({ name: t('common.labels.home'), link: '/' });
+  return categoryBreadcrumbs.filter((item) => item.name !== hiddenRootCategoryName);
+});
+const inlineBreadcrumbHost = useState<string | null>('category-data-inline-breadcrumb-host', () => null);
+const inlineBreadcrumbKey = computed(() => {
+  const categoryId = categoryGetters.getId(productsCatalog.value.category);
+  return categoryId ? `${categoryId}:${props.meta.uuid}` : '';
+});
+const canHostInlineBreadcrumb = computed(
+  () =>
+    props.content.displayCategoryImage === 'off' && breadcrumbs.value.length > 0 && Boolean(inlineBreadcrumbKey.value),
+);
+
+watchEffect(() => {
+  if (!canHostInlineBreadcrumb.value) return;
+
+  const categoryId = categoryGetters.getId(productsCatalog.value.category);
+  const hostCategoryId = inlineBreadcrumbHost.value?.split(':')[0];
+  if (!inlineBreadcrumbHost.value || hostCategoryId !== String(categoryId)) {
+    inlineBreadcrumbHost.value = inlineBreadcrumbKey.value;
+  }
+});
+
+const shouldRenderInlineBreadcrumb = computed(
+  () => canHostInlineBreadcrumb.value && inlineBreadcrumbHost.value === inlineBreadcrumbKey.value,
+);
 const imagePath = computed(() => {
   if (props.content.displayCategoryImage === 'image-1') {
     return details.value.imagePath;
