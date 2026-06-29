@@ -1,12 +1,14 @@
 <template>
-  <div v-if="visibleFlags.length" id="flags" class="contact-flags" :style="flagsStyle">
-    <div v-for="flag in visibleFlags" :key="`${flag.label}-${flag.link}`" class="contact-flags__item">
-      <a class="contact-flags__link" :href="flag.link" :style="linkStyle">
-        <i v-if="flag.icon" class="fa contact-flags__icon" :class="flag.icon" aria-hidden="true" />
-        <span>{{ flag.label }}</span>
-      </a>
+  <Teleport to="body">
+    <div v-if="visibleFlags.length" id="flags" class="contact-flags" :style="flagsStyle">
+      <div v-for="flag in visibleFlags" :key="`${flag.label}-${flag.link}`" class="contact-flags__item">
+        <a class="contact-flags__link" :href="flag.link" :style="linkStyle">
+          <i v-if="flag.icon" class="fa contact-flags__icon" :class="flag.icon" aria-hidden="true" />
+          <span>{{ flag.label }}</span>
+        </a>
+      </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
