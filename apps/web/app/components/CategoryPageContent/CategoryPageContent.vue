@@ -8,15 +8,7 @@
         </NuxtLazyHydrate>
       </CategorySidebar>
       <div class="flex-1">
-        <div class="flex justify-between items-center mb-6">
-          <span class="font-bold md:text-lg">
-            {{
-              t('search.numberOfProducts', {
-                count: products?.length ?? 0,
-                total: totalProducts,
-              })
-            }}
-          </span>
+        <div class="flex justify-end items-center mb-6">
           <UiButton variant="tertiary" class="md:hidden whitespace-nowrap" @click="open">
             <template #prefix>
               <SfIconTune />

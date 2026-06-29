@@ -1,26 +1,5 @@
 <template>
   <div class="flex-1">
-    <template v-if="showStandaloneItemCount">
-      <div
-        class="flex items-center mb-6"
-        :class="{
-          'justify-end': content?.itemCountPosition === 'right',
-          'justify-center': content?.itemCountPosition === 'center',
-          'justify-start': content?.itemCountPosition === 'left',
-        }"
-        data-testid="item-count"
-      >
-        <span class="font-bold md:text-lg">
-          {{
-            t('search.numberOfProducts', {
-              count: products?.length ?? 0,
-              total: totalProducts,
-            })
-          }}
-        </span>
-      </div>
-    </template>
-
     <template v-if="content?.paginationPosition === 'top' || content?.paginationPosition === 'both'">
       <UiPagination
         v-if="totalProducts > 0"
@@ -73,7 +52,6 @@
 import { productGetters } from '@plentymarkets/shop-api';
 import { SfLink } from '@storefront-ui/vue';
 import type { ItemGridProps } from '~/components/blocks/ItemGrid/types';
-import type { SortContent } from '~/components/blocks/Sort/types';
 
 const { getFacetsFromURL } = useCategoryFilter();
 
@@ -81,7 +59,6 @@ const viewport = useViewport();
 const localePath = useLocalePath();
 const { showNetPrices } = useCart();
 const { data: productsCatalog, productsPerPage } = useProducts();
-const { pageBlocks } = useBlocks();
 
 const props = defineProps<ItemGridProps>();
 const products = computed(() => productsCatalog.value.products || []);
@@ -90,12 +67,6 @@ const itemsPerPage = computed(() => Number(productsPerPage.value) || 0);
 const maxVisiblePages = computed(() => (viewport.isGreaterOrEquals('lg') ? 5 : 2));
 const currentPage = computed(() => getFacetsFromURL().page ?? 1);
 const categoryId = computed(() => getFacetsFromURL().categoryUrlPath ?? null);
-const categoryToolbarShowsItemCount = computed(() =>
-  pageBlocks.value.some(
-    (block) => block.name === 'Sort' && (block.content as Partial<SortContent>)?.settings?.selectionModeCompact,
-  ),
-);
-const showStandaloneItemCount = computed(() => props.content?.showItemCount && !categoryToolbarShowsItemCount.value);
 
 const gridClasses = computed(() =>
   gridClassFor(

@@ -5,17 +5,10 @@
     :style="layoutStyle"
     :class="
       useSelectionModeCompact
-        ? 'relative z-20 flex flex-wrap items-center justify-between gap-3 mb-4 md:-ml-[150px] md:w-[calc(100%+438px)]'
+        ? 'relative z-20 flex flex-wrap items-center justify-between gap-3 p-[10px] mb-4 md:-ml-[150px] md:w-[calc(100%+438px)]'
         : ''
     "
   >
-    <span
-      v-if="useSelectionModeCompact && totalProducts > 0"
-      class="text-sm font-normal leading-6 text-neutral-700 whitespace-nowrap"
-      data-testid="category-toolbar-item-count"
-    >
-      {{ totalProducts }} {{ t('common.labels.products') }}
-    </span>
     <CategorySorting
       :key="useSelectionModeCompact ? 'ph' : 'no-ph'"
       :selection-mode-compact="useSelectionModeCompact"
@@ -28,9 +21,7 @@
 import type { SortContent } from '~/components/blocks/Sort/types';
 
 const props = defineProps<{ content: SortContent }>();
-const { data: productsCatalog } = useProducts();
 const useSelectionModeCompact = computed(() => props.content.settings?.selectionModeCompact ?? false);
-const totalProducts = computed(() => Number(productsCatalog.value?.pagination?.totals) || 0);
 
 const layoutStyle = computed(() => {
   const layout = props.content.layout ?? {};

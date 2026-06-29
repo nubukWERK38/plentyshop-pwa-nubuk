@@ -35,7 +35,7 @@ const visibleFlags = computed(() =>
 );
 
 const flagsStyle = computed<CSSProperties>(() => ({
-  top: `${content.value.top ?? 227}px`,
+  top: '310px',
 }));
 
 const linkStyle = computed<CSSProperties>(() => ({
@@ -67,7 +67,7 @@ const linkStyle = computed<CSSProperties>(() => ({
   display: flex;
   align-items: center;
   gap: 9px;
-  min-width: 125px;
+  min-width: 145px;
   min-height: 44px;
   padding: 0 18px;
   font-size: 16px;

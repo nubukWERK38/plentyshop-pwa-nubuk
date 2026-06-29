@@ -124,7 +124,7 @@ export default {
       spacing: {
         s: '1.875rem',
         m: '2.5rem',
-        l: '3.125rem',
+        l: '0.5rem',
         xl: '3.75rem',
       },
     },

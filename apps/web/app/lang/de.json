@@ -267,8 +267,8 @@
         "recommended_sorting": "Empfohlen"
       },
       "item": {
-        "feedbackDecimal_asc": "Kundenbewertung ⬆",
-        "feedbackDecimal_desc": "Kundenbewertung ⬇",
+        "feedbackDecimal_asc": "Kundenbewertung ↑",
+        "feedbackDecimal_desc": "Kundenbewertung ↓",
         "manufacturer": {
           "externalName_asc": "Hersteller A-Z",
           "externalName_desc": "Hersteller Z-A"
@@ -277,8 +277,8 @@
       },
       "sorting": {
         "price": {
-          "avg_asc": "Preis ⬆",
-          "avg_desc": "Preis ⬇"
+          "avg_asc": "Preis ↑",
+          "avg_desc": "Preis ↓"
         }
       },
       "texts": {
@@ -287,15 +287,15 @@
       },
       "variation": {
         "availability": {
-          "averageDays_asc": "Verfügbarkeit ⬆",
-          "averageDays_desc": "Verfügbarkeit ⬇"
+          "averageDays_asc": "Verfügbarkeit ↑",
+          "averageDays_desc": "Verfügbarkeit ↓"
         },
         "createdAt_asc": "Älteste Artikel",
         "createdAt_desc": "Neueste Artikel",
-        "number_asc": "Variantennummer ⬆",
-        "number_desc": "Variantennummer ⬇",
-        "position_asc": "Meistverkaufte Artikel ⬆",
-        "position_desc": "Meistverkaufte Artikel ⬇",
+        "number_asc": "Variantennummer ↑",
+        "number_desc": "Variantennummer ↓",
+        "position_asc": "Meistverkaufte Artikel ↑",
+        "position_desc": "Meistverkaufte Artikel ↓",
         "updatedAt_asc": "Letzte Aktualisierung",
         "updatedAt_desc": "Erste Aktualisierung"
       }
@@ -1162,29 +1162,29 @@
       "firstSortingOptionLabel": "Erster Sortierungswert",
       "options": {
         "sortDataRandom": "Zufällig",
-        "sortingPriorityCategoryAvailabilityAsc": "Verfügbarkeit ⬆",
-        "sortingPriorityCategoryAvailabilityDesc": "Verfügbarkeit ⬇",
-        "sortingPriorityCategoryItemIdAsc": "Artikel-ID ⬆",
-        "sortingPriorityCategoryItemIdDesc": "Artikel-ID ⬇",
+        "sortingPriorityCategoryAvailabilityAsc": "Verfügbarkeit ↑",
+        "sortingPriorityCategoryAvailabilityDesc": "Verfügbarkeit ↓",
+        "sortingPriorityCategoryItemIdAsc": "Artikel-ID ↑",
+        "sortingPriorityCategoryItemIdDesc": "Artikel-ID ↓",
         "sortingPriorityCategoryManufacturerAsc": "Hersteller A-Z",
         "sortingPriorityCategoryManufacturerDesc": "Hersteller Z-A",
-        "sortingPriorityCategoryManufacturerPositionAsc": "Herstellerposition ⬆",
-        "sortingPriorityCategoryManufacturerPositionDesc": "Herstellerposition ⬇",
+        "sortingPriorityCategoryManufacturerPositionAsc": "Herstellerposition ↑",
+        "sortingPriorityCategoryManufacturerPositionDesc": "Herstellerposition ↓",
         "sortingPriorityCategoryNameAsc": "Artikelname A-Z",
         "sortingPriorityCategoryNameDesc": "Artikelname Z-A",
         "sortingPriorityCategoryNotSelected": "Keine Auswahl",
-        "sortingPriorityCategoryPriceAsc": "Preis ⬆",
-        "sortingPriorityCategoryPriceDesc": "Preis ⬇",
-        "sortingPriorityCategoryStockAsc": "Bestand ⬆",
-        "sortingPriorityCategoryStockDesc": "Bestand ⬇",
+        "sortingPriorityCategoryPriceAsc": "Preis ↑",
+        "sortingPriorityCategoryPriceDesc": "Preis ↓",
+        "sortingPriorityCategoryStockAsc": "Bestand ↑",
+        "sortingPriorityCategoryStockDesc": "Bestand ↓",
         "sortingPriorityCategoryVariationCreatedAtAsc": "Älteste Variante zuerst",
         "sortingPriorityCategoryVariationCreatedAtDesc": "Neueste Variante zuerst",
-        "sortingPriorityCategoryVariationIdAsc": "Varianten-ID ⬆",
-        "sortingPriorityCategoryVariationIdDesc": "Varianten-ID ⬇",
-        "sortingPriorityCategoryVariationNumberAsc": "Variantennummer ⬆",
-        "sortingPriorityCategoryVariationNumberDesc": "Variantennummer ⬇",
-        "sortingPriorityCategoryVariationPositionAsc": "Variantenposition ⬆",
-        "sortingPriorityCategoryVariationPositionDesc": "Variantenposition ⬇",
+        "sortingPriorityCategoryVariationIdAsc": "Varianten-ID ↑",
+        "sortingPriorityCategoryVariationIdDesc": "Varianten-ID ↓",
+        "sortingPriorityCategoryVariationNumberAsc": "Variantennummer ↑",
+        "sortingPriorityCategoryVariationNumberDesc": "Variantennummer ↓",
+        "sortingPriorityCategoryVariationPositionAsc": "Variantenposition ↑",
+        "sortingPriorityCategoryVariationPositionDesc": "Variantenposition ↓",
         "sortingPriorityCategoryVariationUpdatedAtAsc": "Zuletzt aktualisierte Variante zuerst",
         "sortingPriorityCategoryVariationUpdatedAtDesc": "Zuerst aktualisierte Variante zuerst"
       },

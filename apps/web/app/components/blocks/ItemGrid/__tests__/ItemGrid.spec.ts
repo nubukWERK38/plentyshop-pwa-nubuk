@@ -33,21 +33,6 @@ describe('ItemGrid.vue', () => {
     expect(grid.classes()).toContain('md:mb-5');
   });
 
-  it('should position product count correctly (left, center, right)', async () => {
-    const wrapper = mount(ItemGrid, {
-      props: { ...ItemGridMock },
-    });
-
-    const countDiv = wrapper.find('.flex.items-center');
-    expect(countDiv.classes()).toContain('justify-start');
-
-    await wrapper.setProps({ content: { ...ItemGridMock.content, itemCountPosition: 'center' } });
-    expect(wrapper.find('.flex.items-center').classes()).toContain('justify-center');
-
-    await wrapper.setProps({ content: { ...ItemGridMock.content, itemCountPosition: 'right' } });
-    expect(wrapper.find('.flex.items-center').classes()).toContain('justify-end');
-  });
-
   it('should render the correct number of product cards (2)', async () => {
     const wrapper = mount(ItemGrid, {
       props: { ...ItemGridMock },
@@ -117,7 +102,7 @@ describe('ItemGrid.vue', () => {
     expect(wrapper.find('[data-testid="pagination-bottom"]').exists()).toBe(false);
   });
 
-  it('should render item count when content.showItemCount is true', async () => {
+  it('should not render item count when content.showItemCount is true', async () => {
     useProductsMock.mockImplementation(() => ({
       data: { value: { products, pagination: { totals: products.length } } },
       productsPerPage: { value: 2 },
@@ -127,7 +112,7 @@ describe('ItemGrid.vue', () => {
       props: { ...ItemGridMock, content: { ...ItemGridMock.content, showItemCount: true } },
     });
 
-    expect(wrapper.find('[data-testid="item-count"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="item-count"]').exists()).toBe(false);
   });
 
   it('should not render item count when content.showItemCount is false', async () => {
@@ -217,7 +202,7 @@ describe('ItemGrid.vue', () => {
     expect(shippingInfo.attributes('href')).toBe('/shipping');
   });
 
-  it('should render correct item count when showItemCount is true', async () => {
+  it('should keep item count hidden when showItemCount is true', async () => {
     useProductsMock.mockImplementation(() => ({
       data: { value: { products, pagination: { totals: products.length } } },
       productsPerPage: { value: 2 },
@@ -228,7 +213,6 @@ describe('ItemGrid.vue', () => {
     });
 
     const itemCount = wrapper.find('[data-testid="item-count"]');
-    expect(itemCount.exists()).toBe(true);
-    expect(itemCount.text()).toContain(`items out of`);
+    expect(itemCount.exists()).toBe(false);
   });
 });
