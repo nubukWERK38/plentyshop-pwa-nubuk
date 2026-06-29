@@ -62,7 +62,7 @@
 import { SfDropdown, SfLink, SfIconMoreHoriz } from '@storefront-ui/vue';
 import type { BreadcrumbsProps } from '~/components/ui/Breadcrumbs/types';
 
-defineProps<BreadcrumbsProps>();
+const props = defineProps<BreadcrumbsProps>();
 
 const localePath = useLocalePath();
 const dropdownOpened = ref(false);
@@ -75,43 +75,27 @@ const toggle = () => {
 
 const NuxtLink = resolveComponent('NuxtLink');
 const route = useRoute();
-const items = route.path.split('/');
-const itemListElement = [] as Array<unknown>;
-let name = '';
-items.forEach((item, index) => {
-  name += item;
-  if (index === 0) {
-    itemListElement.push({
-      '@type': 'ListItem',
-      position: 1,
-      item: {
-        '@id': '/',
-        name: 'Home',
-      },
-    });
-  } else {
-    itemListElement.push({
-      '@type': 'ListItem',
-      position: index,
-      item: {
-        '@id': `/${name}/`,
-        name: `${item}`,
-      },
-    });
-  }
-});
-
-const structuredData = {
+const structuredData = computed(() => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
-  itemListElement,
-};
-useHead({
-  script: [
-    {
-      type: 'application/ld+json',
-      innerHTML: JSON.stringify(structuredData),
+  itemListElement: props.breadcrumbs.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@id': item.link === '#' ? route.path : item.link,
+      name: item.name,
     },
-  ],
-});
+  })),
+}));
+
+useHead(() => ({
+  script: props.breadcrumbs.length
+    ? [
+        {
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify(structuredData.value),
+        },
+      ]
+    : [],
+}));
 </script>

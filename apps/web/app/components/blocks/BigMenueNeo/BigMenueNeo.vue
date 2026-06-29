@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CategoryEntry, CategoryTreeItem } from '@plentymarkets/shop-api';
+import type { CategoryTreeItem } from '@plentymarkets/shop-api';
 import type { BigMenueNeoContent, BigMenueNeoProps, BigMenueNeoCategoryLink } from './types';
 
 const props = defineProps<BigMenueNeoProps>();
@@ -82,20 +82,18 @@ const { t } = useI18n();
 
 const activeMenuIndex = ref<number | null>(null);
 const isPanelOpen = ref(false);
-const allCategoryEntries = ref<CategoryEntry[]>([]);
-const categoriesLoading = ref(false);
 
 const defaultContent = (): BigMenueNeoContent => ({
   menus: [
     {
       id: 'menu-1',
-      category: { linkType: 'category', categoryId: null, categoryPath: '', manualUrl: '', customLabel: 'Top-Kategorie' },
+      category: { linkType: 'category', categoryId: null, categoryName: '', categoryPath: '', manualUrl: '', customLabel: 'Top-Kategorie' },
       columns: [
         {
           id: 'col-1',
-          category: { linkType: 'category', categoryId: null, categoryPath: '', manualUrl: '', customLabel: 'Submenue' },
+          category: { linkType: 'category', categoryId: null, categoryName: '', categoryPath: '', manualUrl: '', customLabel: 'Submenue' },
           items: [
-            { id: 'item-1', category: { linkType: 'category', categoryId: null, categoryPath: '', manualUrl: '', customLabel: 'Ebene 3' } },
+            { id: 'item-1', category: { linkType: 'category', categoryId: null, categoryName: '', categoryPath: '', manualUrl: '', customLabel: 'Ebene 3' } },
           ],
         },
       ],
@@ -137,6 +135,7 @@ const normalizedContent = computed<BigMenueNeoContent>(() => {
   const normalizeCategory = (category?: Partial<BigMenueNeoCategoryLink>): BigMenueNeoCategoryLink => ({
     linkType: category?.linkType === 'manualUrl' ? 'manualUrl' : 'category',
     categoryId: normalizeCategoryId(category?.categoryId),
+    categoryName: category?.categoryName || '',
     categoryPath: category?.categoryPath || '',
     manualUrl: category?.manualUrl || '',
     customLabel: category?.customLabel || '',
@@ -242,108 +241,22 @@ const findCategoryById = (nodes: CategoryTreeItem[], id: number): CategoryTreeIt
   return null;
 };
 
-const findCategoryEntryById = (id: number) => allCategoryEntries.value.find((entry) => entry.id === id) || null;
-
 const normalizePath = (path: string) => {
   if (!path) return '/';
   return path.startsWith('/') ? path : `/${path}`;
 };
 
-const getCategoryEntrySlug = (entry: CategoryEntry) => entry.details?.[0]?.nameUrl?.trim() || '';
-
-const getCategoryEntryPreviewPath = (entry: CategoryEntry) => {
-  const previewUrl = entry.details?.[0]?.previewUrl?.trim();
-  if (!previewUrl) return '';
-
-  try {
-    return new URL(previewUrl).pathname;
-  } catch {
-    return previewUrl.startsWith('/') ? previewUrl : '';
-  }
-};
-
-const buildCategoryEntryPath = (entry: CategoryEntry): string => {
-  const previewPath = getCategoryEntryPreviewPath(entry);
-  if (previewPath) return normalizePath(previewPath);
-
-  const pathSegments: string[] = [];
-  let currentEntry: CategoryEntry | null = entry;
-  const visitedIds = new Set<number>();
-
-  while (currentEntry && !visitedIds.has(currentEntry.id)) {
-    visitedIds.add(currentEntry.id);
-    const slug = getCategoryEntrySlug(currentEntry);
-    if (slug) {
-      pathSegments.unshift(slug);
-    }
-    currentEntry = currentEntry.parentCategoryId ? findCategoryEntryById(currentEntry.parentCategoryId) : null;
-  }
-
-  return pathSegments.length > 0 ? normalizePath(pathSegments.join('/')) : '/';
-};
-
-const addCategoryEntries = (entries: CategoryEntry[]) => {
-  const categoryEntriesById = new Map(allCategoryEntries.value.map((entry) => [entry.id, entry]));
-  for (const entry of entries) {
-    categoryEntriesById.set(entry.id, entry);
-  }
-  allCategoryEntries.value = Array.from(categoryEntriesById.values());
-};
-
-const collectConfiguredCategoryIds = () => {
-  const categoryIds = new Set<number>();
-  const addCategoryId = (category: BigMenueNeoCategoryLink) => {
-    const categoryId = normalizeCategoryId(category.categoryId);
-    if (category.linkType === 'category' && categoryId) {
-      categoryIds.add(categoryId);
-    }
-  };
-
-  for (const menu of normalizedContent.value.menus) {
-    addCategoryId(menu.category);
-    for (const column of menu.columns || []) {
-      addCategoryId(column.category);
-      for (const item of column.items || []) {
-        addCategoryId(item.category);
-      }
+const getFallbackCategoryLabel = (category: BigMenueNeoCategoryLink) => {
+  if (category.categoryName?.trim()) return category.categoryName.trim();
+  const pathSegment = category.categoryPath?.split('/').filter(Boolean).pop();
+  if (pathSegment) {
+    try {
+      return decodeURIComponent(pathSegment).replace(/-/g, ' ');
+    } catch {
+      return pathSegment.replace(/-/g, ' ');
     }
   }
-
-  return Array.from(categoryIds);
-};
-
-const loadCategoryEntryById = async (categoryId: number, visitedIds = new Set<number>()) => {
-  if (visitedIds.has(categoryId) || findCategoryEntryById(categoryId)) return;
-  visitedIds.add(categoryId);
-
-  const sdk = useSdk();
-  const result = await sdk.plentysystems.getCategoryById({
-    categoryId,
-    itemsPerPage: 1,
-    with: 'details,clients',
-  });
-  const categoryEntry = result?.data?.entries?.[0];
-  if (!categoryEntry) return;
-
-  addCategoryEntries([categoryEntry]);
-
-  if (categoryEntry.parentCategoryId) {
-    await loadCategoryEntryById(categoryEntry.parentCategoryId, visitedIds);
-  }
-};
-
-const loadConfiguredCategories = async () => {
-  if (categoriesLoading.value) return;
-  categoriesLoading.value = true;
-  try {
-    for (const categoryId of collectConfiguredCategoryIds()) {
-      await loadCategoryEntryById(categoryId);
-    }
-  } catch (error) {
-    console.warn('BigMenueNeo: Konfigurierte Kategorien konnten nicht geladen werden', error);
-  } finally {
-    categoriesLoading.value = false;
-  }
+  return category.categoryId ? `#${category.categoryId}` : t('bigMenuNeo.notConfigured');
 };
 
 const getCategoryLabel = (category: BigMenueNeoCategoryLink) => {
@@ -354,8 +267,7 @@ const getCategoryLabel = (category: BigMenueNeoCategoryLink) => {
   if (!category.categoryId) return t('bigMenuNeo.notConfigured');
   const match = findCategoryById(categoryTree.value || [], category.categoryId);
   if (match?.details?.[0]?.name) return match.details[0].name;
-  const fallbackCategory = findCategoryEntryById(category.categoryId);
-  return fallbackCategory?.details?.[0]?.name || t('bigMenuNeo.notConfigured');
+  return getFallbackCategoryLabel(category);
 };
 
 const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
@@ -371,11 +283,6 @@ const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
   const categoryTreeNode = findCategoryById(categoryTree.value || [], normalizedCategoryId);
   if (categoryTreeNode) {
     return localePath(buildCategoryMenuLink(categoryTreeNode, categoryTree.value || []));
-  }
-  const fallbackCategoryEntry = findCategoryEntryById(normalizedCategoryId);
-  if (fallbackCategoryEntry) {
-    const fallbackPath = buildCategoryEntryPath(fallbackCategoryEntry);
-    return localePath(fallbackPath);
   }
   return '/';
 };
@@ -411,14 +318,6 @@ watch(
 if (categoryTree.value.length === 0) {
   await getCategoryTree();
 }
-await loadConfiguredCategories();
-
-watch(
-  () => collectConfiguredCategoryIds().join(','),
-  () => {
-    void loadConfiguredCategories();
-  },
-);
 
 onMounted(async () => {
   if (categoryTree.value.length === 0) {

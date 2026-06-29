@@ -2,6 +2,7 @@
   <NuxtLayout
     name="default"
     class="relative"
+    :breadcrumbs="breadcrumbs"
     :class="{ 'pointer-events-none opacity-50': loading }"
   >
     <SfLoaderCircular v-if="loading" class="fixed top-[50%] right-0 left-0 m-auto z-[99999]" size="2xl" />
@@ -16,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { categoryGetters } from '@plentymarkets/shop-api';
+import { categoryGetters, categoryTreeGetters } from '@plentymarkets/shop-api';
 import type { Locale } from '#i18n';
 import { SfLoaderCircular } from '@storefront-ui/vue';
 
@@ -31,6 +32,7 @@ const { setCategoriesPageMeta } = useUrlPageMeta();
 const { setBlocksListContext } = useBlocksList();
 const { getFacetsFromURL } = useCategoryFilter();
 const { data: productsCatalog, loading } = useProducts();
+const { data: categoryTree, getCategoryTree } = useCategoryTree();
 const routeDataReady = useState<Promise<void> | null>('routeDataReady');
 const { buildCategoryLanguagePath } = useLocalization();
 
@@ -66,10 +68,35 @@ await handleQueryUpdate().then(() => {
   setBlocksListContext(productsCatalog.value.category.type === 'item' ? 'productCategory' : 'content');
 });
 
+if (!categoryTree.value.length) {
+  try {
+    await getCategoryTree();
+  } catch {
+    // Breadcrumbs stay empty until the shared category tree can be loaded.
+  }
+}
+
 const { setPageMeta } = usePageMeta();
 const categoryName = computed(() => categoryGetters.getCategoryName(productsCatalog.value.category));
 const icon = 'sell';
 setPageMeta(categoryName.value, icon);
+
+const breadcrumbs = computed(() => {
+  const category = productsCatalog.value.category;
+
+  if (!category) {
+    return [];
+  }
+
+  const categoryBreadcrumbs = categoryTreeGetters.generateBreadcrumbFromCategory(
+    categoryTree.value,
+    categoryGetters.getId(category),
+  );
+
+  categoryBreadcrumbs.unshift({ name: t('common.labels.home'), link: '/' });
+
+  return categoryBreadcrumbs;
+});
 
 watch(
   () => locale.value,

@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1">
-    <template v-if="content?.showItemCount">
+    <template v-if="showStandaloneItemCount">
       <div
         class="flex items-center mb-6"
         :class="{
@@ -88,6 +88,8 @@ const itemsPerPage = computed(() => Number(productsPerPage.value) || 0);
 const maxVisiblePages = computed(() => (viewport.isGreaterOrEquals('lg') ? 5 : 2));
 const currentPage = computed(() => getFacetsFromURL().page ?? 1);
 const categoryId = computed(() => getFacetsFromURL().categoryUrlPath ?? null);
+const categoryToolbarShowsItemCount = useState<boolean>('category-toolbar-shows-item-count', () => false);
+const showStandaloneItemCount = computed(() => props.content?.showItemCount && !categoryToolbarShowsItemCount.value);
 
 const gridClasses = computed(() =>
   gridClassFor(

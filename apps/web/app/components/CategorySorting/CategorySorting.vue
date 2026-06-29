@@ -1,13 +1,19 @@
 <template>
-  <div class="w-full" data-testid="category-sorting">
+  <div :class="selectionModeCompact ? 'w-auto' : 'w-full'" data-testid="category-sorting">
     <div
       v-if="!selectionModeCompact"
       class="bg-primary-50/50 mb-4 px-4 py-2 rounded-none uppercase typography-headline-6 font-bold tracking-widest select-none"
     >
       {{ t('common.labels.sortBy') }}
     </div>
-    <div class="px-4">
-      <SfSelect id="sortBy" v-model="selected" :aria-label="t('common.labels.sortBy')" data-testid="select-sort-by">
+    <div :class="selectionModeCompact ? '' : 'px-4'">
+      <SfSelect
+        id="sortBy"
+        v-model="selected"
+        :aria-label="t('common.labels.sortBy')"
+        data-testid="select-sort-by"
+        :class="selectionModeCompact ? 'w-[220px] max-w-full text-sm' : 'w-full'"
+      >
         <option v-if="selectionModeCompact" value="" disabled hidden>{{ t('common.labels.sortBy') }}</option>
         <option v-for="option in options" :key="option" :value="option">
           {{ t(`category.sorting.${option}`) }}

@@ -707,7 +707,7 @@ const categoryOptions = computed<FlattenedCategoryOption[]>(() => {
     return normalizePath([parentPath.replace(/^\/|\/$/g, ''), slug].filter(Boolean).join('/'));
   };
   return allCategoryEntries.value
-    .map((entry) => ({ id: entry.id, label: getPath(entry), path: getUrlPath(entry) }))
+    .map((entry) => ({ id: entry.id, label: getPath(entry), name: entry.details?.[0]?.name?.trim() || '', path: getUrlPath(entry) }))
     .sort((a, b) => a.label.localeCompare(b.label));
 });
 
@@ -726,20 +726,27 @@ const toCategoryIdInputValue = (value: number | null) => (value === null ? '' : 
 
 const updateCategoryId = (category: BigMenueNeoCategoryLink, rawValue: string) => {
   const categoryId = normalizeCategoryId(rawValue);
+  const option = categoryId ? categoryOptions.value.find((entry) => entry.id === categoryId) : null;
   category.categoryId = categoryId;
-  category.categoryPath = categoryId ? categoryOptions.value.find((option) => option.id === categoryId)?.path || '' : '';
+  category.categoryName = option?.name || '';
+  category.categoryPath = option?.path || '';
 };
 
 const updateCategorySelection = (category: BigMenueNeoCategoryLink) => {
   const categoryId = normalizeCategoryId(category.categoryId);
+  const option = categoryId ? categoryOptions.value.find((entry) => entry.id === categoryId) : null;
   category.categoryId = categoryId;
-  category.categoryPath = categoryId ? categoryOptions.value.find((option) => option.id === categoryId)?.path || '' : '';
+  category.categoryName = option?.name || '';
+  category.categoryPath = option?.path || '';
 };
 
 const syncCategoryPath = (category: BigMenueNeoCategoryLink) => {
   const categoryId = normalizeCategoryId(category.categoryId);
-  if (category.linkType !== 'category' || !categoryId || category.categoryPath?.trim()) return;
-  category.categoryPath = categoryOptions.value.find((option) => option.id === categoryId)?.path || '';
+  if (category.linkType !== 'category' || !categoryId) return;
+  const option = categoryOptions.value.find((entry) => entry.id === categoryId);
+  if (!option) return;
+  if (!category.categoryName?.trim()) category.categoryName = option.name || '';
+  if (!category.categoryPath?.trim()) category.categoryPath = option.path || '';
 };
 
 const getTopCategoryPreviewLabel = (category: BigMenueNeoCategoryLink) => getCategoryPreviewLabel(category);
@@ -750,6 +757,7 @@ const getBrandPreviewLabel = (alt: string) => alt?.trim() || getEditorTranslatio
 const createCategoryLink = () => ({
   linkType: 'category' as const,
   categoryId: null,
+  categoryName: '',
   categoryPath: '',
   manualUrl: '',
   customLabel: '',
@@ -760,6 +768,7 @@ const normalizeCategoryLink = (value: any): BigMenueNeoCategoryLink => {
   return {
     linkType,
     categoryId: normalizeCategoryId(value?.categoryId),
+    categoryName: value?.categoryName ?? '',
     categoryPath: value?.categoryPath ?? '',
     manualUrl: value?.manualUrl ?? '',
     customLabel: value?.customLabel ?? '',
