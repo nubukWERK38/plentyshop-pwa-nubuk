@@ -323,6 +323,86 @@
             }
           }
         }
+      },
+      {
+        "title": "Kontaktfähnchen",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/navigation-thumbnail.svg",
+        "template": {
+          "en": {
+            "name": "ContactFlags",
+            "type": "content",
+            "meta": {
+              "uuid": "7d6f5c40-9df0-4f01-8da6-39dd5000f001",
+              "isGlobalTemplate": true
+            },
+            "configuration": {
+              "visible": true
+            },
+            "content": {
+              "top": 227,
+              "backgroundColor": "#212529",
+              "textColor": "#ffffff",
+              "iconColor": "#ccff00",
+              "flags": [
+                {
+                  "label": "Kontakt",
+                  "link": "https://www.nubuk-bikes.de/kontakt",
+                  "icon": "fa-envelope",
+                  "visible": true
+                },
+                {
+                  "label": "Retoure",
+                  "link": "https://www.nubuk-bikes.de/ueber-uns/retoure",
+                  "icon": "fa-undo",
+                  "visible": true
+                },
+                {
+                  "label": "Versand",
+                  "link": "https://www.nubuk-bikes.de/ueber-uns/versand",
+                  "icon": "fa-truck",
+                  "visible": true
+                }
+              ]
+            }
+          },
+          "de": {
+            "name": "ContactFlags",
+            "type": "content",
+            "meta": {
+              "uuid": "7d6f5c40-9df0-4f01-8da6-39dd5000f002",
+              "isGlobalTemplate": true
+            },
+            "configuration": {
+              "visible": true
+            },
+            "content": {
+              "top": 227,
+              "backgroundColor": "#212529",
+              "textColor": "#ffffff",
+              "iconColor": "#ccff00",
+              "flags": [
+                {
+                  "label": "Kontakt",
+                  "link": "https://www.nubuk-bikes.de/kontakt",
+                  "icon": "fa-envelope",
+                  "visible": true
+                },
+                {
+                  "label": "Retoure",
+                  "link": "https://www.nubuk-bikes.de/ueber-uns/retoure",
+                  "icon": "fa-undo",
+                  "visible": true
+                },
+                {
+                  "label": "Versand",
+                  "link": "https://www.nubuk-bikes.de/ueber-uns/versand",
+                  "icon": "fa-truck",
+                  "visible": true
+                }
+              ]
+            }
+          }
+        }
       }
     ]
   },

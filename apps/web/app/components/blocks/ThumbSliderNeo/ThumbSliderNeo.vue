@@ -344,16 +344,12 @@ const accentBarTopStyle = computed<CSSProperties>(() => ({
   height: `${Math.max(0, controls.value.accentBarHeight)}px`,
   width: `${clampNumber(controls.value.accentBarWidth, 0, 100)}%`,
   backgroundColor: controls.value.accentBarColor,
-  top: `${controls.value.accentBarTopY}px`,
-  right: `${controls.value.accentBarTopX}px`,
 }));
 
 const accentBarBottomStyle = computed<CSSProperties>(() => ({
   height: `${Math.max(0, controls.value.accentBarHeight)}px`,
   width: `${clampNumber(controls.value.accentBarWidth, 0, 100)}%`,
   backgroundColor: controls.value.accentBarColor,
-  bottom: `${controls.value.accentBarBottomY}px`,
-  left: `${controls.value.accentBarBottomX}px`,
 }));
 </script>
 

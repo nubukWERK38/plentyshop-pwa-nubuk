@@ -21,6 +21,7 @@ const blockTypeNames: Record<string, string> = {
   BigMenueNeo: 'Big-Menue Neo',
   UtilityBar: 'Utility Bar',
   HeaderContainer: 'Header Container',
+  ContactFlags: 'Kontaktfähnchen',
   BreadcrumbsWidget: 'Breadcrumbs',
 };
 

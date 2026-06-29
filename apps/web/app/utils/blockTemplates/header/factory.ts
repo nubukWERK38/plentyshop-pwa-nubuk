@@ -1,6 +1,7 @@
 import type { HeaderContainerBlock } from '~/components/blocks/structure/HeaderContainer/types';
 import type { Block } from '@plentymarkets/shop-api';
 import { v4 as uuid } from 'uuid';
+import { createDefault as createContactFlags } from '~/components/blocks/ContactFlags/defaults';
 
 export const HEADER_CONTAINER_BLOCK_NAME = 'HeaderContainer' as const;
 
@@ -29,7 +30,25 @@ export function createHeaderContainerBlock(
 }
 
 export function createDefaultHeaderContainerBlock(): HeaderContainerBlock {
-  return createHeaderContainerBlock([createUtilityBar(), createNavigation()]);
+  return createHeaderContainerBlock([createUtilityBar(), createNavigation(), createContactFlags()]);
+}
+
+export function normalizeHeaderContainerBlock(block: HeaderContainerBlock): HeaderContainerBlock {
+  const hasContactFlags = block.content.some((contentBlock) => contentBlock.name === 'ContactFlags');
+  const contactFlagsMigrated = (block.meta as Record<string, unknown>).contactFlagsMigrated === true;
+
+  if (hasContactFlags || contactFlagsMigrated) {
+    return block;
+  }
+
+  return {
+    ...block,
+    meta: {
+      ...block.meta,
+      contactFlagsMigrated: true,
+    },
+    content: [...block.content, createContactFlags()],
+  };
 }
 
 export function createUtilityBar(): Block {

@@ -1,4 +1,5 @@
 import type { Block, GetBlocksResponse } from '@plentymarkets/shop-api';
+import type { HeaderContainerBlock } from '~/components/blocks/structure/HeaderContainer/types';
 
 const FOOTER_BLOCK_NAME = 'Footer';
 const HEADER_BLOCK_NAME = 'Header';
@@ -63,7 +64,7 @@ export const assembleBlocks = (
 ): GetBlocksResponse => {
   const HeaderContainer = isBlockEmpty(raw?.HeaderContainer)
     ? createDefaultHeaderContainerBlock()
-    : raw?.HeaderContainer;
+    : normalizeHeaderContainerBlock(raw.HeaderContainer as HeaderContainerBlock);
 
   const Footer = raw?.Footer ? normalizeFooter(raw.Footer) : normalizeFooter(createFooter());
 
