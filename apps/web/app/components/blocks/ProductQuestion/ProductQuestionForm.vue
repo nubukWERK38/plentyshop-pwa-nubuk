@@ -19,7 +19,7 @@
           <SfTextarea v-model="productQuestion.text.intro" class="w-full" />
         </label>
         <label>
-          <UiFormLabel>Bestaetigungstext</UiFormLabel>
+          <UiFormLabel>Bestätigungstext</UiFormLabel>
           <SfTextarea v-model="productQuestion.text.successText" class="w-full" />
         </label>
       </div>
@@ -67,7 +67,7 @@ const productQuestion = computed<ProductQuestionContent>(() => {
     title: content.text?.title ?? 'Noch Fragen?',
     intro:
       content.text?.intro ??
-      'Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne ueber das folgende Formular benachrichtigen.',
+      'Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne über das folgende Formular benachrichtigen.',
     successText:
       content.text?.successText ?? 'Vielen Dank für Deine Anfrage. Wir melden uns schnellst möglich bei Dir. ',
   };

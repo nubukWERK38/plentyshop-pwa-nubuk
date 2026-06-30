@@ -113,7 +113,7 @@ const createProductQuestionBlock = (): Block => ({
     text: {
       title: '',
       intro:
-        'Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne ueber das folgende Formular benachrichtigen.',
+        'Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne über das folgende Formular benachrichtigen.',
       successText: 'Vielen Dank für Deine Anfrage. Wir melden uns schnellst möglich bei Dir. ',
     },
     layout: {

@@ -20,85 +20,87 @@
             <SfIconWarning class="mr-2 mt-0.5 shrink-0 text-warning-700" />
             <div>Kontakt-Mail und Cloudflare Turnstile sind noch nicht konfiguriert.</div>
           </div>
-          <form v-else class="grid gap-4" novalidate @submit.prevent="onSubmit">
-            <label>
-              <UiFormLabel class="mb-1">E-Mail Adresse: *</UiFormLabel>
-              <SfInput
+          <form v-else class="product-question__form" novalidate @submit.prevent="onSubmit">
+            <label class="product-question__field product-question__field--half">
+              <UiFormLabel class="sr-only">E-Mail Adresse: *</UiFormLabel>
+              <input
                 v-bind="emailAttributes"
                 v-model="email"
                 name="email"
                 type="email"
-                :invalid="Boolean(errors.email)"
+                placeholder="E-Mail Adresse: *"
                 autocomplete="email"
+                class="product-question__control"
+                :class="{ 'product-question__control--invalid': Boolean(errors.email) }"
               />
               <ErrorMessage as="div" name="email" class="pt-[0.2rem] text-left text-sm text-negative-700" />
             </label>
-            <label>
-              <UiFormLabel class="mb-1">Vorname:</UiFormLabel>
-              <SfInput
+            <label class="product-question__field product-question__field--half">
+              <UiFormLabel class="sr-only">Vorname:</UiFormLabel>
+              <input
                 v-bind="firstNameAttributes"
                 v-model="firstName"
                 name="firstName"
                 type="text"
-                :invalid="Boolean(errors.firstName)"
+                placeholder="Vorname:"
                 autocomplete="given-name"
+                class="product-question__control"
               />
             </label>
-            <label>
-              <UiFormLabel class="mb-1">Nachname:</UiFormLabel>
-              <SfInput
+            <label class="product-question__field product-question__field--half">
+              <UiFormLabel class="sr-only">Nachname:</UiFormLabel>
+              <input
                 v-bind="lastNameAttributes"
                 v-model="lastName"
                 name="lastName"
                 type="text"
-                :invalid="Boolean(errors.lastName)"
+                placeholder="Nachname:"
                 autocomplete="family-name"
+                class="product-question__control"
               />
             </label>
-            <label>
-              <UiFormLabel class="mb-1">Telefon:</UiFormLabel>
-              <SfInput
+            <label class="product-question__field product-question__field--half">
+              <UiFormLabel class="sr-only">Telefon:</UiFormLabel>
+              <input
                 v-bind="phoneAttributes"
                 v-model="phone"
                 name="phone"
                 type="tel"
-                :invalid="Boolean(errors.phone)"
+                placeholder="Telefon:"
                 autocomplete="tel"
+                class="product-question__control"
               />
             </label>
-            <label class="flex flex-col">
-              <UiFormLabel class="mb-1">Frage zum Artikel: *</UiFormLabel>
-              <SfTextarea
+            <label class="product-question__field product-question__field--full">
+              <UiFormLabel class="sr-only">Frage zum Artikel: *</UiFormLabel>
+              <textarea
                 v-bind="questionAttributes"
                 v-model="question"
                 name="question"
-                :invalid="Boolean(errors.question)"
-                class="min-h-[120px] w-full"
+                placeholder="Frage zum Artikel: *"
+                class="product-question__control product-question__textarea"
+                :class="{ 'product-question__control--invalid': Boolean(errors.question) }"
               />
               <ErrorMessage as="div" name="question" class="pt-[0.2rem] text-left text-sm text-negative-700" />
             </label>
-            <div>
-              <div class="flex items-start">
-                <SfCheckbox
+            <div class="product-question__privacy">
+              <div class="product-question__privacy-row">
+                <input
                   id="product-question-privacy"
                   v-bind="privacyPolicyAttributes"
                   v-model="privacyPolicy"
-                  :invalid="Boolean(errors.privacyPolicy)"
-                  value="value"
-                  class="peer mt-1"
+                  type="checkbox"
+                  class="product-question__checkbox"
                 />
-                <label
-                  class="ml-3 text-base text-neutral-900 cursor-pointer peer-disabled:text-disabled-900 select-none"
-                  for="product-question-privacy"
-                >
-                  Hiermit bestaetige ich, dass ich die
-                  <SfLink :href="localePath(paths.privacyPolicy)" target="_blank">Datenschutzerklaerung</SfLink>
+                <label class="product-question__privacy-label" for="product-question-privacy">
+                  Hiermit bestätige ich, dass ich die
+                  <SfLink :href="localePath(paths.privacyPolicy)" target="_blank">Datenschutzerklärung</SfLink>
                   gelesen habe. *
                 </label>
               </div>
               <ErrorMessage as="div" name="privacyPolicy" class="pt-[0.2rem] text-left text-sm text-negative-700" />
             </div>
-            <p class="text-sm text-neutral-500">* Pflichtfelder</p>
+            <p class="product-question__required">* Pflichtfelder</p>
             <NuxtTurnstile
               v-if="turnstileSiteKey.length > 0 && turnstileLoad"
               v-bind="turnstileAttributes"
@@ -108,14 +110,11 @@
               :options="{ theme: 'light' }"
             />
             <ErrorMessage as="div" name="turnstile" class="pt-[0.2rem] text-left text-sm text-negative-700" />
-            <div class="flex flex-col-reverse gap-3 md:flex-row md:justify-end">
-              <UiButton type="button" variant="secondary" :disabled="isContactLoading" @click="clearInputs"
-                >Zuruecksetzen</UiButton
-              >
-              <UiButton type="submit" class="min-w-[140px]" :disabled="isContactLoading">
+            <div class="product-question__actions">
+              <button type="submit" class="product-question__submit" :disabled="isContactLoading">
                 <SfLoaderCircular v-if="isContactLoading" class="flex items-center justify-center" size="sm" />
                 <span v-else>Absenden</span>
-              </UiButton>
+              </button>
             </div>
           </form>
         </div>
@@ -134,85 +133,87 @@
         <SfIconWarning class="mr-2 mt-0.5 shrink-0 text-warning-700" />
         <div>Kontakt-Mail und Cloudflare Turnstile sind noch nicht konfiguriert.</div>
       </div>
-      <form v-else class="grid gap-4" novalidate @submit.prevent="onSubmit">
-        <label>
-          <UiFormLabel class="mb-1">E-Mail Adresse: *</UiFormLabel>
-          <SfInput
+      <form v-else class="product-question__form" novalidate @submit.prevent="onSubmit">
+        <label class="product-question__field product-question__field--half">
+          <UiFormLabel class="sr-only">E-Mail Adresse: *</UiFormLabel>
+          <input
             v-bind="emailAttributes"
             v-model="email"
             name="email"
             type="email"
-            :invalid="Boolean(errors.email)"
+            placeholder="E-Mail Adresse: *"
             autocomplete="email"
+            class="product-question__control"
+            :class="{ 'product-question__control--invalid': Boolean(errors.email) }"
           />
           <ErrorMessage as="div" name="email" class="pt-[0.2rem] text-left text-sm text-negative-700" />
         </label>
-        <label>
-          <UiFormLabel class="mb-1">Vorname:</UiFormLabel>
-          <SfInput
+        <label class="product-question__field product-question__field--half">
+          <UiFormLabel class="sr-only">Vorname:</UiFormLabel>
+          <input
             v-bind="firstNameAttributes"
             v-model="firstName"
             name="firstName"
             type="text"
-            :invalid="Boolean(errors.firstName)"
+            placeholder="Vorname:"
             autocomplete="given-name"
+            class="product-question__control"
           />
         </label>
-        <label>
-          <UiFormLabel class="mb-1">Nachname:</UiFormLabel>
-          <SfInput
+        <label class="product-question__field product-question__field--half">
+          <UiFormLabel class="sr-only">Nachname:</UiFormLabel>
+          <input
             v-bind="lastNameAttributes"
             v-model="lastName"
             name="lastName"
             type="text"
-            :invalid="Boolean(errors.lastName)"
+            placeholder="Nachname:"
             autocomplete="family-name"
+            class="product-question__control"
           />
         </label>
-        <label>
-          <UiFormLabel class="mb-1">Telefon:</UiFormLabel>
-          <SfInput
+        <label class="product-question__field product-question__field--half">
+          <UiFormLabel class="sr-only">Telefon:</UiFormLabel>
+          <input
             v-bind="phoneAttributes"
             v-model="phone"
             name="phone"
             type="tel"
-            :invalid="Boolean(errors.phone)"
+            placeholder="Telefon:"
             autocomplete="tel"
+            class="product-question__control"
           />
         </label>
-        <label class="flex flex-col">
-          <UiFormLabel class="mb-1">Frage zum Artikel: *</UiFormLabel>
-          <SfTextarea
+        <label class="product-question__field product-question__field--full">
+          <UiFormLabel class="sr-only">Frage zum Artikel: *</UiFormLabel>
+          <textarea
             v-bind="questionAttributes"
             v-model="question"
             name="question"
-            :invalid="Boolean(errors.question)"
-            class="min-h-[120px] w-full"
+            placeholder="Frage zum Artikel: *"
+            class="product-question__control product-question__textarea"
+            :class="{ 'product-question__control--invalid': Boolean(errors.question) }"
           />
           <ErrorMessage as="div" name="question" class="pt-[0.2rem] text-left text-sm text-negative-700" />
         </label>
-        <div>
-          <div class="flex items-start">
-            <SfCheckbox
+        <div class="product-question__privacy">
+          <div class="product-question__privacy-row">
+            <input
               id="product-question-privacy"
               v-bind="privacyPolicyAttributes"
               v-model="privacyPolicy"
-              :invalid="Boolean(errors.privacyPolicy)"
-              value="value"
-              class="peer mt-1"
+              type="checkbox"
+              class="product-question__checkbox"
             />
-            <label
-              class="ml-3 text-base text-neutral-900 cursor-pointer peer-disabled:text-disabled-900 select-none"
-              for="product-question-privacy"
-            >
-              Hiermit bestaetige ich, dass ich die
-              <SfLink :href="localePath(paths.privacyPolicy)" target="_blank">Datenschutzerklaerung</SfLink>
+            <label class="product-question__privacy-label" for="product-question-privacy">
+              Hiermit bestätige ich, dass ich die
+              <SfLink :href="localePath(paths.privacyPolicy)" target="_blank">Datenschutzerklärung</SfLink>
               gelesen habe. *
             </label>
           </div>
           <ErrorMessage as="div" name="privacyPolicy" class="pt-[0.2rem] text-left text-sm text-negative-700" />
         </div>
-        <p class="text-sm text-neutral-500">* Pflichtfelder</p>
+        <p class="product-question__required">* Pflichtfelder</p>
         <NuxtTurnstile
           v-if="turnstileSiteKey.length > 0 && turnstileLoad"
           v-bind="turnstileAttributes"
@@ -222,14 +223,11 @@
           :options="{ theme: 'light' }"
         />
         <ErrorMessage as="div" name="turnstile" class="pt-[0.2rem] text-left text-sm text-negative-700" />
-        <div class="flex flex-col-reverse gap-3 md:flex-row md:justify-end">
-          <UiButton type="button" variant="secondary" :disabled="isContactLoading" @click="clearInputs"
-            >Zuruecksetzen</UiButton
-          >
-          <UiButton type="submit" class="min-w-[140px]" :disabled="isContactLoading">
+        <div class="product-question__actions">
+          <button type="submit" class="product-question__submit" :disabled="isContactLoading">
             <SfLoaderCircular v-if="isContactLoading" class="flex items-center justify-center" size="sm" />
             <span v-else>Absenden</span>
-          </UiButton>
+          </button>
         </div>
       </form>
     </div>
@@ -239,7 +237,7 @@
 <script setup lang="ts">
 import type { CustomerContactEmailParams } from '@plentymarkets/shop-api';
 import { productGetters, userGetters } from '@plentymarkets/shop-api';
-import { SfCheckbox, SfIconWarning, SfInput, SfLink, SfLoaderCircular, SfTextarea } from '@storefront-ui/vue';
+import { SfIconWarning, SfLink, SfLoaderCircular } from '@storefront-ui/vue';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
 import { boolean, object, string } from 'yup';
@@ -260,7 +258,7 @@ const content = computed(() => ({
     title: props.content?.text?.title ?? 'Noch Fragen?',
     intro:
       props.content?.text?.intro ??
-      'Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne ueber das folgende Formular benachrichtigen.',
+      'Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne über das folgende Formular benachrichtigen.',
     successText:
       props.content?.text?.successText ?? 'Vielen Dank für Deine Anfrage. Wir melden uns schnellst möglich bei Dir. ',
   },
@@ -287,7 +285,7 @@ const validationSchema = toTypedSchema(
     email: string()
       .trim()
       .required('Bitte gib Deine E-Mail-Adresse ein.')
-      .test('is-valid-email', 'Bitte gib eine gueltige E-Mail-Adresse ein.', (mail: string) =>
+      .test('is-valid-email', 'Bitte gib eine gültige E-Mail-Adresse ein.', (mail: string) =>
         userGetters.isValidEmailAddress(mail),
       )
       .default(''),
@@ -301,10 +299,10 @@ const validationSchema = toTypedSchema(
         return val.replace(/\n/g, '').trim().length >= 3;
       })
       .default(''),
-    privacyPolicy: boolean().oneOf([true], 'Bitte bestaetige die Datenschutzerklaerung.').default(false),
+    privacyPolicy: boolean().oneOf([true], 'Bitte bestätige die Datenschutzerklärung.').default(false),
     turnstile:
       turnstileSiteKey.length > 0
-        ? string().required('Bitte bestaetige den Spamschutz.').default('')
+        ? string().required('Bitte bestätige den Spamschutz.').default('')
         : string().optional().default(''),
   }),
 );
@@ -406,3 +404,145 @@ if (turnstileSiteKey.length > 0) {
 const { registerBlockVisibility } = useBlocksVisibility();
 registerBlockVisibility(props.meta.uuid, true);
 </script>
+
+<style scoped>
+.product-question {
+  color: #4f5965;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.product-question__form {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  max-width: 100%;
+}
+
+.product-question__field {
+  display: block;
+}
+
+.product-question__field--full,
+.product-question__privacy,
+.product-question__required,
+.product-question__actions {
+  grid-column: 1 / -1;
+}
+
+.product-question__control {
+  display: block;
+  width: 100%;
+  min-height: 43px;
+  border: 1px solid #dcdcdc;
+  border-radius: 0;
+  background: #fff;
+  padding: 0 12px;
+  color: #4f5965;
+  font: inherit;
+  line-height: 43px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.product-question__control::placeholder {
+  color: #9aa0a6;
+  opacity: 1;
+}
+
+.product-question__control:focus {
+  border-color: #9aa0a6;
+  box-shadow: 0 0 0 1px #9aa0a6 inset;
+}
+
+.product-question__control--invalid {
+  border-color: #dc2626;
+}
+
+.product-question__textarea {
+  min-height: 110px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.product-question__privacy {
+  margin-top: 2px;
+}
+
+.product-question__privacy-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.product-question__checkbox {
+  width: 16px;
+  height: 16px;
+  margin: 4px 6px 0 0;
+  border: 1px solid #4f5965;
+  border-radius: 0;
+  accent-color: #222;
+  flex: 0 0 auto;
+}
+
+.product-question__privacy-label {
+  color: #4f5965;
+  cursor: pointer;
+  user-select: none;
+}
+
+.product-question__privacy-label :deep(a) {
+  color: #1f9ed5;
+  text-decoration: none;
+}
+
+.product-question__privacy-label :deep(a:hover) {
+  text-decoration: underline;
+}
+
+.product-question__required {
+  margin: 2px 0 -4px;
+  color: #4f5965;
+}
+
+.product-question__actions {
+  width: 100%;
+}
+
+.product-question__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 37px;
+  border: 0;
+  border-radius: 0;
+  background: #dce1e5;
+  color: #333;
+  font: inherit;
+  cursor: pointer;
+}
+
+.product-question__submit:hover:not(:disabled),
+.product-question__submit:focus-visible:not(:disabled) {
+  background: #cfd5da;
+}
+
+.product-question__submit:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+@media (min-width: 768px) {
+  .product-question__form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .product-question__field--half {
+    grid-column: auto;
+  }
+}
+</style>
