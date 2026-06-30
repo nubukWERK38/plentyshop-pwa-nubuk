@@ -4,7 +4,8 @@
       v-for="(column, colIndex) in columns"
       :key="colIndex"
       :class="getColumnClasses(colIndex)"
-      class="group/col relative z-[1]"
+      :style="columnInlineStyle"
+      class="multi-grid__column group/col relative z-[1]"
       data-testid="multi-grid-column"
     >
       <div
@@ -75,21 +76,33 @@ const { shouldEnableEditorFeatures } = useEditorState();
 const { isDragging, shouldDisplayPlaceholder } = useBlockManager();
 const { siteConfigurationDrawerOpen, siteConfigurationDrawerView } = useSiteConfiguration();
 const attrs = useAttrs() as { enableActions?: boolean; root?: boolean };
-const { getSetting: getBlockSize } = useSiteSettings('verticalBlockSize');
-const blockSize = computed(() => getBlockSize());
 
 const drawerOpen = computed(() => siteConfigurationDrawerOpen.value);
 const drawerView = computed(() => siteConfigurationDrawerView.value);
 
-const gapClassMap: Record<string, string> = {
-  None: 'gap-x-0',
-  S: 'gap-y-1 md:gap-x-1 md:gap-y-0',
-  M: 'gap-y-2 md:gap-x-2 md:gap-y-0',
-  L: 'gap-y-3 md:gap-x-3 md:gap-y-0',
-  XL: 'gap-y-5 md:gap-x-5 md:gap-y-0',
+const gapPxMap: Record<string, number> = {
+  None: 0,
+  S: 4,
+  M: 8,
+  L: 12,
+  XL: 20,
 };
-const gridGapClass = computed(() => gapClassMap[configuration.layout?.gap || 'M']);
-const defaultMarginBottom = computed(() => getVerticalPixels(blockSize.value));
+const defaultGridGap = 8;
+const baseGapPixels = computed<number>(() => gapPxMap[configuration.layout?.gap || 'M'] ?? defaultGridGap);
+const isTwoByTwoImageTeaserGrid = computed(() => {
+  if (configuration.columnWidths?.length !== 2) return false;
+  const columnCounts = columns.value.map((column) => column.length);
+
+  return columnCounts.length === 2 && columnCounts.every((count) => count === 2);
+});
+const gridGapValue = computed(() => {
+  if (isTwoByTwoImageTeaserGrid.value) {
+    return 'var(--ci-teaser-grid-gap)';
+  }
+
+  return `${baseGapPixels.value}px`;
+});
+const defaultSectionSpacing = 'var(--ci-section-spacing)';
 
 const gradientBackground = computed(() => {
   if (configuration.layout?.gradientEnabled !== true) return undefined;
@@ -109,24 +122,45 @@ const gradientBackground = computed(() => {
 
 const gridInlineStyle = computed(() => ({
   background: gradientBackground.value,
-  backgroundColor: configuration.layout?.gradientEnabled ? undefined : configuration.layout?.backgroundColor ?? 'transparent',
-  marginTop: configuration.layout?.marginTop !== undefined ? `${configuration.layout.marginTop}px` : '0px',
+  backgroundColor: configuration.layout?.gradientEnabled
+    ? undefined
+    : (configuration.layout?.backgroundColor ?? 'transparent'),
+  gap: gridGapValue.value,
+  marginTop:
+    configuration.layout?.marginTop !== undefined ? `${configuration.layout.marginTop}px` : defaultSectionSpacing,
   marginRight: configuration.layout?.marginRight !== undefined ? `${configuration.layout.marginRight}px` : '0px',
   marginBottom:
-    configuration.layout?.marginBottom !== undefined
-      ? `${configuration.layout.marginBottom}px`
-      : `${defaultMarginBottom.value}px`,
+    configuration.layout?.marginBottom !== undefined ? `${configuration.layout.marginBottom}px` : defaultSectionSpacing,
   marginLeft: configuration.layout?.marginLeft !== undefined ? `${configuration.layout.marginLeft}px` : '0px',
-  paddingTop: configuration.layout?.paddingTop !== undefined ? `${configuration.layout.paddingTop}px` : '0px',
+  paddingTop: isTwoByTwoImageTeaserGrid.value
+    ? gridGapValue.value
+    : configuration.layout?.paddingTop !== undefined
+      ? `${configuration.layout.paddingTop}px`
+      : '0px',
   paddingRight: configuration.layout?.paddingRight !== undefined ? `${configuration.layout.paddingRight}px` : '0px',
-  paddingBottom: configuration.layout?.paddingBottom !== undefined ? `${configuration.layout.paddingBottom}px` : '0px',
+  paddingBottom: isTwoByTwoImageTeaserGrid.value
+    ? gridGapValue.value
+    : configuration.layout?.paddingBottom !== undefined
+      ? `${configuration.layout.paddingBottom}px`
+      : '0px',
   paddingLeft: configuration.layout?.paddingLeft !== undefined ? `${configuration.layout.paddingLeft}px` : '0px',
 }));
+const columnInlineStyle = computed(() => ({
+  rowGap: gridGapValue.value,
+}));
 const getGridClasses = () => {
-  return gridClassFor({ mobile: 1, tablet: 12, desktop: 12 }, [gridGapClass.value ?? '', 'items-start']);
+  if (isTwoByTwoImageTeaserGrid.value) {
+    return gridClassFor({ mobile: 1, tablet: 2, desktop: 2 }, ['items-start']);
+  }
+
+  return gridClassFor({ mobile: 1, tablet: 12, desktop: 12 }, ['items-start']);
 };
 
 const getColumnClasses = (colIndex: number) => {
+  if (isTwoByTwoImageTeaserGrid.value) {
+    return [];
+  }
+
   const columnWidth = configuration.columnWidths[colIndex];
   const classes = [`col-span-${columnWidth}`];
 
@@ -207,3 +241,10 @@ const columns = computed<Block[][]>(() => {
   return blocks.value;
 });
 </script>
+
+<style scoped>
+.multi-grid__column {
+  display: flex;
+  flex-direction: column;
+}
+</style>

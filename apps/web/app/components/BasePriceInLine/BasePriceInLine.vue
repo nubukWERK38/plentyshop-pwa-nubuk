@@ -5,6 +5,5 @@
 <script setup lang="ts">
 import type { BasePriceProps } from '~/components/BasePrice/types';
 
-const props = defineProps<BasePriceProps>();
-const { basePrice, unitContent, unitName } = props;
+defineProps<BasePriceProps>();
 </script>

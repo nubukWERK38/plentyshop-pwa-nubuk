@@ -1,5 +1,10 @@
 <template>
-  <section ref="blockRef" class="product-recommended-products w-screen" :style="sectionStyle">
+  <section
+    ref="blockRef"
+    class="product-recommended-products w-screen"
+    :class="backgroundVariantClass"
+    :style="sectionStyle"
+  >
     <div v-bind="$attrs" :style="blockStyle" class="product-recommended-products__inner w-full">
       <TextContent data-testid="recommended-block" class="product-recommended-products__text pb-4" :text="props.content.text" :index="props.index" />
 
@@ -78,6 +83,44 @@ const gradientToCss = (gradient: ReturnType<typeof ensureGradient>) => {
   return `linear-gradient(${gradient.angle}deg, ${gradient.startColor}, ${gradient.endColor})`;
 };
 
+const parseColor = (value?: string): [number, number, number] | null => {
+  if (!value || value === 'transparent') return null;
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized.startsWith('#')) {
+    const hex = normalized.slice(1);
+    const fullHex =
+      hex.length === 3
+        ? hex
+            .split('')
+            .map((char) => `${char}${char}`)
+            .join('')
+        : hex;
+
+    if (fullHex.length !== 6) return null;
+
+    return [
+      Number.parseInt(fullHex.slice(0, 2), 16),
+      Number.parseInt(fullHex.slice(2, 4), 16),
+      Number.parseInt(fullHex.slice(4, 6), 16),
+    ];
+  }
+
+  const rgbMatch = normalized.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!rgbMatch) return null;
+
+  return [Number(rgbMatch[1]), Number(rgbMatch[2]), Number(rgbMatch[3])];
+};
+
+const luminance = ([red, green, blue]: [number, number, number]) =>
+  (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
+
+const isDarkColor = (value?: string) => {
+  const color = parseColor(value);
+
+  return color ? luminance(color) < 0.5 : null;
+};
+
 const layoutSettings = computed(() => ({
   gap: props.content.layout?.gap ?? 16,
   marginLeft: props.content.layout?.marginLeft ?? 0,
@@ -91,6 +134,29 @@ const sectionStyle = computed<CSSProperties>(() => ({
   background: gradientToCss(layoutSettings.value.gradient),
   backgroundColor: layoutSettings.value.gradient.enabled ? undefined : layoutSettings.value.backgroundColor,
 }));
+
+const backgroundVariantClass = computed(() => {
+  const gradient = layoutSettings.value.gradient;
+
+  if (gradient.enabled) {
+    const gradientColors = [gradient.startColor, gradient.endColor]
+      .map((color) => parseColor(color))
+      .filter((color): color is [number, number, number] => Boolean(color));
+
+    if (gradientColors.length) {
+      const averageLuminance =
+        gradientColors.reduce((sum, color) => sum + luminance(color), 0) / gradientColors.length;
+
+      return averageLuminance < 0.5
+        ? 'product-recommended-products--dark'
+        : 'product-recommended-products--light';
+    }
+  }
+
+  return isDarkColor(layoutSettings.value.backgroundColor) === false
+    ? 'product-recommended-products--light'
+    : 'product-recommended-products--dark';
+});
 
 const blockStyle = computed<CSSProperties>(() => ({
   marginLeft: `${layoutSettings.value.marginLeft}px`,
@@ -210,6 +276,38 @@ watch(
   color: #c8ff00;
 }
 
+.product-recommended-products--light :deep(.product-slider__legal),
+.product-recommended-products--light :deep(.product-slider__legal-link),
+.product-recommended-products--light :deep(.product-slider__legal-link:hover),
+.product-recommended-products--light :deep(.product-slider__legal-link:focus),
+.product-recommended-products--light :deep(.product-slider__legal-link:focus-visible),
+.product-recommended-products--light :deep(.product-slider__legal-link:active),
+.product-recommended-products--light .product-recommended-products__text :deep(p),
+.product-recommended-products--light .product-recommended-products__text :deep(a),
+.product-recommended-products--light .product-recommended-products__text :deep(a:hover),
+.product-recommended-products--light .product-recommended-products__text :deep(a:focus),
+.product-recommended-products--light .product-recommended-products__text :deep(a:focus-visible),
+.product-recommended-products--light .product-recommended-products__text :deep(a:active) {
+  color: var(--ci-primary) !important;
+}
+
+.product-recommended-products--dark .product-recommended-products__text :deep(a),
+.product-recommended-products--dark .product-recommended-products__text :deep(a:hover),
+.product-recommended-products--dark .product-recommended-products__text :deep(a:focus),
+.product-recommended-products--dark .product-recommended-products__text :deep(a:focus-visible),
+.product-recommended-products--dark .product-recommended-products__text :deep(a:active) {
+  color: #ffffff !important;
+}
+
+.product-recommended-products--dark :deep(.product-slider__legal),
+.product-recommended-products--dark :deep(.product-slider__legal-link),
+.product-recommended-products--dark :deep(.product-slider__legal-link:hover),
+.product-recommended-products--dark :deep(.product-slider__legal-link:focus),
+.product-recommended-products--dark :deep(.product-slider__legal-link:focus-visible),
+.product-recommended-products--dark :deep(.product-slider__legal-link:active) {
+  color: #ffffff !important;
+}
+
 .product-recommended-products :deep(.product-recommended-products__card) {
   min-height: 512px;
   border: 0;
@@ -237,7 +335,14 @@ watch(
 
 .product-recommended-products :deep(.product-recommended-products__card [data-testid='productcard-name']) {
   font-weight: 300;
-  color: #111827;
+  color: #959595;
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.product-recommended-products :deep(.product-recommended-products__card .product-card__price-row) {
+  margin-top: 1.625rem;
+  padding-top: 0;
 }
 
 .product-recommended-products :deep(.product-recommended-products__card [data-testid='product-card-vertical-price']) {

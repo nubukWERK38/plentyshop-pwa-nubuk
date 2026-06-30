@@ -113,7 +113,7 @@
       <SfLink
         :tag="NuxtLink"
         :to="productPath"
-        class="line-clamp-2 no-underline text-base leading-[1.1] text-neutral-500 hover:text-neutral-700"
+        class="product-card__name line-clamp-2 no-underline text-base leading-[1.1] text-neutral-500 hover:text-neutral-700"
         variant="secondary"
         data-testid="productcard-name"
       >
@@ -124,7 +124,7 @@
         <BasePriceInLine :base-price="basePrice" :unit-content="unitContent" :unit-name="unitName" />
       </div>
 
-      <div class="mt-auto flex w-full items-end justify-between gap-4 pt-6">
+      <div class="product-card__price-row mt-auto flex w-full items-end justify-between gap-4 pt-6">
         <div v-if="hasComparablePrice" class="flex flex-col text-xs font-normal leading-none text-neutral-500">
           <span class="font-semibold uppercase">UVP</span>
           <span class="mt-1">{{ format(crossedPrice ?? 0) }}</span>
@@ -187,7 +187,7 @@ const configuration = computed(() => props.configuration || ({} as ItemGridConte
 const { addModernImageExtension } = useModernImage();
 const localePath = useLocalePath();
 const { format } = usePriceFormatter();
-const { price, crossedPrice } = useProductPrice(product.value);
+const { price, crossedPrice } = useProductPrice(product);
 const config = useRuntimeConfig();
 const useTagsOnCategoryPage = config.public.useTagsOnCategoryPage;
 const name = computed(

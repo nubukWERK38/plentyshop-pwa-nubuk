@@ -119,7 +119,7 @@ const onApprove = async (data: OnApproveData) => {
   }
 };
 
-const getLabel = (type: string) => {
+const getLabel = (type: string): 'checkout' | 'pay' | 'buynow' => {
   switch (type) {
     case TypeCartPreview:
     case TypeSingleItem:
@@ -131,14 +131,29 @@ const getLabel = (type: string) => {
   }
 };
 
+const getButtonStyle = () => {
+  if (props.location === 'itemPage') {
+    return {
+      layout: 'horizontal' as const,
+      label: getLabel(props.type),
+      color: 'white' as const,
+      height: 36,
+      tagline: false,
+    };
+  }
+
+  return {
+    layout: 'vertical' as const,
+    label: getLabel(props.type),
+    color: 'gold' as const,
+    tagline: false,
+  };
+};
+
 const renderButton = (fundingSource: FUNDING_SOURCE) => {
   if (paypalScript.value?.Buttons && fundingSource) {
     const button = paypalScript.value?.Buttons({
-      style: {
-        layout: 'vertical',
-        label: getLabel(props.type),
-        color: 'gold',
-      },
+      style: getButtonStyle(),
       fundingSource: fundingSource,
       async onClick(data, actions) {
         const success = await onValidationCallback();
@@ -191,10 +206,13 @@ const createButton = () => {
     if (paypalScript.value.FUNDING) {
       const FUNDING_SOURCES: Array<string> = [];
 
+      if (props.location === 'itemPage' && payLaterVisibility.getVisibility(props.location)) {
+        FUNDING_SOURCES.push(paypalScript.value.FUNDING.PAYLATER as string);
+      }
       if (payPalVisibility.getVisibility(props.location ?? 'checkoutPage')) {
         FUNDING_SOURCES.push(paypalScript.value.FUNDING.PAYPAL as string);
       }
-      if (payLaterVisibility.getVisibility(props.location ?? 'checkoutPage')) {
+      if (props.location !== 'itemPage' && payLaterVisibility.getVisibility(props.location ?? 'checkoutPage')) {
         FUNDING_SOURCES.push(paypalScript.value.FUNDING.PAYLATER as string);
       }
 

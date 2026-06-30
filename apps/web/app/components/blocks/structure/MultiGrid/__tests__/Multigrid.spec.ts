@@ -86,7 +86,46 @@ describe('MultiGrid block', () => {
         },
       },
     });
-    expect(wrapper.find('[data-testid="multi-grid-structure"]').classes()).toContain('md:gap-x-5');
+    expect(wrapper.find('[data-testid="multi-grid-structure"]').attributes('style')).toContain('gap: 20px');
+  });
+
+  it('should use triple base gap for a 2x2 image teaser grid', () => {
+    const teaserBlocks = Array.from({ length: 4 }, (_, index) => ({
+      name: 'ImageTextBox',
+      type: 'content',
+      content: {},
+      meta: { uuid: `teaser-${index}` },
+      parent_slot: index % 2,
+    }));
+
+    const wrapper = mount(MultiGrid, {
+      props: {
+        name: 'MultiGrid',
+        type: 'structure',
+        content: teaserBlocks,
+        configuration: {
+          columnWidths: [6, 6],
+          layout: {
+            backgroundColor: '#ffffff',
+            gap: 'M',
+          },
+        },
+        meta: { uuid: 'teaser-grid' },
+      },
+    });
+
+    const gridStyle = wrapper.find('[data-testid="multi-grid-structure"]').attributes('style');
+    const gridClasses = wrapper.find('[data-testid="multi-grid-structure"]').classes();
+    const columnClasses = wrapper.find('[data-testid="multi-grid-column"]').classes();
+
+    expect(gridClasses).toContain('md:grid-cols-2');
+    expect(gridClasses).toContain('lg:grid-cols-2');
+    expect(columnClasses).not.toContain('col-span-6');
+    expect(gridStyle).toContain('gap: var(--ci-teaser-grid-gap)');
+    expect(gridStyle).toContain('padding: var(--ci-teaser-grid-gap) 0px');
+    expect(wrapper.find('[data-testid="multi-grid-column"]').attributes('style')).toContain(
+      'row-gap: var(--ci-teaser-grid-gap)',
+    );
   });
 
   it('should apply layout styles (margin, background color) to the grid container', () => {

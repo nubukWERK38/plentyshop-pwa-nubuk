@@ -16,11 +16,39 @@
   --ci-footer-background: #cfe4ec;
   --ci-footer-panel: #161a16;
   --ci-footer-footnote: #959795;
+  --ci-section-spacing: 60px;
+  --ci-teaser-grid-gap: 50px;
+  --ci-content-max-width: 1440px;
+  --ci-content-gutter: 1.5rem;
 
   /* Legacy aliases */
   --ci: var(--ci-primary);
   --cidark: var(--ci-dark);
   --green: var(--ci-accent);
+}
+
+.section-spacing,
+.section-spacing-s,
+.section-spacing-m,
+.section-spacing-l,
+.section-spacing-xl {
+  margin-top: var(--ci-section-spacing);
+  margin-bottom: var(--ci-section-spacing);
+}
+
+.image-text-box {
+  width: min(calc(100% - (var(--ci-content-gutter) * 2)), var(--ci-content-max-width));
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.multi-grid__column .image-text-box {
+  width: 100%;
+}
+
+.product-recommended-products {
+  padding-top: var(--ci-section-spacing) !important;
+  padding-bottom: var(--ci-section-spacing) !important;
 }
 
 .scrollbar-hidden {

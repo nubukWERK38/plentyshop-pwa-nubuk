@@ -52,6 +52,32 @@
                 :unit-content="productGetters.getUnitContent(product)"
                 :unit-name="productGetters.getUnitName(product)"
               />
+              <ul class="purchase-card__more-infos">
+                <li>
+                  <NuxtLink :to="localePath('/ueber-uns/retoure')" title="Wie läuft eine Retoure ab?">
+                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    Wie läuft eine Retoure ab?
+                  </NuxtLink>
+                </li>
+                <li>
+                  <NuxtLink :to="localePath(paths.contact)" title="Fragen zum Produkt?">
+                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    Fragen zum Produkt?
+                  </NuxtLink>
+                </li>
+                <li>
+                  <button type="button" title="Mit Bike-Leasing bis zu 40% sparen" @click="openLeasingModal">
+                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    Mit Bike-Leasing bis zu 40% sparen
+                  </button>
+                </li>
+                <li>
+                  <button type="button" title="Herstellerangaben" @click="openManufacturerDetails">
+                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    Herstellerangaben
+                  </button>
+                </li>
+              </ul>
             </template>
             <template v-if="key === 'tags' && configuration?.fields.tags">
               <UiBadges class="mb-2" :product="product" :use-availability="false" :use-tags="true" />
@@ -156,11 +182,12 @@
                 :product="product"
               />
               <div class="purchase-card__cart-section mt-4">
-                <div class="purchase-card__cart-row flex flex-col md:flex-row flex-wrap gap-4">
+                <div class="purchase-card__cart-row flex gap-4">
                   <UiQuantitySelector
                     :min-value="productGetters.getMinimumOrderQuantity(product)"
                     :value="quantitySelectorValue"
-                    class="purchase-card__quantity min-w-[92px] flex-grow-0 flex-shrink-0 basis-0"
+                    variant="vertical"
+                    class="purchase-card__quantity"
                     @change-quantity="changeQuantity"
                   />
                   <div
@@ -174,7 +201,7 @@
                     show-arrow
                     placement="top"
                     :label="isNotValidVariation || isSalableText"
-                    class="flex-grow-[2] flex-shrink basis-auto whitespace-nowrap"
+                    class="purchase-card__cart-tooltip flex-1 min-w-0 whitespace-nowrap"
                   >
                     <UiButton
                       type="submit"
@@ -195,8 +222,20 @@
                     </UiButton>
                   </SfTooltip>
                 </div>
-
-                <div class="mt-4 typography-text-xs flex gap-1">
+                <template v-if="showPayPalButtons">
+                  <PayPalExpressButton
+                    type="SingleItem"
+                    location="itemPage"
+                    class="purchase-card__paypal-buttons mt-4"
+                    @validation-callback="paypalHandleAddToCart"
+                  />
+                  <PayPalPayLaterBanner
+                    placement="product"
+                    location="itemPage"
+                    :amount="priceWithProperties * quantitySelectorValue"
+                  />
+                </template>
+                <div class="purchase-card__tax-note mt-4 typography-text-xs flex gap-1">
                   <span>{{ t('common.labels.asterisk') }}</span>
                   <span>{{ showNetPrices ? t('product.priceExclVAT') : t('product.priceInclVAT') }}</span>
                   <i18n-t keypath="shipping.excludedLabel" scope="global">
@@ -211,19 +250,6 @@
                     </template>
                   </i18n-t>
                 </div>
-                <template v-if="showPayPalButtons">
-                  <PayPalExpressButton
-                    type="SingleItem"
-                    location="itemPage"
-                    class="mt-4"
-                    @validation-callback="paypalHandleAddToCart"
-                  />
-                  <PayPalPayLaterBanner
-                    placement="product"
-                    location="itemPage"
-                    :amount="priceWithProperties * quantitySelectorValue"
-                  />
-                </template>
               </div>
             </template>
 
@@ -248,6 +274,40 @@
       </div>
     </div>
   </form>
+  <Teleport to="body">
+    <UiModal
+      v-model="leasingModalOpen"
+      aria-labelledby="leasing-modal-title"
+      tag="section"
+      role="dialog"
+      class="purchase-card__leasing-modal h-full w-full md:h-[calc(100vh-96px)] md:w-[min(1500px,calc(100vw-220px))] m-0 p-0 overflow-hidden"
+      overlay-classes="z-[2147483647]"
+    >
+      <header class="purchase-card__leasing-modal-header">
+        <h2 id="leasing-modal-title">Mit Bike-Leasing bis zu 40% sparen</h2>
+        <UiButton
+          :aria-label="t('common.navigation.closeDialog')"
+          square
+          variant="tertiary"
+          class="purchase-card__leasing-modal-close"
+          @click="leasingModalOpen = false"
+        >
+          <SfIconClose />
+        </UiButton>
+      </header>
+      <div class="purchase-card__leasing-modal-body">
+        <div v-if="leasingModalLoading" class="purchase-card__leasing-modal-loading">
+          <SfLoaderCircular size="lg" />
+        </div>
+        <div
+          v-else-if="leasingModalContent"
+          class="purchase-card__leasing-modal-content no-preflight"
+          v-html="leasingModalContent"
+        />
+        <p v-else class="purchase-card__leasing-modal-empty">Der Leasing-Content konnte nicht geladen werden.</p>
+      </div>
+    </UiModal>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -266,6 +326,7 @@ import {
   SfTooltip,
   SfLink,
   SfIconExpandMore,
+  SfIconClose,
 } from '@storefront-ui/vue';
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';
@@ -354,6 +415,12 @@ const { reviewArea } = useProductReviews(Number(productGetters.getId(props?.prod
 const { getSetting: getNotifyMeSetting } = useSiteSettings('showNotifyMe');
 const showNotifyMe = computed(() => getNotifyMeSetting().toString() === 'true');
 const localePath = useLocalePath();
+const { openDrawer } = useProductLegalDetailsDrawer();
+const leasingModalOpen = ref(false);
+const leasingModalLoading = ref(false);
+const leasingModalContent = ref('');
+const LEASING_CATEGORY_ID = 3228;
+const LEASING_CATEGORY_PATH = '/ueber-uns/leasingpartner';
 
 const manufacturer = computed(() => productGetters.getManufacturer(props.product));
 const brandName = computed(
@@ -555,6 +622,37 @@ const scrollToReviews = () => {
     reviewArea.value.scrollIntoView({ behavior: 'smooth' });
   }
 };
+
+const openManufacturerDetails = () => {
+  openDrawer();
+};
+
+const openLeasingModal = async () => {
+  leasingModalOpen.value = true;
+
+  if (leasingModalContent.value || leasingModalLoading.value) return;
+
+  leasingModalLoading.value = true;
+  try {
+    const templateResponse = await useSdk().plentysystems.getCategoryTemplate({ id: LEASING_CATEGORY_ID });
+    leasingModalContent.value = templateResponse?.data?.data || '';
+
+    if (!leasingModalContent.value) {
+      const facetResponse = await useSdk().plentysystems.getFacet({
+        categoryUrlPath: LEASING_CATEGORY_PATH,
+        page: 1,
+        itemsPerPage: 1,
+      });
+      const categoryDetails = facetResponse?.data?.category?.details?.[0];
+      leasingModalContent.value =
+        categoryDetails?.description || categoryDetails?.description2 || categoryDetails?.fulltext || '';
+    }
+  } catch {
+    leasingModalContent.value = '';
+  } finally {
+    leasingModalLoading.value = false;
+  }
+};
 </script>
 
 <style scoped>
@@ -579,7 +677,6 @@ const scrollToReviews = () => {
   line-height: 1;
   text-transform: uppercase;
 }
-
 
 .purchase-card__name {
   margin-bottom: 8px;
@@ -716,49 +813,153 @@ const scrollToReviews = () => {
 
 .purchase-card__unit-content {
   margin-top: 24px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: #a9afb8;
   font-size: 1rem;
 }
 
+.purchase-card__more-infos {
+  display: grid;
+  gap: 3px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.purchase-card__more-infos a,
+.purchase-card__more-infos button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ci-primary);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.purchase-card__more-infos a:hover,
+.purchase-card__more-infos a:focus-visible,
+.purchase-card__more-infos button:hover,
+.purchase-card__more-infos button:focus-visible {
+  color: #071625;
+  text-decoration: underline;
+}
+
 .purchase-card__cart-row {
   align-items: stretch;
+  flex-wrap: nowrap;
 }
 
 .purchase-card__quantity {
-  width: 92px;
-  min-width: 92px;
+  width: 84px;
+  min-width: 84px;
+  flex: 0 0 84px;
 }
 
 .purchase-card__quantity :deep(.rounded-md) {
   border-radius: 0;
 }
 
+.purchase-card__cart-tooltip {
+  display: block;
+}
+
 .purchase-card__cart-button {
-  min-height: 56px;
+  min-height: 60px;
   border-radius: 0;
-  background: var(--ci-accent-button) !important;
+  background: #d1ff00 !important;
   color: #000 !important;
   font-weight: 800;
 }
 
 .purchase-card__cart-button:hover,
 .purchase-card__cart-button:active {
-  background: var(--ci-accent-button-hover) !important;
+  background: #c4f000 !important;
   color: #000 !important;
 }
 
-.purchase-card :deep(select) {
-  min-height: 48px;
-  border-radius: 0;
-  background-color: #e8e8e8;
-  border-color: #d9d9d9;
-  color: #071625;
+.purchase-card__paypal-buttons {
+  width: 100%;
 }
 
-.purchase-card :deep(label[for^='attribute-']) {
+.purchase-card__tax-note {
+  color: #8b8f96;
+  font-style: italic;
+}
+
+.purchase-card__leasing-modal {
+  z-index: 10000;
+  background: #fff;
+  border-radius: 0;
+}
+
+.purchase-card__leasing-modal-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #d9d9d9;
+  background: #fff;
+  padding: 0 18px;
+}
+
+.purchase-card__leasing-modal-header h2 {
+  margin: 0;
+  color: #071625;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.purchase-card__leasing-modal-close {
+  color: #7a7c7f;
+}
+
+.purchase-card__leasing-modal-body {
+  height: calc(100% - 64px);
+  overflow-y: auto;
+  background: #fff;
+}
+
+.purchase-card__leasing-modal-loading,
+.purchase-card__leasing-modal-empty {
+  display: flex;
+  min-height: 240px;
+  align-items: center;
+  justify-content: center;
+  color: #7a7c7f;
+}
+
+.purchase-card__leasing-modal-content {
+  width: min(100%, 1380px);
+  margin: 0 auto;
+  padding: 64px 48px 80px;
+}
+
+.purchase-card :deep(select) {
+  width: 100%;
+  height: 36px;
+  min-height: 36px;
+  border-radius: 0;
+  background-color: #e8e8e8 !important;
+  border-color: #d9d9d9 !important;
+  color: #071625;
+  padding-top: 0;
+  padding-bottom: 8px;
+  box-shadow: none;
+}
+
+.purchase-card :deep(label[for^='attribute-']),
+.purchase-card :deep(label[for='unit-combination']) {
   display: block;
-  padding: 7px 14px 0;
+  padding: 9px 14px 0;
+  background: #e8e8e8;
   color: #071625;
   font-size: 0.8rem;
   font-weight: 700;
@@ -767,7 +968,9 @@ const scrollToReviews = () => {
 }
 
 .purchase-card :deep(label[for^='attribute-'] + select),
-.purchase-card :deep(label[for^='attribute-'] + div select) {
+.purchase-card :deep(label[for^='attribute-'] + div select),
+.purchase-card :deep(label[for='unit-combination'] + select),
+.purchase-card :deep(label[for='unit-combination'] + div select) {
   margin-top: 0;
   padding-top: 0;
 }
@@ -781,6 +984,10 @@ const scrollToReviews = () => {
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 12px;
+  }
+
+  .purchase-card__leasing-modal-content {
+    padding: 32px 18px 56px;
   }
 }
 </style>

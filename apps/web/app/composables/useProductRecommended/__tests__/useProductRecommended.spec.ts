@@ -1,12 +1,102 @@
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import type { Product } from '@plentymarkets/shop-api';
 import { useProductRecommended } from '~/composables/useProductRecommended/useProductRecommended';
 
+const { useSdk, useAsyncData, useHandleError } = vi.hoisted(() => ({
+  useSdk: vi.fn(),
+  useAsyncData: vi.fn(),
+  useHandleError: vi.fn(),
+}));
+
+mockNuxtImport('useSdk', () => useSdk);
+mockNuxtImport('useAsyncData', () => useAsyncData);
+mockNuxtImport('useHandleError', () => useHandleError);
+
+const createProduct = (variationId: number, price: number, rrp?: number): Product =>
+  ({
+    variation: { id: variationId },
+    prices: {
+      default: {
+        unitPrice: { value: price },
+      },
+      rrp: rrp
+        ? {
+            unitPrice: { value: rrp },
+          }
+        : null,
+    },
+  }) as Product;
+
 describe('useProductRecommended', () => {
-  it('should return product recommended', async () => {
-    const slug = 'athletic-mens-walking-sneakers';
-    const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended(slug);
+  const getFacet = vi.fn();
+  const getProductsByIds = vi.fn();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    useAsyncData.mockImplementation(async (_key: string, handler: () => Promise<Product[]>) => ({
+      data: ref(await handler()),
+      error: ref(null),
+    }));
+
+    useSdk.mockReturnValue({
+      plentysystems: {
+        getFacet,
+        getProductsByIds,
+      },
+    });
+  });
+
+  it('should return enriched product recommended', async () => {
+    const facetProduct = createProduct(1145, 0);
+    const enrichedProduct = createProduct(1145, 9.95, 19.95);
+
+    getFacet.mockResolvedValue({ data: { products: [facetProduct] } });
+    getProductsByIds.mockResolvedValue({ data: { products: [enrichedProduct], total: 1 } });
+
+    const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended('recommended-products');
 
     await fetchProductRecommended({ type: 'category', categoryId: '16' });
 
-    expect(recommendedProducts.value).not.toBeUndefined();
+    expect(getFacet).toHaveBeenCalledWith(
+      expect.objectContaining({
+        itemsPerPage: 250,
+        sort: 'item.score',
+      }),
+    );
+    expect(getProductsByIds).toHaveBeenCalledWith({ variationIds: [1145], itemsPerPage: 1 });
+    expect(recommendedProducts.value[0]!.prices?.default?.unitPrice.value).toBe(9.95);
+    expect(recommendedProducts.value[0]!.prices?.rrp?.unitPrice.value).toBe(19.95);
+  });
+
+  it('should filter products without displayable prices after enrichment', async () => {
+    const firstZeroProduct = createProduct(1145, 0);
+    const secondZeroProduct = createProduct(1146, 0);
+    const enrichedZeroProduct = createProduct(1145, 0);
+    const enrichedProductWithPrice = createProduct(1146, 9.95, 19.95);
+
+    getFacet.mockResolvedValue({ data: { products: [firstZeroProduct, secondZeroProduct] } });
+    getProductsByIds.mockResolvedValue({
+      data: { products: [enrichedZeroProduct, enrichedProductWithPrice], total: 2 },
+    });
+
+    const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended('priced-products');
+
+    await fetchProductRecommended({ type: 'category', categoryId: '16' });
+
+    expect(recommendedProducts.value).toEqual([enrichedProductWithPrice]);
+  });
+
+  it('should keep facet products when enrichment fails', async () => {
+    const facetProduct = createProduct(1145, 0);
+
+    getFacet.mockResolvedValue({ data: { products: [facetProduct] } });
+    getProductsByIds.mockRejectedValue(new Error('Enrichment failed'));
+
+    const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended('fallback-products');
+
+    await fetchProductRecommended({ type: 'category', categoryId: '16' });
+
+    expect(recommendedProducts.value).toEqual([facetProduct]);
   });
 });

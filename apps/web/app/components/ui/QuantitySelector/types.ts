@@ -3,4 +3,5 @@ export interface QuantitySelectorProps {
   minValue?: number;
   maxValue?: number;
   disabled?: boolean;
+  variant?: 'horizontal' | 'vertical';
 }

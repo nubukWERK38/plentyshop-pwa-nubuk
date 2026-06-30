@@ -3,7 +3,43 @@ import type {
   UseProductRecommendedState,
   FetchProductRecommended,
 } from '~/composables/useProductRecommended/types';
-import type { FacetSearchCriteria } from '@plentymarkets/shop-api';
+import { productGetters, type FacetSearchCriteria, type Product } from '@plentymarkets/shop-api';
+
+const RECOMMENDED_PRODUCTS_LIMIT = 20;
+const RECOMMENDED_PRODUCTS_FETCH_LIMIT = 250;
+
+const enrichProductsByVariationIds = async (products: Product[]): Promise<Product[]> => {
+  const variationIds = [
+    ...new Set(products.map((product) => productGetters.getVariationId(product)).filter((id) => id > 0)),
+  ];
+
+  if (!variationIds.length) return products;
+
+  try {
+    const { data } = await useSdk().plentysystems.getProductsByIds({
+      variationIds,
+      itemsPerPage: products.length,
+    });
+    const enrichedProducts = data?.products ?? [];
+    const enrichedProductsByVariationId = new Map(
+      enrichedProducts.map((product) => [productGetters.getVariationId(product), product]),
+    );
+
+    return products.map(
+      (product) => enrichedProductsByVariationId.get(productGetters.getVariationId(product)) ?? product,
+    );
+  } catch {
+    return products;
+  }
+};
+
+const hasDisplayablePrice = (product: Product) => (productGetters.getPrice(product) ?? 0) > 0;
+
+const getDisplayableProducts = (products: Product[]) => {
+  const productsWithPrices = products.filter(hasDisplayablePrice);
+
+  return (productsWithPrices.length ? productsWithPrices : products).slice(0, RECOMMENDED_PRODUCTS_LIMIT);
+};
 
 /**
  * Composable for managing recommended products data
@@ -32,8 +68,8 @@ export const useProductRecommended: UseProductRecommendedReturn = (categoryId: s
     state.value.loading = true;
 
     const common = {
-      itemsPerPage: 20,
-      sort: 'sorting.price.avg_asc',
+      itemsPerPage: RECOMMENDED_PRODUCTS_FETCH_LIMIT,
+      sort: 'item.score',
       type: params.type,
     };
 
@@ -48,11 +84,16 @@ export const useProductRecommended: UseProductRecommendedReturn = (categoryId: s
 
     const { data, error } = await useAsyncData(
       `useProductRecommended-${params.type}-${idForKey}-${params.crossSellingRelation}`,
-      () => useSdk().plentysystems.getFacet(payload),
+      async () => {
+        const response = await useSdk().plentysystems.getFacet(payload);
+        const products = await enrichProductsByVariationIds(response?.data?.products ?? []);
+
+        return getDisplayableProducts(products);
+      },
     );
 
     useHandleError(error.value ?? null);
-    state.value.data = data?.value?.data?.products ?? state.value.data;
+    state.value.data = data?.value ?? state.value.data;
     state.value.loading = false;
     return state.value.data;
   };

@@ -69,4 +69,20 @@ describe('useProductPrice', () => {
 
     expect(crossedPrice.value).toBe(120);
   });
+
+  it('should update price when product ref changes', () => {
+    const productRef = ref(productWithPrices as Product);
+    const { price, crossedPrice } = useProductPrice(productRef);
+    const changedProduct = structuredClone(productWithPrices) as Product;
+    const changedPrices = changedProduct.prices!;
+
+    changedPrices.default!.unitPrice.value = 42;
+    changedPrices.rrp!.unitPrice.value = 84;
+    changedPrices.specialOffer = null;
+    changedPrices.graduatedPrices = [];
+    productRef.value = changedProduct;
+
+    expect(price.value).toBe(42);
+    expect(crossedPrice.value).toBe(84);
+  });
 });

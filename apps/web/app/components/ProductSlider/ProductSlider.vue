@@ -50,7 +50,7 @@
       </template>
     </SfScrollable>
   </div>
-  <div class="mt-4 typography-text-xs flex gap-1">
+  <div class="product-slider__legal mt-4 typography-text-xs flex gap-1">
     <span>{{ t('common.labels.asterisk') }}</span>
     <span v-if="showNetPrices">{{ t('product.priceExclVAT') }}</span>
     <span v-else>{{ t('product.priceInclVAT') }}</span>
@@ -59,7 +59,7 @@
         <SfLink
           :href="localePath(paths.shipping)"
           target="_blank"
-          class="focus:outline focus:outline-offset-2 focus:outline-2 outline-secondary-600 rounded"
+          class="product-slider__legal-link focus:outline focus:outline-offset-2 focus:outline-2 outline-secondary-600 rounded"
         >
           {{ t('common.labels.delivery') }}
         </SfLink>
@@ -161,6 +161,61 @@ const handleScrollableNavigation = (direction: 'prev' | 'next', event: Scrollabl
   width: var(--product-slider-item-width);
   max-width: var(--product-slider-item-width);
   flex-basis: var(--product-slider-item-width);
+}
+
+.product-slider :deep(.product-slider__item) {
+  min-height: 512px;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  color: #111827;
+  box-shadow: none;
+}
+
+.product-slider :deep(.product-slider__item:hover) {
+  box-shadow: none;
+}
+
+.product-slider :deep(.product-slider__item .size-48) {
+  width: 100%;
+  height: 342px;
+  padding: 2rem 1.25rem 1rem;
+}
+
+.product-slider :deep(.product-slider__item > div:last-child) {
+  min-height: 170px;
+  padding: 1rem 1.25rem 1.5rem;
+  border-top: 0;
+}
+
+.product-slider :deep(.product-slider__item [data-testid='productcard-name']) {
+  color: #959595;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.product-slider :deep(.product-slider__item .product-card__price-row) {
+  margin-top: 1.625rem;
+  padding-top: 0;
+}
+
+.product-slider :deep(.product-slider__item [data-testid='product-card-vertical-price']) {
+  color: var(--ci-price);
+}
+
+.product-slider :deep(.product-slider__item button),
+.product-slider :deep(.product-slider__item a) {
+  border-radius: 0;
+}
+
+.product-slider__legal,
+.product-slider__legal-link,
+.product-slider__legal-link:hover,
+.product-slider__legal-link:focus,
+.product-slider__legal-link:focus-visible,
+.product-slider__legal-link:active {
+  color: var(--ci-primary) !important;
 }
 
 .product-slider__nav {

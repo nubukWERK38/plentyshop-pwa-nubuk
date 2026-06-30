@@ -16,15 +16,15 @@ export const getHorizontalClass = (key: string | undefined): string => {
 export const getVerticalClass = (key: string | undefined): string => {
   switch (key ?? '') {
     case 's':
-      return 'mb-s';
+      return 'section-spacing-s';
     case 'm':
-      return 'mb-m';
+      return 'section-spacing-m';
     case 'l':
-      return 'mb-l';
+      return 'section-spacing-l';
     case 'xl':
-      return 'mb-xl';
+      return 'section-spacing-xl';
     default:
-      return '';
+      return 'section-spacing';
   }
 };
 

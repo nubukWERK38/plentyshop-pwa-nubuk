@@ -28,7 +28,9 @@
               type="button"
               :class="[
                 gapBtnClasses,
-                { 'bg-editor-button text-white': count === (multiGridStructure.configuration.columnWidths?.length || 0) },
+                {
+                  'bg-editor-button text-white': count === (multiGridStructure.configuration.columnWidths?.length || 0),
+                },
               ]"
               @click="setColumnCount(count)"
             >
@@ -185,7 +187,10 @@
         <template v-if="multiGridStructure.configuration.layout.gradientEnabled">
           <div class="mb-3">
             <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-type-label') }}</UiFormLabel>
-            <select v-model="multiGridStructure.configuration.layout.gradientType" class="w-full rounded border border-gray-300 px-2 py-2">
+            <select
+              v-model="multiGridStructure.configuration.layout.gradientType"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+            >
               <option value="linear">Linear</option>
               <option value="radial">Radial</option>
             </select>
@@ -321,9 +326,7 @@ const { blockUuid } = useSiteConfiguration();
 const resolvedUuid = computed(() => props.uuid || blockUuid.value);
 const { allBlocks: data } = useBlocks();
 const { findOrDeleteBlockByUuid } = useBlockManager();
-const { getSetting: getBlockSize } = useSiteSettings('verticalBlockSize');
-const blockSize = computed(() => getBlockSize());
-const defaultMarginBottom = computed(() => getVerticalPixels(blockSize.value));
+const defaultSectionSpacing = 60;
 const isTwoColumnMultigrid = computed(() => {
   return multiGridStructure.value.configuration?.columnWidths?.length === 2;
 });
@@ -332,9 +335,9 @@ const multiGridStructure = computed(() => {
   const block = (findOrDeleteBlockByUuid(data.value, resolvedUuid.value) as ColumnBlock) || { content: [] };
   if (!block.configuration.layout) {
     block.configuration.layout = {
-      marginTop: 0,
+      marginTop: defaultSectionSpacing,
       marginRight: 0,
-      marginBottom: defaultMarginBottom.value,
+      marginBottom: defaultSectionSpacing,
       marginLeft: 0,
       paddingTop: 0,
       paddingRight: 0,
@@ -362,7 +365,8 @@ const multiGridStructure = computed(() => {
     if (block.configuration.layout.gradientRadius === undefined) block.configuration.layout.gradientRadius = 100;
     if (block.configuration.layout.gradientStartX === undefined) block.configuration.layout.gradientStartX = 50;
     if (block.configuration.layout.gradientStartY === undefined) block.configuration.layout.gradientStartY = 50;
-    if (block.configuration.layout.marginTop === undefined) block.configuration.layout.marginTop = 0;
+    if (block.configuration.layout.marginTop === undefined)
+      block.configuration.layout.marginTop = defaultSectionSpacing;
     if (block.configuration.layout.marginRight === undefined) block.configuration.layout.marginRight = 0;
     if (block.configuration.layout.marginLeft === undefined) block.configuration.layout.marginLeft = 0;
     if (block.configuration.layout.paddingTop === undefined) block.configuration.layout.paddingTop = 0;
@@ -370,7 +374,7 @@ const multiGridStructure = computed(() => {
     if (block.configuration.layout.paddingBottom === undefined) block.configuration.layout.paddingBottom = 0;
     if (block.configuration.layout.paddingLeft === undefined) block.configuration.layout.paddingLeft = 0;
     if (block.configuration.layout.marginBottom === undefined || block.configuration.layout.marginBottom === null) {
-      block.configuration.layout.marginBottom = defaultMarginBottom.value;
+      block.configuration.layout.marginBottom = defaultSectionSpacing;
     }
   }
   return block;

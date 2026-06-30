@@ -1,5 +1,6 @@
 import type { Product } from '@plentymarkets/shop-api';
 import { productGetters } from '@plentymarkets/shop-api';
+import type { MaybeRefOrGetter } from 'vue';
 
 /**
  * @description Composable for managing product prices.
@@ -10,11 +11,14 @@ import { productGetters } from '@plentymarkets/shop-api';
  * ```
  */
 
-export const useProductPrice = (product: Product) => {
-  const specialOffer = productGetters.getSpecialOffer(product);
-  const graduatedPrices = productGetters.getGraduatedPrices(product);
+export const useProductPrice = (product: MaybeRefOrGetter<Product>) => {
+  const currentProduct = computed(() => toValue(product));
 
   const price = computed(() => {
+    const product = currentProduct.value;
+    const specialOffer = productGetters.getSpecialOffer(product);
+    const graduatedPrices = productGetters.getGraduatedPrices(product);
+
     if (graduatedPrices.length) {
       return specialOffer && specialOffer < productGetters.getCheapestGraduatedPrice(product)
         ? specialOffer
@@ -25,9 +29,12 @@ export const useProductPrice = (product: Product) => {
     return specialOffer && specialOffer < priceValue ? specialOffer : priceValue;
   });
 
-  const crossedPrice = computed(() =>
-    specialOffer ? productGetters.getPrice(product) : productGetters.getCrossedPrice(product),
-  );
+  const crossedPrice = computed(() => {
+    const product = currentProduct.value;
+    const specialOffer = productGetters.getSpecialOffer(product);
+
+    return specialOffer ? productGetters.getPrice(product) : productGetters.getCrossedPrice(product);
+  });
 
   return {
     price,
