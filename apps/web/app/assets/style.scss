@@ -129,6 +129,13 @@ apple-pay-button {
   color: #D1FF00;
 
 }
+.footer-block__html a {
+  color: #fff;
+  text-decoration: none;
+}
+.footer-block__html.footer-block__html[data-v-ac639b72] a:hover, .footer-block__html.footer-block__html a:active, .footer-block__html.footer-block__html a:focus {
+  color: #D1FF00;
+}
 .footer-block__html .d-flex {
   display: flex;
   gap: 40px
@@ -161,8 +168,12 @@ h1, .h1 {
 	text-transform: uppercase;
 	font-weight: 300;
 	font-family: "Noto Sans",sans-serif !important;
-	color: #fff;
+	color: #7A7C7F;
 	letter-spacing: .2rem;
+}
+
+.product-recommended-products__text p {
+  color: #fff;
 }
 .product-recommended-products__text .h1 {
 	font-size: 48px;
@@ -171,6 +182,28 @@ h1, .h1 {
   text-transform: none;
 }
 
+.thumb-slider-neo button {
+  height: 185px !important;
+  background-color: #284f70 !important;
+  color: #fff !important;
+}
+.thumb-slider-neo__accent--top[data-v-37f9a9ab] {
+  clip-path: polygon(30px 0,
+    100% 0,
+    100% 100%,
+    0 100%);
+}
+.thumb-slider-neo__accent--bottom[data-v-37f9a9ab] {
+  bottom: -1px !important;
+  //clip-path rechte Ecke -30px abrunden
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+}
+.ring-1 {
+  border: 0 none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-color: rgba(0, 0, 0, 0) !important;
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
 .shippingName {
     line-height: 1.2;
     font-size: 15px;
