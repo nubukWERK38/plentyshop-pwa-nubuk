@@ -42,12 +42,17 @@
       :data-testid="`tabs-item-content-${activeTabIndex}`"
     >
       <div
-        v-if="activeItem.html"
+        v-if="activeItem.html && !isDefaultProductQuestionTab(activeItem)"
         class="no-preflight [&>p:first-child]:mt-0 [&>p:last-child]:mb-0"
         v-html="activeItem.html"
       />
 
-      <div v-for="block in activeItem.blocks" :key="block.meta?.uuid" :data-uuid="block.meta?.uuid" class="group relative">
+      <div
+        v-for="block in activeItem.blocks"
+        :key="block.meta?.uuid"
+        :data-uuid="block.meta?.uuid"
+        class="group relative"
+      >
         <ClientOnly>
           <button
             v-if="shouldEnableEditorFeatures"
@@ -67,6 +72,7 @@
 
 <script setup lang="ts">
 import type { TabsItem, TabsProps } from './types';
+import type { Block } from '@plentymarkets/shop-api';
 
 const getBlockComponent = (name: string) => getCachedBlockComponent(name);
 
@@ -79,9 +85,58 @@ const normalizedItems = computed<TabsItem[]>(() => {
   return items.map((item) => ({
     title: item?.title ?? '',
     html: item?.html ?? '',
-    blocks: item?.blocks ?? [],
+    blocks: normalizeTabBlocks(item?.title ?? '', item?.html ?? '', item?.blocks ?? []),
   }));
 });
+
+const normalizeText = (value: string) => value.trim().toLowerCase();
+
+const isProductQuestionTitle = (title: string) =>
+  ['noch fragen?', 'noch fragen', 'any questions?'].includes(normalizeText(title));
+
+const isDefaultProductQuestionHtml = (html: string) => {
+  const normalizedHtml = normalizeText(html)
+    .replace(/^<p>/, '')
+    .replace(/<\/p>$/, '')
+    .trim();
+  return normalizedHtml === '' || normalizedHtml === 'tab content';
+};
+
+const createProductQuestionBlock = (): Block => ({
+  name: 'ProductQuestion',
+  type: 'content',
+  meta: {
+    uuid: `${props.meta.uuid}-product-question`,
+    isGlobalTemplate: false,
+  },
+  content: {
+    text: {
+      title: '',
+      intro:
+        'Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne ueber das folgende Formular benachrichtigen.',
+      successText: 'Vielen Dank für Deine Anfrage. Wir melden uns schnellst möglich bei Dir. ',
+    },
+    layout: {
+      displayAsCollapsable: false,
+      initiallyCollapsed: false,
+      fullWidth: false,
+      paddingTop: 0,
+      paddingBottom: 0,
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+  },
+});
+
+const normalizeTabBlocks = (title: string, html: string, blocks: Block[]) => {
+  if (!isProductQuestionTitle(title) || !isDefaultProductQuestionHtml(html)) return blocks;
+  if (blocks.some((block) => block.name === 'ProductQuestion')) return blocks;
+
+  return [...blocks, createProductQuestionBlock()];
+};
+
+const isDefaultProductQuestionTab = (item: TabsItem) =>
+  isProductQuestionTitle(item.title) && isDefaultProductQuestionHtml(item.html);
 
 const activeTabIndex = ref(0);
 

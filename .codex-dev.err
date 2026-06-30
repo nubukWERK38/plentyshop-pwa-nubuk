@@ -1,16 +1,2 @@
-[WARN] Fetching PWA settings is disabled! Set FETCH_REMOTE_CONFIG in .env file.
-
-[43m[30m WARN [39m[49m
-
-
-[43m[30m WARN [39m[49m [1m[33mwarn[39m[22m - Your [36mcontent[39m configuration includes a pattern which looks like it's accidentally matching all of [36mnode_modules[39m and can cause serious performance issues.
-
-
-[43m[30m WARN [39m[49m [1m[33mwarn[39m[22m - Pattern: [36m./**\*.vue[39m
-
-
-[43m[30m WARN [39m[49m [1m[33mwarn[39m[22m - See our documentation for recommendations:
-
-
-[43m[30m WARN [39m[49m [1m[33mwarn[39m[22m - https://tailwindcss.com/docs/content-configuration#pattern-recommendations
-
+• turbo 2.8.10
+• turbo 2.8.10

@@ -34,6 +34,7 @@ export const BLOCK_LAYOUT_RULES: Record<string, BlockLayoutRule> = {
   PriceCard: { defaultFullWidth: false, padding: true },
   ItemText: { defaultFullWidth: false, padding: true },
   TechnicalData: { defaultFullWidth: false, padding: true },
+  ProductQuestion: { defaultFullWidth: false, padding: true },
   CustomerReview: { defaultFullWidth: false, padding: true },
   ProductLegalInformation: { defaultFullWidth: false, padding: true },
   PerPageFilter: { defaultFullWidth: false, padding: true },

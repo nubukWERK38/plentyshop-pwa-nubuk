@@ -13,6 +13,7 @@ const blockTypeNames: Record<string, string> = {
   ItemText: 'Item Details',
   CategoryData: 'Category Data',
   TechnicalData: 'Technical Data',
+  ProductQuestion: 'Product Question',
   ItemData: 'Item Data',
   Banner: 'Image Banner',
   ImageTextBox: 'Image Text Box',

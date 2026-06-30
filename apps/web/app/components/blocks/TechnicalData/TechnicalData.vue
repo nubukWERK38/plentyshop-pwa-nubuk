@@ -8,7 +8,7 @@
         data-testid="technical-data"
       >
         <template #summary>
-          <h2 class="font-bold text-lg leading-6 md:text-2xl">
+          <h2 v-if="content.text.title" class="font-bold text-lg leading-6 md:text-2xl">
             {{ content.text.title }}
           </h2>
         </template>
@@ -28,7 +28,7 @@
       <UiDivider v-if="initiallyCollapsed && hasContent" class="mb-2 mt-2" />
     </div>
     <div v-else>
-      <h2 class="font-bold text-lg leading-6 md:text-2xl">
+      <h2 v-if="content.text.title" class="font-bold text-lg leading-6 md:text-2xl">
         {{ content.text.title }}
       </h2>
       <div v-if="technicalPropertyGroups.length" class="technical-info" data-testid="technical-data-properties">

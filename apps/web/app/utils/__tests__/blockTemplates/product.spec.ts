@@ -12,8 +12,7 @@ describe('createProduct', () => {
     const blocks = createProduct();
     const blockNames = blocks.map((block) => block.name);
     expect(blockNames).toContain('MultiGrid');
-    expect(blockNames).toContain('ItemText');
-    expect(blockNames).toContain('TechnicalData');
+    expect(blockNames).toContain('Tabs');
     expect(blockNames).toContain('CustomerReview');
     expect(blockNames).toContain('ProductLegalInformation');
     expect(blockNames).toContain('ProductRecommendedProducts');
@@ -42,11 +41,11 @@ describe('createProduct', () => {
 
   it('should use translations for block titles', () => {
     const blocks = createProduct();
-    const itemTextBlock = blocks.find((block) => block.name === 'ItemText');
-    expect(itemTextBlock).toBeDefined();
-    const content = itemTextBlock?.content as { text?: { title?: string } };
-    expect(content?.text?.title).toBeDefined();
-    expect(typeof content?.text?.title).toBe('string');
+    const tabsBlock = blocks.find((block) => block.name === 'Tabs');
+    expect(tabsBlock).toBeDefined();
+    const content = tabsBlock?.content as { items?: { title?: string }[] };
+    expect(content?.items?.[0]?.title).toBeDefined();
+    expect(typeof content?.items?.[0]?.title).toBe('string');
   });
 
   it('should not include Footer (Footer is a global block)', () => {

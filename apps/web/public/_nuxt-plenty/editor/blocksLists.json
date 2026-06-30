@@ -2558,6 +2558,56 @@
         }
       },
       {
+        "title": "Product Question",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/forms_preview.png",
+        "template": {
+          "en": {
+            "name": "ProductQuestion",
+            "type": "content",
+            "meta": { "uuid": "8dfbe3d3-1c2a-4e54-912a-9b1c2d3e4f6a", "isGlobalTemplate": false },
+            "parent_slot": 0,
+            "content": {
+              "text": {
+                "title": "Any questions?",
+                "intro": "If you have any further questions about this item, please use the form below.",
+                "successText": "Thank you for your request. We will get back to you as soon as possible."
+              },
+              "layout": {
+                "displayAsCollapsable": true,
+                "initiallyCollapsed": true,
+                "fullWidth": false,
+                "paddingTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0
+              }
+            }
+          },
+          "de": {
+            "name": "ProductQuestion",
+            "type": "content",
+            "meta": { "uuid": "2a6fe4c0-8a38-4b0a-a34d-2d7c2d3e4f6b", "isGlobalTemplate": false },
+            "parent_slot": 0,
+            "content": {
+              "text": {
+                "title": "Noch Fragen?",
+                "intro": "Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne ueber das folgende Formular benachrichtigen.",
+                "successText": "Vielen Dank für Deine Anfrage. Wir melden uns schnellst möglich bei Dir. "
+              },
+              "layout": {
+                "displayAsCollapsable": true,
+                "initiallyCollapsed": true,
+                "fullWidth": false,
+                "paddingTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0
+              }
+            }
+          }
+        }
+      },
+      {
         "title": "Customer Reviews",
         "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/customer_reviews.svg",
         "template": {

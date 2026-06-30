@@ -104,40 +104,103 @@ export const createProduct = (): Block[] => {
       ],
     },
     {
-      name: 'ItemText',
+      name: 'Tabs',
       type: 'content',
       meta: {
         uuid: uuid(),
         isGlobalTemplate: false,
       },
       content: {
-        text: {
-          title: itemTextTitle,
-        },
+        items: [
+          {
+            title: itemTextTitle,
+            html: '',
+            blocks: [
+              {
+                name: 'ItemText',
+                type: 'content',
+                meta: {
+                  uuid: uuid(),
+                  isGlobalTemplate: false,
+                },
+                content: {
+                  text: {
+                    title: '',
+                  },
+                  layout: {
+                    displayAsCollapsable: false,
+                    initiallyCollapsed: false,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                  },
+                },
+              },
+            ],
+          },
+          {
+            title: technicalDataTitle,
+            html: '',
+            blocks: [
+              {
+                name: 'TechnicalData',
+                type: 'content',
+                meta: {
+                  uuid: uuid(),
+                  isGlobalTemplate: false,
+                },
+                content: {
+                  text: {
+                    title: '',
+                  },
+                  layout: {
+                    displayAsCollapsable: false,
+                    initiallyCollapsed: false,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                  },
+                },
+              },
+            ],
+          },
+          {
+            title: 'Noch Fragen?',
+            html: '',
+            blocks: [
+              {
+                name: 'ProductQuestion',
+                type: 'content',
+                meta: {
+                  uuid: uuid(),
+                  isGlobalTemplate: false,
+                },
+                content: {
+                  text: {
+                    title: '',
+                    intro:
+                      'Wenn Du noch weitere Fragen zu diesem Artikel hast, kannst Du uns gerne ueber das folgende Formular benachrichtigen.',
+                    successText: 'Vielen Dank für Deine Anfrage. Wir melden uns schnellst möglich bei Dir. ',
+                  },
+                  layout: {
+                    displayAsCollapsable: false,
+                    initiallyCollapsed: false,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                  },
+                },
+              },
+            ],
+          },
+        ],
         layout: {
-          displayAsCollapsable: true,
-          initiallyCollapsed: false,
-          paddingTop: 0,
-          paddingBottom: 0,
-          paddingLeft: 0,
-          paddingRight: 0,
-        },
-      },
-    },
-    {
-      name: 'TechnicalData',
-      type: 'content',
-      meta: {
-        uuid: uuid(),
-        isGlobalTemplate: false,
-      },
-      content: {
-        text: {
-          title: technicalDataTitle,
-        },
-        layout: {
-          displayAsCollapsable: true,
-          initiallyCollapsed: false,
+          fullWidth: false,
+          additionalClasses: '',
+          htmlId: 'product-detail-tabs',
           paddingTop: 0,
           paddingBottom: 0,
           paddingLeft: 0,
