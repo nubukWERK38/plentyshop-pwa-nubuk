@@ -83,7 +83,7 @@ const linkStyle = computed<CSSProperties>(() => ({
 
 .contact-flags__link:hover,
 .contact-flags__link:focus-visible {
-  background-color: #111416;
+  background-color: var(--ci-dark);
   box-shadow: 0 8px 18px rgb(0 0 0 / 18%);
   transform: translateX(0);
   text-decoration: none;

@@ -157,7 +157,7 @@
                 <template #suffix>
                   <button
                     type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    class="editor-color-swatch"
                     :style="{ backgroundColor: color }"
                     @mousedown.stop
                     @click.stop="toggle"
@@ -180,7 +180,7 @@
                 <template #suffix>
                   <button
                     type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    class="editor-color-swatch"
                     :style="{ backgroundColor: color }"
                     @mousedown.stop
                     @click.stop="toggle"
@@ -203,7 +203,7 @@
                 <template #suffix>
                   <button
                     type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    class="editor-color-swatch"
                     :style="{ backgroundColor: color }"
                     @mousedown.stop
                     @click.stop="toggle"
@@ -222,7 +222,7 @@
                 <template #suffix>
                   <button
                     type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    class="editor-color-swatch"
                     :style="{ backgroundColor: color }"
                     @mousedown.stop
                     @click.stop="toggle"
@@ -241,7 +241,7 @@
                 <template #suffix>
                   <button
                     type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    class="editor-color-swatch"
                     :style="{ backgroundColor: color }"
                     @mousedown.stop
                     @click.stop="toggle"
@@ -260,7 +260,7 @@
                 <template #suffix>
                   <button
                     type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    class="editor-color-swatch"
                     :style="{ backgroundColor: color }"
                     @mousedown.stop
                     @click.stop="toggle"

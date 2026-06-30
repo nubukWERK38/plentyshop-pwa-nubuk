@@ -366,7 +366,7 @@ onMounted(async () => {
   color: var(--bmn-text);
   background: var(--bmn-bg);
   position: relative;
-  border-bottom: 1px solid var(--cidark, #1f2937);
+  border-bottom: 1px solid var(--ci-dark);
   margin-bottom: 30px;
 }
 

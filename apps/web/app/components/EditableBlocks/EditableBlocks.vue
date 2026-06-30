@@ -30,7 +30,7 @@
               root
               :read-only="readOnly"
               class="group"
-              :class="getBlockClass(block).value"
+              :class="[getBlockClass(block).value, { '!mb-0': isLastMainBlock(block) }]"
               data-testid="block-wrapper"
               @click="tabletEdit(getIndex(block))"
             />
@@ -139,6 +139,12 @@ const {
 } = useSiteConfiguration();
 const { drawerOpen: localizationDrawerOpen } = useEditorLocalizationKeys();
 const { shouldShowBlock, clearRegistry } = useBlocksVisibility();
+
+const visibleBlocks = computed(() => data.value.filter((block: Block) => shouldShowBlock(block, enabledActions.value)));
+const isLastMainBlock = (block: Block) => {
+  if (props.blocks.length > 0) return false;
+  return visibleBlocks.value.at(-1)?.meta.uuid === block.meta.uuid;
+};
 
 const drawerOpen = computed<boolean>(() => siteConfigurationDrawerOpenRef.value);
 const drawerView = computed<string | null>(() => siteConfigurationDrawerViewRef.value);

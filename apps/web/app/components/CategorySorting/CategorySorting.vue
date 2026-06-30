@@ -1,7 +1,6 @@
 <template>
   <div
-    :class="selectionModeCompact ? 'max-w-full' : 'w-full'"
-    :style="selectionModeCompact ? { width: '240px' } : undefined"
+    :class="selectionModeCompact ? 'category-sorting--compact max-w-full' : 'w-full'"
     data-testid="category-sorting"
   >
     <div

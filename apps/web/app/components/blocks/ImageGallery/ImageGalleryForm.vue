@@ -84,7 +84,7 @@
                 <template #suffix>
                   <button
                     type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    class="editor-color-swatch"
                     :style="{ backgroundColor: color }"
                     @mousedown.stop
                     @click.stop="toggle"
@@ -103,7 +103,7 @@
                 <template #suffix>
                   <button
                     type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                    class="editor-color-swatch"
                     :style="{ backgroundColor: color }"
                     @mousedown.stop
                     @click.stop="toggle"
@@ -128,7 +128,7 @@
               <template #suffix>
                 <button
                   type="button"
-                  class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                  class="editor-color-swatch"
                   :style="{ backgroundColor: color }"
                   @mousedown.stop
                   @click.stop="toggle"
@@ -196,7 +196,7 @@
         <UiFormLabel class="mb-1">{{ getEditorTranslation('subline-color-label') }}</UiFormLabel>
         <EditorColorPicker v-model="headerState.sublineColor" class="w-full">
           <template #trigger="{ color, toggle }">
-            <SfInput v-model="headerState.sublineColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+            <SfInput v-model="headerState.sublineColor" type="text"><template #suffix><button type="button" class="editor-color-swatch" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
           </template>
         </EditorColorPicker>
       </div>
@@ -205,7 +205,7 @@
         <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-color-label') }}</UiFormLabel>
         <EditorColorPicker v-model="headerState.headlineColor" class="w-full">
           <template #trigger="{ color, toggle }">
-            <SfInput v-model="headerState.headlineColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+            <SfInput v-model="headerState.headlineColor" type="text"><template #suffix><button type="button" class="editor-color-swatch" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
           </template>
         </EditorColorPicker>
       </div>
@@ -228,7 +228,7 @@
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-start-label') }}</UiFormLabel>
           <EditorColorPicker v-model="headerGradientState.startColor" class="w-full">
             <template #trigger="{ color, toggle }">
-              <SfInput v-model="headerGradientState.startColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+              <SfInput v-model="headerGradientState.startColor" type="text"><template #suffix><button type="button" class="editor-color-swatch" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
             </template>
           </EditorColorPicker>
         </div>
@@ -237,7 +237,7 @@
           <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-end-label') }}</UiFormLabel>
           <EditorColorPicker v-model="headerGradientState.endColor" class="w-full">
             <template #trigger="{ color, toggle }">
-              <SfInput v-model="headerGradientState.endColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+              <SfInput v-model="headerGradientState.endColor" type="text"><template #suffix><button type="button" class="editor-color-swatch" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
             </template>
           </EditorColorPicker>
         </div>
@@ -252,7 +252,7 @@
         <UiFormLabel class="mb-1">{{ getEditorTranslation('header-background-label') }}</UiFormLabel>
         <EditorColorPicker v-model="headerState.backgroundColor" class="w-full">
           <template #trigger="{ color, toggle }">
-            <SfInput v-model="headerState.backgroundColor" type="text"><template #suffix><button type="button" class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
+            <SfInput v-model="headerState.backgroundColor" type="text"><template #suffix><button type="button" class="editor-color-swatch" :style="{ backgroundColor: color }" @mousedown.stop @click.stop="toggle" /></template></SfInput>
           </template>
         </EditorColorPicker>
       </div>

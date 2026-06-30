@@ -1,3 +1,28 @@
+:root {
+  /* CI colors */
+  --ci-primary: #284f70;
+  --ci-primary-dark: #1d2c36;
+  --ci-dark: #111416;
+  --ci-text: #1c1c1c;
+  --ci-accent: #d1ff00;
+  --ci-accent-light: #edff6c;
+  --ci-accent-button: #c7ff00;
+  --ci-accent-button-hover: #b6ef00;
+  --ci-success: #02c652;
+  --ci-muted: #7a7c7f;
+  --ci-price: #ff3434;
+  --ci-price-highlight: #ff4a4a;
+  --ci-sale: #e84646;
+  --ci-footer-background: #cfe4ec;
+  --ci-footer-panel: #161a16;
+  --ci-footer-footnote: #959795;
+
+  /* Legacy aliases */
+  --ci: var(--ci-primary);
+  --cidark: var(--ci-dark);
+  --green: var(--ci-accent);
+}
+
 .scrollbar-hidden {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -17,6 +42,13 @@
 }
 .scrollbar-thin::-webkit-scrollbar-track {
   background-color: #f1f1f1;
+}
+
+.product-slider__nav--next {
+  right: -33px !important;
+}
+.product-slider__nav--prev {
+  left: -33px !important;
 }
 
 @media (min-width: 1024px) {
@@ -81,11 +113,10 @@ apple-pay-button {
     vertical-align: middle;
   }
 }
-.zipBox>.widget-inner {
+.zipBox > .widget-inner {
     max-width: 100%;
-    // hintergrund mit gradient 90deg von var(--cidark) zu var(--ci) und fallback zu var(--ci) wenn gradient nicht unterstützt wird
-    background: var(--ci);
-    background: linear-gradient(90deg, var(--cidark), var(--ci));
+    background: var(--ci-primary);
+    background: linear-gradient(90deg, var(--ci-dark), var(--ci-primary));
     color: #fff;
     padding: 60px 120px !important;
     clip-path: polygon(10% 5%, 100% 0%, 90% 95%, 0% 100%);
@@ -93,7 +124,7 @@ apple-pay-button {
     margin-bottom: 170px;
 }
 .zipBox {
-  filter: drop-shadow(15px -15px 0px var(--green));
+  filter: drop-shadow(15px -15px 0px var(--ci-accent));
 
   ul, .rte-prose.rte-prose ul, .rte-prose.rte-prose ol {
     padding-left: 0 !important;
@@ -112,7 +143,7 @@ apple-pay-button {
       font-weight: 900;
       content: '\f00c';
       margin-right: 10px;
-      color: var(--green);
+      color: var(--ci-accent);
     }
   }
 }
@@ -126,7 +157,7 @@ apple-pay-button {
 }
 
 .footer-block .fa {
-  color: #D1FF00;
+  color: var(--ci-accent);
 
 }
 .footer-block__html a {
@@ -134,7 +165,7 @@ apple-pay-button {
   text-decoration: none;
 }
 .footer-block__html.footer-block__html[data-v-ac639b72] a:hover, .footer-block__html.footer-block__html a:active, .footer-block__html.footer-block__html a:focus {
-  color: #D1FF00;
+  color: var(--ci-accent);
 }
 .footer-block__html .d-flex {
   display: flex;
@@ -168,7 +199,7 @@ h1, .h1 {
 	text-transform: uppercase;
 	font-weight: 300;
 	font-family: "Noto Sans",sans-serif !important;
-	color: #7A7C7F;
+	color: var(--ci-muted);
 	letter-spacing: .2rem;
 }
 
@@ -184,7 +215,7 @@ h1, .h1 {
 
 .thumb-slider-neo button {
   height: 185px !important;
-  background-color: #284f70 !important;
+  background-color: var(--ci-primary) !important;
   color: #fff !important;
 }
 .thumb-slider-neo__accent--top[data-v-37f9a9ab] {
@@ -224,8 +255,8 @@ h1, .h1 {
 	text-transform: uppercase;
 	font-size: 14px;
 	font-weight: 300;
-	color: var(--green);
-	background-color: var(--cidark);
+	color: var(--ci-accent);
+	background-color: var(--ci-dark);
 	padding: 2px 6px;
 }
 .purchase-card__brand img {
@@ -234,4 +265,65 @@ h1, .h1 {
 	margin-bottom: 20px;
 	max-height: 100px;
   filter: grayscale(1) invert(1);
+}
+
+.editor-block-row-outline {
+  box-shadow: inset 0 0 0 2px #7c3aed;
+}
+
+.editor-localization-sidebar {
+  width: 384px;
+}
+
+.notify-me-modal {
+  z-index: 9999;
+}
+
+.product-card__discount-badge {
+  background-color: var(--ci-sale);
+  clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.product-card__sale-badge {
+  color: var(--ci-price-highlight);
+  border-color: var(--ci-price-highlight);
+}
+
+.product-card__price {
+  color: var(--ci-price-highlight);
+}
+
+.editor-color-picker__trigger {
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  border: 1px solid #dee2e6;
+}
+
+.editor-color-swatch {
+  width: 2.5rem;
+  height: 2rem;
+  cursor: pointer;
+  border: 1px solid #a0a0a0;
+  border-radius: 0.5rem;
+}
+
+.category-items-per-page--compact {
+  width: 140px;
+}
+
+.category-sorting--compact {
+  width: 240px;
+}
+
+.payment-button--disabled {
+  pointer-events: none;
+}
+
+.cookiebar-open-icon-path {
+  stroke: rgb(var(--colors-2-primary-500) / 1);
+}
+
+.navbar-top--plain {
+  color: var(--ci-success);
 }

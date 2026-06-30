@@ -241,7 +241,7 @@ watch(
 }
 
 .product-recommended-products :deep(.product-recommended-products__card [data-testid='product-card-vertical-price']) {
-  color: #ff3434;
+  color: var(--ci-price);
 }
 
 .product-recommended-products :deep(.product-recommended-products__card button),

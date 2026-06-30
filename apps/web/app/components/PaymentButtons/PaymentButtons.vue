@@ -29,12 +29,12 @@
     />
     <ApplePayButton
       v-else-if="selectedPaymentId === paypalApplePayPaymentId"
-      :style="disableBuyButton ? 'pointer-events: none;' : ''"
+      :class="{ 'payment-button--disabled': disableBuyButton }"
       @button-clicked="handlePreparePaymentPayPal"
     />
     <GooglePayButton
       v-else-if="selectedPaymentId === paypalGooglePayPaymentId"
-      :style="disableBuyButton ? 'pointer-events: none;' : ''"
+      :class="{ 'payment-button--disabled': disableBuyButton }"
       @button-clicked="handlePreparePaymentPayPal"
     />
     <PayPalAPM v-else-if="PayPalIsAPM" :disabled="disableBuyButton" @validation-callback="handlePreparePaymentPayPal" />

@@ -9,7 +9,7 @@ export const createDefault = (): AnnouncementBarProps => ({
     visible: true,
   },
   content: {
-    backgroundColor: '#EDFF6C',
+    backgroundColor: 'var(--ci-accent-light)',
     text: 'This is an example announcement.',
   },
 });

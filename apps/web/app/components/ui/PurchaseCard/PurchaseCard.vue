@@ -737,14 +737,14 @@ const scrollToReviews = () => {
 .purchase-card__cart-button {
   min-height: 56px;
   border-radius: 0;
-  background: #c7ff00 !important;
+  background: var(--ci-accent-button) !important;
   color: #000 !important;
   font-weight: 800;
 }
 
 .purchase-card__cart-button:hover,
 .purchase-card__cart-button:active {
-  background: #b6ef00 !important;
+  background: var(--ci-accent-button-hover) !important;
   color: #000 !important;
 }
 

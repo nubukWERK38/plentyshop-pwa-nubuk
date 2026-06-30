@@ -7,7 +7,7 @@
     <div class="relative overflow-hidden bg-white">
       <div
         v-if="hasSpecialOffer"
-        class="absolute left-5 top-4 z-[2] border border-[#ff4a4a] px-1.5 py-0.5 text-xs font-normal uppercase leading-none tracking-[0.2em] text-[#ff4a4a]"
+        class="product-card__sale-badge absolute left-5 top-4 z-[2] border px-1.5 py-0.5 text-xs font-normal uppercase leading-none tracking-[0.2em]"
         data-testid="product-card-sale-badge"
       >
         SALE
@@ -15,8 +15,7 @@
 
       <div
         v-if="discountPercentage"
-        class="absolute right-0 top-0 z-[2] flex h-12 w-20 items-center justify-center bg-[#e84646] pl-3 text-lg font-bold leading-none text-white"
-        style="clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%)"
+        class="product-card__discount-badge absolute right-0 top-0 z-[2] flex h-12 w-20 items-center justify-center pl-3 text-lg font-bold leading-none text-white"
         data-testid="product-card-discount-badge"
       >
         -{{ discountPercentage }}%
@@ -133,7 +132,7 @@
         <div v-else aria-hidden="true" />
 
         <span
-          class="ml-auto whitespace-nowrap text-base font-bold leading-none text-[#ff4a4a]"
+          class="product-card__price ml-auto whitespace-nowrap text-base font-bold leading-none"
           data-testid="product-card-vertical-price"
         >
           <span v-if="showFromText" class="mr-1">{{ t('account.ordersAndReturns.orderDetails.priceFrom') }}</span>

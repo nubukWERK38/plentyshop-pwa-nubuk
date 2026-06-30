@@ -50,16 +50,16 @@ export function createDefaultFooterContent(): FooterContent {
     ],
     layout: {
       backgroundImage: '',
-      contentBackground: '#161a16',
+      contentBackground: 'var(--ci-footer-panel)',
       contentOpacity: 0.88,
     },
     footnote: `© ${runtimeConfig.public.storename} ${new Date().getFullYear()}`,
     footnoteAlign: 'right',
     colors: {
-      background: '#cfe4ec',
-      text: '#1c1c1c',
-      footnoteBackground: '#161a16',
-      footnoteText: '#959795',
+      background: 'var(--ci-footer-background)',
+      text: 'var(--ci-text)',
+      footnoteBackground: 'var(--ci-footer-panel)',
+      footnoteText: 'var(--ci-footer-footnote)',
     },
   };
 }

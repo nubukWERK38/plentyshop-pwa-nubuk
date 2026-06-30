@@ -562,8 +562,8 @@ const navigateToLogin = () => {
 }
 
 .nubuk-service-bar {
-  background: #284f70;
-  border-top: 1px solid #1d2c36;
+  background: var(--ci-primary);
+  border-top: 1px solid var(--ci-primary-dark);
   color: #ffffff;
   font-size: 14px;
   line-height: 1;

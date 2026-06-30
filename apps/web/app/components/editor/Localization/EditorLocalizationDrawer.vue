@@ -67,7 +67,7 @@
               {{ emptyStateMessage }}
             </div>
             <template v-else>
-              <div class="flex-shrink-0 z-10" style="width: 384px">
+              <div class="editor-localization-sidebar flex-shrink-0 z-10">
                 <div ref="leftScrollerRef" class="h-full overflow-y-auto scrollbar-thin" @scroll="syncScrollLeft">
                   <div :style="{ height: `${leftVirtualizer.getTotalSize()}px`, position: 'relative' }">
                     <div

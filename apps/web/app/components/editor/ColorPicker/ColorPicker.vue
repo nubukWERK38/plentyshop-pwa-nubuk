@@ -9,7 +9,7 @@
       :open="openDropdown"
       :close="close"
     >
-      <div class="h-8 w-8 border border-[#dee2e6] cursor-pointer" :style="style" @mousedown.stop @click.stop="toggle" />
+      <div class="editor-color-picker__trigger" :style="style" @mousedown.stop @click.stop="toggle" />
     </slot>
 
     <div v-if="open" :class="['absolute top-full z-50 mt-2', dropdownPositionClass]" @mousedown.stop @click.stop>
