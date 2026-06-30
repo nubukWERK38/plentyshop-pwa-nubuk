@@ -2,7 +2,7 @@
   <div :style="inlineStyle" data-testid="technical-data-block">
     <div v-if="displayAsCollapsable">
       <UiAccordionItem
-        v-if="text"
+        v-if="hasContent"
         v-model="initiallyCollapsed"
         summary-class="md:rounded-md w-full hover:bg-neutral-100 py-2 pl-4 pr-3 flex justify-between items-center select-none"
         data-testid="technical-data"
@@ -12,15 +12,37 @@
             {{ content.text.title }}
           </h2>
         </template>
-        <div v-if="text" data-testid="technical-data-innertext" class="no-preflight" v-html="text" />
+        <div v-if="technicalPropertyGroups.length" class="technical-info" data-testid="technical-data-properties">
+          <div v-for="group in technicalPropertyGroups" :key="group.id" class="technical-info__group group">
+            <p class="technical-info__heading h4">{{ group.name }}</p>
+            <ul class="technical-info__list">
+              <li v-for="property in group.properties" :key="property.id" class="technical-info__item">
+                <strong>{{ property.name }}</strong
+                ><span>: {{ property.value }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div v-else-if="text" data-testid="technical-data-innertext" class="no-preflight" v-html="text" />
       </UiAccordionItem>
-      <UiDivider v-if="initiallyCollapsed && text?.length" class="mb-2 mt-2" />
+      <UiDivider v-if="initiallyCollapsed && hasContent" class="mb-2 mt-2" />
     </div>
     <div v-else>
       <h2 class="font-bold text-lg leading-6 md:text-2xl">
         {{ content.text.title }}
       </h2>
-      <div v-if="text" class="no-preflight" v-html="text" />
+      <div v-if="technicalPropertyGroups.length" class="technical-info" data-testid="technical-data-properties">
+        <div v-for="group in technicalPropertyGroups" :key="group.id" class="technical-info__group group">
+          <p class="technical-info__heading h4">{{ group.name }}</p>
+          <ul class="technical-info__list">
+            <li v-for="property in group.properties" :key="property.id" class="technical-info__item">
+              <strong>{{ property.name }}</strong
+              ><span>: {{ property.value }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div v-else-if="text" class="no-preflight" v-html="text" />
     </div>
   </div>
 </template>
@@ -31,11 +53,169 @@ import type { TechnicalDataProps } from './types';
 
 const props = defineProps<TechnicalDataProps>();
 
+type TechnicalPropertyGroup = {
+  id?: number | string | null;
+  name?: string | null;
+  names?: {
+    name?: string | null;
+  } | null;
+  properties?: TechnicalProperty[];
+};
+
+type TechnicalProperty = {
+  id?: number | string | null;
+  groupId?: number | string | null;
+  position?: number | null;
+  names?: {
+    name?: string | null;
+    propertyId?: number | string | null;
+  } | null;
+  values?: {
+    value?: unknown;
+  } | null;
+  groups?: TechnicalPropertyGroup[];
+};
+
+type TechnicalInfoProperty = {
+  id: string;
+  name: string;
+  value: string;
+  position: number;
+};
+
+type TechnicalInfoGroup = {
+  id: number;
+  name: string;
+  properties: TechnicalInfoProperty[];
+};
+
+const TECHNICAL_GROUP_IDS = [5, 15, 16, 17, 18, 19, 20, 21, 22];
+const TECHNICAL_GROUP_ID_SET = new Set(TECHNICAL_GROUP_IDS);
+const TECHNICAL_GROUP_PROPERTY_FILTERS: Record<number, Set<number>> = {
+  5: new Set([11, 13]),
+};
+const TECHNICAL_GROUP_NAMES: Record<number, string> = {
+  5: 'Rahmenset',
+  15: 'Fahrwerk',
+  16: 'Bremsen',
+  17: 'Antrieb',
+  18: 'Laufr\u00e4der',
+  19: 'Gewicht',
+  20: 'Rahmengr\u00f6\u00dfe',
+  21: 'E-Bike',
+  22: 'Accessoires',
+};
+
 const content = computed(() => props.content);
 const initiallyCollapsed = computed(() => !props.content?.layout.initiallyCollapsed);
 const displayAsCollapsable = computed(() => props.content?.layout.displayAsCollapsable);
 const { currentProduct } = useProducts();
 const text = computed(() => productGetters.getTechnicalData(currentProduct.value));
+const getNumericId = (value: number | string | null | undefined) => {
+  const numericId = Number(value);
+
+  return Number.isInteger(numericId) ? numericId : null;
+};
+
+const normalizeGroupName = (name: string | null | undefined) => (name ?? '').replace(/^Beschreibung\s+/i, '').trim();
+
+const getGroupName = (groupId: number, group?: TechnicalPropertyGroup) =>
+  normalizeGroupName(group?.names?.name ?? group?.name) || TECHNICAL_GROUP_NAMES[groupId] || '';
+
+const getPropertyValue = (property: TechnicalProperty) => {
+  const value = property.values?.value;
+  if (value === null || value === undefined) return '';
+
+  return String(value).trim();
+};
+
+const getPropertyName = (property: TechnicalProperty) => property.names?.name?.trim() ?? '';
+
+const getPropertyId = (property: TechnicalProperty) =>
+  String(property.id ?? property.names?.propertyId ?? property.names?.name ?? property.values?.value ?? '');
+
+const getNumericPropertyId = (property: TechnicalProperty) => getNumericId(property.id ?? property.names?.propertyId);
+
+const isAllowedPropertyInGroup = (groupId: number, property: TechnicalProperty) => {
+  const propertyFilter = TECHNICAL_GROUP_PROPERTY_FILTERS[groupId];
+  if (!propertyFilter) return true;
+
+  const propertyId = getNumericPropertyId(property);
+  return propertyId !== null && propertyFilter.has(propertyId);
+};
+
+const getPropertyGroup = (property: TechnicalProperty) =>
+  property.groups?.find((group) => {
+    const groupId = getNumericId(group.id);
+
+    return groupId !== null && TECHNICAL_GROUP_ID_SET.has(groupId);
+  });
+
+const addPropertyToGroup = (
+  groups: Map<number, TechnicalInfoGroup>,
+  groupId: number,
+  property: TechnicalProperty,
+  group?: TechnicalPropertyGroup,
+) => {
+  const value = getPropertyValue(property);
+  const name = getPropertyName(property);
+
+  if (!value || !name || !isAllowedPropertyInGroup(groupId, property)) return;
+
+  if (!groups.has(groupId)) {
+    groups.set(groupId, {
+      id: groupId,
+      name: getGroupName(groupId, group),
+      properties: [],
+    });
+  }
+
+  groups.get(groupId)?.properties.push({
+    id: `${groupId}-${getPropertyId(property)}`,
+    name,
+    value,
+    position: property.position ?? 0,
+  });
+};
+
+const technicalPropertyGroups = computed<TechnicalInfoGroup[]>(() => {
+  const groups = new Map<number, TechnicalInfoGroup>();
+  const variationProperties = (currentProduct.value?.variationProperties ?? []) as TechnicalPropertyGroup[];
+
+  variationProperties.forEach((group) => {
+    const groupId = getNumericId(group.id);
+    const isTechnicalGroup = groupId !== null && TECHNICAL_GROUP_ID_SET.has(groupId);
+
+    (group.properties ?? []).forEach((property) => {
+      if (isTechnicalGroup && groupId !== null) {
+        addPropertyToGroup(groups, groupId, property, group);
+        return;
+      }
+
+      const propertyGroupId = getNumericId(property.groupId);
+      if (propertyGroupId !== null && TECHNICAL_GROUP_ID_SET.has(propertyGroupId)) {
+        const propertyGroup = property.groups?.find((nestedGroup) => getNumericId(nestedGroup.id) === propertyGroupId);
+        addPropertyToGroup(groups, propertyGroupId, property, propertyGroup ?? group);
+        return;
+      }
+
+      const propertyGroup = getPropertyGroup(property);
+      const nestedGroupId = getNumericId(propertyGroup?.id);
+      if (nestedGroupId !== null && TECHNICAL_GROUP_ID_SET.has(nestedGroupId)) {
+        addPropertyToGroup(groups, nestedGroupId, property, propertyGroup);
+      }
+    });
+  });
+
+  return TECHNICAL_GROUP_IDS.map((groupId) => groups.get(groupId))
+    .filter((group): group is TechnicalInfoGroup => Boolean(group?.properties.length))
+    .map((group) => ({
+      ...group,
+      properties: [...group.properties].sort((a, b) => a.position - b.position),
+    }));
+});
+
+const hasContent = computed(() => technicalPropertyGroups.value.length > 0 || Boolean(text.value?.length));
 const inlineStyle = computed(() => {
   const layout = props.content?.layout || {};
   return {
@@ -49,9 +229,9 @@ const inlineStyle = computed(() => {
 const { registerBlockVisibility } = useBlocksVisibility();
 
 watch(
-  text,
-  (newText) => {
-    registerBlockVisibility(props.meta.uuid, newText?.length > 0);
+  hasContent,
+  (isVisible) => {
+    registerBlockVisibility(props.meta.uuid, isVisible);
   },
   { immediate: true },
 );

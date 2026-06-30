@@ -90,6 +90,62 @@
   }
 }
 
+.technical-info {
+  column-count: 2;
+  column-gap: 42px;
+  color: #9aa0a6;
+  font-size: 16px;
+  line-height: 1.45;
+
+  &__group {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 34px;
+    break-inside: avoid;
+  }
+
+  &__heading {
+    margin: 0 0 10px;
+    color: var(--ci-dark);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    position: relative;
+    margin: 0 0 8px;
+    padding-left: 18px;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #7b8289;
+      content: '\203a';
+    }
+
+    strong {
+      color: #747b82;
+      font-weight: 700;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .technical-info {
+    column-count: 1;
+    column-gap: 0;
+  }
+}
+
 apple-pay-button {
   --apple-pay-button-width: 100%;
   --apple-pay-button-height: 50px;

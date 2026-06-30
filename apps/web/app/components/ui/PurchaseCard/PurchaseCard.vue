@@ -280,7 +280,7 @@
       aria-labelledby="leasing-modal-title"
       tag="section"
       role="dialog"
-      class="purchase-card__leasing-modal h-full w-full md:h-[calc(100vh-96px)] md:w-[min(1500px,calc(100vw-220px))] m-0 p-0 overflow-hidden"
+      class="purchase-card__leasing-modal z-[2147483647] h-full w-full md:h-[calc(100vh-96px)] md:w-[min(1500px,calc(100vw-220px))] m-0 p-0 overflow-hidden"
       overlay-classes="z-[2147483647]"
     >
       <header class="purchase-card__leasing-modal-header">

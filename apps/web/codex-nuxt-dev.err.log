@@ -14,18 +14,3 @@
 
 [43m[30m WARN [39m[49m [1m[33mwarn[39m[22m - https://tailwindcss.com/docs/content-configuration#pattern-recommendations
 
-
-[90m[[90mnuxt[90m][39m [41m[30m ERROR [39m[49m Could not compile template [36mi18n-options.mjs[39m.
-
-
-[90m[[90mnuxt[90m][39m [41m[30m ERROR [39m[49m Nuxt instance is unavailable!
-
-    [90mat [39museNuxt ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/@nuxtjs/i18n/node_modules/@nuxt/kit/dist/index.mjs:44:11[39m)
-    [90mat [39mgenerateTemplateNuxtI18nOptions ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/@nuxtjs/i18n/dist/module.mjs:1418:76[39m)
-    [90mat [39mObject.getContents ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/@nuxtjs/i18n/dist/module.mjs:1836:26[39m)
-    [90mat [39mcompileTemplate ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/index.mjs:8123:21[39m)
-    [90mat [39mprocessTemplate ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/index.mjs:8075:28[39m)
-    [90mat [39mArray.map ([36m<anonymous>[39m)
-    [90mat [39mgenerateApp ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/index.mjs:8100:50[39m)
-    [90mat [39masync _applyPromised ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/node_modules/perfect-debounce/dist/index.mjs:85:9[39m)
-
