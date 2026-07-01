@@ -9,7 +9,7 @@
           <UiFormLabel>{{ t('form.emailLabel') }} {{ t('form.required') }}</UiFormLabel>
           <SfInput
             v-model="email"
-            wrapper-class="ring-neutral-400"
+            wrapper-class="login-input"
             name="email"
             type="email"
             autocomplete="email"
@@ -21,7 +21,7 @@
           <UiFormLabel>{{ t('form.passwordLabel') }} {{ t('form.required') }}</UiFormLabel>
           <UiFormPasswordInput
             v-model="password"
-            wrapper-class="ring-neutral-400"
+            wrapper-class="login-input"
             name="password"
             autocomplete="current-password"
             required
@@ -85,3 +85,9 @@ const loginUser = async () => {
   }
 };
 </script>
+
+<style>
+.login-input {
+  border: 1px solid #9ca3af !important;
+}
+</style>
