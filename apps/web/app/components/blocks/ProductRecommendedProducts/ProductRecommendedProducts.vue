@@ -38,6 +38,18 @@
         card-class="product-recommended-products__card"
         wrapper-class="w-full"
       />
+
+      <div v-else-if="shouldShowSkeleton" class="product-recommended-products__skeleton" aria-hidden="true">
+        <div v-for="index in skeletonItems" :key="`recommended-skeleton-${index}`" class="product-recommended-products__skeleton-card">
+          <div class="product-recommended-products__skeleton-image" />
+          <div class="product-recommended-products__skeleton-body">
+            <span class="product-recommended-products__skeleton-line product-recommended-products__skeleton-line--brand" />
+            <span class="product-recommended-products__skeleton-line" />
+            <span class="product-recommended-products__skeleton-line product-recommended-products__skeleton-line--short" />
+            <span class="product-recommended-products__skeleton-price" />
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -180,7 +192,7 @@ const fallbackHeading = computed(() =>
   hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das könnte auch was für Dich sein!' : '',
 );
 
-const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended(props.meta.uuid);
+const { data: recommendedProducts, loading, fetchProductRecommended } = useProductRecommended(props.meta.uuid);
 
 const shouldShowSlider = computed(
   () =>
@@ -188,6 +200,10 @@ const shouldShowSlider = computed(
     !!recommendedProducts.value?.length &&
     (shouldRender.value || shouldRenderAfterUpdate.value),
 );
+const shouldShowSkeleton = computed(
+  () => isNearViewport.value && shouldRender.value && loading.value && !recommendedProducts.value?.length,
+);
+const skeletonItems = computed(() => Math.max(1, Math.min(layoutSettings.value.visibleItems ?? 4, 6)));
 const sourceWithDefaults = (source?: Partial<ProductRecommendedProductsSource>): ProductRecommendedProductsSource => ({
   type: source?.type ?? 'category',
   categoryId: source?.categoryId ?? '',
@@ -301,6 +317,67 @@ watch(
   color: #c8ff00;
 }
 
+.product-recommended-products__skeleton {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--product-recommended-skeleton-gap, 16px);
+}
+
+.product-recommended-products__skeleton-card {
+  min-height: 374px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.product-recommended-products__skeleton-image {
+  height: clamp(170px, 15vw, 220px);
+  margin: 1rem 1.25rem 0.25rem;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: product-recommended-skeleton 1.4s ease infinite;
+}
+
+.product-recommended-products__skeleton-body {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.875rem 1.25rem 1.375rem;
+}
+
+.product-recommended-products__skeleton-line,
+.product-recommended-products__skeleton-price {
+  display: block;
+  height: 0.875rem;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: product-recommended-skeleton 1.4s ease infinite;
+}
+
+.product-recommended-products__skeleton-line--brand {
+  width: 38%;
+  height: 1rem;
+}
+
+.product-recommended-products__skeleton-line--short {
+  width: 72%;
+}
+
+.product-recommended-products__skeleton-price {
+  width: 32%;
+  height: 1rem;
+  margin-top: 1.4rem;
+  margin-left: auto;
+}
+
+@keyframes product-recommended-skeleton {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
+}
+
 .product-recommended-products--light :deep(.product-slider__legal),
 .product-recommended-products--light :deep(.product-slider__legal-link),
 .product-recommended-products--light :deep(.product-slider__legal-link:hover),
@@ -388,6 +465,10 @@ watch(
   .product-recommended-products__tabs {
     grid-auto-columns: minmax(9rem, 1fr);
     overflow-x: auto;
+  }
+
+  .product-recommended-products__skeleton {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

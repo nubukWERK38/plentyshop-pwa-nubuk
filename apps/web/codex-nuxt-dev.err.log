@@ -14,3 +14,32 @@
 
 [43m[30m WARN [39m[49m [1m[33mwarn[39m[22m - https://tailwindcss.com/docs/content-configuration#pattern-recommendations
 
+
+<--- Last few GCs --->
+
+[21360:0000017F1391E000] 60662145 ms: Mark-Compact 4088.3 (4100.7) -> 4085.1 (4100.9) MB, pooled: 2 MB, 1265.63 / 0.00 ms  (average mu = 0.175, current mu = 0.037) task; scavenge might not succeed
+[21360:0000017F1391E000] 60663518 ms: Mark-Compact 4088.4 (4100.9) -> 4085.2 (4101.2) MB, pooled: 2 MB, 1324.13 / 0.00 ms  (average mu = 0.106, current mu = 0.035) task; scavenge might not succeed
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF763E2403F void __cdecl node::OnFatalError(char const * __ptr64,char const * __ptr64)+1343
+ 2: 00007FF764A6FAA7 public: class v8::MaybeLocal<class v8::Object> __cdecl v8::Function::NewInstance(class v8::Local<class v8::Context>,int,class v8::Local<class v8::Value> * __ptr64 const)const __ptr64+423
+ 3: 00007FF7648704D7 private: __cdecl v8::base::AddressSpaceReservation::AddressSpaceReservation(void * __ptr64,unsigned __int64) __ptr64+322071
+ 4: 00007FF7648741E4 private: __cdecl v8::base::AddressSpaceReservation::AddressSpaceReservation(void * __ptr64,unsigned __int64) __ptr64+337700
+ 5: 00007FF76488313C protected: void __cdecl v8::internal::StrongRootAllocatorBase::deallocate_impl(unsigned __int64 * __ptr64,unsigned __int64) __ptr64+16604
+ 6: 00007FF76488297B protected: void __cdecl v8::internal::StrongRootAllocatorBase::deallocate_impl(unsigned __int64 * __ptr64,unsigned __int64) __ptr64+14619
+ 7: 00007FF765D0A2AD struct v8::base::MagicNumbersForDivision<unsigned __int64> __cdecl v8::base::UnsignedDivisionByConstant<unsigned __int64>(unsigned __int64,unsigned int)+2794653
+ 8: 00007FF76486DFA0 private: __cdecl v8::base::AddressSpaceReservation::AddressSpaceReservation(void * __ptr64,unsigned __int64) __ptr64+312544
+ 9: 00007FF76481E952 EVP_PKEY_asn1_set_get_priv_key+86258
+10: 00007FF763D7514A void __cdecl node::GetNodeReport(class node::Environment * __ptr64,char const * __ptr64,char const * __ptr64,class v8::Local<class v8::Value>,class std::basic_ostream<char,struct std::char_traits<char> > & __ptr64)+99450
+11: 00007FF763D73930 void __cdecl node::GetNodeReport(class node::Environment * __ptr64,char const * __ptr64,char const * __ptr64,class v8::Local<class v8::Value>,class std::basic_ostream<char,struct std::char_traits<char> > & __ptr64)+93280
+12: 00007FF764AD70AB uv_run+1867
+13: 00007FF764AD6C1F uv_run+703
+14: 00007FF763F38A6F __int64 __cdecl node::DecodeWrite(class v8::Isolate * __ptr64,char * __ptr64,unsigned __int64,class v8::Local<class v8::Value>,enum node::encoding)+351
+15: 00007FF763DB2C96 public: void __cdecl node::MultiIsolatePlatform::DisposeIsolate(class v8::Isolate * __ptr64) __ptr64+250406
+16: 00007FF763E81ADC int __cdecl node::Start(int,char * __ptr64 * __ptr64 const)+1052
+17: 00007FF764E9E942 AES_cbc_encrypt+2546
+18: 00007FF765D139B4 struct v8::base::MagicNumbersForDivision<unsigned __int64> __cdecl v8::base::UnsignedDivisionByConstant<unsigned __int64>(unsigned __int64,unsigned int)+2833316
+19: 00007FF81346E957 BaseThreadInitThunk+23
+20: 00007FF81438AD6C RtlUserThreadStart+44

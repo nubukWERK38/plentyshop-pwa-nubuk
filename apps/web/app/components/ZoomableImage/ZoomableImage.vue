@@ -76,19 +76,28 @@ const imageAlt =
 const imageTitle =
   productImageGetters.getImageName(image.value) || productImageGetters.getCleanImageName(image.value) || '';
 
+const normalizeSrcsetUrl = (url?: string) => {
+  const trimmedUrl = url?.trim();
+
+  return trimmedUrl ? encodeURI(trimmedUrl) : '';
+};
+
 const getSourceSet = (image: ImagesData) => {
   const dpr = 1;
-  const secondPreview = productImageGetters.getImageUrlSecondPreview(image);
-  const preview = productImageGetters.getImageUrlPreview(image);
-  const middle = productImageGetters.getImageUrlMiddle(image);
-  const full = productImageGetters.getImageUrl(image);
+  const candidates = [
+    [productImageGetters.getImageUrlSecondPreview(image), 370 * dpr],
+    [productImageGetters.getImageUrlPreview(image), 700 * dpr],
+    [productImageGetters.getImageUrlMiddle(image), 720 * dpr],
+    [productImageGetters.getImageUrl(image), 1400 * dpr],
+  ] as const;
 
-  return `
-    ${secondPreview} ${370 * dpr}w,
-    ${preview} ${700 * dpr}w,
-    ${middle} ${720 * dpr}w,
-    ${full} ${1400 * dpr}w
-  `;
+  return candidates
+    .map(([url, width]) => {
+      const normalizedUrl = normalizeSrcsetUrl(url);
+      return normalizedUrl ? `${normalizedUrl} ${width}w` : '';
+    })
+    .filter(Boolean)
+    .join(', ');
 };
 
 const computedWidth = computed(() => {

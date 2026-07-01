@@ -38,8 +38,11 @@ const flagsStyle = computed<CSSProperties>(() => ({
   top: '310px',
 }));
 
+const resolveBackgroundColor = (color?: string) =>
+  color?.toLowerCase() === '#212529' || !color ? 'var(--var-primary-grey)' : color;
+
 const linkStyle = computed<CSSProperties>(() => ({
-  backgroundColor: content.value.backgroundColor || '#212529',
+  backgroundColor: resolveBackgroundColor(content.value.backgroundColor),
   color: content.value.textColor || '#ffffff',
   '--contact-flags-icon-color': content.value.iconColor || '#ccff00',
 }));

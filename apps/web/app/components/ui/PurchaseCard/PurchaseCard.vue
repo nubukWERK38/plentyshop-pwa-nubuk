@@ -115,10 +115,15 @@
             <template v-if="key === 'previewText' && configuration?.fields.previewText">
               <div
                 v-if="productGetters.getShortDescription(product).length > 0"
-                class="mb-2 font-normal typography-text-sm whitespace-pre-line break-words no-preflight"
+                class="purchase-card__preview-text mb-2 font-normal whitespace-pre-line break-words no-preflight"
                 data-testid="product-description"
-                v-html="productGetters.getShortDescription(product)"
-              />
+              >
+                <p class="purchase-card__preview-title">
+                  <span class="purchase-card__preview-product-name">{{ productGetters.getName(product) }}</span>
+                  <span class="purchase-card__preview-title-main">Kurz-Check</span>
+                </p>
+                <div class="purchase-card__preview-copy" v-html="productGetters.getShortDescription(product)" />
+              </div>
             </template>
 
             <template v-if="key === 'addToWishlist' && configuration?.fields.addToWishlist">
@@ -747,7 +752,7 @@ const openReturnModal = async () => {
 
 .purchase-card__article-number {
   margin-bottom: 16px;
-  color: #4b5563;
+  color: var(--var-primary-grey-light);
   font-size: 0.95rem;
   line-height: 1.4;
 }
@@ -771,9 +776,52 @@ const openReturnModal = async () => {
   background: #ff9d00;
 }
 
+.purchase-card__preview-text {
+  padding: 30px;
+  border: 2px solid var(--ci-primary);
+  background: var(--ci-primary-gradient);
+  color: #fff;
+  font-size: 0.8125rem;
+  line-height: 1.32;
+}
+
+.purchase-card__preview-title {
+  margin: 0 0 1rem;
+  color: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.purchase-card__preview-product-name,
+.purchase-card__preview-title-main {
+  display: block;
+}
+
+.purchase-card__preview-title-main {
+  font-size: 2.1rem;
+  line-height: 1.05;
+}
+
+.purchase-card__preview-copy :deep(p),
+.purchase-card__preview-copy :deep(ul),
+.purchase-card__preview-copy :deep(ol) {
+  margin: 0 0 0.45rem;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.purchase-card__preview-copy :deep(p:last-child),
+.purchase-card__preview-copy :deep(ul:last-child),
+.purchase-card__preview-copy :deep(ol:last-child) {
+  margin-bottom: 0;
+}
+
 .purchase-card__leasing-panel {
   margin-bottom: 18px;
-  background: #e8e8e8;
+  border: 2px solid var(--var-primary-grey-dark);
+  background: linear-gradient(90deg, var(--var-primary-grey-light), var(--var-primary-grey-dark));
+  color: #fff;
 }
 
 .purchase-card__leasing-summary {
@@ -803,7 +851,7 @@ const openReturnModal = async () => {
 }
 
 .purchase-card__leasing-description {
-  color: #071625;
+  color: inherit;
   font-size: 0.95rem;
   line-height: 1.45;
 }
@@ -979,7 +1027,7 @@ const openReturnModal = async () => {
 }
 
 .purchase-card__leasing-modal-close {
-  color: #7a7c7f;
+  color: var(--var-primary-grey-lighter);
 }
 
 .purchase-card__leasing-modal-body {
@@ -994,7 +1042,7 @@ const openReturnModal = async () => {
   min-height: 240px;
   align-items: center;
   justify-content: center;
-  color: #7a7c7f;
+  color: var(--var-primary-grey-lighter);
 }
 
 .purchase-card__leasing-modal-content {

@@ -43,39 +43,43 @@
       aria-relevant="all"
       :aria-label="t('searchBar.searchSuggestions')"
     >
-      <div class="w-full @2xl:col-span-1">
-        <div v-if="results?.suggestions?.length" class="mb-8">
-          <h3 class="sr-only uppercase tracking-widest text-sm font-bold text-neutral-700">
-            {{ t('searchBar.searchSuggestions') }}
-          </h3>
-          <ul>
-            <li v-for="(item, index) in results.suggestions" :key="index">
-              <UiSearchSuggestionItem :item="item" />
-            </li>
-          </ul>
+      <div class="w-full lg:col-span-full grid lg:grid-cols-2 gap-8">
+        <div class="w-full">
+          <div v-if="results?.suggestions?.length" class="mb-8 lg:mb-0">
+            <h3 class="sr-only uppercase tracking-widest text-sm font-bold text-neutral-700">
+              {{ t('searchBar.searchSuggestions') }}
+            </h3>
+            <ul>
+              <li v-for="(item, index) in results.suggestions" :key="index">
+                <UiSearchSuggestionItem :item="item" />
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <h3 class="uppercase tracking-widest text-sm font-bold text-neutral-700">
-          {{ t('searchBar.matchingCategories') }}
-        </h3>
-        <hr class="h-px mt-2 bg-neutral-200 border-0" />
-        <div class="@2xl:mb-4">
-          <ul v-if="results?.categories?.length" class="mt-4 flex flex-wrap gap-1.5 @2xl:flex-col @2xl:items-start">
-            <li v-for="(category, index) in results.categories" :key="index">
-              <NuxtLink :to="category.url">
-                <div
-                  class="bg-neutral-100 hover:bg-neutral-200 transition-colors duration-200 text-neutral-800 text-sm px-3 py-1.5"
-                >
-                  {{ category.label }}
-                </div>
-              </NuxtLink>
-            </li>
-          </ul>
-          <div v-else class="text-base mt-4 text-neutral-900">{{ t('searchBar.noResultsFound') }}</div>
+        <div class="w-full">
+          <h3 class="uppercase tracking-widest text-sm font-bold text-neutral-700">
+            {{ t('searchBar.matchingCategories') }}
+          </h3>
+          <hr class="h-px mt-2 bg-neutral-200 border-0" />
+          <div class="lg:mb-0">
+            <ul v-if="results?.categories?.length" class="mt-4 flex flex-wrap gap-1.5">
+              <li v-for="(category, index) in results.categories" :key="index">
+                <NuxtLink :to="category.url">
+                  <div
+                    class="bg-neutral-100 hover:bg-neutral-200 transition-colors duration-200 text-neutral-800 text-sm px-3 py-1.5"
+                  >
+                    {{ category.label }}
+                  </div>
+                </NuxtLink>
+              </li>
+            </ul>
+            <div v-else class="text-base mt-4 text-neutral-900">{{ t('searchBar.noResultsFound') }}</div>
+          </div>
         </div>
       </div>
 
-      <div class="w-full @2xl:col-span-2 @container/products @2xl:mb-4 overflow-hidden">
+      <div class="w-full lg:col-span-full @container/products lg:mb-4 overflow-hidden">
         <div class="flex items-center justify-between gap-2">
           <h3 class="uppercase tracking-widest text-sm font-bold text-neutral-700 shrink-0">
             {{ t('searchBar.productSuggestions') }}
@@ -94,7 +98,7 @@
         </div>
 
         <hr class="h-px mt-2 bg-neutral-200 border-0" />
-        <ul v-if="results?.items?.length" class="mt-4 gap-4 grid @sm/products:grid-cols-2 items-stretch">
+        <ul v-if="results?.items?.length" class="mt-4 gap-4 grid sm:grid-cols-2 lg:grid-cols-4 items-stretch">
           <li v-for="(item, index) in results.items" :key="index">
             <UiSearchSuggestionProduct :item="item" />
           </li>
@@ -271,5 +275,14 @@ onUnmounted(() => debounceInput.cancel());
   z-index: 3000;
   background: #ffffff;
   color: #111827;
+}
+
+@media (min-width: 1024px) {
+  .search-suggestions {
+    left: 50%;
+    width: 70vw;
+    max-width: calc(100vw - 2rem);
+    transform: translateX(-50%);
+  }
 }
 </style>

@@ -1,2 +1,5 @@
 • turbo 2.8.10
 • turbo 2.8.10
+web:dev: ERROR: command finished with error: command (J:\Github\Neuer Ordner\plentyshop-pwa-nubuk\apps\web) C:\Program Files\nodejs\npm.cmd run dev exited (-1)
+web#dev: command (J:\Github\Neuer Ordner\plentyshop-pwa-nubuk\apps\web) C:\Program Files\nodejs\npm.cmd run dev exited (-1)
+ ERROR  run failed: command  exited (-1)

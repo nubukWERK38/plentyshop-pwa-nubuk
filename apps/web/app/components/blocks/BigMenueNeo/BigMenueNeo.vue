@@ -108,7 +108,7 @@ const { t } = useI18n();
 
 const activeMenuIndex = ref<number | null>(null);
 const isPanelOpen = ref(false);
-const openMenuDelay = 1000;
+const openMenuDelay = 300;
 let openMenuTimer: ReturnType<typeof setTimeout> | null = null;
 
 const defaultContent = (): BigMenueNeoContent => ({

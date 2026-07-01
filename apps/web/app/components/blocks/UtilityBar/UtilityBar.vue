@@ -1,5 +1,9 @@
 <template>
-  <div :style="utilityBarStyle">
+  <div
+    class="nubuk-utility-shell"
+    :class="{ 'nubuk-utility-shell--compact': isHeaderCompact }"
+    :style="utilityBarStyle"
+  >
     <div v-if="viewport.isGreaterOrEquals('md')" class="nubuk-service-bar">
       <div class="nubuk-service-bar__inner">
         <div v-for="item in serviceBarItems" :key="item" class="nubuk-service-bar__item">
@@ -16,7 +20,7 @@
         </div>
       </div>
     </div>
-    <header class="relative w-full md:sticky z-[1000]">
+    <header class="relative w-full md:sticky md:top-0 z-[1000]">
       <div
         v-if="viewport.isLessThan('md')"
         class="flex items-center w-full"
@@ -302,7 +306,8 @@
       v-if="viewport.isGreaterOrEquals('md') && isAuthenticationOpen"
       v-model="isAuthenticationOpen"
       tag="section"
-      class="h-full md:w-[500px] md:h-fit m-0 p-0 overflow-y-auto"
+      class="h-full md:w-[500px] md:h-fit m-0 p-0 overflow-y-auto z-[1101]"
+      overlay-classes="z-[1100]"
     >
       <header>
         <UiButton
@@ -439,6 +444,20 @@ const runtimeConfig = useRuntimeConfig();
 const showConfigurationDrawer = runtimeConfig.public.showConfigurationDrawer;
 const { isEditing, disableActions } = useEditor();
 const isActive = computed(() => isLanguageSelectOpen);
+const isHeaderCompact = ref(false);
+
+const updateHeaderCompactState = () => {
+  isHeaderCompact.value = window.scrollY > 0;
+};
+
+onMounted(() => {
+  updateHeaderCompactState();
+  window.addEventListener('scroll', updateHeaderCompactState, { passive: true });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', updateHeaderCompactState);
+});
 
 onNuxtReady(async () => {
   if (categoryTree.value.length === 0) {
@@ -561,12 +580,22 @@ const navigateToLogin = () => {
   background: #E9E9EA !important;
 }
 
+.nubuk-utility-shell {
+  background: #ffffff;
+}
+
 .nubuk-service-bar {
   background: var(--ci-primary);
   border-top: 1px solid var(--ci-primary-dark);
   color: #ffffff;
   font-size: 14px;
   line-height: 1;
+  max-height: 29px;
+  overflow: hidden;
+  transition:
+    max-height 180ms ease,
+    opacity 180ms ease,
+    visibility 180ms ease;
 }
 
 .nubuk-service-bar__inner {
@@ -577,6 +606,9 @@ const navigateToLogin = () => {
   gap: clamp(36px, 6.2vw, 96px);
   min-height: 29px;
   padding: 0 24px;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .nubuk-service-bar__item,
@@ -607,6 +639,10 @@ const navigateToLogin = () => {
   min-height: 103px;
   background: #ffffff !important;
   padding: 38px 0 17px !important;
+  transition:
+    min-height 180ms ease,
+    padding 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .nubuk-utility-row__logo {
@@ -644,7 +680,7 @@ const navigateToLogin = () => {
 
 .nubuk-action--cart {
   order: 2 !important;
-  color: #222222 !important;
+  color: var(--var-primary-grey) !important;
 }
 
 .nubuk-action :deep(svg) {
@@ -664,7 +700,7 @@ const navigateToLogin = () => {
 
 .nubuk-cart-total {
   min-width: 56px;
-  color: #222222;
+  color: var(--var-primary-grey);
   text-align: right;
 }
 
@@ -687,11 +723,59 @@ const navigateToLogin = () => {
   max-width: inherit !important;
   height: var(--utility-logo-height);
   width: auto;
+  transition:
+    height 180ms ease,
+    max-height 180ms ease,
+    width 180ms ease;
 }
 
 #blockified-logo-mobile :deep(img) {
   height: var(--utility-logo-height);
   width: auto;
+}
+
+.nubuk-utility-shell--compact .nubuk-service-bar {
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.nubuk-utility-shell--compact .nubuk-service-bar__inner {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.nubuk-utility-shell--compact .nubuk-utility-row {
+  min-height: 58px;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 8%);
+}
+
+.nubuk-utility-shell--compact .utility-bar__desktop-inner--boxed {
+  padding-right: 24px !important;
+  padding-left: 24px !important;
+}
+
+.nubuk-utility-shell--compact #blockified-logo {
+  display: flex;
+  align-items: center;
+  height: 58px;
+}
+
+.nubuk-utility-shell--compact #blockified-logo :deep(picture) {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.nubuk-utility-shell--compact #blockified-logo :deep(img) {
+  width: auto !important;
+  height: 55px !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain;
 }
 
 @media (max-width: 1199px) {

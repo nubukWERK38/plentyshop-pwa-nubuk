@@ -484,7 +484,7 @@ registerBlockVisibility(props.meta.uuid, true);
   margin: 4px 6px 0 0;
   border: 1px solid #4f5965;
   border-radius: 0;
-  accent-color: #222;
+  accent-color: var(--var-primary-grey);
   flex: 0 0 auto;
 }
 

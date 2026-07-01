@@ -5,8 +5,8 @@ import type {
 } from '~/composables/useProductRecommended/types';
 import { productGetters, type ApiError, type FacetSearchCriteria, type Product } from '@plentymarkets/shop-api';
 
-const RECOMMENDED_PRODUCTS_LIMIT = 20;
-const RECOMMENDED_PRODUCTS_FETCH_LIMIT = 60;
+const RECOMMENDED_PRODUCTS_LIMIT = 12;
+const RECOMMENDED_PRODUCTS_FETCH_LIMIT = 12;
 
 const enrichProductsByVariationIds = async (products: Product[]): Promise<Product[]> => {
   const variationIds = [

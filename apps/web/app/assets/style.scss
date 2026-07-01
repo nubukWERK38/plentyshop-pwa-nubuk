@@ -1,7 +1,13 @@
 :root {
   /* CI colors */
   --ci-primary: #284f70;
-  --ci-primary-dark: #1d2c36;
+  --ci-primary-light: #53728d;
+  --ci-primary-dark: #1f3f5a;
+  --ci-primary-gradient: radial-gradient(circle at 90% 50%, var(--ci-primary-light) 0%, var(--ci-primary-dark) 100%);
+  --var-primary-grey-dark: #1a1e21;
+  --var-primary-grey: #212529;
+  --var-primary-grey-light: #4d5154;
+  --var-primary-grey-lighter: #7a7c7f;
   --ci-dark: #111416;
   --ci-text: #1c1c1c;
   --ci-accent: #d1ff00;
@@ -9,7 +15,7 @@
   --ci-accent-button: #c7ff00;
   --ci-accent-button-hover: #b6ef00;
   --ci-success: #02c652;
-  --ci-muted: #7a7c7f;
+  --ci-muted: var(--var-primary-grey-lighter);
   --ci-price: #ff3434;
   --ci-price-highlight: #ff4a4a;
   --ci-sale: #e84646;
@@ -128,12 +134,12 @@
       position: absolute;
       top: 0;
       left: 0;
-      color: #7b8289;
+      color: var(--var-primary-grey-lighter);
       content: '\203a';
     }
 
     strong {
-      color: #747b82;
+      color: var(--var-primary-grey-lighter);
       font-weight: 700;
     }
   }

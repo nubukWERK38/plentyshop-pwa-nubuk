@@ -441,7 +441,7 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
   align-items: center;
   justify-content: center;
   border: 0;
-  background: #252525;
+  background: var(--var-primary-grey);
   color: #fff;
   cursor: pointer;
   transition: opacity 0.15s;
