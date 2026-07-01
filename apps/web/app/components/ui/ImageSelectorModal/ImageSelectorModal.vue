@@ -128,7 +128,7 @@ const selectedRowKey = ref<string | null>(null);
 const selectedKey = ref<string | null>(null);
 
 const { placeholderImg, getImageTypeLabel } = usePickerHelper();
-const { data: items, loading, getStorageItems, uploadStorageItem, revokeAllBlobUrls, folders } = useItemsTable();
+const { loading, getStorageItems, uploadStorageItem, revokeAllBlobUrls, folders } = useItemsTable();
 
 const canAdd = computed(() => {
   const image = selectedImage.value?.image;
@@ -158,24 +158,28 @@ const handleSelect = (image: { image: string; name: string }) => {
 };
 const handleUpload = async (file: File) => {
   uploading.value = true;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    selectedImage.value = {
-      image: e.target?.result as string,
-      name: file.name,
-    };
-  };
-  reader.readAsDataURL(file);
+  selectedImage.value = null;
 
-  await uploadStorageItem(file, filePath.value);
-  await nextTick();
+  try {
+    const uploadedItem = await uploadStorageItem(file, filePath.value);
+    await nextTick();
 
-  const uploadedItem = items.value.find(
-    (item) => item.key === file.name || item.key.endsWith(`/${file.name}`) || item.key === file.name,
-  );
-  selectedRowKey.value = uploadedItem?.key ?? items.value[0]?.key ?? null;
-  selectedKey.value = uploadedItem?.key ?? items.value[0]?.key ?? null;
-  uploading.value = false;
+    if (uploadedItem?.publicUrl) {
+      selectedImage.value = {
+        image: uploadedItem.publicUrl,
+        name: uploadedItem.key,
+      };
+      selectedRowKey.value = uploadedItem.key;
+      selectedKey.value = uploadedItem.key;
+      return;
+    }
+
+    selectedImage.value = null;
+    selectedRowKey.value = null;
+    selectedKey.value = null;
+  } finally {
+    uploading.value = false;
+  }
 };
 const addImage = () => {
   if (selectedImage.value) {

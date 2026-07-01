@@ -1,7 +1,7 @@
 <template>
   <div>
     <draggable
-      v-if="data.length"
+      v-if="isDragEnabled && data.length"
       v-model="data"
       item-key="meta.uuid"
       handle=".drag-handle"
@@ -16,7 +16,7 @@
         <div>
           <UiBlockPlaceholder v-if="shouldDisplayPlaceholder(block.meta.uuid, 'top', drawerOpen, drawerView)" />
           <component
-            :is="block?.content?.layout?.narrowContainer || block?.layout?.narrowContainer ? NarrowContainer : 'div'"
+            :is="usesNarrowContainer(block) ? NarrowContainer : 'div'"
             v-if="shouldShowBlock(block, enabledActions)"
           >
             <PageBlock
@@ -39,6 +39,30 @@
         </div>
       </template>
     </draggable>
+    <template v-else-if="data.length">
+      <div v-for="block in data" :key="block.meta.uuid">
+        <component
+          :is="usesNarrowContainer(block) ? NarrowContainer : 'div'"
+          v-if="shouldShowBlock(block, enabledActions)"
+        >
+          <PageBlock
+            :index="getIndex(block)"
+            :block="block"
+            :enable-actions="enabledActions"
+            :is-clicked="isClicked"
+            :clicked-block-index="clickedBlockIndex"
+            :is-tablet="isTablet"
+            :change-block-position="changeBlockPosition"
+            root
+            :read-only="readOnly"
+            class="group"
+            :class="[getBlockClass(block).value, { '!mb-0': isLastMainBlock(block) }]"
+            data-testid="block-wrapper"
+            @click="tabletEdit(getIndex(block))"
+          />
+        </component>
+      </div>
+    </template>
     <CategoryEmptyState v-else-if="!readOnly && isContentEmptyInLive" />
     <EmptyBlock v-else />
   </div>
@@ -65,6 +89,7 @@ const props = withDefaults(defineProps<EditableBlocksProps>(), {
 const { pageBlocks, updateBlocks } = useBlocks();
 
 const frozenBlocks = shallowRef<Block[] | null>(null);
+const routeDataReady = useState<Promise<void> | null>('routeDataReady');
 
 const renderedBlocks = computed(() => {
   return props.blocks && props.blocks.length > 0 ? props.blocks : pageBlocks.value;
@@ -82,6 +107,18 @@ if (import.meta.client) {
       frozenBlocks.value = renderedBlocks.value;
     }
   });
+
+  watch(routeDataReady, async (pendingRouteData) => {
+    if (!pendingRouteData || !frozenBlocks.value) return;
+
+    try {
+      await pendingRouteData;
+    } finally {
+      if (routeDataReady.value === pendingRouteData) {
+        frozenBlocks.value = null;
+      }
+    }
+  });
 }
 
 const data = computed({
@@ -95,6 +132,12 @@ const data = computed({
     updateBlocks(value);
   },
 });
+
+const usesNarrowContainer = (block: Block) => {
+  const content = block.content as { layout?: { narrowContainer?: boolean } } | undefined;
+  const blockWithLayout = block as Block & { layout?: { narrowContainer?: boolean } };
+  return !!(content?.layout?.narrowContainer || blockWithLayout.layout?.narrowContainer);
+};
 
 const getIndex = (block: Block) => renderedBlocks.value.indexOf(block);
 
@@ -152,6 +195,7 @@ const drawerView = computed<string | null>(() => siteConfigurationDrawerViewRef.
 const enabledActions = computed(
   () => shouldShowEditorUI.value && props.hasEnabledActions && !localizationDrawerOpen.value,
 );
+const isDragEnabled = computed(() => enabledActions.value && !props.readOnly);
 
 useEditorUnsavedChangesGuard({
   enabled: !props.readOnly,
