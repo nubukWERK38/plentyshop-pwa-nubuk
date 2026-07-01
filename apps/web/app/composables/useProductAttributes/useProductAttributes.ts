@@ -7,6 +7,7 @@ import type {
   UseProductAttributesState,
 } from './types';
 import type { Product, VariationMapProductVariation } from '@plentymarkets/shop-api';
+import { sortProductAttributes } from '~/utils/sortAttributeValues';
 
 /**
  * @description Composable for handling product attributes.
@@ -125,7 +126,7 @@ export const useProductAttributes = (): UseProductAttributesReturn => {
   const setAttribute: SetAttribute = (product: Product, preSelectAttributes = false) => {
     state.value.itemId = product.item.id;
     state.value.variationId = product.variation.id;
-    state.value.attributes = product.variationAttributeMap?.attributes || [];
+    state.value.attributes = sortProductAttributes(product.variationAttributeMap?.attributes || []);
     state.value.combinations = product.variationAttributeMap?.variations || [];
     state.value.attributeValues = {};
 

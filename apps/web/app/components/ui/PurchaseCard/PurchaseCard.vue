@@ -459,7 +459,7 @@ const returnModalContent = ref('');
 const LEASING_CATEGORY_ID = 3228;
 const LEASING_CATEGORY_PATH = '/ueber-uns/leasingpartner';
 const RETURN_CATEGORY_ID = 2999;
-const RETURN_CATEGORY_PATH = '/ueber-uns/retoure';
+const RETURN_CATEGORY_PATH = '/artikel-informationen/wie-laeuft-eine-retoure-ab';
 
 const manufacturer = computed(() => productGetters.getManufacturer(props.product));
 const brandName = computed(
