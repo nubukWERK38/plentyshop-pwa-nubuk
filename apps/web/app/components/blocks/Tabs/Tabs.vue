@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="tabsBlockRef"
     v-bind="$attrs"
     :id="htmlId || undefined"
     :class="['tabs-block', content.layout?.additionalClasses]"
@@ -156,12 +157,42 @@ watch(
 );
 
 const activeItem = computed(() => normalizedItems.value[activeTabIndex.value]);
+const tabsBlockRef = ref<HTMLElement | null>(null);
 
 const isActiveTab = (index: number) => activeTabIndex.value === index;
 
 const setActiveTab = (index: number) => {
   if (index < 0 || index >= normalizedItems.value.length) return;
   activeTabIndex.value = index;
+};
+
+const scrollToTabsBlock = async () => {
+  await nextTick();
+
+  const element = tabsBlockRef.value;
+  if (!element) return;
+
+  const top = element.getBoundingClientRect().top + window.scrollY - 140;
+  window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+};
+
+const openProductQuestionTab = () => {
+  const questionTabIndex = normalizedItems.value.findIndex((item) => isProductQuestionTitle(item.title));
+  if (questionTabIndex < 0) return;
+
+  setActiveTab(questionTabIndex);
+  scrollToTabsBlock();
+};
+
+const handleProductQuestionLinkClick = (event: MouseEvent) => {
+  const trigger = (event.target as HTMLElement | null)?.closest('a, button');
+  if (!trigger) return;
+
+  const label = normalizeText(`${trigger.textContent ?? ''} ${trigger.getAttribute('title') ?? ''}`);
+  if (!label.includes('frage stellen')) return;
+
+  event.preventDefault();
+  openProductQuestionTab();
 };
 
 const htmlId = computed(() => props.content?.layout?.htmlId?.trim() ?? '');
@@ -185,4 +216,14 @@ watch(
   },
   { immediate: true },
 );
+
+onMounted(() => {
+  window.addEventListener('open-product-question-tab', openProductQuestionTab);
+  document.addEventListener('click', handleProductQuestionLinkClick);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('open-product-question-tab', openProductQuestionTab);
+  document.removeEventListener('click', handleProductQuestionLinkClick);
+});
 </script>

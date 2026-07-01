@@ -21,13 +21,33 @@ const validateApiUrl = (url: string | undefined): string | undefined => {
   return url?.replace(/[/\\]+$/, '');
 };
 
+const getAllowedCorsOrigins = () =>
+  new Set(
+    [
+      validateApiUrl(process.env.API_URL),
+      validateApiUrl(process.env.NUXT_PUBLIC_SITE_URL),
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+    ].filter((origin): origin is string => Boolean(origin)),
+  );
+
 (async () => {
+  const allowedCorsOrigins = getAllowedCorsOrigins();
   const app = await createServer(
     { integrations: config.integrations },
     {
       cors: {
         credentials: true,
-        origin: validateApiUrl(process.env.API_URL) ?? 'http://localhost:3000',
+        origin: (origin: string | undefined, callback: (error: Error | null, allowed?: boolean) => void) => {
+          if (!origin || allowedCorsOrigins.has(validateApiUrl(origin) ?? origin)) {
+            callback(null, true);
+            return;
+          }
+
+          callback(new Error(`CORS origin not allowed: ${origin}`), false);
+        },
       },
       bodyParser: {
         limit: '50mb',

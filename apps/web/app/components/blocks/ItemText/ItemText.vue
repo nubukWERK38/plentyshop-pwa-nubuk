@@ -39,7 +39,24 @@ const initiallyCollapsed = computed(() => !props.content?.layout.initiallyCollap
 const displayAsCollapsable = computed(() => props.content?.layout.displayAsCollapsable);
 const { currentProduct } = useProducts();
 const content = computed(() => props.content);
-const text = computed(() => productGetters.getDescription(currentProduct.value));
+const description = computed(() => productGetters.getDescription(currentProduct.value));
+const productName = computed(() => productGetters.getName(currentProduct.value));
+const startsWithH2 = (html: string) => /^(?:\s|<!--[\s\S]*?-->)*<h2(?:\s|>)/i.test(html);
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+const text = computed(() => {
+  const html = description.value || '';
+  const name = productName.value || '';
+
+  if (!html || !name || startsWithH2(html)) return html;
+
+  return `<h2 class="item-text__product-name-heading">${escapeHtml(name)}</h2>${html}`;
+});
 const inlineStyle = computed(() => {
   const layout = props.content?.layout || {};
   return {
@@ -60,3 +77,19 @@ watch(
   { immediate: true },
 );
 </script>
+
+<style scoped>
+.no-preflight :deep(.item-text__product-name-heading) {
+  margin: 0 0 1rem;
+  color: var(--ci-dark);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+@media (max-width: 767px) {
+  .no-preflight :deep(.item-text__product-name-heading) {
+    font-size: 1.5rem;
+  }
+}
+</style>

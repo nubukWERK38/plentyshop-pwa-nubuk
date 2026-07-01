@@ -19,6 +19,7 @@
             v-if="menuNode.childCount > 0"
             ref="triggerReference"
             :to="localePath(generateCategoryLink(menuNode))"
+            :title="getCategoryLinkTitle(menuNode)"
             data-testid="category-button"
             :class="categoryButtonClasses"
             :style="categoryButtonStyle"
@@ -46,6 +47,7 @@
             v-else
             ref="triggerReference"
             :to="localePath(generateCategoryLink(menuNode))"
+            :title="getCategoryLinkTitle(menuNode)"
             data-testid="category-button"
             :class="categoryButtonClasses"
             :style="categoryButtonStyle"
@@ -85,6 +87,7 @@
                       :tag="NuxtLink"
                       size="sm"
                       :href="localePath(generateCategoryLink(node))"
+                      :title="getCategoryLinkTitle(node)"
                       :class="['mb-2 nav-hover-bg rounded font-medium typography-text-base', submenuTextAlignmentClass]"
                     >
                       {{ categoryTreeGetters.getName(node) }}
@@ -97,6 +100,7 @@
                   :tag="NuxtLink"
                   size="sm"
                   :href="localePath(generateCategoryLink(node))"
+                  :title="getCategoryLinkTitle(node)"
                   :class="[
                     'typography-text-base font-medium text-neutral-900 px-4 py-1.5 nav-hover-bg rounded whitespace-normal break-words',
                     submenuTextAlignmentClass,
@@ -111,6 +115,7 @@
                       :tag="NuxtLink"
                       size="sm"
                       :href="localePath(generateCategoryLink(child))"
+                      :title="getCategoryLinkTitle(child)"
                       :class="['typography-text-sm py-1.5 nav-hover-bg rounded', submenuTextAlignmentClass]"
                     >
                       {{ categoryTreeGetters.getName(child) }}
@@ -167,6 +172,7 @@
                   size="lg"
                   :tag="NuxtLink"
                   :href="localePath(generateCategoryLink(node))"
+                  :title="getCategoryLinkTitle(node)"
                   class="nav-hover-bg"
                   @click="close()"
                 >
@@ -181,6 +187,7 @@
                   <NuxtLink
                     class="flex-1 m-0 px-4 py-3 text-left"
                     :to="localePath(generateCategoryLink(node))"
+                    :title="getCategoryLinkTitle(node)"
                     @click="close()"
                   >
                     <div class="flex items-center">
@@ -221,6 +228,7 @@ import { unrefElement } from '@vueuse/core';
 import { type CategoryTreeItem, categoryTreeGetters } from '@plentymarkets/shop-api';
 import type { MegaMenuProps } from '~/components/MegaMenu/types';
 import type { NavigationProps } from './types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 
 type NavigationBlockProps = Partial<MegaMenuProps> & Partial<NavigationProps>;
 
@@ -361,6 +369,9 @@ const findNode = (keys: number[], node: CategoryTreeItem): CategoryTreeItem => {
 const generateCategoryLink = (category: CategoryTreeItem) => {
   return buildCategoryMenuLink(category, categoryTree.value);
 };
+
+const getCategoryLinkTitle = (category: CategoryTreeItem) =>
+  buildSeoLinkTitle(categoryTreeGetters.getName(category), 'Nubuk Bikes Fahrradshop');
 
 const goBack = () => {
   activeNode.value = activeNode.value.slice(0, -1);

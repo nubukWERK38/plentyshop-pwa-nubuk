@@ -164,7 +164,7 @@ const handleScrollableNavigation = (direction: 'prev' | 'next', event: Scrollabl
 }
 
 .product-slider :deep(.product-slider__item) {
-  min-height: 512px;
+  min-height: 100%;
   border: 0;
   border-radius: 0;
   background: #ffffff;
@@ -178,13 +178,13 @@ const handleScrollableNavigation = (direction: 'prev' | 'next', event: Scrollabl
 
 .product-slider :deep(.product-slider__item .size-48) {
   width: 100%;
-  height: 342px;
-  padding: 2rem 1.25rem 1rem;
+  height: clamp(220px, 21vw, 300px);
+  padding: 1.5rem 1.25rem 0.75rem;
 }
 
 .product-slider :deep(.product-slider__item > div:last-child) {
-  min-height: 170px;
-  padding: 1rem 1.25rem 1.5rem;
+  min-height: 164px;
+  padding: 0.875rem 1.25rem 1.375rem;
   border-top: 0;
 }
 

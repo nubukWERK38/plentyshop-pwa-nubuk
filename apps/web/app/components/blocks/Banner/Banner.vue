@@ -36,6 +36,7 @@
           class="flex flex-col md:flex-row gap-4 mt-6"
           :tag="NuxtLink"
           :to="localePath(banner.button.link ?? '')"
+          :title="buildSeoLinkTitle(banner.button.label, 'Nubuk Bikes Shop')"
           :variant="banner.button.variant ?? 'primary'"
           size="lg"
           :data-testid="'banner-button-' + meta.uuid"
@@ -49,6 +50,7 @@
 
 <script setup lang="ts">
 import type { BannerProps } from './types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 
 const NuxtLink = resolveComponent('NuxtLink');
 

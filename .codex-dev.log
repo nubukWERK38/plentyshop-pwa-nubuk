@@ -92,3 +92,281 @@ web:dev: [32m√[39m Vite server built in 60ms
 web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2617ms
 web:dev: [36mi[39m Vite server warmed up in 1ms
 web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductQuestion/ProductQuestion.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductQuestion/ProductQuestion.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36museModuleRendering.ts[39m in 606.44ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mshopCoreModule.d.ts[39m in 606.79ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mModuleComponentRendering.vue[39m in 606.93ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mruntime.vue-devtools-client.KPqaugEn4Nc3rBt2C_SWDutryQg2ShBUFhq9hI29g8M.js[39m in 606.01ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 775.15ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 1454.75ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 1456.19ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 1463.68ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductQuestion/ProductQuestion.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x2)[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [32m√[39m Vite server hmr 31 files in 1.361ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x2)[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductQuestion/ProductQuestion.vue, /components/blocks/ProductQuestion/ProductQuestion.vue?vue&type=style&index=0&scoped=eb7144d9&lang.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductQuestion/ProductQuestion.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [32m√[39m Vite server hmr 32 files in 1.223ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductQuestion/ProductQuestion.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36museModuleRendering.ts[39m in 612.94ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mModuleComponentRendering.vue[39m in 613.24ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mshopCoreModule.d.ts[39m in 613.35ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mruntime.vue-devtools-client.KPqaugEn4Nc3rBt2C_SWDutryQg2ShBUFhq9hI29g8M.js[39m in 613.47ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 988.26ms
+web:dev: [36mi[39m [32mpage reload [39m[2mutils/blockTemplates/product/factory.ts[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mutils/blockTemplates/product/factory.ts[22m[2m (x2)[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/Tabs/Tabs.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/blocks/Tabs/Tabs.vue[22m
+web:dev: [32m√[39m Vite server hmr 85 files in 9.639ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 7026.48ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 7046.6ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 7103.58ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 57ms
+web:dev: [32m√[39m Vite server built in 59ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3069ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 2ms
+server:dev: [INFO] 16:44:47 Restarting: J:\Github\Neuer Ordner\plentyshop-pwa-nubuk\apps\server\src\index.ts has been modified
+server:dev: [32m[nodemon] restarting due to changes...[39m
+server:dev: [32m[nodemon] starting `ts-node-dev src/index.ts`[39m
+server:dev: [INFO] 16:44:48 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+web:dev: [36mi[39m [32mpage reload [39m[2mcomposables/useProductRecommended/useProductRecommended.ts[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomposables/useProductRecommended/useProductRecommended.ts[22m[2m (x2)[22m
+web:dev: [32m√[39m Vite server hmr 60 files in 142.279ms
+web:dev: [43m[30m WARN [39m[49m Failed to fetch blocks:
+web:dev: [43m[30m WARN [39m[49m Failed to fetch homepage header blocks:
+server:dev: {"timestamp":"2026-06-30T14:44:50.683Z","severity":"INFO","message":"Middleware starting....","alokai":{"context":"middleware"}}
+server:dev: {"timestamp":"2026-06-30T14:44:50.735Z","severity":"INFO","message":"Middleware created!","alokai":{"context":"middleware"}}
+server:dev: [32m√[39m API server listening on http://0.0.0.0:8181
+web:dev: [41m[30m ERROR [39m[49m [unhandledRejection] Cannot read properties of undefined (reading 'all')
+web:dev: 
+web:dev:     [90mat [39mObject.getGallery ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@plentymarkets\shop-api\lib\index.es.js:2412:91[39m)
+web:dev:     [90mat [39m_sfc_ssrRender ([36mapp\components\blocks\ImageGallery\ImageGallery.vue:157:76[39m)
+web:dev:     [90mat [39mrenderComponentSubTree ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\server-renderer\dist\server-renderer.cjs.js:777:9[39m)
+web:dev:     [90mat [39mrenderComponentVNode ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\server-renderer\dist\server-renderer.cjs.js:726:12[39m)
+web:dev:     [90mat [39mrenderVNode ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\server-renderer\dist\server-renderer.cjs.js:841:14[39m)
+web:dev:     [90mat [39mrenderComponentSubTree ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\server-renderer\dist\server-renderer.cjs.js:792:7[39m)
+web:dev:     [90mat [39mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\server-renderer\dist\server-renderer.cjs.js:724:25
+web:dev:     [90mat [39mprocess.processTicksAndRejections ([36mnode:internal/process/task_queues:104:5[39m)
+web:dev: [41m[30m ERROR [39m[49m (node:34192) PromiseRejectionHandledWarning: Promise rejection was handled asynchronously (rejection id: 12)
+web:dev: (Use [36mnode --trace-warnings ...[39m to show where the warning was created)
+web:dev: [41m[30m ERROR [39m[49m [unhandledRejection] Cannot read properties of undefined (reading 'manufacturer')
+web:dev: 
+web:dev:     [90mat [39mObject.getManufacturer ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@plentymarkets\shop-api\lib\index.es.js:2654:41[39m)
+web:dev:     [90mat [39mComputedRefImpl.fn ([36mapp\components\ui\PurchaseCard\PurchaseCard.vue:185:106[39m)
+web:dev:     [90mat [39mrefreshComputed ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\reactivity\dist\reactivity.cjs.js:397:28[39m)
+web:dev:     [90mat [39mget value ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\reactivity\dist\reactivity.cjs.js:1718:5[39m)
+web:dev:     [90mat [39mComputedRefImpl.fn ([36mapp\components\ui\PurchaseCard\PurchaseCard.vue:208:125[39m)
+web:dev:     [90mat [39mrefreshComputed ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\reactivity\dist\reactivity.cjs.js:397:28[39m)
+web:dev:     [90mat [39mget value ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\reactivity\dist\reactivity.cjs.js:1718:5[39m)
+web:dev:     [90mat [39munref ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\reactivity\dist\reactivity.cjs.js:1543:45[39m)
+web:dev:     [90mat [39mObject.get ([36mJ:\Github\Neuer Ordner\plentyshop-pwa-nubuk\node_modules\@vue\reactivity\dist\reactivity.cjs.js:1549:64[39m)
+web:dev:     [90mat [39mapp\components\ui\PurchaseCard\PurchaseCard.vue:412:18
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/app.vue?direct&vue&type=style&index=0&lang.scss, /error.vue?direct&vue&type=style&index=0&lang.scss, /error.vue?vue&type=style&index=0&lang.scss, /app.vue?vue&type=style&index=0&lang.scss[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/app.vue?vue&type=style&index=0&lang.scss, /error.vue?vue&type=style&index=0&lang.scss[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomposables/useProductRecommended/useProductRecommended.ts[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomposables/useProductRecommended/useProductRecommended.ts[22m[2m (x2)[22m
+web:dev: [32m√[39m Vite server hmr 67 files in 2.547ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1055.4ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 3015.03ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 3020.6ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 3036.1ms
+web:dev: [36mi[39m [32mpage reload [39m[2mcomposables/useProductRecommended/useProductRecommended.ts[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomposables/useProductRecommended/useProductRecommended.ts[22m[2m (x2)[22m
+web:dev: [32m√[39m Vite server hmr 61 files in 53.954ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1146.67ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 7164.28ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 7237.76ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 7369.73ms
+server:dev: [INFO] 16:49:45 Restarting: J:\Github\Neuer Ordner\plentyshop-pwa-nubuk\apps\server\src\index.ts has been modified
+web:dev: [36mi[39m [32mpage reload [39m[2mcomposables/useProductRecommended/useProductRecommended.ts[22m[2m (x3)[22m
+server:dev: [32m[nodemon] restarting due to changes...[39m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomposables/useProductRecommended/useProductRecommended.ts[22m[2m (x4)[22m
+server:dev: [32m[nodemon] starting `ts-node-dev src/index.ts`[39m
+web:dev: [36mi[39m [32mhmr update [39m[2m/app.vue?direct&vue&type=style&index=0&lang.scss, /error.vue?direct&vue&type=style&index=0&lang.scss, /error.vue?vue&type=style&index=0&lang.scss, /app.vue?vue&type=style&index=0&lang.scss[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/app.vue?vue&type=style&index=0&lang.scss, /error.vue?vue&type=style&index=0&lang.scss[22m
+web:dev: [32m√[39m Vite server hmr 63 files in 14.899ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+server:dev: [INFO] 16:49:46 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: 
+web:dev: [90m[[90mnuxt[90m][39m [41m[30m ERROR [39m[49m Could not compile template [36mi18n-options.mjs[39m.
+server:dev: {"timestamp":"2026-06-30T14:49:48.607Z","severity":"INFO","message":"Middleware starting....","alokai":{"context":"middleware"}}
+web:dev: 
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+server:dev: {"timestamp":"2026-06-30T14:49:48.660Z","severity":"INFO","message":"Middleware created!","alokai":{"context":"middleware"}}
+web:dev: 
+server:dev: Error: listen EADDRINUSE: address already in use 0.0.0.0:8181
+web:dev: [90m[[90mnuxt[90m][39m [41m[30m ERROR [39m[49m Nuxt instance is unavailable!
+server:dev:     at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+web:dev: 
+server:dev:     at listenInCluster (node:net:2065:12)
+web:dev:     [90mat [39museNuxt ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/@nuxtjs/i18n/node_modules/@nuxt/kit/dist/index.mjs:44:11[39m)
+server:dev:     at node:net:2274:7
+web:dev:     [90mat [39mgenerateTemplateNuxtI18nOptions ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/@nuxtjs/i18n/dist/module.mjs:1418:76[39m)
+server:dev:     at processTicksAndRejections (node:internal/process/task_queues:90:21)
+web:dev:     [90mat [39mObject.getContents ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/@nuxtjs/i18n/dist/module.mjs:1836:26[39m)
+server:dev: [ERROR] 16:49:48 Error: listen EADDRINUSE: address already in use 0.0.0.0:8181
+web:dev:     [90mat [39mcompileTemplate ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/index.mjs:8123:21[39m)
+web:dev:     [90mat [39mprocessTemplate ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/index.mjs:8075:28[39m)
+web:dev:     [90mat [39mArray.map ([36m<anonymous>[39m)
+web:dev:     [90mat [39mgenerateApp ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/index.mjs:8100:50[39m)
+web:dev:     [90mat [39masync _applyPromised ([36m/J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/node_modules/perfect-debounce/dist/index.mjs:85:9[39m)
+web:dev: 
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 70ms
+web:dev: [32m√[39m Vite server built in 110ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2636ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 57ms
+web:dev: [32m√[39m Vite server built in 54ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1789ms
+web:dev: [36mi[39m Vite server warmed up in 0ms
+web:dev: [36mi[39m Vite client warmed up in 1ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/UtilityBar/UtilityBar.vue?vue&type=style&index=0&scoped=d4c70789&lang.css, /components/ui/Search.vue?vue&type=style&index=0&scoped=d64115eb&lang.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/layouts/default.vue, /components/PreviewMode/PreviewMode.vue, /components/ui/Search.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/layouts/default.vue, /components/PreviewMode/PreviewMode.vue, /components/ui/Search.vue[22m[2m (x2)[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/layouts/default.vue, /components/PreviewMode/PreviewMode.vue, /components/ui/Search.vue[22m[2m (x3)[22m
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 53ms
+web:dev: [32m√[39m Vite server built in 46ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1802ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 1ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 50ms
+web:dev: [32m√[39m Vite server built in 50ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1650ms
+web:dev: [36mi[39m Vite server warmed up in 0ms
+web:dev: [36mi[39m Vite client warmed up in 1ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ui/PurchaseCard/PurchaseCard.vue?direct&vue&type=style&index=0&scoped=ec9b1cf9&lang.css, /components/ui/PurchaseCard/PurchaseCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/Tabs/Tabs.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/blocks/Tabs/Tabs.vue[22m
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1808.67ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ProductLegalDetailsDrawer/ProductLegalDetailsDrawer.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ManufacturerInformation/ManufacturerInformation.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ManufacturerResponsibleInfo/ManufacturerResponsibleInfo.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1925.44ms
+web:dev: [32m√[39m Vite server hmr 36 files in 1.119ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /components/ProductSlider/ProductSlider.vue?vue&type=style&index=0&scoped=17702b16&lang.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ProductSlider/ProductSlider.vue?direct&vue&type=style&index=0&scoped=17702b16&lang.css, /components/ProductSlider/ProductSlider.vue?vue&type=style&index=0&scoped=17702b16&lang.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?vue&type=style&index=0&scoped=2e929127&lang.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?direct&vue&type=style&index=0&scoped=2e929127&lang.css, /components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?vue&type=style&index=0&scoped=2e929127&lang.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ProductLegalDetailsDrawer/ProductLegalDetailsDrawer.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
+web:dev: [32m√[39m Vite server hmr 39 files in 1.716ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ItemText/ItemText.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/blocks/ItemText/ItemText.vue[22m
+web:dev: [32m√[39m Vite server hmr 32 files in 1.528ms
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?direct&vue&type=style&index=0&scoped=2e929127&lang.css, /components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue, /components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?vue&type=style&index=0&scoped=2e929127&lang.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?direct&vue&type=style&index=0&scoped=2e929127&lang.css, /components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [32m√[39m Vite server hmr 34 files in 1.354ms
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?direct&vue&type=style&index=0&scoped=2e929127&lang.css, /components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?vue&type=style&index=0&scoped=2e929127&lang.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /components/blocks/ProductRecommendedProducts/ProductRecommendedProducts.vue?vue&type=style&index=0&scoped=2e929127&lang.css[22m
+web:dev: [32m√[39m Vite server hmr 34 files in 0.931ms
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ui/PurchaseCard/PurchaseCard.vue?direct&vue&type=style&index=0&scoped=ec9b1cf9&lang.css, /components/ui/PurchaseCard/PurchaseCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mModuleComponentRendering.vue[39m in 1456.93ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36museModuleRendering.ts[39m in 1457.1ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mshopCoreModule.d.ts[39m in 1457.12ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mruntime.vue-devtools-client.KPqaugEn4Nc3rBt2C_SWDutryQg2ShBUFhq9hI29g8M.js[39m in 1456.4ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1508.06ms
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ui/PurchaseCard/PurchaseCard.vue?direct&vue&type=style&index=0&scoped=ec9b1cf9&lang.css, /components/ui/PurchaseCard/PurchaseCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1659.96ms
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ui/PurchaseCard/PurchaseCard.vue?direct&vue&type=style&index=0&scoped=ec9b1cf9&lang.css, /components/ui/PurchaseCard/PurchaseCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mshopCoreModule.d.ts[39m in 1423.32ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36museModuleRendering.ts[39m in 1423.5ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mModuleComponentRendering.vue[39m in 1423.55ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mruntime.vue-devtools-client.KPqaugEn4Nc3rBt2C_SWDutryQg2ShBUFhq9hI29g8M.js[39m in 1422.94ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1525.68ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 57ms
+web:dev: [32m√[39m Vite server built in 63ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2012ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ui/PurchaseCard/PurchaseCard.vue?direct&vue&type=style&index=0&scoped=ec9b1cf9&lang.css, /components/ui/PurchaseCard/PurchaseCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [32m√[39m Vite server hmr 34 files in 0.545ms
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/blocks/Tabs/Tabs.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/blocks/Tabs/Tabs.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [32m√[39m Vite server hmr 29 files in 1.715ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 53ms
+web:dev: [32m√[39m Vite server built in 51ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1632ms
+web:dev: [36mi[39m Vite server warmed up in 0ms
+web:dev: [36mi[39m Vite client warmed up in 1ms

@@ -21,6 +21,7 @@
         <NuxtLink
           :to="localePath(paths.home)"
           :aria-label="t('common.actions.goToHomepage')"
+          :title="buildSeoLinkTitle('Startseite', 'Nubuk Bikes Shop')"
           class="flex shrink-0 w-full lg:w-48 items-center mr-auto text-white md:mr-10 focus-visible:outline focus-visible:outline-offset focus-visible:rounded-sm"
         >
           <UiLogo />
@@ -48,6 +49,7 @@
             v-if="menuNode.childCount > 0"
             ref="triggerReference"
             :to="localePath(generateCategoryLink(menuNode))"
+            :title="getCategoryLinkTitle(menuNode)"
             data-testid="category-button"
             :class="categoryButtonClasses"
             tabindex="0"
@@ -73,6 +75,7 @@
             v-else
             ref="triggerReference"
             :to="localePath(generateCategoryLink(menuNode))"
+            :title="getCategoryLinkTitle(menuNode)"
             data-testid="category-button"
             :class="categoryButtonClasses"
             tabindex="0"
@@ -108,6 +111,7 @@
                       :tag="NuxtLink"
                       size="sm"
                       :href="localePath(generateCategoryLink(node))"
+                      :title="getCategoryLinkTitle(node)"
                       class="mb-2 hover:bg-secondary-100 rounded font-medium typography-text-base"
                     >
                       {{ categoryTreeGetters.getName(node) }}
@@ -120,6 +124,7 @@
                   :tag="NuxtLink"
                   size="sm"
                   :href="localePath(generateCategoryLink(node))"
+                  :title="getCategoryLinkTitle(node)"
                   class="typography-text-base font-medium text-neutral-900 px-4 py-1.5 border-b border-b-neutral-200 border-b-solid hover:bg-secondary-100 rounded whitespace-normal break-words"
                 >
                   {{ categoryTreeGetters.getName(node) }}
@@ -131,6 +136,7 @@
                       :tag="NuxtLink"
                       size="sm"
                       :href="localePath(generateCategoryLink(child))"
+                      :title="getCategoryLinkTitle(child)"
                       class="typography-text-sm py-1.5 hover:bg-secondary-100 rounded"
                     >
                       {{ categoryTreeGetters.getName(child) }}
@@ -187,6 +193,7 @@
                   size="lg"
                   :tag="NuxtLink"
                   :href="localePath(generateCategoryLink(node))"
+                  :title="getCategoryLinkTitle(node)"
                   class="hover:bg-secondary-100"
                   @click="close()"
                 >
@@ -201,6 +208,7 @@
                   <NuxtLink
                     class="flex-1 m-0 px-4 py-3 text-left"
                     :to="localePath(generateCategoryLink(node))"
+                    :title="getCategoryLinkTitle(node)"
                     @click="close()"
                   >
                     <div class="flex items-center">
@@ -242,6 +250,7 @@ import { unrefElement } from '@vueuse/core';
 import { type CategoryTreeItem, categoryTreeGetters } from '@plentymarkets/shop-api';
 import { paths } from '~/utils/paths';
 import type { MegaMenuProps } from '~/components/MegaMenu/types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 
 const props = defineProps<MegaMenuProps>();
 const NuxtLink = resolveComponent('NuxtLink');
@@ -296,6 +305,9 @@ const findNode = (keys: number[], node: CategoryTreeItem): CategoryTreeItem => {
 const generateCategoryLink = (category: CategoryTreeItem) => {
   return buildCategoryMenuLink(category, categoryTree.value);
 };
+
+const getCategoryLinkTitle = (category: CategoryTreeItem) =>
+  buildSeoLinkTitle(categoryTreeGetters.getName(category), 'Nubuk Bikes Fahrradshop');
 
 const openMenu = (menuType: number[]) => {
   activeNode.value = menuType;

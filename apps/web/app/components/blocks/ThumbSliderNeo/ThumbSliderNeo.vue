@@ -45,6 +45,7 @@
             <component
               :is="item.link ? NuxtLink : 'div'"
               :to="item.link ? localePath(item.link) : undefined"
+              :title="item.link ? buildSeoLinkTitle(item.text || item.alt, 'Nubuk Bikes Shop') : undefined"
               class="thumb-slider-neo__tile block"
               :style="tileStyle"
               :data-testid="`thumb-slider-neo-item-${index}`"
@@ -56,6 +57,11 @@
                 class="thumb-slider-neo__image"
                 width="400"
                 height="220"
+                sizes="(max-width: 767px) 50vw, 20vw"
+                :loading="isPriorityImage(index) ? 'eager' : 'lazy'"
+                :fetchpriority="isPriorityImage(index) ? 'high' : 'auto'"
+                :preload="isPriorityImage(index)"
+                decoding="async"
               />
               <p v-if="item.text" class="thumb-slider-neo__text" :style="tileTextStyle">{{ item.text }}</p>
             </component>
@@ -91,6 +97,7 @@ import { Autoplay, Navigation } from 'swiper/modules';
 import { SfIconChevronLeft, SfIconChevronRight } from '@storefront-ui/vue';
 import type { CSSProperties } from 'vue';
 import type { ThumbSliderNeoContent, ThumbSliderNeoProps } from './types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
@@ -99,6 +106,8 @@ const props = defineProps<ThumbSliderNeoProps>();
 const localePath = useLocalePath();
 const NuxtLink = resolveComponent('NuxtLink');
 const sliderId = computed(() => (props.meta?.uuid || 'thumb-slider-neo').replace(/[^a-zA-Z0-9_-]/g, ''));
+const isTopBlock = computed(() => props.index === 0);
+const isPriorityImage = (index: number) => isTopBlock.value && index === 0;
 
 const ensureSpacing = (spacing?: { top?: number; right?: number; bottom?: number; left?: number }) => ({
   top: spacing?.top ?? 0,
@@ -196,10 +205,9 @@ const sidePeekMobile = computed(() => (controls.value.peekSlides ? clampNumber(c
 
 const desktopSlidesPerView = computed(() => controls.value.slidesPerViewDesktop + sidePeekDesktop.value);
 const mobileSlidesPerView = computed(() => controls.value.slidesPerViewMobile + sidePeekMobile.value);
+const initialVisibleSlides = computed(() => Math.ceil(Math.max(desktopSlidesPerView.value, mobileSlidesPerView.value)));
 
-const minimumLoopSlides = computed(
-  () => Math.ceil(Math.max(desktopSlidesPerView.value, mobileSlidesPerView.value)) + controls.value.slidesPerGroup * 2,
-);
+const minimumLoopSlides = computed(() => initialVisibleSlides.value + controls.value.slidesPerGroup * 2);
 
 const renderedItems = computed(() => {
   const items = normalizedItems.value;
@@ -393,11 +401,13 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
 .thumb-slider-neo__accent--top {
   top: -28px;
   right: 0;
+  clip-path: polygon(30px 0, 100% 0, 100% 100%, 0 100%);
 }
 
 .thumb-slider-neo__accent--bottom {
-  bottom: 0;
+  bottom: -1px;
   left: 0;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
 }
 
 .thumb-slider-neo__tile {

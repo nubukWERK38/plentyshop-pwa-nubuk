@@ -26,6 +26,7 @@
                 <SfLink
                   :tag="NuxtLink"
                   :to="localePath(item.link)"
+                  :title="buildSeoLinkTitle(item.name, 'Nubuk Bikes Shop')"
                   variant="secondary"
                   class="leading-5 no-underline text-inherit hover:underline active:underline whitespace-nowrap outline-secondary-600"
                 >
@@ -45,6 +46,7 @@
           v-if="index < visibleBreadcrumbs.length - 1"
           :tag="NuxtLink"
           :to="localePath(item.link)"
+          :title="buildSeoLinkTitle(item.name, 'Nubuk Bikes Shop')"
           variant="secondary"
           class="leading-5 no-underline hover:underline active:underline whitespace-nowrap outline-secondary-600 text-inherit"
         >
@@ -61,6 +63,7 @@
 <script setup lang="ts">
 import { SfDropdown, SfLink, SfIconMoreHoriz } from '@storefront-ui/vue';
 import type { BreadcrumbsProps } from '~/components/ui/Breadcrumbs/types';
+import { buildSeoLinkTitle, getSiteOrigin, toAbsoluteUrl } from '~/utils/seo';
 
 const props = defineProps<BreadcrumbsProps>();
 const hiddenRootCategoryName = 'Produkte Neuer Shop';
@@ -76,6 +79,8 @@ const toggle = () => {
 
 const NuxtLink = resolveComponent('NuxtLink');
 const route = useRoute();
+const runtimeConfig = useRuntimeConfig();
+const siteOrigin = computed(() => getSiteOrigin(runtimeConfig.public.domain));
 const visibleBreadcrumbs = computed(() => props.breadcrumbs.filter((item) => item.name !== hiddenRootCategoryName));
 const structuredData = computed(() => ({
   '@context': 'https://schema.org',
@@ -84,7 +89,7 @@ const structuredData = computed(() => ({
     '@type': 'ListItem',
     position: index + 1,
     item: {
-      '@id': item.link === '#' ? route.path : item.link,
+      '@id': toAbsoluteUrl(item.link === '#' ? route.path : localePath(item.link), siteOrigin.value),
       name: item.name,
     },
   })),

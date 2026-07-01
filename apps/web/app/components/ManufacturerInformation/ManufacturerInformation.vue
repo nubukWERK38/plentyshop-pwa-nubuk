@@ -1,11 +1,11 @@
 <template>
-  <div v-if="hasAnyInfo" class="py-2 px-4">
-    <h4 class="typography-headline-4 font-bold text-neutral-900">
+  <div v-if="hasAnyInfo" class="manufacturer-details py-2 px-4">
+    <h4 class="manufacturer-details__heading typography-headline-4 font-bold">
       {{ t('manufacturer.header') }}
     </h4>
-    <p class="mb-2">{{ t('manufacturer.subtitle') }}</p>
+    <p class="manufacturer-details__subtitle mb-2">{{ t('manufacturer.subtitle') }}</p>
 
-    <div class="border-2 py-2 px-4">
+    <div class="manufacturer-details__card border-2 py-2 px-4">
       <p v-if="manufacturerInfo.logo">
         <NuxtImg :src="manufacturerInfo.logo" :alt="t('manufacturer.logoAlt')" loading="lazy" />
       </p>
@@ -68,3 +68,23 @@ const hasAnyInfo = computed(() => {
   return Object.values(info).some(Boolean);
 });
 </script>
+
+<style scoped>
+.manufacturer-details__heading {
+  color: var(--ci-primary);
+}
+
+.manufacturer-details__subtitle {
+  color: var(--ci-dark);
+}
+
+.manufacturer-details__card {
+  border-color: #cfe4ec;
+  background: #f8fbfc;
+  color: var(--ci-dark);
+}
+
+.manufacturer-details__card a {
+  color: var(--ci-primary);
+}
+</style>

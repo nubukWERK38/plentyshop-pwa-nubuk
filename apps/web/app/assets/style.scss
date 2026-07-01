@@ -302,17 +302,6 @@ h1, .h1 {
   background-color: var(--ci-primary) !important;
   color: #fff !important;
 }
-.thumb-slider-neo__accent--top[data-v-37f9a9ab] {
-  clip-path: polygon(30px 0,
-    100% 0,
-    100% 100%,
-    0 100%);
-}
-.thumb-slider-neo__accent--bottom[data-v-37f9a9ab] {
-  bottom: -1px !important;
-  //clip-path rechte Ecke -30px abrunden
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
-}
 .ring-1 {
   border: 0 none !important;
   --tw-ring-shadow: 0 0 #0000 !important;

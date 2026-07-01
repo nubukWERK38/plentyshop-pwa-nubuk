@@ -3,7 +3,7 @@ import type {
   UseProductRecommendedState,
   FetchProductRecommended,
 } from '~/composables/useProductRecommended/types';
-import { productGetters, type FacetSearchCriteria, type Product } from '@plentymarkets/shop-api';
+import { productGetters, type ApiError, type FacetSearchCriteria, type Product } from '@plentymarkets/shop-api';
 
 const RECOMMENDED_PRODUCTS_LIMIT = 20;
 const RECOMMENDED_PRODUCTS_FETCH_LIMIT = 250;
@@ -80,21 +80,17 @@ export const useProductRecommended: UseProductRecommendedReturn = (categoryId: s
       categoryId: params.categoryId,
     };
 
-    const idForKey = params.type === 'cross_selling' ? params.itemId : params.categoryId;
+    try {
+      const response = await useSdk().plentysystems.getFacet(payload);
+      const products = await enrichProductsByVariationIds(response?.data?.products ?? []);
 
-    const { data, error } = await useAsyncData(
-      `useProductRecommended-${params.type}-${idForKey}-${params.crossSellingRelation}`,
-      async () => {
-        const response = await useSdk().plentysystems.getFacet(payload);
-        const products = await enrichProductsByVariationIds(response?.data?.products ?? []);
+      state.value.data = getDisplayableProducts(products);
+    } catch (error) {
+      useHandleError(error as ApiError);
+    } finally {
+      state.value.loading = false;
+    }
 
-        return getDisplayableProducts(products);
-      },
-    );
-
-    useHandleError(error.value ?? null);
-    state.value.data = data?.value ?? state.value.data;
-    state.value.loading = false;
     return state.value.data;
   };
 

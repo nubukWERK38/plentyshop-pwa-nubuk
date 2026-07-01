@@ -2,7 +2,7 @@
   <section class="image-text-box" data-testid="image-text-box">
     <div v-if="isSideBySide" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
       <div :class="imageOrderClass">
-        <div v-if="hasImage" class="w-full overflow-hidden  bg-neutral-100">
+        <div v-if="hasImage" class="w-full overflow-hidden bg-neutral-100">
           <NuxtImg
             v-if="content.image.mobile"
             :src="content.image.mobile"
@@ -22,12 +22,12 @@
       </div>
       <div :class="textOrderClass">
         <div class="space-y-4">
-          <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
+          <div v-if="hasText" class="max-w-none" v-html="content.text.html" />
           <component
             :is="buttonTag"
             v-if="hasButton"
             v-bind="buttonProps"
-            class="inline-flex items-center  px-4 py-2 font-medium"
+            class="inline-flex items-center px-4 py-2 font-medium"
             :style="buttonStyle"
           >
             {{ content.button.label }}
@@ -56,12 +56,12 @@
       </div>
       <div class="absolute inset-0 p-10 flex" :class="insideAlignClasses">
         <div class="image-text-box__text">
-          <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
+          <div v-if="hasText" class="max-w-none" v-html="content.text.html" />
           <component
             :is="buttonTag"
             v-if="hasButton"
             v-bind="buttonProps"
-            class="inline-flex items-center  px-4 py-2 font-medium"
+            class="inline-flex items-center px-4 py-2 font-medium"
             :style="buttonStyle"
           >
             {{ content.button.label }}
@@ -71,7 +71,7 @@
     </div>
 
     <div v-else-if="isOverlay" class="relative pb-10">
-      <div v-if="hasImage" class="w-full overflow-hidden  bg-neutral-100">
+      <div v-if="hasImage" class="w-full overflow-hidden bg-neutral-100">
         <NuxtImg
           v-if="content.image.mobile"
           :src="content.image.mobile"
@@ -90,12 +90,12 @@
       </div>
       <div class="relative z-10 -mt-10 mx-4 md:mx-8 bg-white p-4 md:p-6 shadow-md">
         <div class="space-y-4">
-          <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
+          <div v-if="hasText" class="max-w-none" v-html="content.text.html" />
           <component
             :is="buttonTag"
             v-if="hasButton"
             v-bind="buttonProps"
-            class="inline-flex items-center  px-4 py-2 font-medium"
+            class="inline-flex items-center px-4 py-2 font-medium"
             :style="buttonStyle"
           >
             {{ content.button.label }}
@@ -106,19 +106,19 @@
 
     <div v-else>
       <div v-if="isAbove" class="space-y-4 mb-4">
-        <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
+        <div v-if="hasText" class="max-w-none" v-html="content.text.html" />
         <component
           :is="buttonTag"
           v-if="hasButton"
           v-bind="buttonProps"
-          class="inline-flex items-center  px-4 py-2 font-medium"
+          class="inline-flex items-center px-4 py-2 font-medium"
           :style="buttonStyle"
         >
           {{ content.button.label }}
         </component>
       </div>
 
-      <div v-if="hasImage" class="w-full overflow-hidden  bg-neutral-100">
+      <div v-if="hasImage" class="w-full overflow-hidden bg-neutral-100">
         <NuxtImg
           v-if="content.image.mobile"
           :src="content.image.mobile"
@@ -137,12 +137,12 @@
       </div>
 
       <div v-if="isBelow" class="space-y-4 mt-4">
-        <div v-if="hasText" class=" max-w-none" v-html="content.text.html"></div>
+        <div v-if="hasText" class="max-w-none" v-html="content.text.html" />
         <component
           :is="buttonTag"
           v-if="hasButton"
           v-bind="buttonProps"
-          class="inline-flex items-center  px-4 py-2 font-medium"
+          class="inline-flex items-center px-4 py-2 font-medium"
           :style="buttonStyle"
         >
           {{ content.button.label }}
@@ -155,6 +155,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
 import type { ImageTextBoxAlignX, ImageTextBoxAlignY, ImageTextBoxPosition, ImageTextBoxProps } from './types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 
 const props = defineProps<ImageTextBoxProps>();
 const localePath = useLocalePath();
@@ -195,9 +196,10 @@ const buttonProps = computed(() => {
       to: resolvedButtonLink.value,
       target: '_blank',
       rel: 'noopener noreferrer',
+      title: buildSeoLinkTitle(content.value.button.label, 'Nubuk Bikes Shop'),
     };
   }
-  return { to: resolvedButtonLink.value };
+  return { to: resolvedButtonLink.value, title: buildSeoLinkTitle(content.value.button.label, 'Nubuk Bikes Shop') };
 });
 
 const buttonStyle = computed<CSSProperties>(() => ({

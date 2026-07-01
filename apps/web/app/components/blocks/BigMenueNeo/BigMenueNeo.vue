@@ -14,6 +14,7 @@
           v-for="(menu, index) in normalizedContent.menus"
           :key="menu.id"
           :to="resolveCategoryTo(menu.category)"
+          :title="getCategoryLinkTitle(menu.category)"
           class="big-menue-neo__top-item"
           :class="{ 'big-menue-neo__top-item--active': isPanelOpen && index === activeMenuIndex }"
           @mouseenter="openMenu(index)"
@@ -30,6 +31,7 @@
               <NuxtLink
                 v-if="isRenderableCategoryLink(column.category)"
                 :to="resolveCategoryTo(column.category)"
+                :title="getCategoryLinkTitle(column.category)"
                 class="big-menue-neo__column-title"
               >
                 {{ getCategoryLabel(column.category) }}
@@ -37,7 +39,11 @@
 
               <ul v-if="column.items.length > 0" class="big-menue-neo__level-3">
                 <li v-for="item in column.items" :key="item.id">
-                  <NuxtLink :to="resolveCategoryTo(item.category)" class="big-menue-neo__link">
+                  <NuxtLink
+                    :to="resolveCategoryTo(item.category)"
+                    :title="getCategoryLinkTitle(item.category)"
+                    class="big-menue-neo__link"
+                  >
                     {{ getCategoryLabel(item.category) }}
                   </NuxtLink>
                 </li>
@@ -50,7 +56,13 @@
               <h3 class="big-menue-neo__box-title">{{ t('bigMenuNeo.frequentSearches') }}</h3>
               <ul class="big-menue-neo__search-list">
                 <li v-for="term in activeSearchTerms" :key="term.id">
-                  <NuxtLink class="big-menue-neo__search-link" :to="term.link || '/'">{{ term.label }}</NuxtLink>
+                  <NuxtLink
+                    class="big-menue-neo__search-link"
+                    :to="term.link || '/'"
+                    :title="buildSeoLinkTitle(term.label, 'Nubuk Bikes Suche')"
+                  >
+                    {{ term.label }}
+                  </NuxtLink>
                 </li>
               </ul>
             </div>
@@ -60,11 +72,16 @@
         <div v-if="activeBrands.length > 0" class="big-menue-neo__brands-wrap">
           <ul class="big-menue-neo__brand-list">
             <li v-for="brand in activeBrands" :key="brand.id">
-              <NuxtLink :to="brand.link || '/'" class="big-menue-neo__brand-link">
+              <NuxtLink
+                :to="brand.link || '/'"
+                :title="buildSeoLinkTitle(brand.alt || 'Top-Marke', 'Nubuk Bikes Marken')"
+                class="big-menue-neo__brand-link"
+              >
                 <NuxtImg
                   v-if="brand.image"
                   :src="brand.image"
-                  :alt="brand.alt || 'Brand logo'"
+                  :alt="brand.alt || 'Nubuk Bikes Markenlogo'"
+                  :title="brand.alt || null"
                   class="big-menue-neo__brand-image"
                 />
                 <span v-else class="big-menue-neo__brand-placeholder">{{ brand.alt || 'Brand' }}</span>
@@ -80,6 +97,7 @@
 <script setup lang="ts">
 import type { CategoryTreeItem } from '@plentymarkets/shop-api';
 import type { BigMenueNeoContent, BigMenueNeoProps, BigMenueNeoCategoryLink } from './types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 
 const props = defineProps<BigMenueNeoProps>();
 
@@ -303,6 +321,9 @@ const getCategoryLabel = (category: BigMenueNeoCategoryLink) => {
   if (match?.details?.[0]?.name) return match.details[0].name;
   return getFallbackCategoryLabel(category);
 };
+
+const getCategoryLinkTitle = (category: BigMenueNeoCategoryLink) =>
+  buildSeoLinkTitle(getCategoryLabel(category), 'Nubuk Bikes Fahrradshop');
 
 const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
   if (category.linkType === 'manualUrl') {

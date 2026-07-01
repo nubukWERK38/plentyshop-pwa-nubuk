@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="image-banner-neo group relative"
-    :class="'w-full'"
-    data-testid="image-banner-neo"
-  >
+  <div class="image-banner-neo group relative" :class="'w-full'" data-testid="image-banner-neo">
     <Swiper
       :modules="swiperModules"
       :slides-per-view="1"
@@ -115,6 +111,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import type { CSSProperties } from 'vue';
 import type { ImageBannerNeoProps, ImageBannerNeoSlide } from './types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -352,7 +349,7 @@ const getCtaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
   const hoverTextColor = explicitTextColor || (hoverColor ? getReadableTextColor(hoverColor) : baseTextColor);
 
   return {
-    '--ibn-cta-bg': isPrimary ? (baseColor || 'transparent') : 'transparent',
+    '--ibn-cta-bg': isPrimary ? baseColor || 'transparent' : 'transparent',
     '--ibn-cta-border': baseColor || 'currentColor',
     '--ibn-cta-text': isPrimary ? baseTextColor : explicitTextColor || baseColor || 'currentColor',
     '--ibn-cta-hover-bg': hoverColor || (isPrimary ? baseColor || 'transparent' : 'transparent'),
@@ -368,12 +365,14 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
       href: slide.text.ctaLink,
       target: '_blank',
       rel: 'noopener noreferrer',
+      title: buildSeoLinkTitle(slide.text.ctaLabel, 'Nubuk Bikes Shop'),
     };
   }
 
   return {
     tag: NuxtLink,
     to: localePath(slide.text.ctaLink),
+    title: buildSeoLinkTitle(slide.text.ctaLabel, 'Nubuk Bikes Shop'),
   };
 };
 </script>
@@ -451,7 +450,10 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
   background-color: var(--ibn-cta-bg) !important;
   border-color: var(--ibn-cta-border) !important;
   color: var(--ibn-cta-text) !important;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .image-banner-neo__cta--custom:hover {

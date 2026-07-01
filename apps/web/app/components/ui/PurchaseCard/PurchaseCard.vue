@@ -54,16 +54,16 @@
               />
               <ul class="purchase-card__more-infos">
                 <li>
-                  <NuxtLink :to="localePath('/ueber-uns/retoure')" title="Wie läuft eine Retoure ab?">
+                  <button type="button" title="Wie läuft eine Retoure ab?" @click="openReturnModal">
                     <i class="fa fa-angle-right" aria-hidden="true" />
                     Wie läuft eine Retoure ab?
-                  </NuxtLink>
+                  </button>
                 </li>
                 <li>
-                  <NuxtLink :to="localePath(paths.contact)" title="Fragen zum Produkt?">
+                  <button type="button" title="Fragen zum Produkt?" @click="openProductQuestionTab">
                     <i class="fa fa-angle-right" aria-hidden="true" />
                     Fragen zum Produkt?
-                  </NuxtLink>
+                  </button>
                 </li>
                 <li>
                   <button type="button" title="Mit Bike-Leasing bis zu 40% sparen" @click="openLeasingModal">
@@ -308,6 +308,40 @@
       </div>
     </UiModal>
   </Teleport>
+  <Teleport to="body">
+    <UiModal
+      v-model="returnModalOpen"
+      aria-labelledby="return-modal-title"
+      tag="section"
+      role="dialog"
+      class="purchase-card__leasing-modal z-[2147483647] h-full w-full md:h-[calc(100vh-96px)] md:w-[min(1500px,calc(100vw-220px))] m-0 p-0 overflow-hidden"
+      overlay-classes="z-[2147483647]"
+    >
+      <header class="purchase-card__leasing-modal-header">
+        <h2 id="return-modal-title">Wie läuft eine Retoure ab?</h2>
+        <UiButton
+          :aria-label="t('common.navigation.closeDialog')"
+          square
+          variant="tertiary"
+          class="purchase-card__leasing-modal-close"
+          @click="returnModalOpen = false"
+        >
+          <SfIconClose />
+        </UiButton>
+      </header>
+      <div class="purchase-card__leasing-modal-body">
+        <div v-if="returnModalLoading" class="purchase-card__leasing-modal-loading">
+          <SfLoaderCircular size="lg" />
+        </div>
+        <div
+          v-else-if="returnModalContent"
+          class="purchase-card__leasing-modal-content no-preflight"
+          v-html="returnModalContent"
+        />
+        <p v-else class="purchase-card__leasing-modal-empty">Der Retoure-Content konnte nicht geladen werden.</p>
+      </div>
+    </UiModal>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -419,8 +453,13 @@ const { openDrawer } = useProductLegalDetailsDrawer();
 const leasingModalOpen = ref(false);
 const leasingModalLoading = ref(false);
 const leasingModalContent = ref('');
+const returnModalOpen = ref(false);
+const returnModalLoading = ref(false);
+const returnModalContent = ref('');
 const LEASING_CATEGORY_ID = 3228;
 const LEASING_CATEGORY_PATH = '/ueber-uns/leasingpartner';
+const RETURN_CATEGORY_ID = 2999;
+const RETURN_CATEGORY_PATH = '/ueber-uns/retoure';
 
 const manufacturer = computed(() => productGetters.getManufacturer(props.product));
 const brandName = computed(
@@ -627,6 +666,25 @@ const openManufacturerDetails = () => {
   openDrawer();
 };
 
+const openProductQuestionTab = () => {
+  window.dispatchEvent(new CustomEvent('open-product-question-tab'));
+};
+
+const fetchCategoryModalContent = async (categoryId: number, categoryUrlPath: string) => {
+  const templateResponse = await useSdk().plentysystems.getCategoryTemplate({ id: categoryId });
+  const templateContent = templateResponse?.data?.data || '';
+  if (templateContent) return templateContent;
+
+  const facetResponse = await useSdk().plentysystems.getFacet({
+    categoryUrlPath,
+    page: 1,
+    itemsPerPage: 1,
+  });
+  const categoryDetails = facetResponse?.data?.category?.details?.[0];
+
+  return categoryDetails?.description || categoryDetails?.description2 || categoryDetails?.fulltext || '';
+};
+
 const openLeasingModal = async () => {
   leasingModalOpen.value = true;
 
@@ -634,23 +692,26 @@ const openLeasingModal = async () => {
 
   leasingModalLoading.value = true;
   try {
-    const templateResponse = await useSdk().plentysystems.getCategoryTemplate({ id: LEASING_CATEGORY_ID });
-    leasingModalContent.value = templateResponse?.data?.data || '';
-
-    if (!leasingModalContent.value) {
-      const facetResponse = await useSdk().plentysystems.getFacet({
-        categoryUrlPath: LEASING_CATEGORY_PATH,
-        page: 1,
-        itemsPerPage: 1,
-      });
-      const categoryDetails = facetResponse?.data?.category?.details?.[0];
-      leasingModalContent.value =
-        categoryDetails?.description || categoryDetails?.description2 || categoryDetails?.fulltext || '';
-    }
+    leasingModalContent.value = await fetchCategoryModalContent(LEASING_CATEGORY_ID, LEASING_CATEGORY_PATH);
   } catch {
     leasingModalContent.value = '';
   } finally {
     leasingModalLoading.value = false;
+  }
+};
+
+const openReturnModal = async () => {
+  returnModalOpen.value = true;
+
+  if (returnModalContent.value || returnModalLoading.value) return;
+
+  returnModalLoading.value = true;
+  try {
+    returnModalContent.value = await fetchCategoryModalContent(RETURN_CATEGORY_ID, RETURN_CATEGORY_PATH);
+  } catch {
+    returnModalContent.value = '';
+  } finally {
+    returnModalLoading.value = false;
   }
 };
 </script>

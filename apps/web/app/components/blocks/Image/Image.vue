@@ -5,6 +5,7 @@
       v-if="hasImage"
       :to="linkTarget"
       :aria-label="ariaLabel"
+      :title="linkTitle"
       :class="{ 'absolute inset-0': linkTarget }"
       v-bind="isExternalLink(linkTarget) ? { target: '_blank', rel: 'noopener noreferrer' } : {}"
       data-testid="image-link"
@@ -42,6 +43,7 @@
 
 <script setup lang="ts">
 import type { ImageProps, BreakpointEntry } from './types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 
 const viewport = useViewport();
 const NuxtLink = resolveComponent('NuxtLink');
@@ -59,6 +61,9 @@ const linkTarget = computed(() => {
 });
 const linkTag = computed(() => (linkTarget.value ? NuxtLink : 'div'));
 const ariaLabel = computed(() => props.content?.image?.alt || 'Image link');
+const linkTitle = computed(() =>
+  linkTarget.value ? buildSeoLinkTitle(ariaLabel.value, 'Nubuk Bikes Shop') : undefined,
+);
 
 const textContentProps = computed(() =>
   mapToTextContentProps({

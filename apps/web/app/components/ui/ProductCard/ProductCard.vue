@@ -33,6 +33,7 @@
         <SfLink
           :tag="NuxtLink"
           :to="productPath"
+          :title="productLinkTitle"
           class="relative group/image flex items-center justify-center"
           data-testid="product-card-link"
         >
@@ -69,7 +70,7 @@
               ref="hoverImageRef"
               :src="effectiveHoverImageUrl"
               :alt="imageAlt"
-              :title="imageTitle || null"
+              :title="hoverImageTitle || null"
               :loading="lazy === false ? 'eager' : 'lazy'"
               fetchpriority="auto"
               :preload="false"
@@ -106,13 +107,18 @@
         'items-start': configuration?.contentAlignment === 'left',
       }"
     >
-      <div v-if="brandName" class="mb-0.5 text-base font-semibold leading-tight text-neutral-900" data-testid="productcard-manufacturer">
+      <div
+        v-if="brandName"
+        class="mb-0.5 text-base font-semibold leading-tight text-neutral-900"
+        data-testid="productcard-manufacturer"
+      >
         {{ brandName }}
       </div>
 
       <SfLink
         :tag="NuxtLink"
         :to="productPath"
+        :title="productLinkTitle"
         class="product-card__name line-clamp-2 no-underline text-base leading-[1.1] text-neutral-500 hover:text-neutral-700"
         variant="secondary"
         data-testid="productcard-name"
@@ -150,6 +156,7 @@ import { SfLink } from '@storefront-ui/vue';
 import type { ProductCardProps } from '~/components/ui/ProductCard/types';
 import { defaults } from '~/composables';
 import type { ItemGridContent } from '~/components/blocks/ItemGrid/types';
+import { buildProductLinkTitle } from '~/utils/seo';
 
 const props = withDefaults(defineProps<ProductCardProps>(), {
   configuration: () => ({
@@ -202,7 +209,9 @@ const brandName = computed(
 );
 const showFromText = computed(() => productGetters.showFromText(product.value));
 const hasSpecialOffer = computed(() => Boolean(productGetters.getSpecialOffer(product.value)));
-const hasComparablePrice = computed(() => Boolean(crossedPrice.value && differentPrices(price.value, crossedPrice.value)));
+const hasComparablePrice = computed(() =>
+  Boolean(crossedPrice.value && differentPrices(price.value, crossedPrice.value)),
+);
 const discountPercentage = computed(() => {
   if (!crossedPrice.value || !hasComparablePrice.value) return 0;
 
@@ -211,7 +220,9 @@ const discountPercentage = computed(() => {
 
 const cover = computed(() => productGetters.getCoverImage(product.value));
 const secondCover = computed(() => productGetters.getSecondCoverImage(product.value));
-const firstImage = computed(() => productImageGetters.getFirstImage(product.value));
+const productImages = computed(() => productGetters.getGallery(product.value));
+const coverImage = computed(() => productImages.value[0]);
+const secondCoverImage = computed(() => productImages.value[1]);
 
 const imageUrl = computed(() => addModernImageExtension(cover.value));
 const effectiveHoverImageUrl = computed(() => {
@@ -220,8 +231,18 @@ const effectiveHoverImageUrl = computed(() => {
   return src || '';
 });
 
-const imageAlt = computed(() => productImageGetters.getImageAlternate(firstImage.value) || name.value || '');
-const imageTitle = computed(() => productImageGetters.getImageName(firstImage.value) || '');
+const imageAlt = computed(() =>
+  coverImage.value ? productImageGetters.getImageAlternate(coverImage.value) || name.value || '' : name.value || '',
+);
+const imageTitle = computed(() =>
+  coverImage.value ? productImageGetters.getImageName(coverImage.value) || imageAlt.value : imageAlt.value,
+);
+const hoverImageTitle = computed(() =>
+  secondCoverImage.value
+    ? productImageGetters.getImageName(secondCoverImage.value) || imageTitle.value
+    : imageTitle.value,
+);
+const productLinkTitle = computed(() => buildProductLinkTitle(name.value));
 
 const imageWidth = computed(() => productGetters.getImageWidth(product.value) || 600);
 const imageHeight = computed(() => productGetters.getImageHeight(product.value) || 600);

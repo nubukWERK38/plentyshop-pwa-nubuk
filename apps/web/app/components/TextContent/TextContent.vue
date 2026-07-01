@@ -17,6 +17,7 @@
       v-if="props.button?.label && props.button?.link"
       :tag="NuxtLink"
       :to="localePath(props.button.link)"
+      :title="buildSeoLinkTitle(props.button.label, 'Nubuk Bikes Shop')"
       :variant="props.button.variant ?? 'primary'"
       :data-testid="props.testId ? 'text-button-' + props.testId : 'text-button'"
       :class="[
@@ -33,6 +34,7 @@
 
 <script setup lang="ts">
 import type { TextContentProps } from '~/components/TextContent/types';
+import { buildSeoLinkTitle } from '~/utils/seo';
 
 const props = defineProps<TextContentProps>();
 

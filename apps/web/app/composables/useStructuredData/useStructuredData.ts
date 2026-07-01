@@ -6,8 +6,9 @@ import type {
   SetProductCanonicalMetaData,
   UseStructuredDataState,
 } from './types';
-import { productGetters, reviewGetters, productSeoSettingsGetters } from '@plentymarkets/shop-api';
+import { productGetters, reviewGetters, productSeoSettingsGetters, productImageGetters } from '@plentymarkets/shop-api';
 import type { Product, CanonicalAlternate } from '@plentymarkets/shop-api';
+import { SEO_SITE_NAME, getSiteOrigin, stripHtmlForSeo, toAbsoluteUrl } from '~/utils/seo';
 
 /**
  * @description Composable managing meta data
@@ -34,11 +35,14 @@ export const useStructuredData: useStructuredDataReturn = () => {
     state.value.loading = true;
 
     const runtimeConfig = useRuntimeConfig();
+    const siteOrigin = getSiteOrigin(runtimeConfig.public.domain);
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      url: runtimeConfig.public.domain,
-      logo: runtimeConfig.public.domain + '/_nuxt-plenty/images/logo.png',
+      '@id': `${siteOrigin}/#organization`,
+      name: SEO_SITE_NAME,
+      url: siteOrigin,
+      logo: `${siteOrigin}/_nuxt-plenty/images/logo.png`,
     };
     useHead({
       script: [
@@ -64,50 +68,54 @@ export const useStructuredData: useStructuredDataReturn = () => {
    */
   const setProductMetaData: SetProductMetaData = (product: Product) => {
     state.value.loading = true;
+    const route = useRoute();
+    const runtimeConfig = useRuntimeConfig();
+    const siteOrigin = getSiteOrigin(runtimeConfig.public.domain);
     const { price, crossedPrice } = useProductPrice(product);
     const productId = Number(productGetters.getItemId(product));
+    const productName = productGetters.getName(product);
+    const productUrl = toAbsoluteUrl(route.fullPath, siteOrigin);
+    const imageUrls = [
+      ...new Set(
+        productGetters
+          .getGallery(product)
+          .map((image) => productImageGetters.getImageUrl(image) || productImageGetters.getImageUrlMiddle(image))
+          .filter(Boolean)
+          .map((url) => toAbsoluteUrl(url, siteOrigin)),
+      ),
+    ];
 
     const { data: productReviews } = useProductReviews(productId);
     const { data: reviewAverage } = useProductReviewAverage(productId);
 
-    let reviews = null;
-    if (reviewAverage.value) {
-      reviews = [];
-      reviewGetters.getReviewItems(productReviews.value).forEach((reviewItem) => {
-        reviews.push({
-          '@type': 'Review',
-          reviewRating: {
-            '@type': 'Rating',
-            ratingValue: reviewGetters.getReviewRating(reviewItem),
-          },
-          author: {
-            '@type': 'Person',
-            name: reviewGetters.getReviewAuthor(reviewItem),
-          },
-        });
-      });
-    }
+    const reviews = reviewGetters.getReviewItems(productReviews.value).map((reviewItem) => ({
+      '@type': 'Review',
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: reviewGetters.getReviewRating(reviewItem),
+        bestRating: productGetters.getMaxRating(product) || 5,
+        worstRating: 1,
+      },
+      author: {
+        '@type': 'Person',
+        name: reviewGetters.getReviewAuthor(reviewItem),
+      },
+    }));
+
     const metaObject = {
       '@context': 'https://schema.org',
       '@type': 'Product',
-      name: productGetters.getName(product),
+      '@id': `${productUrl}#product`,
+      name: productName,
       category: productGetters.getCategoryName(product),
-      releaseDate: '',
-      image: productGetters.getCoverImage(product),
+      image: imageUrls.length ? imageUrls : [toAbsoluteUrl(productGetters.getCoverImage(product), siteOrigin)],
       identifier: productGetters.getId(product),
-      description: product.texts.description,
-      disambiguatingDescription: '',
-      review: reviews,
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: productGetters.getAverageRating(product),
-        reviewCount: productGetters.getTotalReviews(product),
-      },
+      description: stripHtmlForSeo(productGetters.getDescription(product) || product.texts.description),
       offers: {
         '@type': 'Offer',
         priceCurrency: productGetters.getSpecialPriceCurrency(product),
         price: Number(price.value),
-        url: null,
+        url: productUrl,
         priceSpecification: [
           {
             '@type': 'UnitPriceSpecification',
@@ -121,6 +129,9 @@ export const useStructuredData: useStructuredDataReturn = () => {
         ],
         availability: productSeoSettingsGetters.getMappedAvailability(product),
         itemCondition: productSeoSettingsGetters.getConditionOfItem(product),
+        seller: {
+          '@id': `${siteOrigin}/#organization`,
+        },
       },
       depth: {
         '@type': 'QuantitativeValue',
@@ -140,6 +151,22 @@ export const useStructuredData: useStructuredDataReturn = () => {
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;
+
+    if (reviews.length) metaObject.review = reviews;
+
+    const reviewCount = productGetters.getTotalReviews(product);
+    const ratingValue = reviewAverage.value?.counts
+      ? reviewGetters.getAverageRating(reviewAverage.value.counts)
+      : productGetters.getAverageRating(product);
+    if (reviewCount > 0 && ratingValue > 0) {
+      metaObject.aggregateRating = {
+        '@type': 'AggregateRating',
+        ratingValue,
+        reviewCount,
+        bestRating: productGetters.getMaxRating(product) || 5,
+        worstRating: 1,
+      };
+    }
 
     const manufacturer = productSeoSettingsGetters.getSeoManufacturer(product);
     if (manufacturer !== '') metaObject.manufacturer = { '@type': 'Organization', name: manufacturer };

@@ -6,7 +6,15 @@
     :style="sectionStyle"
   >
     <div v-bind="$attrs" :style="blockStyle" class="product-recommended-products__inner w-full">
-      <TextContent data-testid="recommended-block" class="product-recommended-products__text pb-4" :text="props.content.text" :index="props.index" />
+      <h2 v-if="fallbackHeading" class="product-recommended-products__fallback-heading">
+        {{ fallbackHeading }}
+      </h2>
+      <TextContent
+        data-testid="recommended-block"
+        class="product-recommended-products__text pb-4"
+        :text="props.content.text"
+        :index="props.index"
+      />
 
       <div v-if="tabsEnabled" class="product-recommended-products__tabs" data-testid="recommended-source-tabs">
         <button
@@ -162,6 +170,15 @@ const blockStyle = computed<CSSProperties>(() => ({
   marginLeft: `${layoutSettings.value.marginLeft}px`,
   marginRight: `${layoutSettings.value.marginRight}px`,
 }));
+const hasCurrentProductContext = computed(() => Object.keys(currentProduct.value).length > 0);
+const hasConfiguredText = computed(() => {
+  const text = props.content.text;
+
+  return Boolean(text?.pretitle || text?.title || text?.subtitle || text?.htmlDescription);
+});
+const fallbackHeading = computed(() =>
+  hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das könnte auch was für Dich sein!' : '',
+);
 
 const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended(props.meta.uuid);
 
@@ -250,6 +267,14 @@ watch(
   padding: 0 1.5rem;
 }
 
+.product-recommended-products__fallback-heading {
+  margin: 0 0 2rem;
+  color: var(--ci-dark);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
 .product-recommended-products__tabs {
   display: grid;
   grid-auto-flow: column;
@@ -309,8 +334,8 @@ watch(
 }
 
 .product-recommended-products :deep(.product-recommended-products__card) {
-  min-height: 512px;
-  border: 0;
+  min-height: 100%;
+  border: 1px solid #e5e7eb;
   border-radius: 0;
   background: #ffffff;
   color: #111827;
@@ -323,13 +348,13 @@ watch(
 
 .product-recommended-products :deep(.product-recommended-products__card .size-48) {
   width: 100%;
-  height: 342px;
-  padding: 2rem 1.25rem 1rem;
+  height: clamp(170px, 15vw, 220px);
+  padding: 1rem 1.25rem 0.25rem;
 }
 
 .product-recommended-products :deep(.product-recommended-products__card > div:last-child) {
-  min-height: 170px;
-  padding: 1rem 1.25rem 1.5rem;
+  min-height: 154px;
+  padding: 0.5rem 1.25rem 1.375rem;
   border-top: 0;
 }
 
@@ -341,7 +366,7 @@ watch(
 }
 
 .product-recommended-products :deep(.product-recommended-products__card .product-card__price-row) {
-  margin-top: 1.625rem;
+  margin-top: 1.25rem;
   padding-top: 0;
 }
 
@@ -355,6 +380,11 @@ watch(
 }
 
 @media (max-width: 767px) {
+  .product-recommended-products__fallback-heading {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
   .product-recommended-products__tabs {
     grid-auto-columns: minmax(9rem, 1fr);
     overflow-x: auto;
