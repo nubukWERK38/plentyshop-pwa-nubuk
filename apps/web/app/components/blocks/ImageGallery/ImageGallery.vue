@@ -9,10 +9,7 @@
       </h2>
     </header>
 
-    <Gallery
-      :images="addModernImageExtensionForGallery(productGetters.getGallery(currentProduct))"
-      :configuration="normalizedContent"
-    />
+    <Gallery :images="galleryImages" :configuration="normalizedContent" />
   </section>
 </template>
 
@@ -26,6 +23,16 @@ const { addModernImageExtensionForGallery } = useModernImage();
 
 const props = defineProps<ImageGalleryProps>();
 const { currentProduct } = useProducts();
+
+const galleryImages = computed(() => {
+  if (!currentProduct.value || Object.keys(currentProduct.value).length === 0) return [];
+
+  try {
+    return addModernImageExtensionForGallery(productGetters.getGallery(currentProduct.value));
+  } catch {
+    return [];
+  }
+});
 
 const ensureSpacing = (spacing?: BoxSpacing) => ({
   top: spacing?.top ?? 0,

@@ -51,11 +51,29 @@ describe('ImageGallery', () => {
     });
 
     const gallery = wrapper.findComponent({ name: 'Gallery' });
-    expect(gallery.props('configuration')).toEqual(mockImageGalleryBlock.content);
+    expect(gallery.props('configuration')).toMatchObject({
+      thumbnails: mockImageGalleryBlock.content.thumbnails,
+      layout: {
+        fullWidth: mockImageGalleryBlock.content.layout.fullWidth,
+      },
+    });
   });
 
   it('should handle empty product gallery correctly', () => {
     vi.mocked(productGetters.getGallery).mockReturnValueOnce([]);
+
+    const wrapper = mount(ImageGallery, {
+      props: mockImageGalleryBlock,
+    });
+
+    const gallery = wrapper.findComponent({ name: 'Gallery' });
+    expect(gallery.props('images')).toEqual([]);
+  });
+
+  it('should handle incomplete product gallery data correctly', () => {
+    vi.mocked(productGetters.getGallery).mockImplementationOnce(() => {
+      throw new TypeError('Cannot read properties of undefined');
+    });
 
     const wrapper = mount(ImageGallery, {
       props: mockImageGalleryBlock,

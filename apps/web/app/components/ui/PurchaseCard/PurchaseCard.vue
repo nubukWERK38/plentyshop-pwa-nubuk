@@ -424,6 +424,7 @@ const props = withDefaults(defineProps<PurchaseCardProps>(), {
 });
 
 const { currentProduct } = useProducts();
+const { isInEditor } = useEditorState();
 
 const { data: productReviews } = useProductReviews(Number(productGetters.getItemId(currentProduct.value)));
 const reviewAverage = computed(() => reviewGetters.getReviewCounts(productReviews.value));
@@ -466,13 +467,22 @@ const LEASING_CATEGORY_PATH = '/ueber-uns/leasingpartner';
 const RETURN_CATEGORY_ID = 2999;
 const RETURN_CATEGORY_PATH = '/artikel-informationen/wie-laeuft-eine-retoure-ab';
 
-const manufacturer = computed(() => productGetters.getManufacturer(props.product));
-const brandName = computed(
-  () =>
+const manufacturer = computed(() => {
+  try {
+    return productGetters.getManufacturer(props.product);
+  } catch {
+    return null;
+  }
+});
+const brandName = computed(() => {
+  if (!manufacturer.value) return '';
+
+  return (
     manufacturerGetters.getManufacturerExternalName(manufacturer.value) ||
     manufacturerGetters.getManufacturerNameExternal(manufacturer.value) ||
-    manufacturerGetters.getManufacturerName(manufacturer.value),
-);
+    manufacturerGetters.getManufacturerName(manufacturer.value)
+  );
+});
 
 const getNormalizedBrandLogo = (value: unknown): string => {
   if (typeof value === 'string') return value;
@@ -498,6 +508,8 @@ const getNormalizedBrandLogo = (value: unknown): string => {
 };
 
 const brandLogo = computed(() => {
+  if (!manufacturer.value) return '';
+
   const getterLogo = getNormalizedBrandLogo(manufacturerGetters.getManufacturerLogo(manufacturer.value));
   if (getterLogo) return getterLogo;
 
@@ -655,7 +667,9 @@ const openReviewsAccordion = () => {
 
 const isSalableText = computed(() => (productGetters.isSalable(props?.product) ? '' : t('product.notAvailable')));
 const isNotValidVariation = computed(() => (getCombination() ? '' : t('product.attributes.notValidVariation')));
-const showPayPalButtons = computed(() => Boolean(getCombination()) && productGetters.isSalable(props?.product));
+const showPayPalButtons = computed(
+  () => !isInEditor.value && Boolean(getCombination()) && productGetters.isSalable(props?.product),
+);
 
 const scrollToReviews = () => {
   if (!isReviewsAccordionOpen()) {

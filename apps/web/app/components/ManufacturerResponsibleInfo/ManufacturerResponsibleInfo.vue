@@ -49,20 +49,51 @@ import { manufacturerGetters, productGetters } from '@plentymarkets/shop-api';
 import type { ManufacturerResponsibleInfoProps } from '~/components/ManufacturerResponsibleInfo/types';
 
 const props = defineProps<ManufacturerResponsibleInfoProps>();
-const manufacturer = productGetters.getManufacturer(props.product);
-const country = manufacturerGetters.getManufacturerResponsibleCountry(manufacturer);
+const manufacturer = computed(() => {
+  try {
+    return productGetters.getManufacturer(props.product);
+  } catch {
+    return null;
+  }
+});
 
-const manufacturerResponsibleInfo = computed(() => ({
-  name: manufacturerGetters.getManufacturerResponsibleName(manufacturer),
-  street: manufacturerGetters.getManufacturerResponsibleStreet(manufacturer),
-  houseNo: manufacturerGetters.getManufacturerResponsibleHouseNo(manufacturer),
-  postCode: manufacturerGetters.getManufacturerResponsiblePostCode(manufacturer),
-  town: manufacturerGetters.getManufacturerResponsibleTown(manufacturer),
-  country: Object.keys(country).length > 0 ? country : null,
-  email: manufacturerGetters.getManufacturerResponsibleEmail(manufacturer),
-  phoneNo: manufacturerGetters.getManufacturerResponsiblePhoneNo(manufacturer),
-  responsibleContactUrl: manufacturerGetters.getManufacturerResponsibleContactUrl(manufacturer),
-}));
+const country = computed(() => {
+  if (!manufacturer.value) return null;
+
+  try {
+    return manufacturerGetters.getManufacturerResponsibleCountry(manufacturer.value);
+  } catch {
+    return null;
+  }
+});
+
+const manufacturerResponsibleInfo = computed(() => {
+  if (!manufacturer.value) {
+    return {
+      name: '',
+      street: '',
+      houseNo: '',
+      postCode: '',
+      town: '',
+      country: null,
+      email: '',
+      phoneNo: '',
+      responsibleContactUrl: '',
+    };
+  }
+
+  return {
+    name: manufacturerGetters.getManufacturerResponsibleName(manufacturer.value),
+    street: manufacturerGetters.getManufacturerResponsibleStreet(manufacturer.value),
+    houseNo: manufacturerGetters.getManufacturerResponsibleHouseNo(manufacturer.value),
+    postCode: manufacturerGetters.getManufacturerResponsiblePostCode(manufacturer.value),
+    town: manufacturerGetters.getManufacturerResponsibleTown(manufacturer.value),
+    country: country.value && Object.keys(country.value).length > 0 ? country.value : null,
+    email: manufacturerGetters.getManufacturerResponsibleEmail(manufacturer.value),
+    phoneNo: manufacturerGetters.getManufacturerResponsiblePhoneNo(manufacturer.value),
+    responsibleContactUrl: manufacturerGetters.getManufacturerResponsibleContactUrl(manufacturer.value),
+  };
+});
 
 const hasAnyInfo = computed(() => {
   const info = manufacturerResponsibleInfo.value;

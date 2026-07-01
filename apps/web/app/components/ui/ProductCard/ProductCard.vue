@@ -200,13 +200,22 @@ const useTagsOnCategoryPage = config.public.useTagsOnCategoryPage;
 const name = computed(
   () => productGetters.getName(product.value) + productGetters.getGroupedAttributesString(product.value),
 );
-const manufacturer = computed(() => productGetters.getManufacturer(product.value));
-const brandName = computed(
-  () =>
+const manufacturer = computed(() => {
+  try {
+    return productGetters.getManufacturer(product.value);
+  } catch {
+    return null;
+  }
+});
+const brandName = computed(() => {
+  if (!manufacturer.value) return '';
+
+  return (
     manufacturerGetters.getManufacturerExternalName(manufacturer.value) ||
     manufacturerGetters.getManufacturerNameExternal(manufacturer.value) ||
-    manufacturerGetters.getManufacturerName(manufacturer.value),
-);
+    manufacturerGetters.getManufacturerName(manufacturer.value)
+  );
+});
 const showFromText = computed(() => productGetters.showFromText(product.value));
 const hasSpecialOffer = computed(() => Boolean(productGetters.getSpecialOffer(product.value)));
 const hasComparablePrice = computed(() =>
@@ -220,7 +229,13 @@ const discountPercentage = computed(() => {
 
 const cover = computed(() => productGetters.getCoverImage(product.value));
 const secondCover = computed(() => productGetters.getSecondCoverImage(product.value));
-const productImages = computed(() => productGetters.getGallery(product.value));
+const productImages = computed(() => {
+  try {
+    return productGetters.getGallery(product.value);
+  } catch {
+    return [];
+  }
+});
 const coverImage = computed(() => productImages.value[0]);
 const secondCoverImage = computed(() => productImages.value[1]);
 

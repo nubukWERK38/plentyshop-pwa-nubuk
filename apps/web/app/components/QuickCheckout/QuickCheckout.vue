@@ -137,14 +137,16 @@
         >
           {{ t('common.actions.goToCheckout') }}
         </UiButton>
-        <OrDivider v-if="isPaypalAvailable('quickCheckout').value" class="my-4" />
-        <PayPalExpressButton
-          class="w-full text-center"
-          location="quickCheckout"
-          type="CartPreview"
-          @on-approved="isOpen = false"
-        />
-        <PayPalPayLaterBanner placement="payment" location="quickCheckout" :amount="totals.total" />
+        <template v-if="showPayPalButtons">
+          <OrDivider class="my-4" />
+          <PayPalExpressButton
+            class="w-full text-center"
+            location="quickCheckout"
+            type="CartPreview"
+            @on-approved="isOpen = false"
+          />
+          <PayPalPayLaterBanner placement="payment" location="quickCheckout" :amount="totals.total" />
+        </template>
       </div>
     </div>
   </UiModal>
@@ -167,12 +169,13 @@ const { data: cart, lastUpdatedCartItem } = useCart();
 const { isAvailable: isPaypalAvailable, loadConfig } = usePayPal();
 const { addModernImageExtension } = useModernImage();
 const { isOpen, timer, startTimer, endTimer, closeQuickCheckout, hasTimer, quantity } = useQuickCheckout();
+const { isInEditor } = useEditorState();
 const cartItemsCount = computed(() => cart.value?.items?.reduce((price, { quantity }) => price + quantity, 0) ?? 0);
 const { isAuthorized } = useCustomer();
 
 onMounted(() => {
   startTimer();
-  loadConfig();
+  if (!isInEditor.value) loadConfig();
 });
 onUnmounted(() => endTimer());
 
@@ -203,9 +206,11 @@ const totals = computed(() => {
 });
 
 const imageAlt = computed(() => {
-  const image = props.product?.images?.all[0];
+  const image = props.product?.images?.all?.[0];
   return image ? productImageGetters.getImageAlternate(image) : '';
 });
+
+const showPayPalButtons = computed(() => !isInEditor.value && isPaypalAvailable('quickCheckout').value);
 
 const goToCheckout = () => (isAuthorized.value ? goToPage(paths.checkout) : goToPage(paths.guestLogin));
 

@@ -6,7 +6,7 @@ import type {
   UseProductAttributesReturn,
   UseProductAttributesState,
 } from './types';
-import type { Product, VariationMapProductVariation } from '@plentymarkets/shop-api';
+import type { Product, VariationMapProductAttribute, VariationMapProductVariation } from '@plentymarkets/shop-api';
 import { sortProductAttributes } from '~/utils/sortAttributeValues';
 
 /**
@@ -72,6 +72,35 @@ export const useProductAttributes = (): UseProductAttributesReturn => {
   /**
    * @description Helper function to check if a combination matches the given attribute values.
    */
+  const isSalableCombination = (combination: VariationMapProductVariation): boolean => combination.isSalable === true;
+
+  const hasAttributeCombinationData = (combinations: VariationMapProductVariation[]): boolean =>
+    combinations.some((combination) => (combination.attributes?.length ?? 0) > 0);
+
+  const filterAttributesBySalableCombinations = (
+    attributes: VariationMapProductAttribute[],
+    combinations: VariationMapProductVariation[],
+    salableCombinations: VariationMapProductVariation[],
+  ) => {
+    if (!hasAttributeCombinationData(combinations)) return attributes;
+
+    return attributes.map((attribute) => {
+      const salableValueIds = new Set(
+        salableCombinations.flatMap(
+          (combination) =>
+            combination.attributes
+              ?.filter((combinationAttribute) => combinationAttribute.attributeId === attribute.attributeId)
+              .map((combinationAttribute) => combinationAttribute.attributeValueId) ?? [],
+        ),
+      );
+
+      return {
+        ...attribute,
+        values: attribute.values.filter((value) => salableValueIds.has(value.attributeValueId)),
+      };
+    });
+  };
+
   const combinationMatchesAttributes = (
     combination: VariationMapProductVariation,
     attributeValues: Record<number, number>,
@@ -124,15 +153,28 @@ export const useProductAttributes = (): UseProductAttributesReturn => {
    * ```
    */
   const setAttribute: SetAttribute = (product: Product, preSelectAttributes = false) => {
+    const combinations = product.variationAttributeMap?.variations || [];
+    const salableCombinations = combinations.filter(isSalableCombination);
+
     state.value.itemId = product.item.id;
     state.value.variationId = product.variation.id;
-    state.value.attributes = sortProductAttributes(product.variationAttributeMap?.attributes || []);
-    state.value.combinations = product.variationAttributeMap?.variations || [];
+    state.value.attributes = sortProductAttributes(
+      filterAttributesBySalableCombinations(
+        product.variationAttributeMap?.attributes || [],
+        combinations,
+        salableCombinations,
+      ),
+    );
+    state.value.combinations = salableCombinations;
     state.value.attributeValues = {};
 
     if (preSelectAttributes) {
       product.attributes?.forEach((attribute) => {
-        state.value.attributeValues[attribute.attributeId] = attribute.value.id;
+        const hasAvailableValue = state.value.attributes
+          .find((availableAttribute) => availableAttribute.attributeId === attribute.attributeId)
+          ?.values.some((value) => value.attributeValueId === attribute.value.id);
+
+        if (hasAvailableValue) state.value.attributeValues[attribute.attributeId] = attribute.value.id;
       });
     }
 

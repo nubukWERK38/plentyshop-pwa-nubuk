@@ -159,7 +159,7 @@ onMounted(() => {
 });
 
 const imageAlt = computed(() => {
-  const image = props.order.variations[props.orderItem.itemVariationId.toString()]?.images?.all[0];
+  const image = props.order.variations[props.orderItem.itemVariationId.toString()]?.images?.all?.[0];
   return image ? productImageGetters.getImageAlternate(image) : '';
 });
 </script>

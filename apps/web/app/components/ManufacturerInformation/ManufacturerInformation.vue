@@ -41,25 +41,59 @@ import { productGetters, manufacturerGetters } from '@plentymarkets/shop-api';
 import type { ManufacturerInformationProps } from '~/components/ManufacturerInformation/types';
 
 const props = defineProps<ManufacturerInformationProps>();
-const manufacturer = productGetters.getManufacturer(props.product);
-const country = manufacturerGetters.getManufacturerCountry(manufacturer);
+const manufacturer = computed(() => {
+  try {
+    return productGetters.getManufacturer(props.product);
+  } catch {
+    return null;
+  }
+});
+
+const country = computed(() => {
+  if (!manufacturer.value) return null;
+
+  try {
+    return manufacturerGetters.getManufacturerCountry(manufacturer.value);
+  } catch {
+    return null;
+  }
+});
 
 const manufacturerInfo = computed(() => {
+  if (!manufacturer.value) {
+    return {
+      logo: '',
+      name: '',
+      externalName: '',
+      legalName: '',
+      street: '',
+      houseNo: '',
+      postcode: '',
+      town: '',
+      country: null,
+      email: '',
+      phoneNumber: '',
+      faxNumber: '',
+      contactUrl: '',
+      url: '',
+    };
+  }
+
   return {
-    logo: manufacturerGetters.getManufacturerLogo(manufacturer),
-    name: manufacturerGetters.getManufacturerName(manufacturer),
-    externalName: manufacturerGetters.getManufacturerExternalName(manufacturer),
-    legalName: manufacturerGetters.getManufacturerLegalName(manufacturer),
-    street: manufacturerGetters.getManufacturerStreet(manufacturer),
-    houseNo: manufacturerGetters.getManufacturerHouseNo(manufacturer),
-    postcode: manufacturerGetters.getManufacturerPostCode(manufacturer),
-    town: manufacturerGetters.getManufacturerTown(manufacturer),
-    country: Object.keys(country).length > 0 ? country : null,
-    email: manufacturerGetters.getManufacturerEmail(manufacturer),
-    phoneNumber: manufacturerGetters.getManufacturerPhoneNumber(manufacturer),
-    faxNumber: manufacturerGetters.getManufacturerFaxNumber(manufacturer),
-    contactUrl: manufacturerGetters.getManufacturerContactUrl(manufacturer),
-    url: manufacturerGetters.getManufacturerUrl(manufacturer),
+    logo: manufacturerGetters.getManufacturerLogo(manufacturer.value),
+    name: manufacturerGetters.getManufacturerName(manufacturer.value),
+    externalName: manufacturerGetters.getManufacturerExternalName(manufacturer.value),
+    legalName: manufacturerGetters.getManufacturerLegalName(manufacturer.value),
+    street: manufacturerGetters.getManufacturerStreet(manufacturer.value),
+    houseNo: manufacturerGetters.getManufacturerHouseNo(manufacturer.value),
+    postcode: manufacturerGetters.getManufacturerPostCode(manufacturer.value),
+    town: manufacturerGetters.getManufacturerTown(manufacturer.value),
+    country: country.value && Object.keys(country.value).length > 0 ? country.value : null,
+    email: manufacturerGetters.getManufacturerEmail(manufacturer.value),
+    phoneNumber: manufacturerGetters.getManufacturerPhoneNumber(manufacturer.value),
+    faxNumber: manufacturerGetters.getManufacturerFaxNumber(manufacturer.value),
+    contactUrl: manufacturerGetters.getManufacturerContactUrl(manufacturer.value),
+    url: manufacturerGetters.getManufacturerUrl(manufacturer.value),
   };
 });
 

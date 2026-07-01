@@ -15,63 +15,84 @@
 [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
 
 [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
-[32m√[39m Vite client built in 75ms
-[32m√[39m Vite server built in 165ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3096ms
+[32m√[39m Vite client built in 78ms
+[32m√[39m Vite server built in 184ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2762ms
 [36mi[39m Vite server warmed up in 1ms
-[36mi[39m Vite client warmed up in 5ms
-[36mi[39m [32mhmr update [39m[2m/components/PageBlock/PageBlock.vue, /components/blocks/Tabs/Tabs.vue[22m
-[36mi[39m [32mpage reload [39m[2mcomponents/blocks/ProductQuestion/ProductQuestion.vue[22m
-[36mi[39m [32mhmr update [39m[2m/components/PageBlock/PageBlock.vue, /components/blocks/Tabs/Tabs.vue[22m
-[36mi[39m [32mpage reload [39m[2mcomponents/blocks/ProductQuestion/ProductQuestionForm.vue[22m
-[36mi[39m [32mpage reload [39m[2mcomponents/blocks/ItemText/ItemText.vue[22m
-[36mi[39m [32mhmr update [39m[2m/components/blocks/ItemText/ItemText.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
-[36mi[39m [32mpage reload [39m[2mconfiguration/block-layout.config.ts[22m
-[36mi[39m [32mpage reload [39m[2mconfiguration/block-layout.config.ts[22m[2m (x2)[22m
-[36mi[39m [32mhmr update [39m[2m/components/blocks/TechnicalData/TechnicalData.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
-[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
-[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /components/PageBlock/PageBlock.vue, /components/blocks/structure/MultiGrid/MultiGrid.vue[22m
-[36mi[39m [32mpage reload [39m[2mutils/blocks/get-block-display-name.ts[22m
-[32m√[39m Vite server hmr 70 files in 16.272ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 2910.36ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 2925.07ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 2945.4ms
-[36mi[39m [32mpage reload [39m[2mutils/blockTemplates/product/factory.ts[22m
-[36mi[39m [32mpage reload [39m[2mutils/blockTemplates/product/factory.ts[22m[2m (x2)[22m
-[32m√[39m Vite server hmr 86 files in 4.36ms
+[36mi[39m Vite client warmed up in 3ms
+[36mi[39m [32mhmr update [39m[2m/components/Gallery/Gallery.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/Gallery/Gallery.vue[22m
+[36mi[39m [32mhmr update [39m[2m/components/Gallery/Gallery.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/Gallery/Gallery.vue[22m
+[32m√[39m Vite server hmr 43 files in 0.961ms
+[36mi[39m [32mpage reload [39m[2mcomponents/blocks/ImageGallery/ImageGallery.vue[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/ImageGallery/ImageGallery.vue?direct&vue&type=style&index=0&scoped=fc761be9&lang.css, /components/blocks/ImageGallery/ImageGallery.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/ManufacturerInformation/ManufacturerInformation.vue?direct&vue&type=style&index=0&scoped=2920f062&lang.css, /components/ManufacturerInformation/ManufacturerInformation.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 1163.06ms
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/ManufacturerResponsibleInfo/ManufacturerResponsibleInfo.vue?direct&vue&type=style&index=0&scoped=74298a6e&lang.css, /components/ManufacturerResponsibleInfo/ManufacturerResponsibleInfo.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/components/ui/PurchaseCard/PurchaseCard.vue?direct&vue&type=style&index=0&scoped=ec9b1cf9&lang.css, /components/ui/PurchaseCard/PurchaseCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/ui/PurchaseCard/PurchaseCard.vue[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/components/ui/PurchaseCard/PurchaseCard.vue?direct&vue&type=style&index=0&scoped=ec9b1cf9&lang.css, /components/ui/PurchaseCard/PurchaseCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/components/QuickCheckout/QuickCheckout.vue?direct&vue&type=style&index=0&scoped=360db538&lang.css, /components/QuickCheckout/QuickCheckout.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/QuickCheckout/QuickCheckout.vue[22m
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36museModuleRendering.ts[39m in 1681.83ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mshopCoreModule.d.ts[39m in 2484.39ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mModuleComponentRendering.vue[39m in 2488.43ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mruntime.vue-devtools-client.KPqaugEn4Nc3rBt2C_SWDutryQg2ShBUFhq9hI29g8M.js[39m in 2491.01ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 2558.39ms
 [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
 [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
-[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct[22m
-[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct[22m[2m (x2)[22m
-[36mi[39m [32mpage reload [39m[2mutils/blockTemplates/product/factory.ts[22m
-[36mi[39m [32mpage reload [39m[2mutils/blockTemplates/product/factory.ts[22m[2m (x2)[22m
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1134.36ms
-[32m√[39m Vite server hmr 89 files in 0.689ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 550.66ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 558.92ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 579.53ms
-[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct[22m
-[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct[22m[2m (x2)[22m
-[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct[22m[2m (x3)[22m
-[36mi[39m [32mpage reload [39m[2mconfiguration/block-layout.config.ts[22m
-[36mi[39m [32mpage reload [39m[2mconfiguration/block-layout.config.ts[22m[2m (x2)[22m
-[36mi[39m [32mpage reload [39m[2mutils/blockTemplates/product/factory.ts[22m
-[36mi[39m [32mpage reload [39m[2mutils/blockTemplates/product/factory.ts[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/components/ui/CartProductCard/CartProductCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/ui/ProductCard/ProductCard.vue[22m
+[36mi[39m [32mhmr update [39m[2m/components/ui/ProductCard/ProductCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36museModuleRendering.ts[39m in 1571.64ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mshopCoreModule.d.ts[39m in 1574.73ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mruntime.vue-devtools-client.KPqaugEn4Nc3rBt2C_SWDutryQg2ShBUFhq9hI29g8M.js[39m in 1575.2ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mModuleComponentRendering.vue[39m in 1577.14ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1633.99ms
+[36mi[39m [32mhmr update [39m[2m/components/ui/ProductCard/ProductCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x2)[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/ui/ProductCard/ProductCard.vue[22m
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mModuleComponentRendering.vue[39m in 1492.79ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mshopCoreModule.d.ts[39m in 1493.8ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36museModuleRendering.ts[39m in 1494.87ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mruntime.vue-devtools-client.KPqaugEn4Nc3rBt2C_SWDutryQg2ShBUFhq9hI29g8M.js[39m in 1495.05ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1554.37ms
+[36mi[39m [32mpage reload [39m[2mcomponents/blocks/ImageGallery/ImageGallery.vue[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/ImageGallery/ImageGallery.vue?direct&vue&type=style&index=0&scoped=fc761be9&lang.css, /components/blocks/ImageGallery/ImageGallery.vue, /components/blocks/ImageGallery/ImageGallery.vue?vue&type=style&index=0&scoped=fc761be9&lang.css, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/components/ManufacturerInformation/ManufacturerInformation.vue?direct&vue&type=style&index=0&scoped=2920f062&lang.css, /components/ManufacturerInformation/ManufacturerInformation.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/ManufacturerResponsibleInfo/ManufacturerResponsibleInfo.vue?direct&vue&type=style&index=0&scoped=74298a6e&lang.css, /components/ManufacturerResponsibleInfo/ManufacturerResponsibleInfo.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
 [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
 [36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
-[36mi[39m [32mpage reload [39m[2mcomponents/blocks/ItemText/ItemText.vue[22m
-[36mi[39m [32mhmr update [39m[2m/components/blocks/ItemText/ItemText.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36museModuleRendering.ts[39m in 1258.3ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mshopCoreModule.d.ts[39m in 1259.5ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mModuleComponentRendering.vue[39m in 1260.7ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mruntime.vue-devtools-client.KPqaugEn4Nc3rBt2C_SWDutryQg2ShBUFhq9hI29g8M.js[39m in 1261.02ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1305.97ms
-[32m√[39m Vite server hmr 90 files in 1.041ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 5826.39ms
-[36mi[39m [32mpage reload [39m[2mcomponents/blocks/Tabs/Tabs.vue[22m
-[36mi[39m [32mhmr update [39m[2m/components/blocks/Tabs/Tabs.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
-[36mi[39m [32mhmr update [39m[2m/components/blocks/Tabs/Tabs.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x2)[22m
-[36mi[39m [32mpage reload [39m[2mcomponents/blocks/Tabs/Tabs.vue[22m
+[36mi[39m [32mhmr update [39m[2m/components/ui/CartProductCard/CartProductCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css, /@id/virtual:nuxt:J%3A%2FGithub%2FNeuer%20Ordner%2Fplentyshop-pwa-nubuk%2Fapps%2Fweb%2F.nuxt%2Froutes.mjs[22m
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 1180.13ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 827.73ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 844.78ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 885.72ms
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[32m√[39m Vite server hmr 70 files in 1.105ms
+[36mi[39m [32mpage reload [39m[2mcomposables/useProductAttributes/useProductAttributes.ts[22m
+[36mi[39m [32mpage reload [39m[2mcomposables/useProductAttributes/useProductAttributes.ts[22m[2m (x2)[22m
+[32m√[39m Vite server hmr 90 files in 8.782ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 749.31ms
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mpage reload [39m[2mcomposables/useProductAttributes/useProductAttributes.ts[22m
+[36mi[39m [32mpage reload [39m[2mcomposables/useProductAttributes/useProductAttributes.ts[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+[32m√[39m Vite server hmr 91 files in 4.38ms
 [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
 [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
 [shop-core | extensions] No extensions to load.
@@ -80,63 +101,120 @@
 [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
 
 [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
-[32m√[39m Vite client built in 69ms
-[32m√[39m Vite server built in 75ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3345ms
-[36mi[39m Vite server warmed up in 0ms
-[36mi[39m Vite client warmed up in 4ms
-[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
-[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
-[shop-core | extensions] No extensions to load.
-[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
-[36mi[39m Using yup with vee-validate
-[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
-
-[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
-[32m√[39m Vite client built in 74ms
-[32m√[39m Vite server built in 126ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2189ms
-[36mi[39m Vite server warmed up in 1ms
-[36mi[39m Vite client warmed up in 37ms
-[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
-[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
-[shop-core | extensions] No extensions to load.
-[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
-[36mi[39m Using yup with vee-validate
-[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
-
-[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
-[32m√[39m Vite client built in 61ms
-[32m√[39m Vite server built in 123ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1657ms
-[36mi[39m Vite server warmed up in 1ms
-[36mi[39m Vite client warmed up in 2ms
-[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
-[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
-[shop-core | extensions] No extensions to load.
-[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
-[36mi[39m Using yup with vee-validate
-[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
-
-[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
-[32m√[39m Vite client built in 72ms
-[32m√[39m Vite server built in 98ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1977ms
-[36mi[39m Vite server warmed up in 1ms
-[36mi[39m Vite client warmed up in 2ms
-[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
-[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
-[shop-core | extensions] No extensions to load.
-[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
-[36mi[39m Using yup with vee-validate
-[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
-
-[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
-[32m√[39m Vite client built in 58ms
-[32m√[39m Vite server built in 62ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1837ms
+[32m√[39m Vite client built in 82ms
+[32m√[39m Vite server built in 82ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3545ms
 [36mi[39m Vite server warmed up in 0ms
 [36mi[39m Vite client warmed up in 3ms
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/teile-parts/torch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2Fteile-parts%2Ftorch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/teile-parts/torch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[32m√[39m Vite server hmr 1 files in 3.154ms
 [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
 [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
 [shop-core | extensions] No extensions to load.
@@ -145,33 +223,672 @@
 [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
 
 [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
-[32m√[39m Vite client built in 67ms
-[32m√[39m Vite server built in 85ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2449ms
-[36mi[39m Vite server warmed up in 0ms
-[36mi[39m Vite client warmed up in 3ms
-[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
-[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
-[shop-core | extensions] No extensions to load.
-[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
-[36mi[39m Using yup with vee-validate
-[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
-
-[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
-[32m√[39m Vite client built in 61ms
-[32m√[39m Vite server built in 56ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1939ms
+[32m√[39m Vite client built in 55ms
+[32m√[39m Vite server built in 55ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2665ms
 [36mi[39m Vite server warmed up in 1ms
-[36mi[39m Vite client warmed up in 2ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 742.5ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1340ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 1167.2ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 1220.79ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 807ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 633.73ms
-[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 703.63ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 587ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1276ms
+[36mi[39m Vite client warmed up in 3ms
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/teile-parts/torch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2Fteile-parts%2Ftorch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/teile-parts/torch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/cart
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2Fcart&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/cart
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/markenwelt/specialized/specialized-chisel-ht-dove-grey-ashen-grey_21413496_541457
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2Fmarkenwelt%2Fspecialized%2Fspecialized-chisel-ht-dove-grey-ashen-grey_21413496_541457&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/markenwelt/specialized/specialized-chisel-ht-dove-grey-ashen-grey_21413496_541457
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/markenwelt/specialized/specialized-chisel-ht-dove-grey-ashen-grey_21413496_541457
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2Fmarkenwelt%2Fspecialized%2Fspecialized-chisel-ht-dove-grey-ashen-grey_21413496_541457&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/markenwelt/specialized/specialized-chisel-ht-dove-grey-ashen-grey_21413496_541457
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/markenwelt/specialized/specialized-chisel-ht-dove-grey-ashen-grey_21413496_541457
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2Fmarkenwelt%2Fspecialized%2Fspecialized-chisel-ht-dove-grey-ashen-grey_21413496_541457&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/markenwelt/specialized/specialized-chisel-ht-dove-grey-ashen-grey_21413496_541457
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/teile-parts/torch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2Fteile-parts%2Ftorch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/teile-parts/torch-3-0-road-shoes-oak-green-moss-green-limestone_21377581_498711
+
+ 
+[31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+
+[2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+[2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+[2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+[2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+[2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+[2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+[2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+[2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+[2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+[2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+
+[31m[CAUSE][39m
+Error {
+  stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+  '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+  '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+  '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+  '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+  '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+  '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+  '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+  '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+  '    at node:internal/modules/esm/loader:628:32\n' +
+  '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+  message: "Cannot find module 'J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+  imported from J:\\Github\\Neuer 
+  Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+}
+[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+[shop-core | extensions] No extensions to load.
+[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+[36mi[39m Using yup with vee-validate
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+
+[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+[32m√[39m Vite client built in 81ms
+[32m√[39m Vite server built in 66ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2638ms
+[36mi[39m Vite server warmed up in 1ms
+[36mi[39m Vite client warmed up in 3ms
 [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
 [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
 [shop-core | extensions] No extensions to load.
@@ -181,7 +898,20 @@
 
 [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
 [32m√[39m Vite client built in 57ms
-[32m√[39m Vite server built in 55ms
-[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1857ms
-[36mi[39m Vite server warmed up in 1ms
-[36mi[39m Vite client warmed up in 4ms
+[32m√[39m Vite server built in 118ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2280ms
+[36mi[39m Vite server warmed up in 0ms
+[36mi[39m Vite client warmed up in 46ms
+[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+[shop-core | extensions] No extensions to load.
+[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+[36mi[39m Using yup with vee-validate
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+
+[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+[32m√[39m Vite client built in 57ms
+[32m√[39m Vite server built in 53ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2468ms
+[36mi[39m Vite server warmed up in 0ms
+[36mi[39m Vite client warmed up in 2ms

@@ -2558,6 +2558,58 @@
         }
       },
       {
+        "title": "Downloads",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/item_text.svg",
+        "template": {
+          "en": {
+            "name": "ProductDownloads",
+            "type": "content",
+            "meta": { "uuid": "3f2d7c6b-9a18-4f22-b6f4-1e3c5a7d9f20", "isGlobalTemplate": false },
+            "parent_slot": 0,
+            "content": {
+              "text": {
+                "title": "Downloads"
+              },
+              "downloads": {
+                "items": []
+              },
+              "layout": {
+                "displayAsCollapsable": true,
+                "initiallyCollapsed": true,
+                "fullWidth": false,
+                "paddingTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0
+              }
+            }
+          },
+          "de": {
+            "name": "ProductDownloads",
+            "type": "content",
+            "meta": { "uuid": "9d7e6f21-4b3c-4a85-9d12-0c8f7e6b5a31", "isGlobalTemplate": false },
+            "parent_slot": 0,
+            "content": {
+              "text": {
+                "title": "Downloads"
+              },
+              "downloads": {
+                "items": []
+              },
+              "layout": {
+                "displayAsCollapsable": true,
+                "initiallyCollapsed": true,
+                "fullWidth": false,
+                "paddingTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0
+              }
+            }
+          }
+        }
+      },
+      {
         "title": "Product Question",
         "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/forms_preview.png",
         "template": {

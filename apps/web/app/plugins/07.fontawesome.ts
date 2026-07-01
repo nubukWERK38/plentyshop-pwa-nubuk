@@ -28,6 +28,9 @@ import {
   faPhone,
   faMapMarkerAlt,
   faHome,
+  faFileImage,
+  faFileLines,
+  faFilePdf,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -57,6 +60,9 @@ library.add(
   faPhone,
   faMapMarkerAlt,
   faHome,
+  faFileImage,
+  faFileLines,
+  faFilePdf,
 );
 
 export default defineNuxtPlugin((nuxtApp) => {

@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 export const createProduct = (): Block[] => {
   const itemTextTitle = t('defaultTemplate.product.itemText.title');
   const technicalDataTitle = t('defaultTemplate.product.technicalData.title');
+  const downloadsTitle = 'Downloads';
   const customerReviewTitle = t('defaultTemplate.product.customerReview.title');
   const legalInfoTitle = t('defaultTemplate.product.productLegalInformation.title');
   const legalInfoLinkText = t('defaultTemplate.product.productLegalInformation.linkText');
@@ -153,6 +154,36 @@ export const createProduct = (): Block[] => {
                 content: {
                   text: {
                     title: '',
+                  },
+                  layout: {
+                    displayAsCollapsable: false,
+                    initiallyCollapsed: false,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                  },
+                },
+              },
+            ],
+          },
+          {
+            title: downloadsTitle,
+            html: '',
+            blocks: [
+              {
+                name: 'ProductDownloads',
+                type: 'content',
+                meta: {
+                  uuid: uuid(),
+                  isGlobalTemplate: false,
+                },
+                content: {
+                  text: {
+                    title: '',
+                  },
+                  downloads: {
+                    items: [],
                   },
                   layout: {
                     displayAsCollapsable: false,

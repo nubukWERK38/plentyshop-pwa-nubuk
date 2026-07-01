@@ -55,7 +55,8 @@
           </ul>
           <div
             v-if="cartItem.basketItemOrderParams.length > 0"
-            id="orderparams" class="text-xs font-normal leading-5 sm:typography-text-sm text-neutral-700"
+            id="orderparams"
+            class="text-xs font-normal leading-5 sm:typography-text-sm text-neutral-700"
           >
             <div class="text-[15px]">{{ t('orderProperties.additionalCostsPerItem') }}:</div>
             <CartOrderProperty
@@ -251,7 +252,7 @@ const path = computed(() => {
 });
 
 const imageAlt = computed(() => {
-  const image = cartItem?.variation?.images?.all[0];
+  const image = cartItem?.variation?.images?.all?.[0];
   return image ? productImageGetters.getImageAlternate(image) : '';
 });
 

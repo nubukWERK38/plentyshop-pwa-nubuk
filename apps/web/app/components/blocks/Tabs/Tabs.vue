@@ -74,6 +74,8 @@
 <script setup lang="ts">
 import type { TabsItem, TabsProps } from './types';
 import type { Block } from '@plentymarkets/shop-api';
+import type { ProductDownloadsContent } from '~/components/blocks/ProductDownloads/types';
+import { hasProductDownloads } from '~/utils/productDownloads';
 
 const getBlockComponent = (name: string) => getCachedBlockComponent(name);
 
@@ -82,18 +84,63 @@ const { openDrawerWithView } = useSiteConfiguration();
 const { shouldEnableEditorFeatures } = useEditorState();
 const route = useRoute();
 const { hasContent: hasTechnicalDataContent } = useTechnicalData();
+const { currentProduct } = useProducts();
 
 const hasTechnicalDataBlock = (item: TabsItem) => item.blocks?.some((block) => block.name === 'TechnicalData') ?? false;
+const hasProductDownloadsBlock = (item: TabsItem) =>
+  item.blocks?.some((block) => block.name === 'ProductDownloads') ?? false;
+const hasProductDownloadsContent = (item: TabsItem) =>
+  item.blocks?.some(
+    (block) =>
+      block.name === 'ProductDownloads' &&
+      hasProductDownloads(currentProduct.value, block.content as Partial<ProductDownloadsContent>),
+  ) ?? false;
+
+const createProductDownloadsBlock = (): Block => ({
+  name: 'ProductDownloads',
+  type: 'content',
+  meta: {
+    uuid: `${props.meta.uuid}-product-downloads`,
+    isGlobalTemplate: false,
+  },
+  content: {
+    text: {
+      title: '',
+    },
+    downloads: {
+      items: [],
+    },
+    layout: {
+      displayAsCollapsable: false,
+      initiallyCollapsed: false,
+      fullWidth: false,
+      paddingTop: 0,
+      paddingBottom: 0,
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+  },
+});
 
 const normalizedItems = computed<TabsItem[]>(() => {
   const items = props.content?.items ?? [];
-  return items
-    .map((item) => ({
-      title: item?.title ?? '',
-      html: item?.html ?? '',
-      blocks: normalizeTabBlocks(item?.title ?? '', item?.html ?? '', item?.blocks ?? []),
-    }))
-    .filter((item) => !hasTechnicalDataBlock(item) || hasTechnicalDataContent.value);
+  const normalized = items.map((item) => ({
+    title: item?.title ?? '',
+    html: item?.html ?? '',
+    blocks: normalizeTabBlocks(item?.title ?? '', item?.html ?? '', item?.blocks ?? []),
+  }));
+
+  if (!normalized.some(hasProductDownloadsBlock) && hasProductDownloads(currentProduct.value)) {
+    normalized.push({
+      title: 'Downloads',
+      html: '',
+      blocks: [createProductDownloadsBlock()],
+    });
+  }
+
+  return normalized
+    .filter((item) => !hasTechnicalDataBlock(item) || hasTechnicalDataContent.value)
+    .filter((item) => !hasProductDownloadsBlock(item) || hasProductDownloadsContent(item));
 });
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
