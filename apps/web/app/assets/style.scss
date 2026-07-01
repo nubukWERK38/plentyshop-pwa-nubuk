@@ -406,3 +406,7 @@ h1, .h1 {
 .navbar-top--plain {
   color: var(--ci-success);
 }
+
+body:has(.site-settings-view) #flags {
+  display: none !important;
+}

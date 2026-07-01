@@ -9,7 +9,7 @@
           <UiFormLabel>{{ t('form.emailLabel') }} {{ t('form.required') }}</UiFormLabel>
           <SfInput
             v-model="email"
-            wrapper-class="border border-neutral-300"
+            wrapper-class="ring-neutral-400"
             name="email"
             type="email"
             autocomplete="email"
@@ -21,7 +21,7 @@
           <UiFormLabel>{{ t('form.passwordLabel') }} {{ t('form.required') }}</UiFormLabel>
           <UiFormPasswordInput
             v-model="password"
-            wrapper-class="border border-neutral-300"
+            wrapper-class="ring-neutral-400"
             name="password"
             autocomplete="current-password"
             required

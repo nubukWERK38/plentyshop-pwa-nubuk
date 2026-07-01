@@ -888,7 +888,10 @@ const openReturnModal = async () => {
 }
 
 .purchase-card__rrp {
-  color: #a9afb8;
+  float: right;
+  margin-right: 30px;
+  margin-bottom: 10px;
+  color: var(--ci-dark);
   font-size: 0.95rem;
   line-height: 1.3;
 }
@@ -901,7 +904,8 @@ const openReturnModal = async () => {
 }
 
 .purchase-card__price {
-  color: #ef4444;
+  margin-left: 30px;
+  color: var(--ci-dark);
   font-size: 1.7rem;
   font-weight: 800;
   line-height: 1.1;
