@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <header class="relative w-full md:sticky z-10">
+    <header class="relative w-full md:sticky z-[1000]">
       <div
         v-if="viewport.isLessThan('md')"
         class="flex items-center w-full"

@@ -11,7 +11,7 @@
     </label>
     <div :id="'attribute-' + productAttributeGetters.getAttributeId(attribute)" class="w-full flex gap-4 flex-wrap">
       <SfTooltip
-        v-for="item in productAttributeGetters.getAttributeValues(attribute)"
+        v-for="item in sortedAttributeValues"
         :key="productAttributeGetters.getAttributeValueId(item)"
         :label="getLabel(item)"
         strategy="absolute"
@@ -47,6 +47,7 @@ import { productAttributeGetters } from '@plentymarkets/shop-api';
 import { object, number } from 'yup';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
+import { sortAttributeValues } from '~/utils/sortAttributeValues';
 
 const { updateValue, getValue } = useProductAttributes();
 const { registerValidator, registerInvalidFields } = useValidatorAggregator('attributes');
@@ -55,6 +56,12 @@ const value = computed(() => getValue(props.attribute.attributeId));
 const selectedAttributeValueName = ref<string>('');
 const runtimeConfig = useRuntimeConfig();
 const domain = runtimeConfig.public?.domain ?? '';
+const sortedAttributeValues = computed(() =>
+  sortAttributeValues(
+    productAttributeGetters.getAttributeValues(props.attribute),
+    productAttributeGetters.getAttributeName(props.attribute),
+  ),
+);
 
 const getLabel = (item: VariationMapProductAttributeValue): string => {
   return productAttributeGetters.isAttributeValueDisabled(item)

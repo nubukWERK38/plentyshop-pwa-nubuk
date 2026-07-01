@@ -6,7 +6,7 @@
 
     <div id="attribute-box" class="w-full flex gap-4 flex-wrap">
       <div
-        v-for="item in productAttributeGetters.getAttributeValues(attribute)"
+        v-for="item in sortedAttributeValues"
         :key="productAttributeGetters.getAttributeValueId(item)"
         class="border h-12 border-zinc-300 rounded-md cursor-pointer hover:bg-[#3C3C4226]"
         :class="{
@@ -35,12 +35,19 @@ import { productAttributeGetters } from '@plentymarkets/shop-api';
 import { object, number } from 'yup';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
+import { sortAttributeValues } from '~/utils/sortAttributeValues';
 
 const { updateValue, getValue } = useProductAttributes();
 const { shouldUseFakeData } = useEditorState();
 const { registerValidator, registerInvalidFields } = useValidatorAggregator('attributes');
 const props = defineProps<AttributeSelectProps>();
 const value = computed(() => getValue(props.attribute.attributeId));
+const sortedAttributeValues = computed(() =>
+  sortAttributeValues(
+    productAttributeGetters.getAttributeValues(props.attribute),
+    productAttributeGetters.getAttributeName(props.attribute),
+  ),
+);
 
 const getLabel = (item: VariationMapProductAttributeValue): string => {
   return productAttributeGetters.isAttributeValueDisabled(item) ? t('product.attributes.seeAvailableOptions') : '';

@@ -34,9 +34,9 @@ export const useSearchSuggestions: UseSearchSuggestionsReturn = () => {
       });
 
       if (data && requestId === state.value.currentRequestId) {
-        data.categories = data?.categories?.splice(0, CATEGORY_LIMIT) ?? [];
-        data.suggestions = data?.suggestions?.splice(0, SUGGESTIONS_LIMIT) ?? [];
-        data.items = data?.items?.splice(0, ITEMS_LIMIT) ?? [];
+        data.categories = data?.categories?.slice(0, CATEGORY_LIMIT) ?? [];
+        data.suggestions = data?.suggestions?.slice(0, SUGGESTIONS_LIMIT) ?? [];
+        data.items = data?.items?.slice(0, ITEMS_LIMIT) ?? [];
         state.value.searchTerm = term;
         state.value.results = data as unknown as ItemSearchAutocompleteResult;
       }

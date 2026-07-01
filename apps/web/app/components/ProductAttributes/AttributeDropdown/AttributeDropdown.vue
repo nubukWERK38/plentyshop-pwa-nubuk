@@ -16,7 +16,7 @@
     >
       <option :value="-1">{{ t('form.selectPlaceholder') }}</option>
       <option
-        v-for="item in productAttributeGetters.getAttributeValues(attribute)"
+        v-for="item in sortedAttributeValues"
         :key="productAttributeGetters.getAttributeValueId(item)"
         :value="productAttributeGetters.getAttributeValueId(item)"
         :disabled="productAttributeGetters.isAttributeValueDisabled(item)"
@@ -35,12 +35,19 @@ import { productAttributeGetters } from '@plentymarkets/shop-api';
 import { number, object } from 'yup';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
+import { sortAttributeValues } from '~/utils/sortAttributeValues';
 
 const { attribute } = defineProps<AttributeSelectProps>();
 const { updateValue, getValue } = useProductAttributes();
 const { registerValidator, registerInvalidFields } = useValidatorAggregator('attributes');
 const value = ref<string | undefined>(
   getValue(productAttributeGetters.getAttributeId(attribute))?.toString() ?? undefined,
+);
+const sortedAttributeValues = computed(() =>
+  sortAttributeValues(
+    productAttributeGetters.getAttributeValues(attribute),
+    productAttributeGetters.getAttributeName(attribute),
+  ),
 );
 
 watch(

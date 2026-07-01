@@ -1,5 +1,5 @@
 <template>
-  <div ref="rootRef" :class="['relative z-[200] @container/search', { 'py-1': variant !== 'header' }]">
+  <div ref="rootRef" :class="['relative z-[3000] @container/search', { 'py-1': variant !== 'header' }]">
     <form
       ref="referenceRef"
       role="search"
@@ -38,7 +38,7 @@
 
     <section
       v-if="isDropdownVisible"
-      class="w-full grid md:shadow @2xl:grid-cols-3 bg-gray absolute px-4 pt-4 border border-neutral-100 mt-[2px] gap-8 max-h-[calc(100vh-120px)] overflow-y-auto"
+      class="search-suggestions w-full grid md:shadow @2xl:grid-cols-3 absolute px-4 pt-4 border border-neutral-100 mt-[2px] gap-8 max-h-[calc(100vh-120px)] overflow-y-auto"
       aria-live="polite"
       aria-relevant="all"
       :aria-label="t('searchBar.searchSuggestions')"
@@ -182,7 +182,7 @@ const handleSearch = () => {
     searchSuggestions(inputModel.value);
   }
 };
-const debounceInput = debounce(handleSearch, 250);
+const debounceInput = debounce(handleSearch, 120);
 
 const handleOpen = () => {
   isOpen.value = true;
@@ -263,5 +263,13 @@ onUnmounted(() => debounceInput.cancel());
 
 .header-search-input :deep(svg) {
   color: #0f1720;
+}
+
+.search-suggestions {
+  top: 100%;
+  left: 0;
+  z-index: 3000;
+  background: #ffffff;
+  color: #111827;
 }
 </style>

@@ -51,6 +51,24 @@
           </span>
         </div>
 
+        <div
+          v-if="itemAttributes.length"
+          class="mb-4 w-full max-w-[360px] border-2 border-primary-600 bg-primary-50 p-3"
+          data-testid="quick-checkout-attributes"
+        >
+          <p class="mb-2 text-sm font-bold uppercase text-neutral-900">{{ t('quickCheckout.selectedOptions') }}</p>
+          <dl class="grid gap-2">
+            <div
+              v-for="attribute in itemAttributes"
+              :key="`${attribute.label}-${attribute.value}`"
+              class="flex items-center justify-between gap-3 text-sm"
+            >
+              <dt class="text-neutral-700">{{ attribute.label }}</dt>
+              <dd class="font-bold text-neutral-900 text-right">{{ attribute.value }}</dd>
+            </div>
+          </dl>
+        </div>
+
         <ProductPrice :product="props.product" />
 
         <div
@@ -148,6 +166,7 @@ onMounted(() => {
 onUnmounted(() => endTimer());
 
 const lastUpdatedProduct = computed(() => cartGetters.getVariation(lastUpdatedCartItem.value) || ({} as Product));
+const itemAttributes = computed(() => cartGetters.getItemAttributes(lastUpdatedCartItem.value));
 
 const totals = computed(() => {
   const totalsData = cartGetters.getTotals(cart.value);

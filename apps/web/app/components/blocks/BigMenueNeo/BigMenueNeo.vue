@@ -17,7 +17,7 @@
           :title="getCategoryLinkTitle(menu.category)"
           class="big-menue-neo__top-item"
           :class="{ 'big-menue-neo__top-item--active': isPanelOpen && index === activeMenuIndex }"
-          @mouseenter="openMenu(index)"
+          @mouseenter="scheduleOpenMenu(index)"
           @focus="openMenu(index)"
         >
           <span class="big-menue-neo__top-label">{{ getCategoryLabel(menu.category) }}</span>
@@ -108,6 +108,8 @@ const { t } = useI18n();
 
 const activeMenuIndex = ref<number | null>(null);
 const isPanelOpen = ref(false);
+const openMenuDelay = 1000;
+let openMenuTimer: ReturnType<typeof setTimeout> | null = null;
 
 const defaultContent = (): BigMenueNeoContent => ({
   menus: [
@@ -342,7 +344,15 @@ const resolveCategoryTo = (category: BigMenueNeoCategoryLink) => {
   return '/';
 };
 
+const clearOpenMenuTimer = () => {
+  if (openMenuTimer) {
+    clearTimeout(openMenuTimer);
+    openMenuTimer = null;
+  }
+};
+
 const openMenu = (index: number) => {
+  clearOpenMenuTimer();
   const menu = normalizedContent.value.menus[index];
   if (!menu || !menuHasPanelContent(menu)) {
     closeMenu();
@@ -352,7 +362,21 @@ const openMenu = (index: number) => {
   isPanelOpen.value = true;
 };
 
+const scheduleOpenMenu = (index: number) => {
+  clearOpenMenuTimer();
+
+  if (isPanelOpen.value) {
+    openMenu(index);
+    return;
+  }
+
+  openMenuTimer = setTimeout(() => {
+    openMenu(index);
+  }, openMenuDelay);
+};
+
 const closeMenu = () => {
+  clearOpenMenuTimer();
   activeMenuIndex.value = null;
   isPanelOpen.value = false;
 };
@@ -378,6 +402,10 @@ onMounted(async () => {
   if (categoryTree.value.length === 0) {
     await getCategoryTree();
   }
+});
+
+onBeforeUnmount(() => {
+  clearOpenMenuTimer();
 });
 </script>
 

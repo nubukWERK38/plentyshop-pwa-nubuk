@@ -63,7 +63,7 @@ const { data: categoryTree } = useCategoryTree();
 const { currentProduct } = useProducts();
 const blockRef = ref<HTMLElement | null>(null);
 const { isNearViewport } = useNearViewport(blockRef, {
-  rootMargin: '200px 0px 200px 0px',
+  rootMargin: '1200px 0px 1200px 0px',
   once: true,
 });
 const firstCategoryId = categoryTree.value?.find((category) => category.type === 'item')?.id || '';

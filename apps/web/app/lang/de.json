@@ -1058,6 +1058,7 @@
     "close": "Warenkorb-Bestätigung schließen",
     "heading": "Zum Warenkorb hinzugefügt",
     "quantity": "Anzahl",
+    "selectedOptions": "Auswahl",
     "subTotal": "Zwischensumme"
   },
   "returns": {
