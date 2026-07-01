@@ -497,6 +497,36 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
   position: relative;
 }
 
+.image-banner-neo__text::before,
+.image-banner-neo__text::after {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: 400px;
+  height: 155px;
+  background-repeat: no-repeat;
+  background-position: top left;
+  content: '';
+  pointer-events: none;
+}
+
+.image-banner-neo__text::before {
+  top: -50px;
+  left: -100px;
+  background-image: url('https://cdn03.plentymarkets.com/0bcmhf2jth7k/frontend/Icons/nubuk-left.svg');
+}
+
+.image-banner-neo__text::after {
+  right: -100px;
+  bottom: -20px;
+  background-image: url('https://cdn03.plentymarkets.com/0bcmhf2jth7k/frontend/Icons/nubuk-right.svg');
+}
+
+.image-banner-neo__text > * {
+  position: relative;
+  z-index: 2;
+}
+
 @media (min-width: 768px) {
   .image-banner-neo__slide {
     grid-template-rows: none;
