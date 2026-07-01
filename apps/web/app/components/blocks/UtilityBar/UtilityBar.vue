@@ -446,17 +446,30 @@ const { isEditing, disableActions } = useEditor();
 const isActive = computed(() => isLanguageSelectOpen);
 const isHeaderCompact = ref(false);
 
-const updateHeaderCompactState = () => {
-  isHeaderCompact.value = window.scrollY > 0;
+const getPageScrollTop = () =>
+  Math.max(
+    window.scrollY,
+    document.scrollingElement?.scrollTop ?? 0,
+    document.documentElement.scrollTop,
+    document.body.scrollTop,
+  );
+
+const updateHeaderCompactState = (event?: Event) => {
+  const target = event?.target;
+  const targetScrollTop = target instanceof Element ? target.scrollTop : 0;
+
+  isHeaderCompact.value = Math.max(getPageScrollTop(), targetScrollTop) > 0;
 };
 
 onMounted(() => {
   updateHeaderCompactState();
   window.addEventListener('scroll', updateHeaderCompactState, { passive: true });
+  document.addEventListener('scroll', updateHeaderCompactState, { passive: true, capture: true });
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', updateHeaderCompactState);
+  document.removeEventListener('scroll', updateHeaderCompactState, { capture: true });
 });
 
 onNuxtReady(async () => {

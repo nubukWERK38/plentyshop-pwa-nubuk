@@ -5,6 +5,8 @@ export type ImageBannerNeoSpacing = {
   left: number;
 };
 
+export type ImageBannerNeoImageFit = 'cover' | 'contain';
+
 export type ImageBannerNeoSlide = {
   image: {
     desktop: string;
@@ -49,6 +51,7 @@ export type ImageBannerNeoContent = {
     showArrows: boolean;
     arrowsOnHover: boolean;
     height: number;
+    imageFit: ImageBannerNeoImageFit;
     fullWidth: boolean;
     autoplay: boolean;
     autoplayDelay: number;

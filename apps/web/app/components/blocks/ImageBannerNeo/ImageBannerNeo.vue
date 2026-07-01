@@ -8,20 +8,26 @@
       :navigation="navigationConfig"
       :autoplay="autoplayConfig"
       :speed="controls.autoplaySpeed"
-      class="!z-0"
+      class="image-banner-neo__swiper !z-0"
+      :style="swiperStyle"
     >
-      <SwiperSlide v-for="(slide, slideIndex) in slides" :key="slideIndex" class="!h-auto">
+      <SwiperSlide
+        v-for="(slide, slideIndex) in slides"
+        :key="slideIndex"
+        class="image-banner-neo__swiper-slide"
+        :style="slideShellStyle"
+      >
         <article
           class="image-banner-neo__slide grid gap-0 md:grid-cols-2"
-          :style="{ minHeight: sliderHeight }"
+          :style="slideStyle"
           :data-testid="`image-banner-neo-slide-${slideIndex}`"
         >
-          <div :class="getImageOrderClass(slide)">
+          <div class="image-banner-neo__image-wrap" :class="getImageOrderClass(slide)">
             <NuxtImg
               :src="resolveSlideImage(slide)"
               :alt="slide.image.alt"
-              class="h-full w-full object-cover"
-              :style="{ minHeight: sliderHeight }"
+              class="image-banner-neo__image"
+              :style="imageStyle"
               width="1024"
               height="576"
               :data-testid="`image-banner-neo-image-${slideIndex}`"
@@ -110,7 +116,7 @@
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import type { CSSProperties } from 'vue';
-import type { ImageBannerNeoProps, ImageBannerNeoSlide } from './types';
+import type { ImageBannerNeoImageFit, ImageBannerNeoProps, ImageBannerNeoSlide } from './types';
 import { buildSeoLinkTitle } from '~/utils/seo';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -180,13 +186,33 @@ const controls = computed(() => ({
   showArrows: props.content?.controls?.showArrows !== false,
   arrowsOnHover: props.content?.controls?.arrowsOnHover === true,
   height: props.content?.controls?.height ?? 420,
+  imageFit: (props.content?.controls?.imageFit === 'contain' ? 'contain' : 'cover') as ImageBannerNeoImageFit,
   fullWidth: props.content?.controls?.fullWidth !== false,
   autoplay: props.content?.controls?.autoplay === true,
   autoplayDelay: props.content?.controls?.autoplayDelay ?? 4000,
   autoplaySpeed: props.content?.controls?.autoplaySpeed ?? 500,
 }));
 
-const sliderHeight = computed(() => `${controls.value.height}px`);
+const normalizedSliderHeight = computed(() => {
+  const height = Number(controls.value.height);
+  return Number.isFinite(height) && height > 0 ? height : 420;
+});
+
+const sliderHeight = computed(() => `${normalizedSliderHeight.value}px`);
+
+const fixedHeightStyle = computed<CSSProperties>(() => ({
+  height: sliderHeight.value,
+  minHeight: sliderHeight.value,
+  maxHeight: sliderHeight.value,
+}));
+
+const swiperStyle = computed<CSSProperties>(() => fixedHeightStyle.value);
+const slideShellStyle = computed<CSSProperties>(() => fixedHeightStyle.value);
+const slideStyle = computed<CSSProperties>(() => fixedHeightStyle.value);
+
+const imageStyle = computed<CSSProperties>(() => ({
+  objectFit: controls.value.imageFit,
+}));
 
 const shouldShowPagination = computed(() => controls.value?.showPagination !== false && slides.value.length > 1);
 const shouldShowArrows = computed(() => controls.value?.showArrows !== false && slides.value.length > 1);
@@ -293,7 +319,11 @@ const getTextAreaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
     alignItems: resolveAlignItems(slide),
     justifyContent: resolveJustifyContent(slide),
     textAlign: resolveTextAlign(slide),
-    minHeight: sliderHeight.value,
+    height: '100%',
+    minHeight: 0,
+    maxHeight: '100%',
+    overflow: 'hidden',
+    boxSizing: 'border-box',
     marginTop: `${spacing.margin.top}px`,
     marginRight: `${spacing.margin.right}px`,
     marginBottom: `${spacing.margin.bottom}px`,
@@ -385,6 +415,12 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
   gap: 0.35rem;
 }
 
+.image-banner-neo__swiper,
+.image-banner-neo :deep(.swiper-wrapper),
+.image-banner-neo__swiper-slide {
+  height: 100%;
+}
+
 .image-banner-neo__controls {
   margin-top: 1rem;
   display: grid;
@@ -440,10 +476,31 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
 
 .image-banner-neo__slide {
   background: #0f172a;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.image-banner-neo__image-wrap {
+  min-height: 0;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.image-banner-neo__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-position: center;
 }
 
 .image-banner-neo__text {
   position: relative;
+}
+
+@media (min-width: 768px) {
+  .image-banner-neo__slide {
+    grid-template-rows: none;
+  }
 }
 
 .image-banner-neo__cta--custom {

@@ -16,7 +16,11 @@
             :key="`slide-tab-${index}`"
             type="button"
             class="rounded-md border px-3 py-1 text-sm"
-            :class="index === activeSlideIndex ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white border-neutral-300'"
+            :class="
+              index === activeSlideIndex
+                ? 'bg-neutral-900 text-white border-neutral-900'
+                : 'bg-white border-neutral-300'
+            "
             :data-testid="`image-banner-neo-slide-tab-${index}`"
             @click="activeSlideIndex = index"
           >
@@ -256,7 +260,11 @@
           <UiFormLabel class="mb-1">{{ getEditorTranslation('headline-color-label') }}</UiFormLabel>
           <EditorColorPicker v-model="activeSlide.text.headlineColor" class="w-full">
             <template #trigger="{ color, toggle }">
-              <SfInput v-model="activeSlide.text.headlineColor" type="text" data-testid="image-banner-neo-headline-color">
+              <SfInput
+                v-model="activeSlide.text.headlineColor"
+                type="text"
+                data-testid="image-banner-neo-headline-color"
+              >
                 <template #suffix>
                   <button
                     type="button"
@@ -487,6 +495,18 @@
           </div>
         </div>
 
+        <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('image-fit-label') }}</UiFormLabel>
+          <select
+            v-model="sliderContent.controls.imageFit"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            data-testid="image-banner-neo-image-fit"
+          >
+            <option value="cover">{{ getEditorTranslation('image-fit-cover-label') }}</option>
+            <option value="contain">{{ getEditorTranslation('image-fit-contain-label') }}</option>
+          </select>
+        </div>
+
         <div class="flex items-center justify-between">
           <UiFormLabel>{{ getEditorTranslation('autoplay-label') }}</UiFormLabel>
           <SfSwitch v-model="sliderContent.controls.autoplay" data-testid="image-banner-neo-autoplay" />
@@ -532,7 +552,12 @@
 
 <script setup lang="ts">
 import { SfInput, SfSwitch, SfIconCheck } from '@storefront-ui/vue';
-import type { ImageBannerNeoContent, ImageBannerNeoFormProps, ImageBannerNeoSlide, ImageBannerNeoSpacing } from './types';
+import type {
+  ImageBannerNeoContent,
+  ImageBannerNeoFormProps,
+  ImageBannerNeoSlide,
+  ImageBannerNeoSpacing,
+} from './types';
 
 type ImageTarget = 'desktop' | 'mobile' | 'textBackground';
 
@@ -664,12 +689,23 @@ const sliderContent = computed<ImageBannerNeoContent>(() => {
 
   // Ensure controls (in-place)
   if (!content.controls) {
-    content.controls = { showPagination: true, showArrows: true, arrowsOnHover: false, height: 420, fullWidth: true, autoplay: false, autoplayDelay: 4000, autoplaySpeed: 500 };
+    content.controls = {
+      showPagination: true,
+      showArrows: true,
+      arrowsOnHover: false,
+      height: 420,
+      imageFit: 'cover',
+      fullWidth: true,
+      autoplay: false,
+      autoplayDelay: 4000,
+      autoplaySpeed: 500,
+    };
   } else {
     if (content.controls.showPagination === undefined) content.controls.showPagination = true;
     if (content.controls.showArrows === undefined) content.controls.showArrows = true;
     if (content.controls.arrowsOnHover === undefined) content.controls.arrowsOnHover = false;
     if (content.controls.height === undefined) content.controls.height = 420;
+    if (content.controls.imageFit === undefined) content.controls.imageFit = 'cover';
     if (content.controls.fullWidth === undefined) content.controls.fullWidth = true;
     if (content.controls.autoplay === undefined) content.controls.autoplay = false;
     if (content.controls.autoplayDelay === undefined) content.controls.autoplayDelay = 4000;
@@ -783,6 +819,9 @@ watch(
     "show-arrows-hover-label": "Show arrows only on hover",
     "full-width-label": "Full width (100vw)",
     "height-label": "Slider height",
+    "image-fit-label": "Image fit",
+    "image-fit-cover-label": "Crop to fill",
+    "image-fit-contain-label": "Fit without crop",
     "autoplay-label": "Autoplay",
     "autoplay-delay-label": "Autoplay delay (pause between slides)",
     "autoplay-speed-label": "Transition speed"
@@ -834,6 +873,9 @@ watch(
     "show-arrows-hover-label": "Pfeile nur bei Hover anzeigen",
     "full-width-label": "Volle Breite (100vw)",
     "height-label": "Slider-Höhe",
+    "image-fit-label": "Bildmodus",
+    "image-fit-cover-label": "Zuschneiden / fuellen",
+    "image-fit-contain-label": "Einpassen ohne Zuschnitt",
     "autoplay-label": "Autoplay",
     "autoplay-delay-label": "Autoplay-Verzögerung (Pause zwischen Slides)",
     "autoplay-speed-label": "Übergangsgeschwindigkeit"
