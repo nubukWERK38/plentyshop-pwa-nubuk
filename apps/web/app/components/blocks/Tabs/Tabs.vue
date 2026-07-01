@@ -80,20 +80,28 @@ const getBlockComponent = (name: string) => getCachedBlockComponent(name);
 const props = defineProps<TabsProps>();
 const { openDrawerWithView } = useSiteConfiguration();
 const { shouldEnableEditorFeatures } = useEditorState();
+const route = useRoute();
+const { hasContent: hasTechnicalDataContent } = useTechnicalData();
+
+const hasTechnicalDataBlock = (item: TabsItem) => item.blocks?.some((block) => block.name === 'TechnicalData') ?? false;
 
 const normalizedItems = computed<TabsItem[]>(() => {
   const items = props.content?.items ?? [];
-  return items.map((item) => ({
-    title: item?.title ?? '',
-    html: item?.html ?? '',
-    blocks: normalizeTabBlocks(item?.title ?? '', item?.html ?? '', item?.blocks ?? []),
-  }));
+  return items
+    .map((item) => ({
+      title: item?.title ?? '',
+      html: item?.html ?? '',
+      blocks: normalizeTabBlocks(item?.title ?? '', item?.html ?? '', item?.blocks ?? []),
+    }))
+    .filter((item) => !hasTechnicalDataBlock(item) || hasTechnicalDataContent.value);
 });
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
 
 const isProductQuestionTitle = (title: string) =>
   ['noch fragen?', 'noch fragen', 'any questions?'].includes(normalizeText(title));
+const isDescriptionTitle = (title: string) => ['beschreibung', 'description'].includes(normalizeText(title));
+const isDescriptionHash = (hash: string) => ['#beschreibung', '#description'].includes(normalizeText(hash));
 
 const isDefaultProductQuestionHtml = (html: string) => {
   const normalizedHtml = normalizeText(html)
@@ -184,6 +192,20 @@ const openProductQuestionTab = () => {
   scrollToTabsBlock();
 };
 
+const openDescriptionTab = () => {
+  const descriptionTabIndex = normalizedItems.value.findIndex((item) => isDescriptionTitle(item.title));
+  if (descriptionTabIndex >= 0) {
+    setActiveTab(descriptionTabIndex);
+  }
+
+  scrollToTabsBlock();
+};
+
+const handleHashTarget = () => {
+  if (!isDescriptionHash(route.hash)) return;
+  openDescriptionTab();
+};
+
 const handleProductQuestionLinkClick = (event: MouseEvent) => {
   const trigger = (event.target as HTMLElement | null)?.closest('a, button');
   if (!trigger) return;
@@ -220,7 +242,10 @@ watch(
 onMounted(() => {
   window.addEventListener('open-product-question-tab', openProductQuestionTab);
   document.addEventListener('click', handleProductQuestionLinkClick);
+  handleHashTarget();
 });
+
+watch(() => route.hash, handleHashTarget);
 
 onBeforeUnmount(() => {
   window.removeEventListener('open-product-question-tab', openProductQuestionTab);

@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div v-if="visibleFlags.length" id="flags" class="contact-flags" :style="flagsStyle">
+    <div v-if="showFlags" id="flags" class="contact-flags" :style="flagsStyle">
       <div v-for="flag in visibleFlags" :key="`${flag.label}-${flag.link}`" class="contact-flags__item">
         <a class="contact-flags__link" :href="flag.link" :style="linkStyle">
           <i v-if="flag.icon" class="fa contact-flags__icon" :class="flag.icon" aria-hidden="true" />
@@ -17,6 +17,7 @@ import type { ContactFlagsContent, ContactFlagsProps } from './types';
 import { createDefaultContactFlagsContent } from './defaults';
 
 const props = defineProps<ContactFlagsProps>();
+const { blocksConfigurationDrawerOpen } = useSiteConfiguration();
 
 defineOptions({
   inheritAttrs: false,
@@ -33,6 +34,8 @@ const content = computed<ContactFlagsContent>(() => ({
 const visibleFlags = computed(() =>
   content.value.flags.filter((flag) => flag.visible !== false && flag.label && flag.link),
 );
+
+const showFlags = computed(() => visibleFlags.value.length > 0 && !blocksConfigurationDrawerOpen.value);
 
 const flagsStyle = computed<CSSProperties>(() => ({
   top: '310px',

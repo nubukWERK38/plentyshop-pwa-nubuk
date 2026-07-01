@@ -7,12 +7,25 @@
       <form class="flex flex-col gap-4 p-2 md:p-6 rounded-md w-full md:w-[400px]" @submit.prevent="loginUser">
         <label>
           <UiFormLabel>{{ t('form.emailLabel') }} {{ t('form.required') }}</UiFormLabel>
-          <SfInput v-model="email" name="email" type="email" autocomplete="email" required />
+          <SfInput
+            v-model="email"
+            wrapper-class="border border-neutral-300"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+          />
         </label>
 
         <label>
           <UiFormLabel>{{ t('form.passwordLabel') }} {{ t('form.required') }}</UiFormLabel>
-          <UiFormPasswordInput v-model="password" name="password" autocomplete="current-password" required />
+          <UiFormPasswordInput
+            v-model="password"
+            wrapper-class="border border-neutral-300"
+            name="password"
+            autocomplete="current-password"
+            required
+          />
         </label>
 
         <div class="text-end">

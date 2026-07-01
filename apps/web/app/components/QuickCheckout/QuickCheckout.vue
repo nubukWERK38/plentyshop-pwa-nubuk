@@ -72,10 +72,21 @@
         <ProductPrice :product="props.product" />
 
         <div
-          class="mb-4 font-normal typography-text-sm no-preflight"
+          v-if="shortDescription"
+          class="quick-checkout__description mb-2 font-normal typography-text-sm no-preflight"
           data-testid="product-description"
-          v-html="productGetters.getShortDescription(props.product)"
+          v-html="shortDescription"
         />
+        <SfLink
+          v-if="shortDescription"
+          :tag="NuxtLink"
+          :to="productDescriptionPath"
+          class="quick-checkout__read-more mb-4 typography-text-sm font-semibold"
+          data-testid="quick-checkout-read-more"
+          @click="close"
+        >
+          {{ t('quickCheckout.readMore') }}
+        </SfLink>
 
         <div class="mt-4 typography-text-xs flex gap-1">
           <span>{{ t('common.labels.asterisk') }}</span>
@@ -167,6 +178,20 @@ onUnmounted(() => endTimer());
 
 const lastUpdatedProduct = computed(() => cartGetters.getVariation(lastUpdatedCartItem.value) || ({} as Product));
 const itemAttributes = computed(() => cartGetters.getItemAttributes(lastUpdatedCartItem.value));
+const shortDescription = computed(() => productGetters.getShortDescription(props.product));
+const variationId = computed(() => productGetters.getVariationId(props.product));
+
+const productPath = computed(() => {
+  if (useCallisto().isEnabled) {
+    return localePath(`/${productGetters.getUrlPath(props.product)}/a-${productGetters.getItemId(props.product)}`);
+  }
+
+  const basePath = `/${productGetters.getUrlPath(props.product)}_${productGetters.getItemId(props.product)}`;
+  const shouldAppendVariation = productGetters.shouldAppendVariationToLink(props.product);
+
+  return localePath(shouldAppendVariation ? `${basePath}_${variationId.value}` : basePath);
+});
+const productDescriptionPath = computed(() => `${productPath.value}#beschreibung`);
 
 const totals = computed(() => {
   const totalsData = cartGetters.getTotals(cart.value);
@@ -192,4 +217,32 @@ const goToPage = (path: string) => {
 const close = () => {
   closeQuickCheckout();
 };
+
+const NuxtLink = resolveComponent('NuxtLink');
 </script>
+
+<style scoped>
+.quick-checkout__description {
+  max-height: calc(1.45em * 5);
+  overflow: hidden;
+  line-height: 1.45;
+}
+
+.quick-checkout__description :deep(p),
+.quick-checkout__description :deep(ul),
+.quick-checkout__description :deep(ol) {
+  margin: 0 0 0.35rem;
+}
+
+.quick-checkout__description :deep(p:last-child),
+.quick-checkout__description :deep(ul:last-child),
+.quick-checkout__description :deep(ol:last-child) {
+  margin-bottom: 0;
+}
+
+.quick-checkout__read-more {
+  color: var(--ci-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+</style>
