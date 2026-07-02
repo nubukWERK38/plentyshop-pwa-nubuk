@@ -33,6 +33,11 @@
   --green: var(--ci-accent);
 }
 
+:where(a) {
+  color: rgb(var(--colors-2-primary-500, 40 79 112));
+  text-decoration: underline;
+}
+
 .section-spacing,
 .section-spacing-s,
 .section-spacing-m,

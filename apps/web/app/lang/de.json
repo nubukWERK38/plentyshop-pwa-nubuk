@@ -1126,6 +1126,7 @@
     "emptyStateText": "Wir haben keine Artikel mehr in dieser Kategorie.",
     "emptyStateText2": "Haben Sie nicht gefunden, was Sie suchen?",
     "numberOfProducts": "{count} Artikel von {total} Artikeln",
+    "title": "Suchergebnisse",
     "searchResults": "Suchergebnisse für \"{phrase}\""
   },
   "searchBar": {

@@ -105,7 +105,6 @@ defineI18nRoute({
 });
 
 const { getRobots, setRobotForStaticPage } = useRobots();
-const { getSetting: getMetaTitle } = useSiteSettings('metaTitle');
 const { getSetting: getMetaDescription } = useSiteSettings('metaDescription');
 const { getSetting: getMetaKeywords } = useSiteSettings('metaKeywords');
 
@@ -194,7 +193,7 @@ await getRobots();
 setRobotForStaticPage('SearchResult');
 
 useHead({
-  title: () => getMetaTitle(),
+  title: () => t('search.title'),
   meta: [
     { name: 'description', content: () => getMetaDescription() },
     { name: 'keywords', content: () => getMetaKeywords() },
