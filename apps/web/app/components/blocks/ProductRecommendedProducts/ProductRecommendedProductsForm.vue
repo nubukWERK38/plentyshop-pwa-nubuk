@@ -574,8 +574,10 @@ const addTab = () => {
     return;
   }
 
-  const items = tabsState.value.items ?? (tabsState.value.items = []);
-  items.push(createTab(defaultSource({ type: 'item_ids', categoryId: firstCategoryId })));
+  tabsItems.value = [
+    ...tabsItems.value,
+    createTab(defaultSource({ type: 'item_ids', categoryId: firstCategoryId })),
+  ];
 };
 
 const removeTab = (tabIndex: number) => {
