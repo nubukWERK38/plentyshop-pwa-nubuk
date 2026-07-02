@@ -29,75 +29,101 @@
 
       <template v-if="!tabsEnabled">
         <fieldset class="py-2">
-        <legend class="text-sm font-medium text-black">
-          {{ getEditorTranslation('source-type-label') }}
-        </legend>
+          <legend class="text-sm font-medium text-black">
+            {{ getEditorTranslation('source-type-label') }}
+          </legend>
 
-        <div class="mt-2 w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden">
-          <div
-            class="flex items-center justify-center w-1/2 px-4 py-2 cursor-pointer text-sm border-r"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': recommendedBlock.source.type === 'cross_selling' }"
-            data-testid="recommended-form-source-product"
-            @click="recommendedBlock.source.type = 'cross_selling'"
-          >
-            <SfIconCheck
-              :class="{ invisible: recommendedBlock.source.type !== 'cross_selling' }"
-              class="mr-1 w-[1.1rem]"
-            />
-            {{ getEditorTranslation('source-type-product') }}
-          </div>
+          <div class="mt-2 w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden">
+            <div
+              class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r"
+              :class="{ 'bg-gray-100 text-gray-900 font-semibold': recommendedBlock.source.type === 'cross_selling' }"
+              data-testid="recommended-form-source-product"
+              @click="recommendedBlock.source.type = 'cross_selling'"
+            >
+              <SfIconCheck
+                :class="{ invisible: recommendedBlock.source.type !== 'cross_selling' }"
+                class="mr-1 w-[1.1rem]"
+              />
+              {{ getEditorTranslation('source-type-product') }}
+            </div>
 
-          <div
-            class="flex items-center justify-center w-1/2 px-4 py-2 cursor-pointer text-sm"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': recommendedBlock.source.type === 'category' }"
-            data-testid="recommended-form-source-category"
-            @click="selectCategoryTab()"
-          >
-            <SfIconCheck :class="{ invisible: recommendedBlock.source.type !== 'category' }" class="mr-1 w-[1.1rem]" />
-            {{ getEditorTranslation('source-type-category') }}
+            <div
+              class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r"
+              :class="{ 'bg-gray-100 text-gray-900 font-semibold': recommendedBlock.source.type === 'category' }"
+              data-testid="recommended-form-source-category"
+              @click="selectCategoryTab()"
+            >
+              <SfIconCheck
+                :class="{ invisible: recommendedBlock.source.type !== 'category' }"
+                class="mr-1 w-[1.1rem]"
+              />
+              {{ getEditorTranslation('source-type-category') }}
+            </div>
+
+            <div
+              class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm"
+              :class="{ 'bg-gray-100 text-gray-900 font-semibold': recommendedBlock.source.type === 'variation_ids' }"
+              data-testid="recommended-form-source-variation-ids"
+              @click="recommendedBlock.source.type = 'variation_ids'"
+            >
+              <SfIconCheck
+                :class="{ invisible: recommendedBlock.source.type !== 'variation_ids' }"
+                class="mr-1 w-[1.1rem]"
+              />
+              {{ getEditorTranslation('source-type-variation-ids') }}
+            </div>
           </div>
-        </div>
-      </fieldset>
+        </fieldset>
 
         <div v-if="recommendedBlock.source.type === 'cross_selling'" class="py-4">
-        <UiFormLabel>{{ getEditorTranslation('product-id-label') }}</UiFormLabel>
-        <SfInput
-          :model-value="recommendedBlock.source.itemId"
-          data-testid="recommended-form-itemId"
-          name="itemId"
-          type="text"
-          :placeholder="getEditorTranslation('product-id-placeholder')"
-          :disabled="Object.keys(currentProduct).length > 0"
-          :wrapper-class="{ '!bg-disabled-100 !ring-disabled-300 !ring-1': Object.keys(currentProduct).length > 0 }"
-          @input="debouncedFn($event)"
-        />
+          <UiFormLabel>{{ getEditorTranslation('product-id-label') }}</UiFormLabel>
+          <SfInput
+            :model-value="recommendedBlock.source.itemId"
+            data-testid="recommended-form-itemId"
+            name="itemId"
+            type="text"
+            :placeholder="getEditorTranslation('product-id-placeholder')"
+            :disabled="Object.keys(currentProduct).length > 0"
+            :wrapper-class="{ '!bg-disabled-100 !ring-disabled-300 !ring-1': Object.keys(currentProduct).length > 0 }"
+            @input="debouncedFn($event)"
+          />
 
-        <div class="py-4">
-          <UiFormLabel>{{ getEditorTranslation('cross-selling-relation-label') }}</UiFormLabel>
-          <Multiselect
-            v-model="crossSellingModel"
-            :options="crossSellingOptions"
-            :allow-empty="false"
-            :multiple="false"
-            label="label"
-            track-by="value"
-            placeholder="Select relation"
-            data-testid="recommended-form-cross-selling-relation"
-            class="w-full"
+          <div class="py-4">
+            <UiFormLabel>{{ getEditorTranslation('cross-selling-relation-label') }}</UiFormLabel>
+            <Multiselect
+              v-model="crossSellingModel"
+              :options="crossSellingOptions"
+              :allow-empty="false"
+              :multiple="false"
+              label="label"
+              track-by="value"
+              placeholder="Select relation"
+              data-testid="recommended-form-cross-selling-relation"
+              class="w-full"
+            />
+          </div>
+        </div>
+
+        <div v-else-if="recommendedBlock.source.type === 'variation_ids'" class="py-4">
+          <UiFormLabel>{{ getEditorTranslation('variation-ids-label') }}</UiFormLabel>
+          <SfInput
+            v-model="recommendedBlock.source.variationIds"
+            data-testid="recommended-form-variationIds"
+            name="variationIds"
+            type="text"
+            :placeholder="getEditorTranslation('variation-ids-placeholder')"
           />
         </div>
-      </div>
 
         <div v-else class="py-4">
-        <UiFormLabel>{{ getEditorTranslation('categories-label') }}</UiFormLabel>
+          <UiFormLabel>{{ getEditorTranslation('categories-label') }}</UiFormLabel>
 
-        <EditorCategorySelect
-          v-model="categoryIdModel"
-          :base-search-params="{ type: 'in:item', sortBy: 'position_asc,name_asc', with: 'details,clients' }"
-          data-testid="recommended-form-categories"
-        />
-      </div>
-
+          <EditorCategorySelect
+            v-model="categoryIdModel"
+            :base-search-params="{ type: 'in:item', sortBy: 'position_asc,name_asc', with: 'details,clients' }"
+            data-testid="recommended-form-categories"
+          />
+        </div>
       </template>
 
       <div class="space-y-4 border-t border-gray-200 py-4">
@@ -130,7 +156,7 @@
                 class="mt-2 w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden"
               >
                 <div
-                  class="flex items-center justify-center w-1/2 px-4 py-2 cursor-pointer text-sm border-r"
+                  class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r"
                   :class="{ 'bg-gray-100 text-gray-900 font-semibold': tab.source.type === 'cross_selling' }"
                   @click="tab.source.type = 'cross_selling'"
                 >
@@ -139,12 +165,21 @@
                 </div>
 
                 <div
-                  class="flex items-center justify-center w-1/2 px-4 py-2 cursor-pointer text-sm"
+                  class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r"
                   :class="{ 'bg-gray-100 text-gray-900 font-semibold': tab.source.type === 'category' }"
                   @click="tab.source.type = 'category'"
                 >
                   <SfIconCheck :class="{ invisible: tab.source.type !== 'category' }" class="mr-1 w-[1.1rem]" />
                   {{ getEditorTranslation('source-type-category') }}
+                </div>
+
+                <div
+                  class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm"
+                  :class="{ 'bg-gray-100 text-gray-900 font-semibold': tab.source.type === 'variation_ids' }"
+                  @click="tab.source.type = 'variation_ids'"
+                >
+                  <SfIconCheck :class="{ invisible: tab.source.type !== 'variation_ids' }" class="mr-1 w-[1.1rem]" />
+                  {{ getEditorTranslation('source-type-variation-ids') }}
                 </div>
               </div>
             </fieldset>
@@ -172,6 +207,16 @@
                   </option>
                 </select>
               </div>
+            </div>
+
+            <div v-else-if="tab.source.type === 'variation_ids'">
+              <UiFormLabel>{{ getEditorTranslation('variation-ids-label') }}</UiFormLabel>
+              <SfInput
+                v-model="tab.source.variationIds"
+                name="tabVariationIds"
+                type="text"
+                :placeholder="getEditorTranslation('variation-ids-placeholder')"
+              />
             </div>
 
             <div v-else>
@@ -364,6 +409,7 @@ const defaultSource = (
   type: overrides.type ?? 'category',
   categoryId: overrides.categoryId ?? '',
   itemId: overrides.itemId ?? '',
+  variationIds: overrides.variationIds ?? '',
   crossSellingRelation: overrides.crossSellingRelation ?? 'Similar',
 });
 
@@ -391,6 +437,7 @@ const createDefaultContent = (): ProductRecommendedProductsContent => ({
     type: 'category',
     categoryId: '',
     itemId: '',
+    variationIds: '',
     crossSellingRelation: 'Similar' as CrossSellingRelationType,
   },
   layout: {
@@ -497,6 +544,7 @@ const categoryIdModel = computed({
         type: 'cross_selling',
         itemId: '',
         categoryId: firstCategoryId,
+        variationIds: '',
         crossSellingRelation: 'Similar',
       };
     }
@@ -631,8 +679,11 @@ const selectCategoryTab = async () => {
     "source-type-label": "Choose source",
     "source-type-product": "Product",
     "source-type-category": "Category",
+    "source-type-variation-ids": "ID list",
     "product-id-label": "Product ID",
     "product-id-placeholder": "Enter Product ID",
+    "variation-ids-label": "Variation IDs",
+    "variation-ids-placeholder": "Enter IDs comma-separated, e.g. 123, 456, 789",
     "categories-label": "Categories",
     "layout-label": "Layout",
     "tabs-label": "Tabs",
@@ -665,8 +716,11 @@ const selectCategoryTab = async () => {
     "source-type-label": "Choose source",
     "source-type-product": "Product",
     "source-type-category": "Category",
+    "source-type-variation-ids": "ID-Liste",
     "product-id-label": "Product ID",
     "product-id-placeholder": "Enter Product ID",
+    "variation-ids-label": "Artikel-/Variations-IDs",
+    "variation-ids-placeholder": "IDs kommagetrennt eingeben, z.B. 123, 456, 789",
     "categories-label": "Categories",
     "tabs-label": "Tabs",
     "tabs-enabled-label": "Source-Tabs unterhalb des Textes anzeigen",

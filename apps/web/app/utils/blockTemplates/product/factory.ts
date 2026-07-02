@@ -286,6 +286,7 @@ export const createProduct = (): Block[] => {
           type: 'category',
           itemId: '',
           categoryId: '',
+          variationIds: '',
           crossSellingRelation: 'Similar',
         },
         layout: {

@@ -60,7 +60,7 @@ describe('useProductRecommended', () => {
 
     expect(getFacet).toHaveBeenCalledWith(
       expect.objectContaining({
-        itemsPerPage: 250,
+        itemsPerPage: 12,
         sort: 'item.score',
       }),
     );
@@ -98,5 +98,20 @@ describe('useProductRecommended', () => {
     await fetchProductRecommended({ type: 'category', categoryId: '16' });
 
     expect(recommendedProducts.value).toEqual([facetProduct]);
+  });
+
+  it('should fetch products by variation ids in configured order', async () => {
+    const firstProduct = createProduct(1145, 19.95);
+    const secondProduct = createProduct(1146, 29.95);
+
+    getProductsByIds.mockResolvedValue({ data: { products: [secondProduct, firstProduct], total: 2 } });
+
+    const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended('manual-products');
+
+    await fetchProductRecommended({ type: 'variation_ids', variationIds: '1145, 1146' });
+
+    expect(getFacet).not.toHaveBeenCalled();
+    expect(getProductsByIds).toHaveBeenCalledWith({ variationIds: [1145, 1146], itemsPerPage: 2 });
+    expect(recommendedProducts.value).toEqual([firstProduct, secondProduct]);
   });
 });

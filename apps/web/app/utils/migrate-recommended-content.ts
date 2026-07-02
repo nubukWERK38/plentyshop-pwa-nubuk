@@ -30,6 +30,7 @@ export function migrateRecommendedContent(
       type: 'category',
       categoryId: String(old.categoryId),
       itemId: '',
+      variationIds: '',
       crossSellingRelation: 'Similar',
     },
     text: (old.text || {}) as ProductRecommendedProductsContent['text'],

@@ -9,12 +9,19 @@
       <h2 v-if="fallbackHeading" class="product-recommended-products__fallback-heading">
         {{ fallbackHeading }}
       </h2>
-      <TextContent
-        data-testid="recommended-block"
-        class="product-recommended-products__text pb-4"
-        :text="props.content.text"
-        :index="props.index"
-      />
+      <div class="product-recommended-products__header">
+        <TextContent
+          data-testid="recommended-block"
+          class="product-recommended-products__text"
+          :text="props.content.text"
+          :index="props.index"
+        />
+
+        <a v-if="ctaButton" class="product-recommended-products__cta" :href="ctaButton.link" :title="ctaButton.label">
+          <span>{{ ctaButton.label }}</span>
+          <span aria-hidden="true">›</span>
+        </a>
+      </div>
 
       <div v-if="tabsEnabled" class="product-recommended-products__tabs" data-testid="recommended-source-tabs">
         <button
@@ -40,12 +47,20 @@
       />
 
       <div v-else-if="shouldShowSkeleton" class="product-recommended-products__skeleton" aria-hidden="true">
-        <div v-for="index in skeletonItems" :key="`recommended-skeleton-${index}`" class="product-recommended-products__skeleton-card">
+        <div
+          v-for="index in skeletonItems"
+          :key="`recommended-skeleton-${index}`"
+          class="product-recommended-products__skeleton-card"
+        >
           <div class="product-recommended-products__skeleton-image" />
           <div class="product-recommended-products__skeleton-body">
-            <span class="product-recommended-products__skeleton-line product-recommended-products__skeleton-line--brand" />
+            <span
+              class="product-recommended-products__skeleton-line product-recommended-products__skeleton-line--brand"
+            />
             <span class="product-recommended-products__skeleton-line" />
-            <span class="product-recommended-products__skeleton-line product-recommended-products__skeleton-line--short" />
+            <span
+              class="product-recommended-products__skeleton-line product-recommended-products__skeleton-line--short"
+            />
             <span class="product-recommended-products__skeleton-price" />
           </div>
         </div>
@@ -83,6 +98,23 @@ const categoryId = productGetters.getCategoryIds(currentProduct.value)[0] ?? '';
 
 const shouldRenderAfterUpdate = ref(false);
 const activeTabIndex = ref(0);
+const fallbackButtons = [
+  {
+    keys: ['specialized', 'sale'],
+    label: 'alle Produkte im Sale',
+    link: 'https://www.nubuk-bikes.de/sale/Specialized/',
+  },
+  {
+    keys: ['centurion'],
+    label: 'alle Produkte',
+    link: 'https://www.nubuk-bikes.de/markenwelt/centurion',
+  },
+  {
+    keys: ['topseller', 'parts'],
+    label: 'alle Produkte',
+    link: 'https://www.nubuk-bikes.de/produkte/teile/',
+  },
+];
 
 const ensureGradient = (gradient?: ProductRecommendedProductsGradient) => ({
   enabled: gradient?.enabled === true,
@@ -164,12 +196,9 @@ const backgroundVariantClass = computed(() => {
       .filter((color): color is [number, number, number] => Boolean(color));
 
     if (gradientColors.length) {
-      const averageLuminance =
-        gradientColors.reduce((sum, color) => sum + luminance(color), 0) / gradientColors.length;
+      const averageLuminance = gradientColors.reduce((sum, color) => sum + luminance(color), 0) / gradientColors.length;
 
-      return averageLuminance < 0.5
-        ? 'product-recommended-products--dark'
-        : 'product-recommended-products--light';
+      return averageLuminance < 0.5 ? 'product-recommended-products--dark' : 'product-recommended-products--light';
     }
   }
 
@@ -187,6 +216,28 @@ const hasConfiguredText = computed(() => {
   const text = props.content.text;
 
   return Boolean(text?.pretitle || text?.title || text?.subtitle || text?.htmlDescription);
+});
+const normalizedTextContent = computed(() =>
+  [
+    props.content.text?.pretitle,
+    props.content.text?.title,
+    props.content.text?.subtitle,
+    props.content.text?.htmlDescription,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/<[^>]*>/g, ' ')
+    .toLowerCase(),
+);
+const ctaButton = computed(() => {
+  const configuredButton = props.content.button;
+  if (configuredButton?.label && configuredButton?.link) return configuredButton;
+
+  const fallbackButton = fallbackButtons.find((button) =>
+    button.keys.every((key) => normalizedTextContent.value.includes(key)),
+  );
+
+  return fallbackButton ? { ...fallbackButton, variant: 'primary' as const } : null;
 });
 const fallbackHeading = computed(() =>
   hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das könnte auch was für Dich sein!' : '',
@@ -208,6 +259,7 @@ const sourceWithDefaults = (source?: Partial<ProductRecommendedProductsSource>):
   type: source?.type ?? 'category',
   categoryId: source?.categoryId ?? '',
   itemId: source?.itemId ?? '',
+  variationIds: source?.variationIds ?? '',
   crossSellingRelation: source?.crossSellingRelation ?? 'Similar',
 });
 const tabs = computed<ProductRecommendedProductsTab[]>(() => props.content.tabs?.items ?? []);
@@ -221,9 +273,10 @@ const activeItemId = computed(() =>
 );
 const isCategory = computed(() => activeSource.value.type === 'category');
 const isProduct = computed(() => activeSource.value.type === 'cross_selling' && activeItemId.value);
+const isVariationIds = computed(() => activeSource.value.type === 'variation_ids' && activeSource.value.variationIds);
 const shouldRender = computed(() => props.shouldLoad === undefined || props.shouldLoad === true);
 const shouldFetch = computed(() => {
-  return isNearViewport.value && shouldRender.value && (isCategory.value || isProduct.value);
+  return isNearViewport.value && shouldRender.value && (isCategory.value || isProduct.value || isVariationIds.value);
 });
 const contentSource = computed(() => ({
   ...activeSource.value,
@@ -248,6 +301,7 @@ watch(
   [
     () => activeSource.value.categoryId,
     () => activeSource.value.itemId,
+    () => activeSource.value.variationIds,
     () => activeSource.value.type,
     () => activeSource.value.crossSellingRelation,
     () => activeTabIndex.value,
@@ -257,6 +311,7 @@ watch(
     if (
       shouldFetch.value &&
       ((activeItemId.value && activeSource.value.type === 'cross_selling') ||
+        (activeSource.value.variationIds && activeSource.value.type === 'variation_ids') ||
         (contentSource.value.categoryId && activeSource.value.type === 'category'))
     ) {
       fetchProductRecommended(contentSource.value);
@@ -289,6 +344,40 @@ watch(
   font-size: 2rem;
   font-weight: 800;
   line-height: 1.2;
+}
+
+.product-recommended-products__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+.product-recommended-products__text {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.product-recommended-products__cta {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+  padding: 0.72rem 1.05rem;
+  background: #ff4949;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.product-recommended-products__cta:hover,
+.product-recommended-products__cta:focus-visible {
+  background: #e73434;
+  color: #ffffff;
 }
 
 .product-recommended-products__tabs {
@@ -460,6 +549,11 @@ watch(
   .product-recommended-products__fallback-heading {
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
+  }
+
+  .product-recommended-products__header {
+    flex-direction: column;
+    gap: 0.875rem;
   }
 
   .product-recommended-products__tabs {

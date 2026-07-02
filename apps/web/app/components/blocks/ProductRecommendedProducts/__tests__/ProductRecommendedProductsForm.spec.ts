@@ -266,12 +266,12 @@ describe('ProductRecommendedProductsForm', () => {
       },
     });
 
-    expect(wrapper.findAll('button').filter((button) => button.text() === 'remove-tab-label')).toHaveLength(0);
+    expect(wrapper.findAll('button').filter((button) => button.text() === 'remove-tab-label')).toHaveLength(1);
 
     const addTabButton = wrapper.findAll('button').find((button) => button.text() === 'add-tab-label');
     expect(addTabButton).toBeDefined();
     await addTabButton?.trigger('click');
 
-    expect(wrapper.findAll('button').filter((button) => button.text() === 'remove-tab-label')).toHaveLength(1);
+    expect(wrapper.findAll('button').filter((button) => button.text() === 'remove-tab-label')).toHaveLength(2);
   });
 });

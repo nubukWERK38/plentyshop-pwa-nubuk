@@ -1,11 +1,16 @@
 import type { Product, FacetSearchCriteria } from '@plentymarkets/shop-api';
 
+export type ProductRecommendedSearchCriteria = Omit<FacetSearchCriteria, 'type'> & {
+  type?: FacetSearchCriteria['type'] | 'variation_ids';
+  variationIds?: string;
+};
+
 export interface UseProductRecommendedState {
   data: Product[];
   loading: boolean;
 }
 
-export type FetchProductRecommended = (params: FacetSearchCriteria) => Promise<Product[]>;
+export type FetchProductRecommended = (params: ProductRecommendedSearchCriteria) => Promise<Product[]>;
 
 export interface useProductRecommended {
   data: Readonly<Ref<UseProductRecommendedState['data']>>;

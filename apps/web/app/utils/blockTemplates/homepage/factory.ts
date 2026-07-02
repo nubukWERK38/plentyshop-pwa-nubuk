@@ -166,6 +166,7 @@ export function createHomepage(): Block[] {
           type: 'category',
           itemId: '',
           categoryId: '73',
+          variationIds: '',
           crossSellingRelation: 'Similar',
         },
         text: {
@@ -279,6 +280,7 @@ export function createHomepage(): Block[] {
           type: 'category',
           itemId: '',
           categoryId: '',
+          variationIds: '',
           crossSellingRelation: 'Similar',
         },
         layout: {

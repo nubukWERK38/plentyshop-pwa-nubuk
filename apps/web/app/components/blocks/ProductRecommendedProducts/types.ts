@@ -1,9 +1,12 @@
+import type { TextContentProps } from '~/components/TextContent/types';
+
 export type CrossSellingRelationType = 'Accessory' | 'ReplacementPart' | 'Similar' | 'Bundle';
 
 export type ProductRecommendedProductsSource = {
-  type: 'category' | 'cross_selling';
+  type: 'category' | 'cross_selling' | 'variation_ids';
   categoryId: string;
   itemId: string;
+  variationIds: string;
   crossSellingRelation: CrossSellingRelationType;
 };
 
@@ -39,6 +42,7 @@ export type ProductRecommendedProductsContent = {
   index?: number;
   cacheKey?: string;
   source: ProductRecommendedProductsSource;
+  button?: TextContentProps['button'];
   text: {
     pretitle?: string;
     title?: string;

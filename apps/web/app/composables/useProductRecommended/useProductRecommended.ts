@@ -2,8 +2,9 @@ import type {
   UseProductRecommendedReturn,
   UseProductRecommendedState,
   FetchProductRecommended,
+  ProductRecommendedSearchCriteria,
 } from '~/composables/useProductRecommended/types';
-import { productGetters, type ApiError, type FacetSearchCriteria, type Product } from '@plentymarkets/shop-api';
+import { productGetters, type ApiError, type Product } from '@plentymarkets/shop-api';
 
 const RECOMMENDED_PRODUCTS_LIMIT = 12;
 const RECOMMENDED_PRODUCTS_FETCH_LIMIT = 12;
@@ -41,6 +42,35 @@ const getDisplayableProducts = (products: Product[]) => {
   return (productsWithPrices.length ? productsWithPrices : products).slice(0, RECOMMENDED_PRODUCTS_LIMIT);
 };
 
+const parseVariationIds = (value?: string) =>
+  [
+    ...new Set(
+      (value ?? '')
+        .split(/[\s,;]+/)
+        .map((id) => Number.parseInt(id, 10))
+        .filter((id) => Number.isInteger(id) && id > 0),
+    ),
+  ].slice(0, RECOMMENDED_PRODUCTS_LIMIT);
+
+const getProductsByVariationIds = async (params: ProductRecommendedSearchCriteria): Promise<Product[]> => {
+  const variationIds = parseVariationIds(params.variationIds);
+  if (!variationIds.length) return [];
+
+  const { data } = await useSdk().plentysystems.getProductsByIds({
+    variationIds,
+    itemsPerPage: variationIds.length,
+  });
+  const productsByVariationId = new Map(
+    (data?.products ?? []).map((product) => [productGetters.getVariationId(product), product]),
+  );
+
+  return getDisplayableProducts(
+    variationIds
+      .map((variationId) => productsByVariationId.get(variationId))
+      .filter((product): product is Product => Boolean(product)),
+  );
+};
+
 /**
  * Composable for managing recommended products data
  * @param categoryId Product slug
@@ -64,23 +94,27 @@ export const useProductRecommended: UseProductRecommendedReturn = (categoryId: s
    * ```
    * @param params
    */
-  const fetchProductRecommended: FetchProductRecommended = async (params: FacetSearchCriteria) => {
+  const fetchProductRecommended: FetchProductRecommended = async (params: ProductRecommendedSearchCriteria) => {
     state.value.loading = true;
 
-    const common = {
-      itemsPerPage: RECOMMENDED_PRODUCTS_FETCH_LIMIT,
-      sort: 'item.score',
-      type: params.type,
-    };
-
-    const payload = {
-      ...common,
-      itemId: params.itemId,
-      crossSellingRelation: params.crossSellingRelation,
-      categoryId: params.categoryId,
-    };
-
     try {
+      if (params.type === 'variation_ids') {
+        state.value.data = await getProductsByVariationIds(params);
+        return state.value.data;
+      }
+
+      const common = {
+        itemsPerPage: RECOMMENDED_PRODUCTS_FETCH_LIMIT,
+        sort: 'item.score',
+        type: params.type,
+      };
+
+      const payload = {
+        ...common,
+        itemId: params.itemId,
+        crossSellingRelation: params.crossSellingRelation,
+        categoryId: params.categoryId,
+      };
       const response = await useSdk().plentysystems.getFacet(payload);
       const products = await enrichProductsByVariationIds(response?.data?.products ?? []);
 
