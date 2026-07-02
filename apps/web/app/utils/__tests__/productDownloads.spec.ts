@@ -172,4 +172,102 @@ describe('productDownloads', () => {
       source: 'property',
     });
   });
+
+  it('extracts file downloads when Plenty omits the download group name but keeps the group id', () => {
+    const product = {
+      variationProperties: [
+        {
+          id: 4,
+          name: null,
+          properties: [
+            {
+              id: 448,
+              groupId: 4,
+              cast: 'file',
+              names: { name: 'Dokument_1' },
+              groups: [{ id: 4 }],
+              values: {
+                value: '1598188/manual.pdf',
+                downloadLink: 'https://cdn03.plentyone.com/0bcmhf2jth7k/propertyItems/1598188%2Fmanual.pdf',
+              },
+            },
+          ],
+        },
+      ],
+    } as unknown as Product;
+
+    expect(getProductDownloads(product)).toEqual([
+      {
+        title: 'Dokument 1',
+        url: 'https://cdn03.plentyone.com/0bcmhf2jth7k/propertyItems/1598188%2Fmanual.pdf',
+        fileType: 'pdf',
+        fileSize: '',
+        source: 'property',
+      },
+    ]);
+  });
+
+  it('uses matching Dokument name text properties as download titles', () => {
+    const product = {
+      variationProperties: [
+        {
+          id: 4,
+          name: null,
+          properties: [
+            {
+              id: 448,
+              groupId: 4,
+              cast: 'file',
+              names: { name: 'Dokument_1' },
+              values: {
+                value: '1598188/manual-1.pdf',
+                downloadLink: 'https://cdn03.plentyone.com/0bcmhf2jth7k/propertyItems/1598188%2Fmanual-1.pdf',
+              },
+            },
+            {
+              id: 451,
+              groupId: 4,
+              cast: 'file',
+              names: { name: 'Dokument_2' },
+              values: {
+                value: '1598189/manual-2.pdf',
+                downloadLink: 'https://cdn03.plentyone.com/0bcmhf2jth7k/propertyItems/1598189%2Fmanual-2.pdf',
+              },
+            },
+            {
+              id: 452,
+              groupId: 4,
+              cast: 'text',
+              names: { name: 'Dokument_1 Name' },
+              values: { value: 'Geometrie-Datenblatt' },
+            },
+            {
+              id: 453,
+              groupId: 4,
+              cast: 'text',
+              names: { name: 'Dokument_2 Name' },
+              values: { value: '' },
+            },
+          ],
+        },
+      ],
+    } as unknown as Product;
+
+    expect(getProductDownloads(product)).toEqual([
+      {
+        title: 'Geometrie-Datenblatt',
+        url: 'https://cdn03.plentyone.com/0bcmhf2jth7k/propertyItems/1598188%2Fmanual-1.pdf',
+        fileType: 'pdf',
+        fileSize: '',
+        source: 'property',
+      },
+      {
+        title: 'Dokument 2',
+        url: 'https://cdn03.plentyone.com/0bcmhf2jth7k/propertyItems/1598189%2Fmanual-2.pdf',
+        fileType: 'pdf',
+        fileSize: '',
+        source: 'property',
+      },
+    ]);
+  });
 });

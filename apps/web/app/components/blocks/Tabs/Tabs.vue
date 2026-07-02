@@ -9,7 +9,7 @@
   >
     <div
       v-if="normalizedItems.length > 0"
-      class="flex gap-2 overflow-x-auto px-0 py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      class="tabs-block__list flex gap-2 overflow-x-auto px-0 py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       role="tablist"
       aria-label="Tabs"
     >
@@ -20,17 +20,25 @@
         type="button"
         role="tab"
         :class="[
-          'min-w-[185px] border-b px-0 pb-4 pt-2 text-left text-sm font-semibold uppercase leading-5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900',
+          'tabs-block__tab flex min-w-[185px] items-center gap-2 border-b px-0 pb-4 pt-2 text-left text-sm font-semibold uppercase leading-5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900',
           isActiveTab(index)
             ? 'border-neutral-900 text-neutral-900'
             : 'border-neutral-300 text-neutral-400 hover:border-neutral-500 hover:text-neutral-600',
         ]"
         :aria-selected="isActiveTab(index)"
         :aria-controls="`tabs-panel-${index}`"
+        :aria-label="item.title"
         :data-testid="`tabs-item-${index}`"
+        :title="item.title"
         @click="setActiveTab(index)"
       >
-        {{ item.title }}
+        <component
+          :is="getTabIconComponent(item.title)"
+          class="tabs-block__icon shrink-0"
+          size="sm"
+          aria-hidden="true"
+        />
+        <span class="tabs-block__label">{{ item.title }}</span>
       </button>
     </div>
 
@@ -74,6 +82,8 @@
 <script setup lang="ts">
 import type { TabsItem, TabsProps } from './types';
 import type { Block } from '@plentymarkets/shop-api';
+import type { Component } from 'vue';
+import { SfIconDownload, SfIconHelp, SfIconInfo, SfIconTune, SfIconViewList } from '@storefront-ui/vue';
 import type { ProductDownloadsContent } from '~/components/blocks/ProductDownloads/types';
 import { hasProductDownloads } from '~/utils/productDownloads';
 
@@ -149,6 +159,18 @@ const isProductQuestionTitle = (title: string) =>
   ['noch fragen?', 'noch fragen', 'any questions?'].includes(normalizeText(title));
 const isDescriptionTitle = (title: string) => ['beschreibung', 'description'].includes(normalizeText(title));
 const isDescriptionHash = (hash: string) => ['#beschreibung', '#description'].includes(normalizeText(hash));
+
+const tabIconRules: Array<{ matches: string[]; icon: Component }> = [
+  { matches: ['beschreibung', 'description'], icon: SfIconViewList },
+  { matches: ['technische daten', 'technical data'], icon: SfIconTune },
+  { matches: ['noch fragen?', 'noch fragen', 'any questions?'], icon: SfIconHelp },
+  { matches: ['downloads', 'download'], icon: SfIconDownload },
+];
+
+const getTabIconComponent = (title: string) => {
+  const normalizedTitle = normalizeText(title);
+  return tabIconRules.find(({ matches }) => matches.includes(normalizedTitle))?.icon ?? SfIconInfo;
+};
 
 const isDefaultProductQuestionHtml = (html: string) => {
   const normalizedHtml = normalizeText(html)
@@ -299,3 +321,48 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleProductQuestionLinkClick);
 });
 </script>
+
+<style scoped>
+.tabs-block__icon {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .tabs-block__list {
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .tabs-block__tab {
+    width: 100%;
+    min-width: 0;
+    padding-inline: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .tabs-block__list {
+    overflow: visible;
+  }
+
+  .tabs-block__tab {
+    min-width: 3.75rem;
+    flex: 0 0 3.75rem;
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .tabs-block__icon {
+    display: inline-flex;
+  }
+
+  .tabs-block__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+</style>

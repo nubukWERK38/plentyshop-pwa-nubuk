@@ -915,3 +915,42 @@ Error {
 [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2468ms
 [36mi[39m Vite server warmed up in 0ms
 [36mi[39m Vite client warmed up in 2ms
+[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+[shop-core | extensions] No extensions to load.
+[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+[36mi[39m Using yup with vee-validate
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+
+[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+[32m√[39m Vite client built in 56ms
+[32m√[39m Vite server built in 63ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2694ms
+[36mi[39m Vite server warmed up in 0ms
+[36mi[39m Vite client warmed up in 3ms
+[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+[shop-core | extensions] No extensions to load.
+[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+[36mi[39m Using yup with vee-validate
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+
+[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+[32m√[39m Vite client built in 75ms
+[32m√[39m Vite server built in 68ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2481ms
+[36mi[39m Vite server warmed up in 0ms
+[36mi[39m Vite client warmed up in 3ms
+[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+[shop-core | extensions] No extensions to load.
+[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+[36mi[39m Using yup with vee-validate
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+
+[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+[32m√[39m Vite client built in 81ms
+[32m√[39m Vite server built in 70ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2410ms
+[36mi[39m Vite server warmed up in 1ms
+[36mi[39m Vite client warmed up in 3ms

@@ -17,6 +17,7 @@ const SIZE_KEYS = ['size', 'fileSize', 'filesize', 'sizeBytes', 'bytes'];
 const TYPE_KEYS = ['fileType', 'mimeType', 'mime', 'contentType', 'type', 'cast'];
 const DOWNLOAD_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'avif', 'svg', 'bmp', 'tif', 'tiff'];
 const DOWNLOAD_PROPERTY_GROUP_NAMES = ['artikel downloads'];
+const DOWNLOAD_PROPERTY_GROUP_IDS = [4];
 
 const isRecord = (value: unknown): value is UnknownRecord =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -141,8 +142,33 @@ const getNameFromNames = (value: unknown) => {
 const getNamedValue = (record: UnknownRecord, directKeys: string[]) =>
   getStringValue(record, directKeys) || getNameFromNames(record.names);
 
+const getPropertyName = (property: UnknownRecord) => getNamedValue(property, TITLE_KEYS).trim();
+
+const normalizePropertyKey = (value: string) =>
+  normalizeName(value)
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const getDocumentTitleKey = (propertyName: string) => {
+  const normalizedName = normalizePropertyKey(propertyName);
+  const titleMatch = normalizedName.match(/^(dokument\s+\d+)\s+name$/);
+
+  return titleMatch?.[1] ?? '';
+};
+
+const getDocumentFileKey = (propertyName: string) => {
+  const normalizedName = normalizePropertyKey(propertyName);
+  const fileMatch = normalizedName.match(/^dokument\s+\d+$/);
+
+  return fileMatch?.[0] ?? '';
+};
+
 const isDownloadsGroup = (group: unknown) => {
   if (!isRecord(group)) return false;
+
+  const id = getNumberValue(group, ['id', 'groupId']);
+  if (id && DOWNLOAD_PROPERTY_GROUP_IDS.includes(id)) return true;
 
   const name = normalizeName(getNamedValue(group, ['name']));
   return DOWNLOAD_PROPERTY_GROUP_NAMES.includes(name);
@@ -176,13 +202,17 @@ const getPropertyRawValue = (property: UnknownRecord) => {
 };
 
 const getPropertyTitle = (property: UnknownRecord, url: string) => {
-  const title = getNamedValue(property, TITLE_KEYS).trim();
+  const title = getPropertyName(property);
   if (!title) return getFileNameFromUrl(url);
 
   return title.replace(/_/g, ' ');
 };
 
-const normalizePropertyDownload = (property: unknown, parentGroup?: unknown): ProductDownload | null => {
+const normalizePropertyDownload = (
+  property: unknown,
+  parentGroup?: unknown,
+  titleOverrides = new Map<string, string>(),
+): ProductDownload | null => {
   if (!isRecord(property) || !isPropertyInDownloadsGroup(property, parentGroup)) return null;
 
   const rawUrl = getPropertyRawValue(property);
@@ -190,9 +220,10 @@ const normalizePropertyDownload = (property: unknown, parentGroup?: unknown): Pr
 
   const url = normalizeUrl(rawUrl);
   const type = getStringValue(property, TYPE_KEYS);
+  const overrideTitle = titleOverrides.get(getDocumentFileKey(getPropertyName(property)));
 
   return {
-    title: getPropertyTitle(property, url),
+    title: overrideTitle || getPropertyTitle(property, url),
     url,
     fileType: getDownloadFileType(url, type),
     fileSize: formatFileSize(getNumberValue(property, SIZE_KEYS) ?? getStringValue(property, SIZE_KEYS)),
@@ -257,8 +288,18 @@ const getProductPropertyDownloads = (product: Product) => {
     if (!isRecord(group)) return [];
 
     const properties = Array.isArray(group.properties) ? group.properties : [];
+    const titleOverrides = properties.reduce((titles, property) => {
+      if (!isRecord(property) || !isPropertyInDownloadsGroup(property, group)) return titles;
+
+      const titleKey = getDocumentTitleKey(getPropertyName(property));
+      const titleValue = getPropertyRawValue(property);
+      if (titleKey && titleValue) titles.set(titleKey, titleValue);
+
+      return titles;
+    }, new Map<string, string>());
+
     return properties
-      .map((property) => normalizePropertyDownload(property, group))
+      .map((property) => normalizePropertyDownload(property, group, titleOverrides))
       .filter((item): item is ProductDownload => Boolean(item));
   });
 };
