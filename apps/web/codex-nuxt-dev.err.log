@@ -1,1 +1,4 @@
 [WARN] Fetching PWA settings is disabled! Set FETCH_REMOTE_CONFIG in .env file.
+
+[43m[30m WARN [39m[49m Slow module [36m@nuxt/devtools[39m took [36m6376.31ms[39m to setup.
+

@@ -96,7 +96,21 @@ const route = useRoute();
 const { hasContent: hasTechnicalDataContent } = useTechnicalData();
 const { currentProduct } = useProducts();
 
+const normalizeText = (value: string) => value.trim().toLowerCase();
+
 const hasTechnicalDataBlock = (item: TabsItem) => item.blocks?.some((block) => block.name === 'TechnicalData') ?? false;
+const isTechnicalDataTitle = (title: string) => ['technische daten', 'technical data'].includes(normalizeText(title));
+const hasMeaningfulHtmlContent = (html: string) =>
+  Boolean(
+    html
+      .replace(/<br\s*\/?>/gi, '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/gi, ' ')
+      .trim().length,
+  );
+const isTechnicalDataTab = (item: TabsItem) => hasTechnicalDataBlock(item) || isTechnicalDataTitle(item.title);
+const shouldShowTechnicalDataTab = (item: TabsItem) =>
+  !isTechnicalDataTab(item) || hasTechnicalDataContent.value || hasMeaningfulHtmlContent(item.html);
 const hasProductDownloadsBlock = (item: TabsItem) =>
   item.blocks?.some((block) => block.name === 'ProductDownloads') ?? false;
 const hasProductDownloadsContent = (item: TabsItem) =>
@@ -105,6 +119,8 @@ const hasProductDownloadsContent = (item: TabsItem) =>
       block.name === 'ProductDownloads' &&
       hasProductDownloads(currentProduct.value, block.content as Partial<ProductDownloadsContent>),
   ) ?? false;
+const hasProductQuestionBlock = (item: TabsItem) =>
+  item.blocks?.some((block) => block.name === 'ProductQuestion') ?? false;
 
 const createProductDownloadsBlock = (): Block => ({
   name: 'ProductDownloads',
@@ -149,14 +165,15 @@ const normalizedItems = computed<TabsItem[]>(() => {
   }
 
   return normalized
-    .filter((item) => !hasTechnicalDataBlock(item) || hasTechnicalDataContent.value)
+    .filter((item) => shouldShowTechnicalDataTab(item))
     .filter((item) => !hasProductDownloadsBlock(item) || hasProductDownloadsContent(item));
 });
 
-const normalizeText = (value: string) => value.trim().toLowerCase();
-
 const isProductQuestionTitle = (title: string) =>
-  ['noch fragen?', 'noch fragen', 'any questions?'].includes(normalizeText(title));
+  ['noch fragen?', 'noch fragen', 'fragen zum produkt?', 'fragen zum produkt', 'any questions?'].includes(
+    normalizeText(title),
+  );
+const isProductQuestionTab = (item: TabsItem) => hasProductQuestionBlock(item) || isProductQuestionTitle(item.title);
 const isDescriptionTitle = (title: string) => ['beschreibung', 'description'].includes(normalizeText(title));
 const isDescriptionHash = (hash: string) => ['#beschreibung', '#description'].includes(normalizeText(hash));
 
@@ -243,8 +260,11 @@ const setActiveTab = (index: number) => {
   activeTabIndex.value = index;
 };
 
+const waitForAnimationFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
 const scrollToTabsBlock = async () => {
   await nextTick();
+  await waitForAnimationFrame();
 
   const element = tabsBlockRef.value;
   if (!element) return;
@@ -254,11 +274,18 @@ const scrollToTabsBlock = async () => {
 };
 
 const openProductQuestionTab = () => {
-  const questionTabIndex = normalizedItems.value.findIndex((item) => isProductQuestionTitle(item.title));
-  if (questionTabIndex < 0) return;
+  const questionTabIndex = normalizedItems.value.findIndex((item) => isProductQuestionTab(item));
+  if (questionTabIndex < 0) return false;
 
   setActiveTab(questionTabIndex);
   scrollToTabsBlock();
+  return true;
+};
+
+const handleOpenProductQuestionTab = (event: Event) => {
+  if (openProductQuestionTab()) {
+    event.preventDefault();
+  }
 };
 
 const openDescriptionTab = () => {
@@ -280,7 +307,7 @@ const handleProductQuestionLinkClick = (event: MouseEvent) => {
   if (!trigger) return;
 
   const label = normalizeText(`${trigger.textContent ?? ''} ${trigger.getAttribute('title') ?? ''}`);
-  if (!label.includes('frage stellen')) return;
+  if (!label.includes('frage stellen') && !label.includes('fragen zum produkt')) return;
 
   event.preventDefault();
   openProductQuestionTab();
@@ -309,7 +336,7 @@ watch(
 );
 
 onMounted(() => {
-  window.addEventListener('open-product-question-tab', openProductQuestionTab);
+  window.addEventListener('open-product-question-tab', handleOpenProductQuestionTab);
   document.addEventListener('click', handleProductQuestionLinkClick);
   handleHashTarget();
 });
@@ -317,7 +344,7 @@ onMounted(() => {
 watch(() => route.hash, handleHashTarget);
 
 onBeforeUnmount(() => {
-  window.removeEventListener('open-product-question-tab', openProductQuestionTab);
+  window.removeEventListener('open-product-question-tab', handleOpenProductQuestionTab);
   document.removeEventListener('click', handleProductQuestionLinkClick);
 });
 </script>

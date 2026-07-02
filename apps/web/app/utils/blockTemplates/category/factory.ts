@@ -40,7 +40,7 @@ export function createCategory(): Block[] {
         },
         layout: {
           paddingTop: 40,
-          paddingBottom: 40,
+          paddingBottom: 0,
           paddingLeft: 0,
           paddingRight: 0,
         },

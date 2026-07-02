@@ -324,13 +324,21 @@ const imageUrl = computed(() => {
 
 const inlineStyle = computed(() => {
   const layout = props.content.layout || {};
+  const isLegacyTextBlockPaddingBottom =
+    props.content.displayCategoryImage === 'off' &&
+    layout.paddingTop === 0 &&
+    layout.paddingBottom === 40 &&
+    layout.paddingLeft === 0 &&
+    layout.paddingRight === 0;
+  const paddingBottom = isLegacyTextBlockPaddingBottom ? 0 : layout.paddingBottom;
+  const style: Record<string, string> = {};
 
-  return {
-    paddingTop: layout.paddingTop ? `${layout.paddingTop}px` : 0,
-    paddingBottom: layout.paddingBottom ? `${layout.paddingBottom}px` : 0,
-    paddingLeft: layout.paddingLeft ? `${layout.paddingLeft}px` : 0,
-    paddingRight: layout.paddingRight ? `${layout.paddingRight}px` : 0,
-  };
+  if (layout.paddingTop) style.paddingTop = `${layout.paddingTop}px`;
+  if (paddingBottom) style.paddingBottom = `${paddingBottom}px`;
+  if (layout.paddingLeft) style.paddingLeft = `${layout.paddingLeft}px`;
+  if (layout.paddingRight) style.paddingRight = `${layout.paddingRight}px`;
+
+  return style;
 });
 
 const categoryDataContentClass = computed(() => {

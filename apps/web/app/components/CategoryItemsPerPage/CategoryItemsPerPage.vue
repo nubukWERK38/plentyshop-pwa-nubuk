@@ -14,7 +14,7 @@
         id="perPage"
         v-model="selected"
         :aria-label="t('common.labels.perPage')"
-        :class="selectionModeCompact ? 'w-full text-sm' : 'w-full'"
+        :class="selectionModeCompact ? 'w-full !bg-neutral-100 text-sm' : 'w-full !bg-neutral-100'"
         @change="updateItemsPerPage(Number(selected))"
       >
         <option v-if="selectionModeCompact" value="" disabled hidden>

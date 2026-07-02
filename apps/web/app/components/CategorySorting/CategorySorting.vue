@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="selectionModeCompact ? 'category-sorting--compact max-w-full' : 'w-full'"
-    data-testid="category-sorting"
-  >
+  <div :class="selectionModeCompact ? 'category-sorting--compact max-w-full' : 'w-full'" data-testid="category-sorting">
     <div
       v-if="!selectionModeCompact"
       class="bg-primary-50/50 mb-4 px-4 py-2 rounded-none uppercase typography-headline-6 font-bold tracking-widest select-none"
@@ -15,7 +12,7 @@
         v-model="selected"
         :aria-label="t('common.labels.sortBy')"
         data-testid="select-sort-by"
-        :class="selectionModeCompact ? 'w-full text-sm' : 'w-full'"
+        :class="selectionModeCompact ? 'w-full !bg-neutral-100 text-sm' : 'w-full !bg-neutral-100'"
       >
         <option v-if="selectionModeCompact" value="" disabled hidden>{{ t('common.labels.sortBy') }}</option>
         <option v-for="option in options" :key="option" :value="option">

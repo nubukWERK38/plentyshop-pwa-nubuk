@@ -60,6 +60,17 @@ describe('Tabs.vue', () => {
     },
   };
 
+  const propsWithTitleOnlyTechnicalDataTab = {
+    meta: { uuid: 'tabs-uuid' },
+    content: {
+      items: [
+        { title: 'Beschreibung', html: '<p>Beschreibung content</p>' },
+        { title: 'Technische Daten', html: '<p><br></p>' },
+      ],
+      layout: {},
+    },
+  };
+
   it('should render tab titles', () => {
     const wrapper = mount(Tabs, {
       props: baseProps,
@@ -133,5 +144,46 @@ describe('Tabs.vue', () => {
     });
 
     expect(wrapper.text()).toContain('Technische Daten');
+  });
+
+  it('should hide title-only technical data tab when technical data and html are empty', () => {
+    technicalDataHasContentMock.value = false;
+
+    const wrapper = mount(Tabs, {
+      props: propsWithTitleOnlyTechnicalDataTab,
+      global: {
+        stubs: {
+          UiButton: UiButtonStub,
+        },
+      },
+    });
+
+    expect(wrapper.text()).toContain('Beschreibung');
+    expect(wrapper.text()).not.toContain('Technische Daten');
+  });
+
+  it('should show title-only technical data tab when html has content', () => {
+    technicalDataHasContentMock.value = false;
+
+    const wrapper = mount(Tabs, {
+      props: {
+        ...propsWithTitleOnlyTechnicalDataTab,
+        content: {
+          ...propsWithTitleOnlyTechnicalDataTab.content,
+          items: [
+            ...propsWithTitleOnlyTechnicalDataTab.content.items.slice(0, 1),
+            { title: 'Technische Daten', html: '<p>Rahmen: Carbon</p>' },
+          ],
+        },
+      },
+      global: {
+        stubs: {
+          UiButton: UiButtonStub,
+        },
+      },
+    });
+
+    expect(wrapper.text()).toContain('Technische Daten');
+    expect(wrapper.text()).toContain('Rahmen: Carbon');
   });
 });

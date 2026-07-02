@@ -685,8 +685,23 @@ const openManufacturerDetails = () => {
   openDrawer();
 };
 
+const dispatchProductQuestionTabEvent = () => {
+  return !window.dispatchEvent(new CustomEvent('open-product-question-tab', { cancelable: true }));
+};
+
 const openProductQuestionTab = () => {
-  window.dispatchEvent(new CustomEvent('open-product-question-tab'));
+  let handled = dispatchProductQuestionTabEvent();
+  if (handled) return;
+
+  setTimeout(() => {
+    if (handled) return;
+    handled = dispatchProductQuestionTabEvent();
+  }, 100);
+
+  setTimeout(() => {
+    if (handled) return;
+    dispatchProductQuestionTabEvent();
+  }, 300);
 };
 
 const fetchCategoryModalContent = async (categoryId: number, categoryUrlPath: string) => {

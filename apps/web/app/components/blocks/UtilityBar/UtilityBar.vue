@@ -289,7 +289,6 @@
               <SfIconPerson />
             </template>
             <span>Anmelden</span>
-            <SfIconExpandMore class="nubuk-action__chevron" size="sm" aria-hidden="true" />
           </UiButton>
         </nav>
       </div>
