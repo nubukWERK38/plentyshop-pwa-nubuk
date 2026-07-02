@@ -1,4 +1,5 @@
 import type { SortingOption } from '~/components/settings/category/sorting/category-sorting/types';
+import { getEditorUITranslation } from './editorTranslationsHelper';
 
 export const getEditorTranslation = (key: string, named?: Record<string, unknown>): string => {
   const locale = 'en';
@@ -13,11 +14,8 @@ export const getEditorTranslation = (key: string, named?: Record<string, unknown
 export const getMappedOptions = (options: string[]): SortingOption[] => {
   if (!options) return [];
 
-  const locale = 'en';
-  const { $i18n } = useNuxtApp();
-
   return options.map((key: string) => ({
-    label: $i18n.t(`category.sorting.${key}`, {}, { locale }) as string,
+    label: getEditorUITranslation(key),
     value: key,
   }));
 };
