@@ -61,14 +61,21 @@ export const mockBlockCategories = {
     title: 'Content Blocks',
     blockName: 'ContentBlock',
     category: 'content',
-    accessControl: 'content' as const,
+    accessControl: ['content'],
     variations: [],
   } as BlockListCategory,
   productBlocks: {
     title: 'Product Blocks',
     blockName: 'ProductBlock',
     category: 'product',
-    accessControl: 'product' as const,
+    accessControl: ['product'],
+    variations: [],
+  } as BlockListCategory,
+  sharedBlocks: {
+    title: 'Shared Blocks',
+    blockName: 'SharedBlock',
+    category: 'shared',
+    accessControl: ['content', 'productCategory'],
     variations: [],
   } as BlockListCategory,
   universalBlocks: {
@@ -83,7 +90,7 @@ export const mockCategory: BlockListCategory = {
   title: 'Test Category',
   blockName: 'TestBlock',
   category: 'test',
-  accessControl: 'content' as const,
+  accessControl: ['content'],
   variations: [],
 };
 

@@ -165,6 +165,14 @@ describe('useBlocksList', () => {
       expect(pageHasAccessToCategory(mockBlockCategories.contentBlocks)).toBe(true);
     });
 
+    it('should return true when context is one of multiple accessControl values', () => {
+      const { setBlocksListContext, pageHasAccessToCategory } = useBlocksList();
+
+      setBlocksListContext('content');
+
+      expect(pageHasAccessToCategory(mockBlockCategories.sharedBlocks)).toBe(true);
+    });
+
     it('should return false when context does not match accessControl', () => {
       const { setBlocksListContext, pageHasAccessToCategory } = useBlocksList();
 

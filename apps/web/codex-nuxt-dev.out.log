@@ -1211,3 +1211,11 @@ Error {
 [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3965ms
 [36mi[39m Vite server warmed up in 1ms
 [36mi[39m Vite client warmed up in 3ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 1031.99ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1297ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 1061.41ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 1080.28ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 879ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.server.mjs[39m in 696.05ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 720.92ms
+[90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 774.64ms
