@@ -8,5 +8,11 @@ export const isPageOfType = (type: string): boolean => {
 
 export const getSearchPath = (suggestion: string) => {
   const localePath = useLocalePath();
-  return `${localePath(paths.search)}?term=${encodeURIComponent(suggestion)}`;
+  const { getSetting: defaultSortingSearch } = useSiteSettings('defaultSortingSearch');
+  const params = new URLSearchParams({ term: suggestion });
+  const sort = defaultSortingSearch();
+
+  if (sort) params.set('sort', sort);
+
+  return `${localePath(paths.search)}?${params.toString()}`;
 };

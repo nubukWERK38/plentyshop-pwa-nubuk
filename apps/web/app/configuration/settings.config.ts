@@ -86,7 +86,7 @@ export default {
   accentColor3: process.env.NUXT_PUBLIC_ACCENT_COLOR_3 || '#6a8d73',
   accentColor4: process.env.NUXT_PUBLIC_ACCENT_COLOR_4 || '#d98324',
   defaultSortingOption: process.env.NUXT_PUBLIC_DEFAULT_SORTING_OPTION ?? 'texts.name1_asc',
-  defaultSortingSearch: process.env.NUXT_PUBLIC_DEFAULT_SORTING_SEARCH ?? 'item.score',
+  defaultSortingSearch: process.env.NUXT_PUBLIC_DEFAULT_SORTING_SEARCH ?? 'default.recommended_sorting',
   availableSortingOptions:
     process.env.NUXT_PUBLIC_AVAILABLE_SORTING_OPTIONS ||
     '["item.score","texts.name1_asc","default.recommended_sorting","sorting.price.avg_asc","sorting.price.avg_desc","variation.availability.averageDays_asc","variation.availability.averageDays_desc"]',

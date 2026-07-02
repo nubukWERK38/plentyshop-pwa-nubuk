@@ -135,6 +135,7 @@ const router = useRouter();
 const route = useRoute();
 const { updateSearchTerm } = useCategoryFilter();
 const { loading } = useSearch();
+const { getSetting: defaultSortingSearch } = useSiteSettings('defaultSortingSearch');
 const rootRef = ref<HTMLElement | null>(null);
 const isOpen = ref(false);
 
@@ -177,7 +178,7 @@ const handleSubmit = () => {
   props.close?.();
   updateSearchTerm(inputModel.value);
   emit('frontend:searchProduct', inputModel.value);
-  router.push({ path: localePath(paths.search), query: { term: inputModel.value } });
+  router.push({ path: localePath(paths.search), query: { term: inputModel.value, sort: defaultSortingSearch() } });
   handleReset();
 };
 const handleSearch = () => {
