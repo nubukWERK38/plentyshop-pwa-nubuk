@@ -473,6 +473,7 @@ const sourceOpen = ref(false);
 const textsOpen = ref(false);
 
 const firstCategoryId = (categoryTree.value?.find((category) => category.type === 'item')?.id || '').toString();
+const newTabLabel = getEditorTranslation('new-tab-label');
 
 const categoryIdModel = computed({
   get() {
@@ -538,7 +539,7 @@ const tabsState = computed(() => {
 });
 
 const createTab = (source: ProductRecommendedProductsSource): ProductRecommendedProductsTab => ({
-  label: getEditorTranslation('new-tab-label'),
+  label: newTabLabel,
   source: defaultSource({
     ...source,
     categoryId: source.categoryId || firstCategoryId,
