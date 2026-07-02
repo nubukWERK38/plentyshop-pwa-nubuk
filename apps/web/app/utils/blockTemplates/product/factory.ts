@@ -285,6 +285,7 @@ export const createProduct = (): Block[] => {
         source: {
           type: 'category',
           itemId: '',
+          itemIds: '',
           categoryId: '',
           variationIds: '',
           crossSellingRelation: 'Similar',

@@ -29,6 +29,7 @@ const createProduct = (variationId: number, price: number, rrp?: number): Produc
 
 describe('useProductRecommended', () => {
   const getFacet = vi.fn();
+  const getProduct = vi.fn();
   const getProductsByIds = vi.fn();
 
   beforeEach(() => {
@@ -42,6 +43,7 @@ describe('useProductRecommended', () => {
     useSdk.mockReturnValue({
       plentysystems: {
         getFacet,
+        getProduct,
         getProductsByIds,
       },
     });
@@ -112,6 +114,23 @@ describe('useProductRecommended', () => {
 
     expect(getFacet).not.toHaveBeenCalled();
     expect(getProductsByIds).toHaveBeenCalledWith({ variationIds: [1145, 1146], itemsPerPage: 2 });
+    expect(recommendedProducts.value).toEqual([firstProduct, secondProduct]);
+  });
+
+  it('should fetch products by item ids in configured order', async () => {
+    const firstProduct = createProduct(1145, 19.95);
+    const secondProduct = createProduct(1146, 29.95);
+
+    getProduct.mockResolvedValueOnce({ data: firstProduct }).mockResolvedValueOnce({ data: secondProduct });
+
+    const { data: recommendedProducts, fetchProductRecommended } = useProductRecommended('manual-item-products');
+
+    await fetchProductRecommended({ type: 'item_ids', itemIds: '21440484, 21456890' });
+
+    expect(getFacet).not.toHaveBeenCalled();
+    expect(getProductsByIds).not.toHaveBeenCalled();
+    expect(getProduct).toHaveBeenNthCalledWith(1, { id: 21440484 });
+    expect(getProduct).toHaveBeenNthCalledWith(2, { id: 21456890 });
     expect(recommendedProducts.value).toEqual([firstProduct, secondProduct]);
   });
 });

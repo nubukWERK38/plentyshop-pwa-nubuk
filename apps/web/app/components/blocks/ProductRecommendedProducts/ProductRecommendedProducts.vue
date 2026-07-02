@@ -16,11 +16,6 @@
           :text="props.content.text"
           :index="props.index"
         />
-
-        <a v-if="ctaButton" class="product-recommended-products__cta" :href="ctaButton.link" :title="ctaButton.label">
-          <span>{{ ctaButton.label }}</span>
-          <span aria-hidden="true">›</span>
-        </a>
       </div>
 
       <div v-if="tabsEnabled" class="product-recommended-products__tabs" data-testid="recommended-source-tabs">
@@ -35,6 +30,13 @@
         >
           {{ tab.label || getDefaultTabLabel(tabIndex) }}
         </button>
+      </div>
+
+      <div v-if="ctaButton" class="product-recommended-products__cta-row">
+        <a class="product-recommended-products__cta" :href="ctaButton.link" :title="ctaButton.label">
+          <span>{{ ctaButton.label }}</span>
+          <span aria-hidden="true">&gt;</span>
+        </a>
       </div>
 
       <ProductSlider
@@ -100,7 +102,7 @@ const shouldRenderAfterUpdate = ref(false);
 const activeTabIndex = ref(0);
 const fallbackButtons = [
   {
-    keys: ['specialized', 'sale'],
+    keys: ['specialized'],
     label: 'alle Produkte im Sale',
     link: 'https://www.nubuk-bikes.de/sale/Specialized/',
   },
@@ -223,10 +225,10 @@ const normalizedTextContent = computed(() =>
     props.content.text?.title,
     props.content.text?.subtitle,
     props.content.text?.htmlDescription,
+    props.content.text?.htmlDescription?.replace(/<[^>]*>/g, ' '),
   ]
     .filter(Boolean)
     .join(' ')
-    .replace(/<[^>]*>/g, ' ')
     .toLowerCase(),
 );
 const ctaButton = computed(() => {
@@ -240,7 +242,7 @@ const ctaButton = computed(() => {
   return fallbackButton ? { ...fallbackButton, variant: 'primary' as const } : null;
 });
 const fallbackHeading = computed(() =>
-  hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das könnte auch was für Dich sein!' : '',
+  hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das koennte auch was fuer Dich sein!' : '',
 );
 
 const { data: recommendedProducts, loading, fetchProductRecommended } = useProductRecommended(props.meta.uuid);
@@ -255,13 +257,18 @@ const shouldShowSkeleton = computed(
   () => isNearViewport.value && shouldRender.value && loading.value && !recommendedProducts.value?.length,
 );
 const skeletonItems = computed(() => Math.max(1, Math.min(layoutSettings.value.visibleItems ?? 4, 6)));
-const sourceWithDefaults = (source?: Partial<ProductRecommendedProductsSource>): ProductRecommendedProductsSource => ({
-  type: source?.type ?? 'category',
-  categoryId: source?.categoryId ?? '',
-  itemId: source?.itemId ?? '',
-  variationIds: source?.variationIds ?? '',
-  crossSellingRelation: source?.crossSellingRelation ?? 'Similar',
-});
+const sourceWithDefaults = (source?: Partial<ProductRecommendedProductsSource>): ProductRecommendedProductsSource => {
+  const hasLegacyConfiguredItem = source?.type === 'cross_selling' && Boolean(source.itemId);
+
+  return {
+    type: hasLegacyConfiguredItem ? 'item_ids' : (source?.type ?? 'category'),
+    categoryId: source?.categoryId ?? '',
+    itemId: source?.itemId ?? '',
+    itemIds: source?.itemIds ?? source?.itemId ?? '',
+    variationIds: source?.variationIds ?? '',
+    crossSellingRelation: source?.crossSellingRelation ?? 'Similar',
+  };
+};
 const tabs = computed<ProductRecommendedProductsTab[]>(() => props.content.tabs?.items ?? []);
 const tabsEnabled = computed(() => props.content.tabs?.enabled === true && tabs.value.length > 0);
 const activeSource = computed(() => {
@@ -271,17 +278,24 @@ const activeSource = computed(() => {
 const activeItemId = computed(() =>
   Object.keys(currentProduct.value).length ? productGetters.getItemId(currentProduct.value) : activeSource.value.itemId,
 );
+const activeItemIds = computed(() => activeSource.value.itemIds || activeSource.value.itemId);
 const isCategory = computed(() => activeSource.value.type === 'category');
 const isProduct = computed(() => activeSource.value.type === 'cross_selling' && activeItemId.value);
+const isItemIds = computed(() => activeSource.value.type === 'item_ids' && activeItemIds.value);
 const isVariationIds = computed(() => activeSource.value.type === 'variation_ids' && activeSource.value.variationIds);
 const shouldRender = computed(() => props.shouldLoad === undefined || props.shouldLoad === true);
 const shouldFetch = computed(() => {
-  return isNearViewport.value && shouldRender.value && (isCategory.value || isProduct.value || isVariationIds.value);
+  return (
+    isNearViewport.value &&
+    shouldRender.value &&
+    (isCategory.value || isProduct.value || isItemIds.value || isVariationIds.value)
+  );
 });
 const contentSource = computed(() => ({
   ...activeSource.value,
   categoryId: activeSource.value.categoryId || (categoryId || firstCategoryId || '').toString(),
   itemId: activeItemId.value,
+  itemIds: activeItemIds.value,
 }));
 
 const getDefaultTabLabel = (tabIndex: number) => `Tab ${tabIndex + 1}`;
@@ -301,6 +315,7 @@ watch(
   [
     () => activeSource.value.categoryId,
     () => activeSource.value.itemId,
+    () => activeSource.value.itemIds,
     () => activeSource.value.variationIds,
     () => activeSource.value.type,
     () => activeSource.value.crossSellingRelation,
@@ -311,6 +326,7 @@ watch(
     if (
       shouldFetch.value &&
       ((activeItemId.value && activeSource.value.type === 'cross_selling') ||
+        (activeItemIds.value && activeSource.value.type === 'item_ids') ||
         (activeSource.value.variationIds && activeSource.value.type === 'variation_ids') ||
         (contentSource.value.categoryId && activeSource.value.type === 'category'))
     ) {
@@ -348,15 +364,18 @@ watch(
 
 .product-recommended-products__header {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding-bottom: 1rem;
+  padding-bottom: 0;
 }
 
 .product-recommended-products__text {
   min-width: 0;
   flex: 1 1 auto;
+}
+
+.product-recommended-products__cta-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 30px;
 }
 
 .product-recommended-products__cta {
@@ -551,9 +570,8 @@ watch(
     font-size: 1.5rem;
   }
 
-  .product-recommended-products__header {
-    flex-direction: column;
-    gap: 0.875rem;
+  .product-recommended-products__cta-row {
+    justify-content: flex-start;
   }
 
   .product-recommended-products__tabs {

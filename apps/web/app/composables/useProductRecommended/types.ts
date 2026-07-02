@@ -1,7 +1,8 @@
 import type { Product, FacetSearchCriteria } from '@plentymarkets/shop-api';
 
 export type ProductRecommendedSearchCriteria = Omit<FacetSearchCriteria, 'type'> & {
-  type?: FacetSearchCriteria['type'] | 'variation_ids';
+  type?: FacetSearchCriteria['type'] | 'item_ids' | 'variation_ids';
+  itemIds?: string;
   variationIds?: string;
 };
 

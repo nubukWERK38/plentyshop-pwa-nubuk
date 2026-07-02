@@ -55,6 +55,7 @@ describe('ProductRecommendedProductsForm', () => {
             type: 'category',
             categoryId: '12',
             itemId: '',
+            itemIds: '',
             crossSellingRelation: 'Similar',
           },
           layout: {
@@ -137,6 +138,7 @@ describe('ProductRecommendedProductsForm', () => {
             type: 'category',
             categoryId: '',
             itemId: '',
+            itemIds: '',
             crossSellingRelation: 'Similar',
           },
           layout: {
@@ -211,6 +213,7 @@ describe('ProductRecommendedProductsForm', () => {
             type: 'category',
             categoryId: '12',
             itemId: '',
+            itemIds: '',
             crossSellingRelation: 'Similar',
           },
           layout: {

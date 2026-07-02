@@ -42,7 +42,7 @@ const getDisplayableProducts = (products: Product[]) => {
   return (productsWithPrices.length ? productsWithPrices : products).slice(0, RECOMMENDED_PRODUCTS_LIMIT);
 };
 
-const parseVariationIds = (value?: string) =>
+const parseIds = (value?: string) =>
   [
     ...new Set(
       (value ?? '')
@@ -52,8 +52,26 @@ const parseVariationIds = (value?: string) =>
     ),
   ].slice(0, RECOMMENDED_PRODUCTS_LIMIT);
 
+const getProductsByItemIds = async (params: ProductRecommendedSearchCriteria): Promise<Product[]> => {
+  const itemIds = parseIds(params.itemIds ?? params.itemId?.toString());
+  if (!itemIds.length) return [];
+
+  const products = await Promise.all(
+    itemIds.map(async (id) => {
+      try {
+        const { data } = await useSdk().plentysystems.getProduct({ id });
+        return data ?? null;
+      } catch {
+        return null;
+      }
+    }),
+  );
+
+  return getDisplayableProducts(products.filter((product): product is Product => Boolean(product)));
+};
+
 const getProductsByVariationIds = async (params: ProductRecommendedSearchCriteria): Promise<Product[]> => {
-  const variationIds = parseVariationIds(params.variationIds);
+  const variationIds = parseIds(params.variationIds);
   if (!variationIds.length) return [];
 
   const { data } = await useSdk().plentysystems.getProductsByIds({
@@ -98,6 +116,11 @@ export const useProductRecommended: UseProductRecommendedReturn = (categoryId: s
     state.value.loading = true;
 
     try {
+      if (params.type === 'item_ids') {
+        state.value.data = await getProductsByItemIds(params);
+        return state.value.data;
+      }
+
       if (params.type === 'variation_ids') {
         state.value.data = await getProductsByVariationIds(params);
         return state.value.data;

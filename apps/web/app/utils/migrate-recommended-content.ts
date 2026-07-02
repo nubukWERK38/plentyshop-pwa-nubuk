@@ -18,7 +18,20 @@ export function migrateRecommendedContent(
   content: OldContent | ProductRecommendedProductsContent,
 ): ProductRecommendedProductsContent {
   if (isNewContent(content)) {
-    return content;
+    const migratedContent = content as ProductRecommendedProductsContent;
+
+    migratedContent.source = {
+      ...migratedContent.source,
+      itemIds: migratedContent.source.itemIds ?? migratedContent.source.itemId ?? '',
+    };
+    migratedContent.tabs?.items?.forEach((tab) => {
+      tab.source = {
+        ...tab.source,
+        itemIds: tab.source.itemIds ?? tab.source.itemId ?? '',
+      };
+    });
+
+    return migratedContent;
   }
 
   const old = content as OldContent;
@@ -30,6 +43,7 @@ export function migrateRecommendedContent(
       type: 'category',
       categoryId: String(old.categoryId),
       itemId: '',
+      itemIds: '',
       variationIds: '',
       crossSellingRelation: 'Similar',
     },

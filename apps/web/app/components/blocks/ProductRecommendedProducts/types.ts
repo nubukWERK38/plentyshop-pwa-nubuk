@@ -3,9 +3,10 @@ import type { TextContentProps } from '~/components/TextContent/types';
 export type CrossSellingRelationType = 'Accessory' | 'ReplacementPart' | 'Similar' | 'Bundle';
 
 export type ProductRecommendedProductsSource = {
-  type: 'category' | 'cross_selling' | 'variation_ids';
+  type: 'category' | 'item_ids' | 'cross_selling' | 'variation_ids';
   categoryId: string;
   itemId: string;
+  itemIds: string;
   variationIds: string;
   crossSellingRelation: CrossSellingRelationType;
 };

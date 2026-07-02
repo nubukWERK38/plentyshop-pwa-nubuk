@@ -49,6 +49,7 @@ const mockProps: ProductRecommendedProductsProps = {
       type: 'category',
       categoryId: '123',
       itemId: '',
+      itemIds: '',
       variationIds: '',
       crossSellingRelation: 'Similar',
     },
