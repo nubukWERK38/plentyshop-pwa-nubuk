@@ -361,6 +361,7 @@ import { SfInput, SfIconCheck, SfSwitch } from '@storefront-ui/vue';
 const props = defineProps<{ uuid?: string }>();
 
 const { allBlocks: data } = useBlocks();
+const { isEditingEnabled } = useEditor();
 const { blockUuid } = useSiteConfiguration();
 const resolvedUuid = computed(() => props.uuid || blockUuid.value);
 const { findOrDeleteBlockByUuid } = useBlockManager();
@@ -566,26 +567,35 @@ const tabsItems = computed<ProductRecommendedProductsTab[]>({
   },
 });
 
+const updateRecommendedContent = (content: ProductRecommendedProductsContent) => {
+  recommendedBlock.value = content;
+  const block = findOrDeleteBlockByUuid(data.value, resolvedUuid.value);
+  if (block) block.content = content;
+  isEditingEnabled.value = true;
+};
+
+const updateTabs = (items: ProductRecommendedProductsTab[], enabled = true) => {
+  updateRecommendedContent({
+    ...recommendedBlock.value,
+    tabs: {
+      ...(recommendedBlock.value.tabs ?? { enabled: false, items: [] }),
+      enabled,
+      items,
+    },
+  });
+};
+
 const addTab = () => {
-  tabsState.value.enabled = true;
+  const nextTab = tabsItems.value.length
+    ? createTab(defaultSource({ type: 'item_ids', categoryId: firstCategoryId }))
+    : createTab(recommendedBlock.value.source);
 
-  if (!tabsItems.value.length) {
-    tabsItems.value = [createTab(recommendedBlock.value.source)];
-    return;
-  }
-
-  tabsItems.value = [
-    ...tabsItems.value,
-    createTab(defaultSource({ type: 'item_ids', categoryId: firstCategoryId })),
-  ];
+  updateTabs([...tabsItems.value, nextTab], true);
 };
 
 const removeTab = (tabIndex: number) => {
-  tabsItems.value = tabsItems.value.filter((_, index) => index !== tabIndex);
-
-  if (!tabsItems.value.length) {
-    tabsEnabled.value = false;
-  }
+  const items = tabsItems.value.filter((_, index) => index !== tabIndex);
+  updateTabs(items, items.length > 0);
 };
 
 watch(
