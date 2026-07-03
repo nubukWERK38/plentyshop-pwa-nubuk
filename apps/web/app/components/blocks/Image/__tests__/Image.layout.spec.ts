@@ -42,14 +42,19 @@ const mockImageBlock: ImageProps = {
 };
 
 describe('Image block layout', () => {
-  it('should apply layout styles (padding, background color) to the image itself', () => {
+  it('should apply layout padding as image insets and background color to the frame', () => {
     const wrapper = mount(Image, {
       props: mockImageBlock,
     });
     const img = wrapper.find('[data-testid="image-block-image"]');
-    const style = img.attributes('style');
-    expect(style).toContain('padding: 10px 40px 20px 30px;');
-    expect(style).toContain('background-color: #abc123;');
+    const imgStyle = img.attributes('style');
+    const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
+
+    expect(imgStyle).toContain('top: 10px');
+    expect(imgStyle).toContain('right: 40px');
+    expect(imgStyle).toContain('bottom: 20px');
+    expect(imgStyle).toContain('left: 30px');
+    expect(frameStyle).toContain('background-color: #abc123;');
   });
 
   it('should apply custom image width and frame alignment', () => {
@@ -73,8 +78,34 @@ describe('Image block layout', () => {
     const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
 
     expect(frameStyle).toContain('width: 320px');
+    expect(frameStyle).toContain('height: 100%');
     expect(frameStyle).toContain('right: 0px');
     expect(frameStyle).toContain('bottom: 0px');
+  });
+
+  it('should keep percentage image widths visible', () => {
+    const block = {
+      ...mockImageBlock,
+      content: {
+        ...mockImageBlock.content,
+        layout: {
+          ...mockImageBlock.content.layout,
+          imageWidth: 50,
+          imageWidthUnit: '%' as const,
+          imageHorizontalAlignment: 'center' as const,
+          imageVerticalAlignment: 'center' as const,
+        },
+      },
+    };
+
+    const wrapper = mount(Image, {
+      props: block,
+    });
+    const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
+
+    expect(frameStyle).toContain('width: 50%');
+    expect(frameStyle).toContain('height: 100%');
+    expect(frameStyle).toContain('transform: translateX(-50%) translateY(-50%)');
   });
 
   it('should apply image object position from alignment settings', () => {

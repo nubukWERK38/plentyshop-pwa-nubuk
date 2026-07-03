@@ -14,16 +14,9 @@
       <NuxtImg
         :src="breakpointConfig.url"
         :alt="props.content.image.alt"
-        class="absolute inset-0 w-full h-full"
+        class="absolute"
         :class="props.content.image.fillMode === 'fit' ? 'object-contain' : 'object-cover'"
-        :style="{
-          display: 'block',
-          filter:
-            props.content.image.brightness !== null && props.content.image.brightness !== undefined
-              ? `brightness(${props.content.image.brightness})`
-              : '',
-          ...imageInlineStyle,
-        }"
+        :style="imageInlineStyle"
         :width="breakpointConfig.dimensions.width"
         :height="breakpointConfig.dimensions.height"
         data-testid="image-block-image"
@@ -136,9 +129,13 @@ const imageFrameStyle = computed(() => {
   const width = Number(layout.imageWidth);
   const widthUnit = normalizeImageWidthUnit(layout.imageWidthUnit);
   const hasCustomWidth = Number.isFinite(width) && width > 0 && !(widthUnit === '%' && width === 100);
+  const baseStyle = {
+    backgroundColor: layout.backgroundColor ?? 'transparent',
+  };
 
   if (!hasCustomWidth) {
     return {
+      ...baseStyle,
       position: 'absolute' as const,
       inset: '0',
       width: '100%',
@@ -149,11 +146,11 @@ const imageFrameStyle = computed(() => {
   const horizontalAlignment = normalizeHorizontalAlignment(layout.imageHorizontalAlignment);
   const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
   const style: Record<string, string> = {
+    ...baseStyle,
     position: 'absolute',
     width: `${width}${widthUnit}`,
+    height: '100%',
     maxWidth: '100%',
-    maxHeight: '100%',
-    aspectRatio: breakpointConfig.value.aspectRatio,
   };
 
   if (horizontalAlignment === 'left') {
@@ -194,11 +191,17 @@ const imageInlineStyle = computed(() => {
   const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
 
   return {
-    paddingTop: `${layout.paddingTop ?? 0}px`,
-    paddingBottom: `${layout.paddingBottom ?? 0}px`,
-    paddingLeft: `${layout.paddingLeft ?? 0}px`,
-    paddingRight: `${layout.paddingRight ?? 0}px`,
-    backgroundColor: layout.backgroundColor ?? 'transparent',
+    display: 'block',
+    top: `${layout.paddingTop ?? 0}px`,
+    right: `${layout.paddingRight ?? 0}px`,
+    bottom: `${layout.paddingBottom ?? 0}px`,
+    left: `${layout.paddingLeft ?? 0}px`,
+    width: 'auto',
+    height: 'auto',
+    filter:
+      props.content.image.brightness !== null && props.content.image.brightness !== undefined
+        ? `brightness(${props.content.image.brightness})`
+        : '',
     objectPosition: `${horizontalAlignment} ${verticalAlignment}`,
   };
 });
