@@ -11,6 +11,52 @@ describe('TextCard - Layout Property', () => {
     expect(textCard.attributes('style')).toContain('background-color: #f9f9f9');
   });
 
+  it('should apply a linear background gradient', () => {
+    const mockWithGradient = {
+      ...mockTextCard,
+      content: {
+        ...mockTextCard.content,
+        layout: {
+          ...mockTextCard.content.layout,
+          backgroundGradient: {
+            enabled: true,
+            type: 'linear' as const,
+            startColor: '#111111',
+            endColor: '#eeeeee',
+            angle: 45,
+          },
+        },
+      },
+    };
+
+    const wrapper = mount(TextCard, { props: mockWithGradient });
+    const textCard = wrapper.find('[data-testid="text-card"]');
+    expect(textCard.attributes('style')).toContain('background-image: linear-gradient(45deg, #111111, #eeeeee)');
+  });
+
+  it('should apply a radial background gradient', () => {
+    const mockWithGradient = {
+      ...mockTextCard,
+      content: {
+        ...mockTextCard.content,
+        layout: {
+          ...mockTextCard.content.layout,
+          backgroundGradient: {
+            enabled: true,
+            type: 'radial' as const,
+            startColor: '#111111',
+            endColor: '#eeeeee',
+            angle: 45,
+          },
+        },
+      },
+    };
+
+    const wrapper = mount(TextCard, { props: mockWithGradient });
+    const textCard = wrapper.find('[data-testid="text-card"]');
+    expect(textCard.attributes('style')).toContain('background-image: radial-gradient(circle, #111111, #eeeeee)');
+  });
+
   it('should apply the correct padding values', () => {
     const mockWithPadding = {
       ...mockTextCard,

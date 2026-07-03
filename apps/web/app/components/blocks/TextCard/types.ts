@@ -39,6 +39,13 @@ export type TextCardContent = {
   };
   layout: {
     backgroundColor?: string;
+    backgroundGradient?: {
+      enabled?: boolean;
+      type?: 'linear' | 'radial';
+      startColor?: string;
+      endColor?: string;
+      angle?: number;
+    };
     paddingTop?: string;
     paddingBottom?: string;
     paddingLeft?: string;

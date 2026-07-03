@@ -1733,16 +1733,17 @@
             "meta": { "uuid": "01020304-0506-4070-8090-0a0b0c0d0e0f" },
             "content": {
               "text": {
-                "htmlDescription": "<p style=\"text-align: center;\">Text that supports HTML formatting</p>",
-                "pretitle": "Pretitle",
-                "title": "h2 heading",
-                "subtitle": "Subtitle",
+                "htmlDescription": "",
+                "pretitle": "",
+                "title": "",
+                "subtitle": "",
                 "textAlignment": "center",
                 "color": "#000"
               },
               "button": {
-                "buttonText": "Button",
-                "link": "/",
+                "buttonText": "",
+                "label": "",
+                "link": "",
                 "variant": "primary"
               },
               "layout": {
@@ -1756,16 +1757,17 @@
             "meta": { "uuid": "1a2b3c4d-5e6f-4111-8abc-1234567890ab" },
             "content": {
               "text": {
-                "htmlDescription": "<p style=\"text-align: center;\">Text mit HTML-Formatierung</p>",
-                "pretitle": "Vortitel",
-                "title": "h2 Titel",
-                "subtitle": "Untertitel",
+                "htmlDescription": "",
+                "pretitle": "",
+                "title": "",
+                "subtitle": "",
                 "textAlignment": "center",
                 "color": "#000"
               },
               "button": {
-                "buttonText": "Buttom",
-                "link": "/",
+                "buttonText": "",
+                "label": "",
+                "link": "",
                 "variant": "primary"
               },
               "layout": {

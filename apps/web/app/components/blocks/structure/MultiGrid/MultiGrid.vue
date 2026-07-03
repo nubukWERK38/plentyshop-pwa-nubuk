@@ -145,15 +145,30 @@ const gridInlineStyle = computed(() => ({
       : '0px',
   paddingLeft: configuration.layout?.paddingLeft !== undefined ? `${configuration.layout.paddingLeft}px` : '0px',
 }));
+
+const horizontalAlignmentMap: Record<string, string> = {
+  left: 'flex-start',
+  center: 'center',
+  right: 'flex-end',
+};
+
+const verticalAlignmentMap: Record<string, string> = {
+  top: 'flex-start',
+  center: 'center',
+  bottom: 'flex-end',
+};
+
 const columnInlineStyle = computed(() => ({
   rowGap: gridGapValue.value,
+  alignItems: horizontalAlignmentMap[configuration.layout?.horizontalAlignment || 'left'],
+  justifyContent: verticalAlignmentMap[configuration.layout?.verticalAlignment || 'top'],
 }));
 const getGridClasses = () => {
   if (isTwoByTwoImageTeaserGrid.value) {
-    return gridClassFor({ mobile: 1, tablet: 2, desktop: 2 }, ['items-start']);
+    return gridClassFor({ mobile: 1, tablet: 2, desktop: 2 }, ['items-stretch']);
   }
 
-  return gridClassFor({ mobile: 1, tablet: 12, desktop: 12 }, ['items-start']);
+  return gridClassFor({ mobile: 1, tablet: 12, desktop: 12 }, ['items-stretch']);
 };
 
 const getColumnClasses = (colIndex: number) => {
@@ -246,5 +261,6 @@ const columns = computed<Block[][]>(() => {
 .multi-grid__column {
   display: flex;
   flex-direction: column;
+  min-height: 100%;
 }
 </style>

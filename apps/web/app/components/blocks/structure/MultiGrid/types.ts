@@ -1,5 +1,8 @@
 import type { Block } from '@plentymarkets/shop-api';
 
+export type MultiGridHorizontalAlignment = 'left' | 'center' | 'right';
+export type MultiGridVerticalAlignment = 'top' | 'center' | 'bottom';
+
 interface MultiGridLayout {
   marginTop?: number;
   marginRight?: number;
@@ -19,6 +22,8 @@ interface MultiGridLayout {
   gradientRadius?: number;
   gradientStartX?: number;
   gradientStartY?: number;
+  horizontalAlignment?: MultiGridHorizontalAlignment;
+  verticalAlignment?: MultiGridVerticalAlignment;
 }
 
 export type MultiGridProps = {
@@ -78,6 +83,8 @@ export type ColumnBlock = Block & {
       gradientStartX?: number;
       gradientStartY?: number;
       fullWidth?: boolean;
+      horizontalAlignment?: MultiGridHorizontalAlignment;
+      verticalAlignment?: MultiGridVerticalAlignment;
     };
   };
 };

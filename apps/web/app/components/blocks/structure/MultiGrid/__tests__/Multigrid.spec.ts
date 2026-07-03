@@ -89,6 +89,29 @@ describe('MultiGrid block', () => {
     expect(wrapper.find('[data-testid="multi-grid-structure"]').attributes('style')).toContain('gap: 20px');
   });
 
+  it('should align column content horizontally and vertically', () => {
+    const wrapper = mount(MultiGrid, {
+      props: {
+        ...mockMultiGridProps,
+        configuration: {
+          ...mockMultiGridProps.configuration,
+          layout: {
+            ...mockMultiGridProps.configuration.layout,
+            horizontalAlignment: 'right',
+            verticalAlignment: 'bottom',
+          },
+        },
+      },
+    });
+
+    const gridClasses = wrapper.find('[data-testid="multi-grid-structure"]').classes();
+    const columnStyle = wrapper.find('[data-testid="multi-grid-column"]').attributes('style');
+
+    expect(gridClasses).toContain('items-stretch');
+    expect(columnStyle).toContain('align-items: flex-end');
+    expect(columnStyle).toContain('justify-content: flex-end');
+  });
+
   it('should use triple base gap for a 2x2 image teaser grid', () => {
     const teaserBlocks = Array.from({ length: 4 }, (_, index) => ({
       name: 'ImageTextBox',

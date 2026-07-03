@@ -144,6 +144,32 @@
             {{ getEditorTranslation('spacing-between') }} {{ getGapPx(multiGridStructure.configuration.layout.gap) }}px
           </div>
         </div>
+
+        <div v-if="multiGridStructure.configuration.layout" class="py-2">
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('horizontal-alignment-label') }}</UiFormLabel>
+          <select
+            v-model="multiGridStructure.configuration.layout.horizontalAlignment"
+            class="w-full rounded border border-gray-300 px-2 py-2"
+            data-testid="horizontal-alignment"
+          >
+            <option v-for="option in horizontalAlignmentOptions" :key="option" :value="option">
+              {{ getEditorTranslation(`horizontal-alignment-${option}`) }}
+            </option>
+          </select>
+        </div>
+
+        <div v-if="multiGridStructure.configuration.layout" class="py-2">
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('vertical-alignment-label') }}</UiFormLabel>
+          <select
+            v-model="multiGridStructure.configuration.layout.verticalAlignment"
+            class="w-full rounded border border-gray-300 px-2 py-2"
+            data-testid="vertical-alignment"
+          >
+            <option v-for="option in verticalAlignmentOptions" :key="option" :value="option">
+              {{ getEditorTranslation(`vertical-alignment-${option}`) }}
+            </option>
+          </select>
+        </div>
       </div>
       <div v-if="multiGridStructure.configuration.columnWidths?.length" class="py-4">
         <UiFormLabel>{{ getEditorTranslation('sticky-columns') }}</UiFormLabel>
@@ -353,6 +379,8 @@ const multiGridStructure = computed(() => {
       gradientRadius: 100,
       gradientStartX: 50,
       gradientStartY: 50,
+      horizontalAlignment: 'left',
+      verticalAlignment: 'top',
     };
   } else {
     if (!block.configuration.layout.backgroundColor) block.configuration.layout.backgroundColor = '#ffffff';
@@ -365,6 +393,8 @@ const multiGridStructure = computed(() => {
     if (block.configuration.layout.gradientRadius === undefined) block.configuration.layout.gradientRadius = 100;
     if (block.configuration.layout.gradientStartX === undefined) block.configuration.layout.gradientStartX = 50;
     if (block.configuration.layout.gradientStartY === undefined) block.configuration.layout.gradientStartY = 50;
+    if (!block.configuration.layout.horizontalAlignment) block.configuration.layout.horizontalAlignment = 'left';
+    if (!block.configuration.layout.verticalAlignment) block.configuration.layout.verticalAlignment = 'top';
     if (block.configuration.layout.marginTop === undefined)
       block.configuration.layout.marginTop = defaultSectionSpacing;
     if (block.configuration.layout.marginRight === undefined) block.configuration.layout.marginRight = 0;
@@ -383,6 +413,8 @@ const multiGridStructure = computed(() => {
 const { isFullWidth } = useFullWidthToggleForConfig(computed(() => multiGridStructure.value.configuration));
 
 const gapOptions = ['None', 'S', 'M', 'L', 'XL'];
+const horizontalAlignmentOptions = ['left', 'center', 'right'] as const;
+const verticalAlignmentOptions = ['top', 'center', 'bottom'] as const;
 const gapBtnClasses =
   'py-2 leading-6 px-4 gap-2 !hover:bg-gray-100 inline-flex items-center justify-center font-medium text-base focus-visible:outline focus-visible:outline-offset rounded-md disabled:text-disabled-500 disabled:bg-disabled-300 disabled:shadow-none disabled:ring-0 disabled:cursor-not-allowed';
 type GapSize = 'None' | 'S' | 'M' | 'L' | 'XL';
@@ -485,7 +517,15 @@ const layoutBackground = ref(false);
     "gradient-angle-label": "Gradient angle",
     "gradient-radius-label": "Gradient radius (%)",
     "gradient-start-x-label": "Gradient start X (%)",
-    "gradient-start-y-label": "Gradient start Y (%)"
+    "gradient-start-y-label": "Gradient start Y (%)",
+    "horizontal-alignment-label": "Horizontal alignment",
+    "horizontal-alignment-left": "Left",
+    "horizontal-alignment-center": "Center",
+    "horizontal-alignment-right": "Right",
+    "vertical-alignment-label": "Vertical alignment",
+    "vertical-alignment-top": "Top",
+    "vertical-alignment-center": "Center",
+    "vertical-alignment-bottom": "Bottom"
   },
   "de": {
     "layout-settings": "Layout Settings",
@@ -512,7 +552,15 @@ const layoutBackground = ref(false);
     "gradient-angle-label": "Verlaufswinkel",
     "gradient-radius-label": "Verlaufsradius (%)",
     "gradient-start-x-label": "Verlauf Start X (%)",
-    "gradient-start-y-label": "Verlauf Start Y (%)"
+    "gradient-start-y-label": "Verlauf Start Y (%)",
+    "horizontal-alignment-label": "Horizontale Ausrichtung",
+    "horizontal-alignment-left": "Links",
+    "horizontal-alignment-center": "Zentriert",
+    "horizontal-alignment-right": "Rechts",
+    "vertical-alignment-label": "Vertikale Ausrichtung",
+    "vertical-alignment-top": "Oben",
+    "vertical-alignment-center": "Mitte",
+    "vertical-alignment-bottom": "Unten"
   }
 }
 </i18n>

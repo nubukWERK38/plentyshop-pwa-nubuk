@@ -271,6 +271,83 @@
       </EditorColorPicker>
     </div>
 
+    <div v-if="!isTransparent" class="py-2 flex items-center justify-between gap-3">
+      <UiFormLabel for="background-gradient-enabled" class="m-0">
+        {{ getEditorTranslation('background-gradient-enabled-label') }}
+      </UiFormLabel>
+
+      <SfSwitch
+        id="background-gradient-enabled"
+        v-model="backgroundGradient.enabled"
+        data-testid="switch-background-gradient"
+        class="checked:bg-editor-button checked:before:hover:bg-editor-button checked:border-gray-500 checked:hover:border:bg-gray-700 hover:border-gray-700 hover:before:bg-gray-700 checked:hover:bg-gray-300 checked:hover:border-gray-400"
+      />
+    </div>
+
+    <template v-if="!isTransparent && backgroundGradient.enabled">
+      <div class="py-2">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('background-gradient-type-label') }}</UiFormLabel>
+        <select
+          v-model="backgroundGradient.type"
+          class="w-full rounded border border-gray-300 px-2 py-2"
+          data-testid="background-gradient-type"
+        >
+          <option value="linear">Linear</option>
+          <option value="radial">Radial</option>
+        </select>
+      </div>
+
+      <div class="py-2">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('background-gradient-start-label') }}</UiFormLabel>
+        <EditorColorPicker v-model="backgroundGradient.startColor" class="w-full">
+          <template #trigger="{ color, toggle }">
+            <SfInput v-model="backgroundGradient.startColor" type="text">
+              <template #suffix>
+                <button
+                  type="button"
+                  class="editor-color-swatch"
+                  :style="{ backgroundColor: color }"
+                  @mousedown.stop
+                  @click.stop="toggle"
+                />
+              </template>
+            </SfInput>
+          </template>
+        </EditorColorPicker>
+      </div>
+
+      <div class="py-2">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('background-gradient-end-label') }}</UiFormLabel>
+        <EditorColorPicker v-model="backgroundGradient.endColor" class="w-full">
+          <template #trigger="{ color, toggle }">
+            <SfInput v-model="backgroundGradient.endColor" type="text">
+              <template #suffix>
+                <button
+                  type="button"
+                  class="editor-color-swatch"
+                  :style="{ backgroundColor: color }"
+                  @mousedown.stop
+                  @click.stop="toggle"
+                />
+              </template>
+            </SfInput>
+          </template>
+        </EditorColorPicker>
+      </div>
+
+      <div v-if="backgroundGradient.type === 'linear'" class="py-2">
+        <UiFormLabel class="mb-1">{{ getEditorTranslation('background-gradient-angle-label') }}</UiFormLabel>
+        <input
+          v-model.number="backgroundGradient.angle"
+          type="number"
+          min="0"
+          max="360"
+          class="w-full rounded border border-gray-300 px-2 py-2"
+          data-testid="background-gradient-angle"
+        />
+      </div>
+    </template>
+
     <EditorFullWidthToggle v-model="isFullWidth" :block-uuid="blockUuid" />
 
     <div class="py-2">
@@ -378,6 +455,23 @@ const textCardBlock = computed<TextCardContent>(() => {
       paddingLeft: '0',
       paddingRight: '0',
       fullWidth: false,
+      backgroundGradient: {
+        enabled: false,
+        type: 'linear',
+        startColor: '#ffffff',
+        endColor: '#f3f4f6',
+        angle: 180,
+      },
+    };
+  }
+
+  if (!content.layout.backgroundGradient) {
+    content.layout.backgroundGradient = {
+      enabled: false,
+      type: 'linear',
+      startColor: content.layout.backgroundColor || '#ffffff',
+      endColor: '#f3f4f6',
+      angle: 180,
     };
   }
 
@@ -403,6 +497,20 @@ const backgroundColor = ref(isTransparent.value ? '' : backgroundColorInit);
 
 watch([isTransparent, backgroundColor], () => {
   textCardBlock.value.layout.backgroundColor = isTransparent.value ? 'transparent' : backgroundColor.value;
+});
+
+const backgroundGradient = computed(() => {
+  if (!textCardBlock.value.layout.backgroundGradient) {
+    textCardBlock.value.layout.backgroundGradient = {
+      enabled: false,
+      type: 'linear',
+      startColor: textCardBlock.value.layout.backgroundColor || '#ffffff',
+      endColor: '#f3f4f6',
+      angle: 180,
+    };
+  }
+
+  return textCardBlock.value.layout.backgroundGradient;
 });
 
 const buttonGradient = computed(() => {
@@ -446,6 +554,11 @@ const buttonGradient = computed(() => {
 
     "layout-group-label": "Layout",
     "background-color-label": "Background Color",
+    "background-gradient-enabled-label": "Enable background gradient",
+    "background-gradient-type-label": "Background gradient type",
+    "background-gradient-start-label": "Background gradient start color",
+    "background-gradient-end-label": "Background gradient end color",
+    "background-gradient-angle-label": "Background gradient angle",
     "padding-label": "Padding",
     "spacing-around": "Spacing around the text elements",
     "keep-transparent-label": "Keep background transparent"
@@ -472,6 +585,11 @@ const buttonGradient = computed(() => {
 
     "layout-group-label": "Layout",
     "background-color-label": "Background Color",
+    "background-gradient-enabled-label": "Hintergrundverlauf aktivieren",
+    "background-gradient-type-label": "Hintergrund Verlaufstyp",
+    "background-gradient-start-label": "Hintergrund Startfarbe Verlauf",
+    "background-gradient-end-label": "Hintergrund Endfarbe Verlauf",
+    "background-gradient-angle-label": "Hintergrund Verlaufswinkel",
     "padding-label": "Padding",
     "spacing-around": "Spacing around the text elements",
     "keep-transparent-label": "or keep transparent"
