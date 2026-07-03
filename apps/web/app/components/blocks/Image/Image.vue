@@ -42,7 +42,6 @@ import { buildSeoLinkTitle } from '~/utils/seo';
 const viewport = useViewport();
 const NuxtLink = resolveComponent('NuxtLink');
 const localePath = useLocalePath();
-const { getBlockDepth } = useBlockManager();
 
 const props = defineProps<ImageProps>();
 
@@ -122,12 +121,18 @@ const imageWidthConfig = computed(() => {
   };
 });
 
-const depth = getBlockDepth(props.meta.uuid);
 const wrapperStyle = computed(() => {
-  if (depth > 0) {
+  const layout = props.content.layout ?? {};
+  const horizontalAlignment = normalizeHorizontalAlignment(layout.imageHorizontalAlignment);
+  const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
+
+  if (imageWidthConfig.value.hasCustomWidth) {
     return {
       position: 'relative' as const,
-      height: '24rem',
+      display: 'flex',
+      justifyContent:
+        horizontalAlignment === 'left' ? 'flex-start' : horizontalAlignment === 'right' ? 'flex-end' : 'center',
+      alignItems: verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'bottom' ? 'flex-end' : 'center',
     };
   }
 
@@ -139,8 +144,6 @@ const wrapperStyle = computed(() => {
 
 const imageFrameStyle = computed(() => {
   const layout = props.content.layout ?? {};
-  const horizontalAlignment = normalizeHorizontalAlignment(layout.imageHorizontalAlignment);
-  const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
   const baseStyle = {
     backgroundColor: layout.backgroundColor ?? 'transparent',
     boxSizing: 'border-box',
@@ -160,35 +163,12 @@ const imageFrameStyle = computed(() => {
     };
   }
 
-  const style: Record<string, string> = {
+  return {
     ...baseStyle,
-    position: 'absolute',
+    position: 'relative' as const,
     width: `${imageWidthConfig.value.width}${imageWidthConfig.value.unit}`,
     aspectRatio: breakpointConfig.value.aspectRatio,
   };
-
-  if (horizontalAlignment === 'left') {
-    style.left = '0';
-  } else if (horizontalAlignment === 'right') {
-    style.right = '0';
-  } else {
-    style.left = '50%';
-  }
-
-  if (verticalAlignment === 'top') {
-    style.top = '0';
-  } else if (verticalAlignment === 'bottom') {
-    style.bottom = '0';
-  } else {
-    style.top = '50%';
-  }
-
-  const transforms = [];
-  if (horizontalAlignment === 'center') transforms.push('translateX(-50%)');
-  if (verticalAlignment === 'center') transforms.push('translateY(-50%)');
-  if (transforms.length) style.transform = transforms.join(' ');
-
-  return style;
 });
 
 const overlayAlignClasses = computed(() => {
