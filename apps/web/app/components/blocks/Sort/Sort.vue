@@ -5,7 +5,7 @@
     :style="layoutStyle"
     :class="
       useSelectionModeCompact
-        ? 'relative z-20 flex flex-wrap items-center justify-between gap-4 mb-4'
+        ? 'relative z-20 flex flex-wrap items-center gap-4 p-[10px] mb-0 md:-ml-[150px] md:w-[calc(100%+438px)]'
         : ''
     "
   >
@@ -19,7 +19,7 @@
     <CategorySorting
       :key="useSelectionModeCompact ? 'ph' : 'no-ph'"
       :selection-mode-compact="useSelectionModeCompact"
-      :class="useSelectionModeCompact ? 'w-full sm:w-[260px] shrink-0' : 'mb-4'"
+      :class="useSelectionModeCompact ? 'w-[260px] shrink-0' : 'mb-4'"
     />
   </section>
 </template>

@@ -14,11 +14,7 @@
       class="flex-shrink-0 bg-white font-editor border-r border-gray-300 overflow-visible"
     />
 
-    <div
-      ref="pageScroller"
-      class="flex-1 w-full bg-white relative"
-      :class="clientPreview ? 'overflow-auto' : 'overflow-visible'"
-    >
+    <div class="flex-1 w-full bg-white relative" :class="clientPreview ? 'overflow-auto' : 'overflow-visible'">
       <Body class="font-body bg-editor-body-bg" :class="bodyClass" :style="currentFont" />
       <UiNotifications />
       <NuxtLoadingIndicator color="repeating-linear-gradient(to right, #008ebd 0%,#80dfff 50%,#e0f7ff 100%)" />
@@ -64,7 +60,6 @@ const { getSetting: getPrimaryColor } = useSiteSettings('primaryColor');
 const { getSetting: customAssetsSafeMode } = useSiteSettings('customAssetsSafeMode');
 
 const { data: productsCatalog } = useProducts();
-const pageScroller = ref<HTMLElement | null>(null);
 
 const category = computed(() => productsCatalog.value?.category);
 const isCategoryPage = computed(() => route.meta?.type === 'category' && !!category.value);
@@ -225,27 +220,7 @@ usePageTitle();
 
 onMounted(() => {
   bodyClass.value = 'hydrated'; // Need this class for cypress testing
-  scrollPageToTop();
 });
-
-watch(
-  () => route.path,
-  async () => {
-    await nextTick();
-    scrollPageToTop();
-  },
-);
-
-const scrollPageToTop = () => {
-  if (!import.meta.client) return;
-
-  if (clientPreview.value && pageScroller.value) {
-    pageScroller.value.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    return;
-  }
-
-  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-};
 
 const SafeModeBanner = defineAsyncComponent(() => import('~/components/SafeModeBanner/SafeModeBanner.vue'));
 const Toolbar = defineAsyncComponent(() => import('~/components/ui/Toolbar/Toolbar.vue'));

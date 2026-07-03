@@ -19,13 +19,13 @@
       </template>
 
       <SfListItem
-        v-if="useAvailability && availabilityName"
+        v-if="useAvailability && productGetters.getAvailabilityName(product)"
         size="sm"
         class="text-xs font-medium select-none rounded-md !w-fit !cursor-text !px-2 grid mt-2"
-        :class="[availabilityClass]"
+        :class="[productGetters.getAgenciesAvailabilityCLass(product)]"
         :style="availabilityStyles"
       >
-        {{ availabilityName }}
+        {{ productGetters.getAvailabilityName(product) }}
       </SfListItem>
     </ul>
   </div>
@@ -45,40 +45,18 @@ const productTags = computed(() => {
   return tagGetters.getTags(product);
 });
 
-const availabilityName = computed(() => {
-  if (!useAvailability) return '';
-
-  try {
-    return productGetters.getAvailabilityName(product) || '';
-  } catch {
-    return '';
-  }
-});
-
-const availabilityClass = computed(() => {
-  if (!availabilityName.value) return '';
-
-  try {
-    return productGetters.getAgenciesAvailabilityCLass(product);
-  } catch {
-    return '';
-  }
-});
-
 const availabilityStyles = computed(() => {
-  if (!availabilityName.value) return {};
+  if (!useAvailability) return {};
 
-  try {
-    return {
-      backgroundColor: productGetters.getAvailabilityBackgroundColor(product),
-      color: productGetters.getAvailabilityTextColor(product),
-    };
-  } catch {
-    return {};
-  }
+  return {
+    backgroundColor: productGetters.getAvailabilityBackgroundColor(product),
+    color: productGetters.getAvailabilityTextColor(product),
+  };
 });
 
-const haveBadges = computed(() => (useTags && productTags.value.length > 0) || Boolean(availabilityName.value));
+const haveBadges = computed(
+  () => (useTags && productTags.value.length > 0) || (useAvailability && productGetters.getAvailabilityName(product)),
+);
 
 const onTagClick = (tag: ProductTag) => {
   navigateTo(localePath(`/tag/${tagGetters.getTagName(tag)}_${tagGetters.getTagId(tag)}`));
