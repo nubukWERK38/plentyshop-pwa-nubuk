@@ -55,6 +55,10 @@ export function migrateImageContent(content: OldContent | ImageContent): ImageCo
       paddingLeft: 0,
       paddingRight: 0,
       fullWidth: false,
+      imageWidth: 100,
+      imageWidthUnit: '%',
+      imageHorizontalAlignment: 'center',
+      imageVerticalAlignment: 'center',
     },
   };
 }

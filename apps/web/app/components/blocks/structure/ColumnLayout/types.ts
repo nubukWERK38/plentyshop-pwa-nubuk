@@ -10,6 +10,14 @@ interface ColumnLayoutAppearance {
   paddingBottom?: number;
   paddingLeft?: number;
   backgroundColor?: string;
+  gradientEnabled?: boolean;
+  gradientType?: 'linear' | 'radial';
+  gradientStartColor?: string;
+  gradientEndColor?: string;
+  gradientAngle?: number;
+  gradientRadius?: number;
+  gradientStartX?: number;
+  gradientStartY?: number;
   gap?: string;
   fullWidth?: boolean;
 }

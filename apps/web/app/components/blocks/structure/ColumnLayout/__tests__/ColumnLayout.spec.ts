@@ -67,4 +67,52 @@ describe('ColumnLayout block', () => {
     expect(columns[1]?.classes()).toContain('col-span-8');
     expect(columns[2]?.classes()).toContain('col-span-2');
   });
+
+  it('should render a linear gradient background when enabled', () => {
+    const wrapper = mount(ColumnLayout, {
+      props: {
+        ...mockColumnLayoutProps,
+        configuration: {
+          ...mockColumnLayoutProps.configuration,
+          layout: {
+            ...mockColumnLayoutProps.configuration.layout,
+            gradientEnabled: true,
+            gradientType: 'linear',
+            gradientStartColor: '#111111',
+            gradientEndColor: '#eeeeee',
+            gradientAngle: 90,
+          },
+        },
+      },
+    });
+
+    expect(wrapper.get('[data-testid="column-layout-structure"]').attributes('style')).toContain(
+      'background-image: linear-gradient(90deg, #111111, #eeeeee);',
+    );
+  });
+
+  it('should render a radial gradient background when enabled', () => {
+    const wrapper = mount(ColumnLayout, {
+      props: {
+        ...mockColumnLayoutProps,
+        configuration: {
+          ...mockColumnLayoutProps.configuration,
+          layout: {
+            ...mockColumnLayoutProps.configuration.layout,
+            gradientEnabled: true,
+            gradientType: 'radial',
+            gradientStartColor: '#111111',
+            gradientEndColor: '#eeeeee',
+            gradientRadius: 80,
+            gradientStartX: 25,
+            gradientStartY: 75,
+          },
+        },
+      },
+    });
+
+    expect(wrapper.get('[data-testid="column-layout-structure"]').attributes('style')).toContain(
+      'background-image: radial-gradient(circle 80% at 25% 75%, #111111, #eeeeee);',
+    );
+  });
 });

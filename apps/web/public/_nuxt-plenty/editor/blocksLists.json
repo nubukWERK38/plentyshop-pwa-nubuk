@@ -1737,7 +1737,7 @@
                 "pretitle": "",
                 "title": "",
                 "subtitle": "",
-                "textAlignment": "center",
+                "textAlignment": "left",
                 "color": "#000"
               },
               "button": {
@@ -1761,7 +1761,7 @@
                 "pretitle": "",
                 "title": "",
                 "subtitle": "",
-                "textAlignment": "center",
+                "textAlignment": "left",
                 "color": "#000"
               },
               "button": {

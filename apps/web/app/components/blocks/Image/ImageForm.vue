@@ -106,6 +106,79 @@
         </div>
       </div>
     </fieldset>
+
+    <div class="py-2">
+      <UiFormLabel class="mb-2">{{ getEditorTranslation('image-width-label') }}</UiFormLabel>
+      <div class="flex gap-2">
+        <SfInput
+          v-model.number="uiImageTextBlock.layout.imageWidth"
+          type="number"
+          min="1"
+          class="flex-1"
+          data-testid="image-width-input"
+        />
+        <select
+          v-model="uiImageTextBlock.layout.imageWidthUnit"
+          class="w-24 rounded border border-gray-300 px-2 py-2"
+          data-testid="image-width-unit"
+        >
+          <option value="%">%</option>
+          <option value="px">px</option>
+        </select>
+      </div>
+    </div>
+
+    <fieldset class="py-2">
+      <legend class="text-sm font-medium text-black">
+        {{ getEditorTranslation('image-align-x-label') }}
+      </legend>
+      <div class="w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden mt-2">
+        <button
+          v-for="option in imageAlignXOptions"
+          :key="option.value"
+          type="button"
+          class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r last:border-r-0"
+          :data-testid="`image-align-x-${option.value}`"
+          :class="{
+            'bg-gray-100 text-gray-900 font-semibold':
+              uiImageTextBlock.layout.imageHorizontalAlignment === option.value,
+          }"
+          @click="uiImageTextBlock.layout.imageHorizontalAlignment = option.value"
+        >
+          <SfIconCheck
+            :class="{ invisible: uiImageTextBlock.layout.imageHorizontalAlignment !== option.value }"
+            class="w-[1.1rem] shrink-0 mr-1"
+          />
+          {{ option.label }}
+        </button>
+      </div>
+    </fieldset>
+
+    <fieldset class="py-2">
+      <legend class="text-sm font-medium text-black">
+        {{ getEditorTranslation('image-align-y-label') }}
+      </legend>
+      <div class="w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden mt-2">
+        <button
+          v-for="option in imageAlignYOptions"
+          :key="option.value"
+          type="button"
+          class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r last:border-r-0"
+          :data-testid="`image-align-y-${option.value}`"
+          :class="{
+            'bg-gray-100 text-gray-900 font-semibold': uiImageTextBlock.layout.imageVerticalAlignment === option.value,
+          }"
+          @click="uiImageTextBlock.layout.imageVerticalAlignment = option.value"
+        >
+          <SfIconCheck
+            :class="{ invisible: uiImageTextBlock.layout.imageVerticalAlignment !== option.value }"
+            class="w-[1.1rem] shrink-0 mr-1"
+          />
+          {{ option.label }}
+        </button>
+      </div>
+    </fieldset>
+
     <div class="py-2">
       <div class="flex justify-between mb-2">
         <UiFormLabel>{{ getEditorTranslation('linktarget-label') }}</UiFormLabel>
@@ -391,6 +464,10 @@ const DEFAULT_LAYOUT = {
   paddingBottom: 0,
   paddingLeft: 0,
   paddingRight: 0,
+  imageWidth: 100,
+  imageWidthUnit: '%' as const,
+  imageHorizontalAlignment: 'center' as const,
+  imageVerticalAlignment: 'center' as const,
 };
 
 const uiImageTextBlock = computed(() => {
@@ -400,11 +477,28 @@ const uiImageTextBlock = computed(() => {
   if (!migrated.layout) {
     migrated.layout = { ...DEFAULT_LAYOUT };
   } else {
-    (Object.keys(DEFAULT_LAYOUT) as Array<keyof typeof DEFAULT_LAYOUT>).forEach((key) => {
-      if (typeof migrated.layout[key] !== 'number') {
-        migrated.layout[key] = DEFAULT_LAYOUT[key];
-      }
-    });
+    if (typeof migrated.layout.paddingTop !== 'number') migrated.layout.paddingTop = DEFAULT_LAYOUT.paddingTop;
+    if (typeof migrated.layout.paddingBottom !== 'number') migrated.layout.paddingBottom = DEFAULT_LAYOUT.paddingBottom;
+    if (typeof migrated.layout.paddingLeft !== 'number') migrated.layout.paddingLeft = DEFAULT_LAYOUT.paddingLeft;
+    if (typeof migrated.layout.paddingRight !== 'number') migrated.layout.paddingRight = DEFAULT_LAYOUT.paddingRight;
+    if (typeof migrated.layout.imageWidth !== 'number') migrated.layout.imageWidth = DEFAULT_LAYOUT.imageWidth;
+    if (migrated.layout.imageWidthUnit !== 'px' && migrated.layout.imageWidthUnit !== '%') {
+      migrated.layout.imageWidthUnit = DEFAULT_LAYOUT.imageWidthUnit;
+    }
+    if (
+      migrated.layout.imageHorizontalAlignment !== 'left' &&
+      migrated.layout.imageHorizontalAlignment !== 'center' &&
+      migrated.layout.imageHorizontalAlignment !== 'right'
+    ) {
+      migrated.layout.imageHorizontalAlignment = DEFAULT_LAYOUT.imageHorizontalAlignment;
+    }
+    if (
+      migrated.layout.imageVerticalAlignment !== 'top' &&
+      migrated.layout.imageVerticalAlignment !== 'center' &&
+      migrated.layout.imageVerticalAlignment !== 'bottom'
+    ) {
+      migrated.layout.imageVerticalAlignment = DEFAULT_LAYOUT.imageVerticalAlignment;
+    }
   }
   return migrated;
 });
@@ -441,6 +535,16 @@ const fillTooltip =
 
 const paddingTooltip = 'Padding is only available in Fit mode.';
 type ImageTypeKey = 'wideScreen' | 'desktop' | 'tablet' | 'mobile';
+const imageAlignXOptions = [
+  { value: 'left' as const, label: getEditorTranslation('image-align-x-left') },
+  { value: 'center' as const, label: getEditorTranslation('image-align-x-center') },
+  { value: 'right' as const, label: getEditorTranslation('image-align-x-right') },
+];
+const imageAlignYOptions = [
+  { value: 'top' as const, label: getEditorTranslation('image-align-y-top') },
+  { value: 'center' as const, label: getEditorTranslation('image-align-y-center') },
+  { value: 'bottom' as const, label: getEditorTranslation('image-align-y-bottom') },
+];
 
 const handleImageAddWrapper = ({ image, type }: { image: string; type: string }) => {
   if (uiImageTextBlock.value.image && ['wideScreen', 'desktop', 'tablet', 'mobile'].includes(type)) {
@@ -465,6 +569,15 @@ const clampBrightness = (event: Event, type: string) => {
     "image-scalling-label": "Image Scaling",
     "image-scalling-fit-label": "Fit",
     "image-scalling-fill-label": "Fill",
+    "image-width-label": "Image width",
+    "image-align-x-label": "Horizontal alignment",
+    "image-align-x-left": "Left",
+    "image-align-x-center": "Center",
+    "image-align-x-right": "Right",
+    "image-align-y-label": "Vertical alignment",
+    "image-align-y-top": "Top",
+    "image-align-y-center": "Center",
+    "image-align-y-bottom": "Bottom",
 
     "layout-label": "Layout",
 
@@ -497,6 +610,15 @@ const clampBrightness = (event: Event, type: string) => {
     "image-scalling-label": "Image Scaling",
     "image-scalling-fit-label": "Fit",
     "image-scalling-fill-label": "Fill",
+    "image-width-label": "Bildbreite",
+    "image-align-x-label": "Horizontale Ausrichtung",
+    "image-align-x-left": "Links",
+    "image-align-x-center": "Zentriert",
+    "image-align-x-right": "Rechts",
+    "image-align-y-label": "Vertikale Ausrichtung",
+    "image-align-y-top": "Oben",
+    "image-align-y-center": "Mitte",
+    "image-align-y-bottom": "Unten",
     "background-color-label": "Background Color",
 
     "layout-label": "Layout",

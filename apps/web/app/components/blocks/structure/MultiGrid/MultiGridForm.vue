@@ -40,6 +40,32 @@
         </div>
 
         <div v-if="multiGridStructure.configuration.layout" class="py-2">
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('horizontal-alignment-label') }}</UiFormLabel>
+          <select
+            v-model="multiGridStructure.configuration.layout.horizontalAlignment"
+            class="w-full rounded border border-gray-300 px-2 py-2"
+            data-testid="horizontal-alignment"
+          >
+            <option v-for="option in horizontalAlignmentOptions" :key="option" :value="option">
+              {{ getEditorTranslation(`horizontal-alignment-${option}`) }}
+            </option>
+          </select>
+        </div>
+
+        <div v-if="multiGridStructure.configuration.layout" class="py-2">
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('vertical-alignment-label') }}</UiFormLabel>
+          <select
+            v-model="multiGridStructure.configuration.layout.verticalAlignment"
+            class="w-full rounded border border-gray-300 px-2 py-2"
+            data-testid="vertical-alignment"
+          >
+            <option v-for="option in verticalAlignmentOptions" :key="option" :value="option">
+              {{ getEditorTranslation(`vertical-alignment-${option}`) }}
+            </option>
+          </select>
+        </div>
+
+        <div v-if="multiGridStructure.configuration.layout" class="py-2">
           <UiFormLabel>{{ getEditorTranslation('margin-label') }}</UiFormLabel>
           <div class="grid grid-cols-4 gap-px rounded-md overflow-hidden border border-gray-300">
             <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
@@ -145,31 +171,6 @@
           </div>
         </div>
 
-        <div v-if="multiGridStructure.configuration.layout" class="py-2">
-          <UiFormLabel class="mb-1">{{ getEditorTranslation('horizontal-alignment-label') }}</UiFormLabel>
-          <select
-            v-model="multiGridStructure.configuration.layout.horizontalAlignment"
-            class="w-full rounded border border-gray-300 px-2 py-2"
-            data-testid="horizontal-alignment"
-          >
-            <option v-for="option in horizontalAlignmentOptions" :key="option" :value="option">
-              {{ getEditorTranslation(`horizontal-alignment-${option}`) }}
-            </option>
-          </select>
-        </div>
-
-        <div v-if="multiGridStructure.configuration.layout" class="py-2">
-          <UiFormLabel class="mb-1">{{ getEditorTranslation('vertical-alignment-label') }}</UiFormLabel>
-          <select
-            v-model="multiGridStructure.configuration.layout.verticalAlignment"
-            class="w-full rounded border border-gray-300 px-2 py-2"
-            data-testid="vertical-alignment"
-          >
-            <option v-for="option in verticalAlignmentOptions" :key="option" :value="option">
-              {{ getEditorTranslation(`vertical-alignment-${option}`) }}
-            </option>
-          </select>
-        </div>
       </div>
       <div v-if="multiGridStructure.configuration.columnWidths?.length" class="py-4">
         <UiFormLabel>{{ getEditorTranslation('sticky-columns') }}</UiFormLabel>
@@ -336,6 +337,7 @@
 
 <script setup lang="ts">
 import type { ColumnBlock } from '~/components/blocks/structure/MultiGrid/types';
+import type { Block } from '@plentymarkets/shop-api';
 import {
   SfInput,
   SfSwitch,
@@ -344,6 +346,7 @@ import {
   SfIconArrowBack,
   SfIconArrowForward,
 } from '@storefront-ui/vue';
+import { v4 as uuidv4 } from 'uuid';
 import ColumnWidthInput from '~/components/editor/ColumnWidthInput.vue';
 
 const props = defineProps<{ uuid?: string }>();
@@ -357,8 +360,71 @@ const isTwoColumnMultigrid = computed(() => {
   return multiGridStructure.value.configuration?.columnWidths?.length === 2;
 });
 
+const createEmptyGridBlock = (slot: number): Block => ({
+  name: 'EmptyGridBlock',
+  type: 'content',
+  content: [],
+  parent_slot: slot,
+  meta: {
+    uuid: uuidv4(),
+  },
+});
+
+const syncSlotContent = (structure: ColumnBlock) => {
+  const columnCount = structure.configuration?.columnWidths?.length || 0;
+  const currentContent = Array.isArray(structure.content) ? structure.content : [];
+
+  let nextContent = currentContent
+    .map((block) => {
+      if (typeof block.parent_slot !== 'number') return block;
+
+      if (block.parent_slot >= columnCount) {
+        if (block.name === 'EmptyGridBlock') return null;
+        block.parent_slot = Math.max(0, columnCount - 1);
+      }
+
+      return block.parent_slot >= 0 ? block : null;
+    })
+    .filter((block): block is Block => block !== null);
+
+  const keptEmptySlots = new Set<number>();
+  nextContent = nextContent.filter((block) => {
+    if (block.name !== 'EmptyGridBlock' || typeof block.parent_slot !== 'number') return true;
+    if (keptEmptySlots.has(block.parent_slot)) return false;
+
+    keptEmptySlots.add(block.parent_slot);
+    return true;
+  });
+
+  for (let slot = 0; slot < columnCount; slot += 1) {
+    const blocksInSlot = nextContent.filter((block) => block.parent_slot === slot);
+    const hasRealBlock = blocksInSlot.some((block) => block.name !== 'EmptyGridBlock');
+
+    if (hasRealBlock) {
+      nextContent = nextContent.filter((block) => !(block.parent_slot === slot && block.name === 'EmptyGridBlock'));
+      continue;
+    }
+
+    if (blocksInSlot.length === 0) {
+      nextContent.push(createEmptyGridBlock(slot));
+    }
+  }
+
+  if (
+    structure.content !== currentContent ||
+    currentContent.length !== nextContent.length ||
+    currentContent.some((block, index) => block !== nextContent[index])
+  ) {
+    structure.content = nextContent;
+  }
+};
+
 const multiGridStructure = computed(() => {
   const block = (findOrDeleteBlockByUuid(data.value, resolvedUuid.value) as ColumnBlock) || { content: [] };
+  if (!Array.isArray(block.content)) {
+    block.content = [];
+  }
+
   if (!block.configuration.layout) {
     block.configuration.layout = {
       marginTop: defaultSectionSpacing,
@@ -407,6 +473,7 @@ const multiGridStructure = computed(() => {
       block.configuration.layout.marginBottom = defaultSectionSpacing;
     }
   }
+  syncSlotContent(block);
   return block;
 });
 
@@ -479,11 +546,13 @@ const setColumnCount = (count: number) => {
   if (Array.isArray(structure.content)) {
     structure.content.forEach((block: any) => {
       if (typeof block.parent_slot !== 'number') return;
+      if (block.name === 'EmptyGridBlock' && block.parent_slot >= count) return;
       if (block.parent_slot >= count) {
         block.parent_slot = count - 1;
       }
     });
   }
+  syncSlotContent(structure);
 };
 
 const textSettings = ref(false);

@@ -170,8 +170,27 @@ const columnCount = computed(() => {
 
 const columnWidths = computed(() => normalizeWidthsToTwelve(configuration.value.columnWidths || [], columnCount.value));
 
+const gradientBackground = computed(() => {
+  if (configuration.value.layout?.gradientEnabled !== true) return undefined;
+
+  const startColor = configuration.value.layout.gradientStartColor || '#ffffff';
+  const endColor = configuration.value.layout.gradientEndColor || '#f3f4f6';
+
+  if (configuration.value.layout.gradientType === 'radial') {
+    const radius = configuration.value.layout.gradientRadius ?? 100;
+    const x = configuration.value.layout.gradientStartX ?? 50;
+    const y = configuration.value.layout.gradientStartY ?? 50;
+    return `radial-gradient(circle ${radius}% at ${x}% ${y}%, ${startColor}, ${endColor})`;
+  }
+
+  return `linear-gradient(${configuration.value.layout.gradientAngle ?? 180}deg, ${startColor}, ${endColor})`;
+});
+
 const gridInlineStyle = computed(() => ({
-  backgroundColor: configuration.value.layout?.backgroundColor ?? 'transparent',
+  background: gradientBackground.value,
+  backgroundColor: configuration.value.layout?.gradientEnabled
+    ? undefined
+    : (configuration.value.layout?.backgroundColor ?? 'transparent'),
   marginTop: configuration.value.layout?.marginTop !== undefined ? `${configuration.value.layout.marginTop}px` : '0px',
   marginRight:
     configuration.value.layout?.marginRight !== undefined ? `${configuration.value.layout.marginRight}px` : '0px',

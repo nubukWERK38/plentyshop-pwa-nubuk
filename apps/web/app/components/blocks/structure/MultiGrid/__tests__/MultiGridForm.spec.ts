@@ -1,19 +1,17 @@
 import { mount } from '@vue/test-utils';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
-import ColumnLayoutForm from '../ColumnLayoutForm.vue';
+import MultiGridForm from '../MultiGridForm.vue';
 
 const {
   useBlocksMock,
   useSiteConfigurationMock,
   useBlockManagerMock,
-  useSiteSettingsMock,
   useFullWidthToggleForConfigMock,
   getEditorTranslationMock,
 } = vi.hoisted(() => ({
   useBlocksMock: vi.fn(),
   useSiteConfigurationMock: vi.fn(),
   useBlockManagerMock: vi.fn(),
-  useSiteSettingsMock: vi.fn(),
   useFullWidthToggleForConfigMock: vi.fn(),
   getEditorTranslationMock: vi.fn((key: string) => key),
 }));
@@ -21,44 +19,40 @@ const {
 mockNuxtImport('useBlocks', () => useBlocksMock);
 mockNuxtImport('useSiteConfiguration', () => useSiteConfigurationMock);
 mockNuxtImport('useBlockManager', () => useBlockManagerMock);
-mockNuxtImport('useSiteSettings', () => useSiteSettingsMock);
 mockNuxtImport('useFullWidthToggleForConfig', () => useFullWidthToggleForConfigMock);
 mockNuxtImport('getEditorTranslation', () => getEditorTranslationMock);
 
-describe('ColumnLayoutForm', () => {
-  const columnLayoutBlock = {
-    name: 'ColumnLayout',
+describe('MultiGridForm', () => {
+  const multiGridBlock = {
+    name: 'MultiGrid',
     type: 'structure',
     meta: {
-      uuid: 'column-layout-uuid',
+      uuid: 'multi-grid-uuid',
     },
     content: [
       {
-        name: 'EmptyGridBlock',
+        name: 'Image',
         type: 'content',
         meta: {
-          uuid: 'left-empty-uuid',
+          uuid: 'image-uuid',
         },
         parent_slot: 0,
-        content: [],
+        content: {},
       },
       {
-        name: 'EmptyGridBlock',
+        name: 'TextCard',
         type: 'content',
         meta: {
-          uuid: 'right-empty-uuid',
+          uuid: 'text-uuid',
         },
         parent_slot: 1,
-        content: [],
+        content: {},
       },
     ],
     configuration: {
-      visible: true,
-      columns: 2,
-      columnWidths: [6, 6],
+      columnWidths: [3, 3, 3, 3],
       layout: {
         gap: 'M',
-        fullWidth: false,
       },
     },
   };
@@ -67,19 +61,15 @@ describe('ColumnLayoutForm', () => {
     vi.clearAllMocks();
 
     useBlocksMock.mockReturnValue({
-      allBlocks: ref([columnLayoutBlock]),
+      allBlocks: ref([multiGridBlock]),
     });
 
     useSiteConfigurationMock.mockReturnValue({
-      blockUuid: ref('column-layout-uuid'),
+      blockUuid: ref('multi-grid-uuid'),
     });
 
     useBlockManagerMock.mockReturnValue({
-      findOrDeleteBlockByUuid: vi.fn(() => columnLayoutBlock),
-    });
-
-    useSiteSettingsMock.mockReturnValue({
-      getSetting: vi.fn(() => 'medium'),
+      findOrDeleteBlockByUuid: vi.fn(() => multiGridBlock),
     });
 
     useFullWidthToggleForConfigMock.mockReturnValue({
@@ -87,13 +77,10 @@ describe('ColumnLayoutForm', () => {
     });
   });
 
-  it('renders settings without rewriting stable layout arrays on each render', async () => {
-    const originalContent = columnLayoutBlock.content;
-    const originalWidths = columnLayoutBlock.configuration.columnWidths;
-
-    const wrapper = mount(ColumnLayoutForm, {
+  it('adds empty placeholders for newly configured empty columns', async () => {
+    mount(MultiGridForm, {
       props: {
-        uuid: 'column-layout-uuid',
+        uuid: 'multi-grid-uuid',
       },
       global: {
         stubs: {
@@ -107,15 +94,12 @@ describe('ColumnLayoutForm', () => {
             template: '<div data-testid="full-width-toggle-stub" />',
           },
           EditorColorPicker: {
-            props: ['modelValue'],
             template: '<div><slot name="trigger" :color="modelValue" :toggle="() => {}" /></div>',
+            props: ['modelValue'],
           },
-          SfInput: {
-            template: '<input />',
-          },
-          SfSwitch: {
-            template: '<input type="checkbox" />',
-          },
+          ColumnWidthInput: true,
+          SfInput: true,
+          SfSwitch: true,
           SfIconArrowUpward: true,
           SfIconArrowDownward: true,
           SfIconArrowBack: true,
@@ -124,11 +108,9 @@ describe('ColumnLayoutForm', () => {
       },
     });
 
-    await wrapper.vm.$nextTick();
+    const placeholders = multiGridBlock.content.filter((block) => block.name === 'EmptyGridBlock');
 
-    expect(wrapper.text()).toContain('columns-count-label');
-    expect(wrapper.find('[data-testid="full-width-toggle-stub"]').exists()).toBe(true);
-    expect(columnLayoutBlock.content).toBe(originalContent);
-    expect(columnLayoutBlock.configuration.columnWidths).toBe(originalWidths);
+    expect(multiGridBlock.content.length).toBe(4);
+    expect(placeholders.map((block) => block.parent_slot)).toEqual([2, 3]);
   });
 });

@@ -1,12 +1,13 @@
 <template>
-  <div class="relative w-full flex justify-center" :style="wrapperStyle" data-testid="image-block">
+  <div class="relative w-full overflow-hidden" :style="wrapperStyle" data-testid="image-block">
     <component
       :is="linkTag"
       v-if="hasImage"
       :to="linkTarget"
       :aria-label="ariaLabel"
       :title="linkTitle"
-      :class="{ 'absolute inset-0': linkTarget }"
+      class="block"
+      :style="imageFrameStyle"
       v-bind="isExternalLink(linkTarget) ? { target: '_blank', rel: 'noopener noreferrer' } : {}"
       data-testid="image-link"
     >
@@ -120,6 +121,65 @@ const wrapperStyle = computed(() => {
   };
 });
 
+const normalizeImageWidthUnit = (unit: ImageProps['content']['layout']['imageWidthUnit']) => (unit === 'px' ? 'px' : '%');
+const normalizeHorizontalAlignment = (alignment: ImageProps['content']['layout']['imageHorizontalAlignment']) => {
+  if (alignment === 'left' || alignment === 'right') return alignment;
+  return 'center';
+};
+const normalizeVerticalAlignment = (alignment: ImageProps['content']['layout']['imageVerticalAlignment']) => {
+  if (alignment === 'top' || alignment === 'bottom') return alignment;
+  return 'center';
+};
+
+const imageFrameStyle = computed(() => {
+  const layout = props.content.layout ?? {};
+  const width = Number(layout.imageWidth);
+  const widthUnit = normalizeImageWidthUnit(layout.imageWidthUnit);
+  const hasCustomWidth = Number.isFinite(width) && width > 0 && !(widthUnit === '%' && width === 100);
+
+  if (!hasCustomWidth) {
+    return {
+      position: 'absolute' as const,
+      inset: '0',
+      width: '100%',
+      height: '100%',
+    };
+  }
+
+  const horizontalAlignment = normalizeHorizontalAlignment(layout.imageHorizontalAlignment);
+  const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
+  const style: Record<string, string> = {
+    position: 'absolute',
+    width: `${width}${widthUnit}`,
+    maxWidth: '100%',
+    maxHeight: '100%',
+    aspectRatio: breakpointConfig.value.aspectRatio,
+  };
+
+  if (horizontalAlignment === 'left') {
+    style.left = '0';
+  } else if (horizontalAlignment === 'right') {
+    style.right = '0';
+  } else {
+    style.left = '50%';
+  }
+
+  if (verticalAlignment === 'top') {
+    style.top = '0';
+  } else if (verticalAlignment === 'bottom') {
+    style.bottom = '0';
+  } else {
+    style.top = '50%';
+  }
+
+  const transforms = [];
+  if (horizontalAlignment === 'center') transforms.push('translateX(-50%)');
+  if (verticalAlignment === 'center') transforms.push('translateY(-50%)');
+  if (transforms.length) style.transform = transforms.join(' ');
+
+  return style;
+});
+
 const overlayAlignClasses = computed(() => {
   const alignY = props.content?.text.textOverlayAlignY;
 
@@ -130,12 +190,16 @@ const overlayAlignClasses = computed(() => {
 
 const imageInlineStyle = computed(() => {
   const layout = props.content.layout ?? {};
+  const horizontalAlignment = normalizeHorizontalAlignment(layout.imageHorizontalAlignment);
+  const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
+
   return {
     paddingTop: `${layout.paddingTop ?? 0}px`,
     paddingBottom: `${layout.paddingBottom ?? 0}px`,
     paddingLeft: `${layout.paddingLeft ?? 0}px`,
     paddingRight: `${layout.paddingRight ?? 0}px`,
     backgroundColor: layout.backgroundColor ?? 'transparent',
+    objectPosition: `${horizontalAlignment} ${verticalAlignment}`,
   };
 });
 </script>

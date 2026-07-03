@@ -240,20 +240,17 @@ const pairWithSlots = computed<Block[]>(() => {
 });
 
 const columns = computed<Block[][]>(() => {
-  const blocks = ref([] as Block[][]);
-  pairWithSlots.value.forEach((block) => {
-    if (block.parent_slot !== undefined) {
-      if (!blocks.value[block.parent_slot]) {
-        blocks.value[block.parent_slot] = [];
-      }
+  const columnCount = configuration.columnWidths?.length || 0;
+  const blocks = Array.from({ length: columnCount }, () => [] as Block[]);
 
-      const slot = blocks.value[block.parent_slot];
-      if (slot) {
-        slot.push(block);
-      }
-    }
+  pairWithSlots.value.forEach((block) => {
+    if (typeof block.parent_slot !== 'number') return;
+    if (block.parent_slot < 0 || block.parent_slot >= columnCount) return;
+
+    blocks[block.parent_slot]?.push(block);
   });
-  return blocks.value;
+
+  return blocks;
 });
 </script>
 

@@ -41,6 +41,10 @@ export type ImageContent = {
     paddingRight: number;
     backgroundColor?: string;
     fullWidth?: boolean;
+    imageWidth?: number;
+    imageWidthUnit?: 'px' | '%';
+    imageHorizontalAlignment?: 'left' | 'center' | 'right';
+    imageVerticalAlignment?: 'top' | 'center' | 'bottom';
   };
 };
 

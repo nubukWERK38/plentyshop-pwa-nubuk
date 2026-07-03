@@ -152,15 +152,155 @@
 
       <EditorFullWidthToggle v-if="resolvedUuid" v-model="isFullWidth" :block-uuid="resolvedUuid" />
     </UiAccordionItem>
+
+    <UiAccordionItem
+      v-model="layoutBackground"
+      data-testid="open-column-layout-background-settings"
+      summary-active-class="bg-neutral-100 border-t-0"
+      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
+    >
+      <template #summary>
+        <h2>{{ getEditorTranslation('layout-background') }}</h2>
+      </template>
+
+      <div v-if="columnLayoutStructure.configuration.layout" class="py-2 px-4">
+        <div class="mb-3 flex items-center justify-between">
+          <UiFormLabel>{{ getEditorTranslation('gradient-enabled-label') }}</UiFormLabel>
+          <SfSwitch v-model="columnLayoutStructure.configuration.layout.gradientEnabled" />
+        </div>
+
+        <template v-if="columnLayoutStructure.configuration.layout.gradientEnabled">
+          <div class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-type-label') }}</UiFormLabel>
+            <select
+              v-model="columnLayoutStructure.configuration.layout.gradientType"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+            >
+              <option value="linear">Linear</option>
+              <option value="radial">Radial</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-start-label') }}</UiFormLabel>
+            <EditorColorPicker v-model="columnLayoutStructure.configuration.layout.gradientStartColor" class="w-full">
+              <template #trigger="{ color, toggle }">
+                <SfInput v-model="columnLayoutStructure.configuration.layout.gradientStartColor" type="text">
+                  <template #suffix>
+                    <button
+                      type="button"
+                      class="editor-color-swatch"
+                      :style="{ backgroundColor: color }"
+                      @mousedown.stop
+                      @click.stop="toggle"
+                    />
+                  </template>
+                </SfInput>
+              </template>
+            </EditorColorPicker>
+          </div>
+
+          <div class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-end-label') }}</UiFormLabel>
+            <EditorColorPicker v-model="columnLayoutStructure.configuration.layout.gradientEndColor" class="w-full">
+              <template #trigger="{ color, toggle }">
+                <SfInput v-model="columnLayoutStructure.configuration.layout.gradientEndColor" type="text">
+                  <template #suffix>
+                    <button
+                      type="button"
+                      class="editor-color-swatch"
+                      :style="{ backgroundColor: color }"
+                      @mousedown.stop
+                      @click.stop="toggle"
+                    />
+                  </template>
+                </SfInput>
+              </template>
+            </EditorColorPicker>
+          </div>
+
+          <div v-if="columnLayoutStructure.configuration.layout.gradientType === 'linear'" class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-angle-label') }}</UiFormLabel>
+            <input
+              v-model.number="columnLayoutStructure.configuration.layout.gradientAngle"
+              type="number"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              min="0"
+              max="360"
+            />
+          </div>
+
+          <div v-if="columnLayoutStructure.configuration.layout.gradientType === 'radial'" class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-radius-label') }}</UiFormLabel>
+            <input
+              v-model.number="columnLayoutStructure.configuration.layout.gradientRadius"
+              type="number"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              min="1"
+              max="300"
+            />
+          </div>
+
+          <div v-if="columnLayoutStructure.configuration.layout.gradientType === 'radial'" class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-start-x-label') }}</UiFormLabel>
+            <input
+              v-model.number="columnLayoutStructure.configuration.layout.gradientStartX"
+              type="number"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              min="0"
+              max="100"
+            />
+          </div>
+
+          <div v-if="columnLayoutStructure.configuration.layout.gradientType === 'radial'" class="mb-3">
+            <UiFormLabel class="mb-1">{{ getEditorTranslation('gradient-start-y-label') }}</UiFormLabel>
+            <input
+              v-model.number="columnLayoutStructure.configuration.layout.gradientStartY"
+              type="number"
+              class="w-full rounded border border-gray-300 px-2 py-2"
+              min="0"
+              max="100"
+            />
+          </div>
+        </template>
+
+        <div class="flex justify-between mb-2">
+          <UiFormLabel>{{ getEditorTranslation('background-color-label') }}</UiFormLabel>
+        </div>
+        <EditorColorPicker v-model="columnLayoutStructure.configuration.layout.backgroundColor" class="w-full">
+          <template #trigger="{ color, toggle }">
+            <label>
+              <SfInput
+                v-model="columnLayoutStructure.configuration.layout.backgroundColor"
+                type="text"
+                data-testid="input-background-color"
+              >
+                <template #suffix>
+                  <button
+                    type="button"
+                    class="editor-color-swatch"
+                    :style="{ backgroundColor: color }"
+                    @mousedown.stop
+                    @click.stop="toggle"
+                  />
+                </template>
+              </SfInput>
+            </label>
+          </template>
+        </EditorColorPicker>
+      </div>
+    </UiAccordionItem>
   </div>
 </template>
 
 <script setup lang="ts">
 import {
+  SfInput,
   SfIconArrowUpward,
   SfIconArrowDownward,
   SfIconArrowBack,
   SfIconArrowForward,
+  SfSwitch,
 } from '@storefront-ui/vue';
 import { v4 as uuidv4 } from 'uuid';
 import type { Block } from '@plentymarkets/shop-api';
@@ -338,6 +478,14 @@ const columnLayoutStructure = computed(() => {
       paddingBottom: 0,
       paddingLeft: 0,
       backgroundColor: '#ffffff',
+      gradientEnabled: false,
+      gradientType: 'linear',
+      gradientStartColor: '#ffffff',
+      gradientEndColor: '#f3f4f6',
+      gradientAngle: 180,
+      gradientRadius: 100,
+      gradientStartX: 50,
+      gradientStartY: 50,
       gap: 'M',
       fullWidth: false,
     };
@@ -345,6 +493,14 @@ const columnLayoutStructure = computed(() => {
 
   if (!block.configuration.layout.gap) block.configuration.layout.gap = 'M';
   if (!block.configuration.layout.backgroundColor) block.configuration.layout.backgroundColor = '#ffffff';
+  if (block.configuration.layout.gradientEnabled === undefined) block.configuration.layout.gradientEnabled = false;
+  if (!block.configuration.layout.gradientType) block.configuration.layout.gradientType = 'linear';
+  if (!block.configuration.layout.gradientStartColor) block.configuration.layout.gradientStartColor = '#ffffff';
+  if (!block.configuration.layout.gradientEndColor) block.configuration.layout.gradientEndColor = '#f3f4f6';
+  if (block.configuration.layout.gradientAngle === undefined) block.configuration.layout.gradientAngle = 180;
+  if (block.configuration.layout.gradientRadius === undefined) block.configuration.layout.gradientRadius = 100;
+  if (block.configuration.layout.gradientStartX === undefined) block.configuration.layout.gradientStartX = 50;
+  if (block.configuration.layout.gradientStartY === undefined) block.configuration.layout.gradientStartY = 50;
   if (block.configuration.layout.marginTop === undefined) block.configuration.layout.marginTop = 0;
   if (block.configuration.layout.marginRight === undefined) block.configuration.layout.marginRight = 0;
   if (block.configuration.layout.marginLeft === undefined) block.configuration.layout.marginLeft = 0;
@@ -385,6 +541,7 @@ const gapBtnClasses =
   'py-2 leading-6 px-4 gap-2 !hover:bg-gray-100 inline-flex items-center justify-center font-medium text-base focus-visible:outline focus-visible:outline-offset rounded-md disabled:text-disabled-500 disabled:bg-disabled-300 disabled:shadow-none disabled:ring-0 disabled:cursor-not-allowed';
 
 const layoutSettings = ref(true);
+const layoutBackground = ref(false);
 </script>
 
 <i18n lang="json">
@@ -397,6 +554,16 @@ const layoutSettings = ref(true);
     "column": "Column",
     "margin-label": "Margin (px)",
     "padding-label": "Padding (px)",
+    "layout-background": "Layout Background",
+    "background-color-label": "Background Color",
+    "gradient-enabled-label": "Enable gradient",
+    "gradient-type-label": "Gradient type",
+    "gradient-start-label": "Gradient start color",
+    "gradient-end-label": "Gradient end color",
+    "gradient-angle-label": "Gradient angle",
+    "gradient-radius-label": "Gradient radius (%)",
+    "gradient-start-x-label": "Gradient start X (%)",
+    "gradient-start-y-label": "Gradient start Y (%)",
     "gap-label": "Gap",
     "gap-size-none": "None",
     "gap-size-s": "S",
@@ -412,6 +579,16 @@ const layoutSettings = ref(true);
     "column": "Spalte",
     "margin-label": "Margin (px)",
     "padding-label": "Padding (px)",
+    "layout-background": "Layout Background",
+    "background-color-label": "Hintergrundfarbe",
+    "gradient-enabled-label": "Verlauf aktivieren",
+    "gradient-type-label": "Verlaufstyp",
+    "gradient-start-label": "Startfarbe Verlauf",
+    "gradient-end-label": "Endfarbe Verlauf",
+    "gradient-angle-label": "Verlaufswinkel",
+    "gradient-radius-label": "Verlaufsradius (%)",
+    "gradient-start-x-label": "Verlauf Start X (%)",
+    "gradient-start-y-label": "Verlauf Start Y (%)",
     "gap-label": "Gap",
     "gap-size-none": "None",
     "gap-size-s": "S",
