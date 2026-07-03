@@ -1035,16 +1035,13 @@ const openProductQuestionTab = () => {
 }
 
 :global(.purchase-card__info-modal-overlay) {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 2147483000 !important;
+  z-index: 10000;
   background: rgb(29 44 54 / 54%);
 }
 
 :global(.purchase-card__info-modal) {
-  z-index: 2147483001 !important;
-  width: min(1320px, calc(100vw - 96px));
-  max-height: min(860px, calc(100vh - 48px));
+  width: min(960px, calc(100vw - 32px));
+  max-height: min(820px, calc(100vh - 32px));
   overflow: hidden;
   border: 0;
   border-radius: 6px;
@@ -1082,7 +1079,7 @@ const openProductQuestionTab = () => {
 }
 
 :global(.purchase-card__info-modal-content) {
-  max-height: calc(min(860px, 100vh - 48px) - 80px);
+  max-height: calc(min(820px, 100vh - 32px) - 80px);
   overflow-y: auto;
   padding: 1.5rem;
 }
@@ -1093,16 +1090,6 @@ const openProductQuestionTab = () => {
 }
 
 @media (max-width: 767px) {
-  :global(.purchase-card__info-modal) {
-    width: calc(100vw - 24px);
-    max-height: calc(100vh - 24px);
-  }
-
-  :global(.purchase-card__info-modal-content) {
-    max-height: calc(100vh - 104px);
-    padding: 1rem;
-  }
-
   .purchase-card__brand {
     font-size: 1.75rem;
   }
