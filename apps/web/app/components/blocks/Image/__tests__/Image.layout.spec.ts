@@ -70,13 +70,12 @@ describe('Image block layout', () => {
     const wrapper = mount(Image, {
       props: block,
     });
-    const wrapperStyle = wrapper.find('[data-testid="image-block"]').attributes('style');
     const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
 
     expect(frameStyle).toContain('width: 320px');
     expect(frameStyle).toContain('aspect-ratio: 16 / 9');
-    expect(wrapperStyle).toContain('justify-content: flex-end');
-    expect(wrapperStyle).toContain('align-items: flex-end');
+    expect(frameStyle).toContain('right: 0px');
+    expect(frameStyle).toContain('bottom: 0px');
   });
 
   it('should keep percentage image widths visible', () => {
@@ -98,12 +97,12 @@ describe('Image block layout', () => {
       props: block,
     });
     const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
-    const wrapperStyle = wrapper.find('[data-testid="image-block"]').attributes('style');
 
     expect(frameStyle).toContain('width: 50%');
     expect(frameStyle).toContain('aspect-ratio: 16 / 9');
-    expect(wrapperStyle).toContain('justify-content: center');
-    expect(wrapperStyle).toContain('align-items: center');
+    expect(frameStyle).toContain('left: 50%');
+    expect(frameStyle).toContain('top: 50%');
+    expect(frameStyle).toContain('transform: translateX(-50%) translateY(-50%)');
   });
 
   it('should keep oversize percentage widths centered', () => {
@@ -124,13 +123,13 @@ describe('Image block layout', () => {
     const wrapper = mount(Image, {
       props: block,
     });
-    const wrapperStyle = wrapper.find('[data-testid="image-block"]').attributes('style');
     const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
 
     expect(frameStyle).toContain('width: 120%');
     expect(frameStyle).toContain('aspect-ratio: 16 / 9');
-    expect(wrapperStyle).toContain('justify-content: center');
-    expect(wrapperStyle).toContain('align-items: flex-start');
+    expect(frameStyle).toContain('left: 50%');
+    expect(frameStyle).toContain('top: 0px');
+    expect(frameStyle).toContain('transform: translateX(-50%)');
   });
 
   it('should apply image object position from alignment settings', () => {

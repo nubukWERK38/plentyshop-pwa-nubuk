@@ -1,0 +1,13 @@
+
+> server@1.15.0 dev
+> nodemon
+
+[33m[nodemon] 3.1.11[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): **\* ..\web\.env[39m
+[33m[nodemon] watching extensions: ts,env[39m
+[32m[nodemon] starting `ts-node-dev src/index.ts`[39m
+[INFO] 15:46:59 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+{"timestamp":"2026-07-03T13:47:04.044Z","severity":"INFO","message":"Middleware starting....","alokai":{"context":"middleware"}}
+{"timestamp":"2026-07-03T13:47:04.177Z","severity":"INFO","message":"Middleware created!","alokai":{"context":"middleware"}}
+[32m√[39m API server listening on http://0.0.0.0:8181
