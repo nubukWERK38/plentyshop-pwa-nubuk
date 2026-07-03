@@ -1,0 +1,22 @@
+
+> web@1.15.0 dev
+> tsx ./build/index.ts && nuxt dev --port 3003
+
+|
+•  [32mNuxt [1m4.4.2[22m[39m[90m (with [39m[90mNitro [1m2.13.2[22m[39m[90m, Vite [1m6.4.1[22m[39m[90m and Vue [1m3.5.31[22m[39m[90m)[39m
+
+[32m  ➜ Local:   [39m [36m[4mhttp://localhost:[1m3003[22m/[24m[39m
+[90m  ➜ Network:  use [37m--host[90m to expose[39m
+
+[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+[shop-core | extensions] No extensions to load.
+[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+[36mi[39m Using yup with vee-validate
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+
+[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+[32m√[39m Vite client built in 89ms
+[32m√[39m Vite server built in 256ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3459ms
+[36mi[39m Vite server warmed up in 1ms
+[36mi[39m Vite client warmed up in 5ms
