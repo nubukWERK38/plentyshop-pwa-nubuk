@@ -12,7 +12,12 @@
       <div class="editor-color-picker__trigger" :style="style" @mousedown.stop @click.stop="toggle" />
     </slot>
 
-    <div v-if="open" :class="['absolute top-full z-50 mt-2', dropdownPositionClass]" @mousedown.stop @click.stop>
+    <div
+      v-if="open"
+      :class="['editor-layer-popup absolute top-full mt-2', dropdownPositionClass]"
+      @mousedown.stop
+      @click.stop
+    >
       <EditorColorPickerPanel
         :model-value="modelValue"
         :active-tab="activeTab"

@@ -113,4 +113,23 @@ describe('TextCard - Layout Property', () => {
     expect(textCard.attributes('style')).toContain('background-color: #e0e0e0');
     expect(textCard.attributes('style')).toContain('padding: 5px 0px 0px 10px;');
   });
+
+  it('should vertically center the content when configured', () => {
+    const mockWithVerticalAlignment = {
+      ...mockTextCard,
+      content: {
+        ...mockTextCard.content,
+        layout: {
+          ...mockTextCard.content.layout,
+          verticalAlignment: 'center' as const,
+        },
+      },
+    };
+
+    const wrapper = mount(TextCard, { props: mockWithVerticalAlignment });
+    const textCard = wrapper.find('[data-testid="text-card"]');
+
+    expect(textCard.classes()).toContain('h-full');
+    expect(textCard.classes()).toContain('justify-center');
+  });
 });

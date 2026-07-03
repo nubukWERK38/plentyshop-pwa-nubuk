@@ -1834,6 +1834,64 @@
             }
           }
         }
+      },
+      {
+        "title": "FAQ",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/rich_text.png",
+        "template": {
+          "en": {
+            "name": "FAQ",
+            "type": "content",
+            "meta": {
+              "uuid": "7f2d2ad0-8e6b-4bd3-9dc0-1f2fbfe40a01"
+            },
+            "content": {
+              "text": {
+                "title": "FAQ"
+              },
+              "items": [
+                {
+                  "question": "How can I return goods?",
+                  "answerHtml": "<p>You can enter the answer here.</p>"
+                }
+              ],
+              "layout": {
+                "fullWidth": false,
+                "initiallyOpenFirst": true,
+                "paddingTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0
+              }
+            }
+          },
+          "de": {
+            "name": "FAQ",
+            "type": "content",
+            "meta": {
+              "uuid": "33ff9ec8-5afc-4f5f-9a76-61ec097278a2"
+            },
+            "content": {
+              "text": {
+                "title": "FAQ"
+              },
+              "items": [
+                {
+                  "question": "Wie kann ich Ware zurueck senden?",
+                  "answerHtml": "<p>Hier kann die Antwort eingetragen werden.</p>"
+                }
+              ],
+              "layout": {
+                "fullWidth": false,
+                "initiallyOpenFirst": true,
+                "paddingTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0
+              }
+            }
+          }
+        }
       }
     ]
   },

@@ -1,7 +1,7 @@
 <template>
   <div
     :key="`${$route.meta?.identifier ?? ''}:${$route.meta?.type ?? ''}`"
-    class="mb-3 font-editor"
+    class="mb-3 font-editor editor-layer-toolbar"
     :class="['sticky top-0 bg-white h-[52px] shadow-[0px_15px_20px_-15px_#111]', drawerZIndexClass]"
     data-testid="edit-mode-toolbar"
   >

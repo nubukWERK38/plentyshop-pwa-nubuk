@@ -23,6 +23,7 @@ export const BLOCK_LAYOUT_RULES: Record<string, BlockLayoutRule> = {
   ColumnLayout: { defaultFullWidth: false, padding: false },
   NewsletterSubscribe: { defaultFullWidth: false, padding: true },
   TextCard: { defaultFullWidth: false, padding: true },
+  FAQ: { defaultFullWidth: false, padding: true },
   CategoryData: { defaultFullWidth: false, padding: true },
   CategorySorting: { defaultFullWidth: false, padding: true },
   BlockSort: { defaultFullWidth: false, padding: true },

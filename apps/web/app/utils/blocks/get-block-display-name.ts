@@ -4,6 +4,7 @@ const blockTypeNames: Record<string, string> = {
   ProductRecommendedProducts: 'Product Gallery',
   TextCard: 'Rich Text',
   Tabs: 'Tabs',
+  FAQ: 'FAQ',
   AnnouncementBar: 'Announcement Bar',
   CustomerReview: 'Customer reviews',
   ProductLegalInformation: 'Legal Information',

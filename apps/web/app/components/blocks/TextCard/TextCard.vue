@@ -1,7 +1,7 @@
 <template>
   <div
     data-testid="text-card"
-    :class="['w-full', 'flex', 'flex-col', 'space-y-4', textAlignmentClass]"
+    :class="['w-full', 'flex', 'flex-col', 'space-y-4', textAlignmentClass, verticalAlignmentClass]"
     :style="inlineStyle"
   >
     <TextContent :text="props.content.text" :button="props.content.button" :index="props.index" />
@@ -37,6 +37,18 @@ const textAlignmentClass = computed(() => {
       return 'text-left items-start';
   }
 });
+
+const verticalAlignmentClass = computed(() => {
+  switch (props.content.layout?.verticalAlignment) {
+    case 'center':
+      return 'h-full justify-center';
+    case 'bottom':
+      return 'h-full justify-end';
+    default:
+      return 'justify-start';
+  }
+});
+
 const inlineStyle = computed(() => {
   const layout = props.content.layout || {};
   const backgroundImage = getBackgroundGradient(layout);

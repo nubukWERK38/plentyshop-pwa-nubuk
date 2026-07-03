@@ -68,6 +68,42 @@ describe('ColumnLayout block', () => {
     expect(columns[2]?.classes()).toContain('col-span-2');
   });
 
+  it('should stretch single blocks to the column height', () => {
+    const wrapper = mount(ColumnLayout, {
+      props: {
+        ...mockColumnLayoutProps,
+      },
+    });
+
+    const grid = wrapper.get('[data-testid="column-layout-structure"]');
+    const row = wrapper.get('[data-uuid="7c78e801-fb6e-41a1-bfd6-030ea6ec4744"]');
+
+    expect(grid.classes()).toContain('items-stretch');
+    expect(row.classes()).toContain('h-full');
+  });
+
+  it('should not force full-height rows when a column contains multiple blocks', () => {
+    const wrapper = mount(ColumnLayout, {
+      props: {
+        ...mockColumnLayoutProps,
+        content: [
+          ...mockColumnLayoutProps.content,
+          {
+            name: 'TextCard',
+            type: 'content',
+            content: { text: { title: 'Second left' } },
+            meta: { uuid: '309cb3f2-b706-4cda-8d2c-5f0f186d33d9' },
+            parent_slot: 0,
+          },
+        ],
+      },
+    });
+
+    const row = wrapper.get('[data-uuid="7c78e801-fb6e-41a1-bfd6-030ea6ec4744"]');
+
+    expect(row.classes()).not.toContain('h-full');
+  });
+
   it('should render a linear gradient background when enabled', () => {
     const wrapper = mount(ColumnLayout, {
       props: {

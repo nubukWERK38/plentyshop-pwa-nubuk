@@ -26,6 +26,10 @@
   --ci-teaser-grid-gap: 50px;
   --ci-content-max-width: 1440px;
   --ci-content-gutter: 1.5rem;
+  --editor-z-drawer: 2147481000;
+  --editor-z-toolbar: 2147482000;
+  --editor-z-popup: 2147483000;
+  --editor-z-modal: 2147483200;
 
   /* Legacy aliases */
   --ci: var(--ci-primary);
@@ -357,6 +361,26 @@ h1,
 
 .editor-block-row-outline {
   box-shadow: inset 0 0 0 2px #7c3aed;
+}
+
+.editor-layer-drawer {
+  z-index: var(--editor-z-drawer) !important;
+}
+
+.editor-layer-toolbar {
+  z-index: var(--editor-z-toolbar) !important;
+}
+
+.editor-layer-popup {
+  z-index: var(--editor-z-popup) !important;
+}
+
+.editor-layer-modal {
+  z-index: var(--editor-z-modal) !important;
+}
+
+.font-editor [role='tooltip'] {
+  z-index: var(--editor-z-popup) !important;
 }
 
 .editor-localization-sidebar {

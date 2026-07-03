@@ -4,12 +4,13 @@
       v-for="(column, colIndex) in columns"
       :key="colIndex"
       :class="getColumnClasses(colIndex)"
-      class="group/col relative"
+      class="group/col relative flex flex-col"
       data-testid="column-layout-column"
     >
       <div
         v-for="row in column"
         :key="row.meta.uuid"
+        :class="getRowClasses(column)"
         class="group/row relative"
         :data-uuid="row.meta.uuid"
         @mouseenter="onRowEnter(row)"
@@ -211,12 +212,14 @@ const gridInlineStyle = computed(() => ({
 }));
 
 const getGridClasses = () => {
-  return gridClassFor({ mobile: 1, tablet: 12, desktop: 12 }, [gridGapClass.value ?? '', 'items-start']);
+  return gridClassFor({ mobile: 1, tablet: 12, desktop: 12 }, [gridGapClass.value ?? '', 'items-stretch']);
 };
 
 const getColumnClasses = (colIndex: number) => {
   return [`col-span-${columnWidths.value[colIndex] || 1}`, colIndex === 0 ? 'z-[2]' : 'z-[1]'];
 };
+
+const getRowClasses = (column: Block[]) => (column.length === 1 ? ['flex', 'flex-col', 'h-full'] : []);
 
 const getBlockActions = () => ({
   isEditable: true,

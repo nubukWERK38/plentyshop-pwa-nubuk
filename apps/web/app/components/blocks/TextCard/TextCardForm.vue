@@ -176,13 +176,7 @@
 
       <div v-if="buttonGradient.type === 'linear'" class="py-2">
         <UiFormLabel class="mb-1">{{ getEditorTranslation('button-gradient-angle-label') }}</UiFormLabel>
-        <input
-          v-model.number="buttonGradient.angle"
-          type="number"
-          min="0"
-          max="360"
-          class="input-field"
-        />
+        <input v-model.number="buttonGradient.angle" type="number" min="0" max="360" class="input-field" />
       </div>
     </template>
 
@@ -350,6 +344,23 @@
 
     <EditorFullWidthToggle v-model="isFullWidth" :block-uuid="blockUuid" />
 
+    <fieldset class="py-2">
+      <UiFormLabel>{{ getEditorTranslation('vertical-alignment-label') }}</UiFormLabel>
+
+      <div class="mt-2 w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden">
+        <div
+          v-for="option in verticalAlignmentOptions"
+          :key="option"
+          class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm"
+          :class="{ 'bg-gray-100 text-gray-900 font-semibold': textCardBlock.layout.verticalAlignment === option }"
+          :data-testid="`vertical-alignment-${option}`"
+          @click="textCardBlock.layout.verticalAlignment = option"
+        >
+          {{ getEditorTranslation(`vertical-alignment-${option}`) }}
+        </div>
+      </div>
+    </fieldset>
+
     <div class="py-2">
       <UiFormLabel>{{ getEditorTranslation('padding-label') }}</UiFormLabel>
       <div class="grid grid-cols-4 gap-px rounded-md overflow-hidden border border-gray-300">
@@ -454,6 +465,7 @@ const textCardBlock = computed<TextCardContent>(() => {
       paddingBottom: '0',
       paddingLeft: '0',
       paddingRight: '0',
+      verticalAlignment: 'top',
       fullWidth: false,
       backgroundGradient: {
         enabled: false,
@@ -464,6 +476,8 @@ const textCardBlock = computed<TextCardContent>(() => {
       },
     };
   }
+
+  if (!content.layout.verticalAlignment) content.layout.verticalAlignment = 'top';
 
   if (!content.layout.backgroundGradient) {
     content.layout.backgroundGradient = {
@@ -490,6 +504,7 @@ const { isFullWidth } = useFullWidthToggleForContent(textCardBlock);
 const textSettings = ref(false);
 const buttonSettings = ref(false);
 const layoutSettings = ref(false);
+const verticalAlignmentOptions = ['top', 'center', 'bottom'] as const;
 
 const backgroundColorInit = textCardBlock.value.layout.backgroundColor;
 const isTransparent = ref(!backgroundColorInit || backgroundColorInit === 'transparent');
@@ -560,6 +575,10 @@ const buttonGradient = computed(() => {
     "background-gradient-end-label": "Background gradient end color",
     "background-gradient-angle-label": "Background gradient angle",
     "padding-label": "Padding",
+    "vertical-alignment-label": "Vertical alignment",
+    "vertical-alignment-top": "Top",
+    "vertical-alignment-center": "Center",
+    "vertical-alignment-bottom": "Bottom",
     "spacing-around": "Spacing around the text elements",
     "keep-transparent-label": "Keep background transparent"
   },
@@ -591,6 +610,10 @@ const buttonGradient = computed(() => {
     "background-gradient-end-label": "Hintergrund Endfarbe Verlauf",
     "background-gradient-angle-label": "Hintergrund Verlaufswinkel",
     "padding-label": "Padding",
+    "vertical-alignment-label": "Vertikale Ausrichtung",
+    "vertical-alignment-top": "Oben",
+    "vertical-alignment-center": "Mittig",
+    "vertical-alignment-bottom": "Unten",
     "spacing-around": "Spacing around the text elements",
     "keep-transparent-label": "or keep transparent"
   }

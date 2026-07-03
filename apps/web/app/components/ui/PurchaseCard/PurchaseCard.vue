@@ -54,10 +54,10 @@
               />
               <ul class="purchase-card__more-infos">
                 <li>
-                  <button type="button" title="Wie läuft eine Retoure ab?" @click="openReturnModal">
+                  <NuxtLink :to="localePath(RETURN_CATEGORY_PATH)" title="Wie läuft eine Retoure ab?">
                     <i class="fa fa-angle-right" aria-hidden="true" />
                     Wie läuft eine Retoure ab?
-                  </button>
+                  </NuxtLink>
                 </li>
                 <li>
                   <button type="button" title="Fragen zum Produkt?" @click="openProductQuestionTab">
@@ -66,10 +66,10 @@
                   </button>
                 </li>
                 <li>
-                  <button type="button" title="Mit Bike-Leasing bis zu 40% sparen" @click="openLeasingModal">
+                  <NuxtLink :to="localePath(LEASING_CATEGORY_PATH)" title="Mit Bike-Leasing bis zu 40% sparen">
                     <i class="fa fa-angle-right" aria-hidden="true" />
                     Mit Bike-Leasing bis zu 40% sparen
-                  </button>
+                  </NuxtLink>
                 </li>
                 <li>
                   <button type="button" title="Herstellerangaben" @click="openManufacturerDetails">
@@ -279,74 +279,6 @@
       </div>
     </div>
   </form>
-  <Teleport to="body">
-    <UiModal
-      v-model="leasingModalOpen"
-      aria-labelledby="leasing-modal-title"
-      tag="section"
-      role="dialog"
-      class="purchase-card__leasing-modal z-[2147483647] h-full w-full md:h-[calc(100vh-96px)] md:w-[min(1500px,calc(100vw-220px))] m-0 p-0 overflow-hidden"
-      overlay-classes="z-[2147483647]"
-    >
-      <header class="purchase-card__leasing-modal-header">
-        <h2 id="leasing-modal-title">Mit Bike-Leasing bis zu 40% sparen</h2>
-        <UiButton
-          :aria-label="t('common.navigation.closeDialog')"
-          square
-          variant="tertiary"
-          class="purchase-card__leasing-modal-close"
-          @click="leasingModalOpen = false"
-        >
-          <SfIconClose />
-        </UiButton>
-      </header>
-      <div class="purchase-card__leasing-modal-body">
-        <div v-if="leasingModalLoading" class="purchase-card__leasing-modal-loading">
-          <SfLoaderCircular size="lg" />
-        </div>
-        <div
-          v-else-if="leasingModalContent"
-          class="purchase-card__leasing-modal-content no-preflight"
-          v-html="leasingModalContent"
-        />
-        <p v-else class="purchase-card__leasing-modal-empty">Der Leasing-Content konnte nicht geladen werden.</p>
-      </div>
-    </UiModal>
-  </Teleport>
-  <Teleport to="body">
-    <UiModal
-      v-model="returnModalOpen"
-      aria-labelledby="return-modal-title"
-      tag="section"
-      role="dialog"
-      class="purchase-card__leasing-modal z-[2147483647] h-full w-full md:h-[calc(100vh-96px)] md:w-[min(1500px,calc(100vw-220px))] m-0 p-0 overflow-hidden"
-      overlay-classes="z-[2147483647]"
-    >
-      <header class="purchase-card__leasing-modal-header">
-        <h2 id="return-modal-title">Wie läuft eine Retoure ab?</h2>
-        <UiButton
-          :aria-label="t('common.navigation.closeDialog')"
-          square
-          variant="tertiary"
-          class="purchase-card__leasing-modal-close"
-          @click="returnModalOpen = false"
-        >
-          <SfIconClose />
-        </UiButton>
-      </header>
-      <div class="purchase-card__leasing-modal-body">
-        <div v-if="returnModalLoading" class="purchase-card__leasing-modal-loading">
-          <SfLoaderCircular size="lg" />
-        </div>
-        <div
-          v-else-if="returnModalContent"
-          class="purchase-card__leasing-modal-content no-preflight"
-          v-html="returnModalContent"
-        />
-        <p v-else class="purchase-card__leasing-modal-empty">Der Retoure-Content konnte nicht geladen werden.</p>
-      </div>
-    </UiModal>
-  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -365,7 +297,6 @@ import {
   SfTooltip,
   SfLink,
   SfIconExpandMore,
-  SfIconClose,
 } from '@storefront-ui/vue';
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';
@@ -456,16 +387,8 @@ const { getSetting: getNotifyMeSetting } = useSiteSettings('showNotifyMe');
 const showNotifyMe = computed(() => getNotifyMeSetting().toString() === 'true');
 const localePath = useLocalePath();
 const { openDrawer } = useProductLegalDetailsDrawer();
-const leasingModalOpen = ref(false);
-const leasingModalLoading = ref(false);
-const leasingModalContent = ref('');
-const returnModalOpen = ref(false);
-const returnModalLoading = ref(false);
-const returnModalContent = ref('');
-const LEASING_CATEGORY_ID = 3228;
 const LEASING_CATEGORY_PATH = '/ueber-uns/leasingpartner';
-const RETURN_CATEGORY_ID = 2999;
-const RETURN_CATEGORY_PATH = '/artikel-informationen/wie-laeuft-eine-retoure-ab';
+const RETURN_CATEGORY_PATH = '/ueber-uns/retoure';
 
 const manufacturer = computed(() => {
   try {
@@ -702,51 +625,6 @@ const openProductQuestionTab = () => {
     if (handled) return;
     dispatchProductQuestionTabEvent();
   }, 300);
-};
-
-const fetchCategoryModalContent = async (categoryId: number, categoryUrlPath: string) => {
-  const templateResponse = await useSdk().plentysystems.getCategoryTemplate({ id: categoryId });
-  const templateContent = templateResponse?.data?.data || '';
-  if (templateContent) return templateContent;
-
-  const facetResponse = await useSdk().plentysystems.getFacet({
-    categoryUrlPath,
-    page: 1,
-    itemsPerPage: 1,
-  });
-  const categoryDetails = facetResponse?.data?.category?.details?.[0];
-
-  return categoryDetails?.description || categoryDetails?.description2 || categoryDetails?.fulltext || '';
-};
-
-const openLeasingModal = async () => {
-  leasingModalOpen.value = true;
-
-  if (leasingModalContent.value || leasingModalLoading.value) return;
-
-  leasingModalLoading.value = true;
-  try {
-    leasingModalContent.value = await fetchCategoryModalContent(LEASING_CATEGORY_ID, LEASING_CATEGORY_PATH);
-  } catch {
-    leasingModalContent.value = '';
-  } finally {
-    leasingModalLoading.value = false;
-  }
-};
-
-const openReturnModal = async () => {
-  returnModalOpen.value = true;
-
-  if (returnModalContent.value || returnModalLoading.value) return;
-
-  returnModalLoading.value = true;
-  try {
-    returnModalContent.value = await fetchCategoryModalContent(RETURN_CATEGORY_ID, RETURN_CATEGORY_PATH);
-  } catch {
-    returnModalContent.value = '';
-  } finally {
-    returnModalLoading.value = false;
-  }
 };
 </script>
 
@@ -1032,58 +910,6 @@ const openReturnModal = async () => {
   font-style: italic;
 }
 
-.purchase-card__leasing-modal {
-  z-index: 10000;
-  background: #fff;
-  border-radius: 0;
-}
-
-.purchase-card__leasing-modal-header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  min-height: 64px;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #d9d9d9;
-  background: #fff;
-  padding: 0 18px;
-}
-
-.purchase-card__leasing-modal-header h2 {
-  margin: 0;
-  color: #071625;
-  font-size: 1.35rem;
-  font-weight: 800;
-  line-height: 1.2;
-}
-
-.purchase-card__leasing-modal-close {
-  color: var(--var-primary-grey-lighter);
-}
-
-.purchase-card__leasing-modal-body {
-  height: calc(100% - 64px);
-  overflow-y: auto;
-  background: #fff;
-}
-
-.purchase-card__leasing-modal-loading,
-.purchase-card__leasing-modal-empty {
-  display: flex;
-  min-height: 240px;
-  align-items: center;
-  justify-content: center;
-  color: var(--var-primary-grey-lighter);
-}
-
-.purchase-card__leasing-modal-content {
-  width: min(100%, 1380px);
-  margin: 0 auto;
-  padding: 64px 48px 80px;
-}
-
 .purchase-card :deep(select) {
   width: 100%;
   height: 36px;
@@ -1126,10 +952,6 @@ const openReturnModal = async () => {
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 12px;
-  }
-
-  .purchase-card__leasing-modal-content {
-    padding: 32px 18px 56px;
   }
 }
 </style>

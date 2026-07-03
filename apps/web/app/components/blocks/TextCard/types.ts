@@ -50,6 +50,7 @@ export type TextCardContent = {
     paddingBottom?: string;
     paddingLeft?: string;
     paddingRight?: string;
+    verticalAlignment?: 'top' | 'center' | 'bottom';
     fullWidth?: boolean;
   };
 };
