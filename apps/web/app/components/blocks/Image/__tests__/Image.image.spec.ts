@@ -222,10 +222,13 @@ describe('Image block', () => {
     expect(wrapper.find('[data-testid="image-block-image"]').classes()).toContain('object-contain');
   });
 
-  it('should use a fixed height when nested inside another block', () => {
+  it('should use aspect ratio instead of a fixed height when nested inside another block', () => {
     getBlockDepthMock.mockReturnValueOnce(1);
     const wrapper = mount(Image, { props: mockImageBlock });
-    expect(wrapper.find('[data-testid="image-block"]').attributes('style')).toContain('height: 24rem');
+    const style = wrapper.find('[data-testid="image-block"]').attributes('style');
+
+    expect(style).toContain('aspect-ratio: 16 / 9');
+    expect(style).not.toContain('height: 24rem');
   });
 
   it('should allow overlay content to receive clicks when a link target is set', () => {

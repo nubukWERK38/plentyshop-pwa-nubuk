@@ -46,14 +46,9 @@ describe('Image block layout', () => {
     const wrapper = mount(Image, {
       props: mockImageBlock,
     });
-    const img = wrapper.find('[data-testid="image-block-image"]');
-    const imgStyle = img.attributes('style');
     const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
 
-    expect(imgStyle).toContain('top: 10px');
-    expect(imgStyle).toContain('right: 40px');
-    expect(imgStyle).toContain('bottom: 20px');
-    expect(imgStyle).toContain('left: 30px');
+    expect(frameStyle).toContain('padding: 10px 40px 20px 30px;');
     expect(frameStyle).toContain('background-color: #abc123;');
   });
 
@@ -75,12 +70,13 @@ describe('Image block layout', () => {
     const wrapper = mount(Image, {
       props: block,
     });
+    const wrapperStyle = wrapper.find('[data-testid="image-block"]').attributes('style');
     const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
 
     expect(frameStyle).toContain('width: 320px');
-    expect(frameStyle).toContain('height: 100%');
-    expect(frameStyle).toContain('right: 0px');
-    expect(frameStyle).toContain('bottom: 0px');
+    expect(frameStyle).toContain('aspect-ratio: 16 / 9');
+    expect(wrapperStyle).toContain('justify-content: flex-end');
+    expect(wrapperStyle).toContain('align-items: flex-end');
   });
 
   it('should keep percentage image widths visible', () => {
@@ -102,10 +98,39 @@ describe('Image block layout', () => {
       props: block,
     });
     const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
+    const wrapperStyle = wrapper.find('[data-testid="image-block"]').attributes('style');
 
     expect(frameStyle).toContain('width: 50%');
-    expect(frameStyle).toContain('height: 100%');
-    expect(frameStyle).toContain('transform: translateX(-50%) translateY(-50%)');
+    expect(frameStyle).toContain('aspect-ratio: 16 / 9');
+    expect(wrapperStyle).toContain('justify-content: center');
+    expect(wrapperStyle).toContain('align-items: center');
+  });
+
+  it('should keep oversize percentage widths centered', () => {
+    const block = {
+      ...mockImageBlock,
+      content: {
+        ...mockImageBlock.content,
+        layout: {
+          ...mockImageBlock.content.layout,
+          imageWidth: 120,
+          imageWidthUnit: '%' as const,
+          imageHorizontalAlignment: 'center' as const,
+          imageVerticalAlignment: 'top' as const,
+        },
+      },
+    };
+
+    const wrapper = mount(Image, {
+      props: block,
+    });
+    const wrapperStyle = wrapper.find('[data-testid="image-block"]').attributes('style');
+    const frameStyle = wrapper.find('[data-testid="image-link"]').attributes('style');
+
+    expect(frameStyle).toContain('width: 120%');
+    expect(frameStyle).toContain('aspect-ratio: 16 / 9');
+    expect(wrapperStyle).toContain('justify-content: center');
+    expect(wrapperStyle).toContain('align-items: flex-start');
   });
 
   it('should apply image object position from alignment settings', () => {

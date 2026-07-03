@@ -14,7 +14,7 @@
       <NuxtImg
         :src="breakpointConfig.url"
         :alt="props.content.image.alt"
-        class="absolute"
+        class="block w-full h-full"
         :class="props.content.image.fillMode === 'fit' ? 'object-contain' : 'object-cover'"
         :style="imageInlineStyle"
         :width="breakpointConfig.dimensions.width"
@@ -42,7 +42,6 @@ import { buildSeoLinkTitle } from '~/utils/seo';
 const viewport = useViewport();
 const NuxtLink = resolveComponent('NuxtLink');
 const localePath = useLocalePath();
-const { getBlockDepth } = useBlockManager();
 
 const props = defineProps<ImageProps>();
 
@@ -99,21 +98,6 @@ const breakpointConfig = computed(() => {
   return (configs[viewport.breakpoint.value] ?? configs['fallback']) as BreakpointEntry;
 });
 
-const depth = getBlockDepth(props.meta.uuid);
-const wrapperStyle = computed(() => {
-  if (depth > 0) {
-    return {
-      position: 'relative' as const,
-      height: '24rem',
-    };
-  }
-
-  return {
-    aspectRatio: breakpointConfig.value.aspectRatio,
-    position: 'relative' as const,
-  };
-});
-
 const normalizeImageWidthUnit = (unit: ImageProps['content']['layout']['imageWidthUnit']) => (unit === 'px' ? 'px' : '%');
 const normalizeHorizontalAlignment = (alignment: ImageProps['content']['layout']['imageHorizontalAlignment']) => {
   if (alignment === 'left' || alignment === 'right') return alignment;
@@ -124,16 +108,52 @@ const normalizeVerticalAlignment = (alignment: ImageProps['content']['layout']['
   return 'center';
 };
 
-const imageFrameStyle = computed(() => {
+const imageWidthConfig = computed(() => {
   const layout = props.content.layout ?? {};
   const width = Number(layout.imageWidth);
-  const widthUnit = normalizeImageWidthUnit(layout.imageWidthUnit);
-  const hasCustomWidth = Number.isFinite(width) && width > 0 && !(widthUnit === '%' && width === 100);
+  const unit = normalizeImageWidthUnit(layout.imageWidthUnit);
+  const hasCustomWidth = Number.isFinite(width) && width > 0 && !(unit === '%' && width === 100);
+
+  return {
+    width,
+    unit,
+    hasCustomWidth,
+  };
+});
+
+const wrapperStyle = computed(() => {
+  const layout = props.content.layout ?? {};
+  const horizontalAlignment = normalizeHorizontalAlignment(layout.imageHorizontalAlignment);
+  const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
+
+  if (imageWidthConfig.value.hasCustomWidth) {
+    return {
+      position: 'relative' as const,
+      display: 'flex',
+      justifyContent:
+        horizontalAlignment === 'left' ? 'flex-start' : horizontalAlignment === 'right' ? 'flex-end' : 'center',
+      alignItems: verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'bottom' ? 'flex-end' : 'center',
+    };
+  }
+
+  return {
+    aspectRatio: breakpointConfig.value.aspectRatio,
+    position: 'relative' as const,
+  };
+});
+
+const imageFrameStyle = computed(() => {
+  const layout = props.content.layout ?? {};
   const baseStyle = {
     backgroundColor: layout.backgroundColor ?? 'transparent',
+    boxSizing: 'border-box',
+    paddingTop: `${layout.paddingTop ?? 0}px`,
+    paddingRight: `${layout.paddingRight ?? 0}px`,
+    paddingBottom: `${layout.paddingBottom ?? 0}px`,
+    paddingLeft: `${layout.paddingLeft ?? 0}px`,
   };
 
-  if (!hasCustomWidth) {
+  if (!imageWidthConfig.value.hasCustomWidth) {
     return {
       ...baseStyle,
       position: 'absolute' as const,
@@ -143,38 +163,12 @@ const imageFrameStyle = computed(() => {
     };
   }
 
-  const horizontalAlignment = normalizeHorizontalAlignment(layout.imageHorizontalAlignment);
-  const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
-  const style: Record<string, string> = {
+  return {
     ...baseStyle,
-    position: 'absolute',
-    width: `${width}${widthUnit}`,
-    height: '100%',
-    maxWidth: '100%',
+    position: 'relative' as const,
+    width: `${imageWidthConfig.value.width}${imageWidthConfig.value.unit}`,
+    aspectRatio: breakpointConfig.value.aspectRatio,
   };
-
-  if (horizontalAlignment === 'left') {
-    style.left = '0';
-  } else if (horizontalAlignment === 'right') {
-    style.right = '0';
-  } else {
-    style.left = '50%';
-  }
-
-  if (verticalAlignment === 'top') {
-    style.top = '0';
-  } else if (verticalAlignment === 'bottom') {
-    style.bottom = '0';
-  } else {
-    style.top = '50%';
-  }
-
-  const transforms = [];
-  if (horizontalAlignment === 'center') transforms.push('translateX(-50%)');
-  if (verticalAlignment === 'center') transforms.push('translateY(-50%)');
-  if (transforms.length) style.transform = transforms.join(' ');
-
-  return style;
 });
 
 const overlayAlignClasses = computed(() => {
@@ -191,13 +185,6 @@ const imageInlineStyle = computed(() => {
   const verticalAlignment = normalizeVerticalAlignment(layout.imageVerticalAlignment);
 
   return {
-    display: 'block',
-    top: `${layout.paddingTop ?? 0}px`,
-    right: `${layout.paddingRight ?? 0}px`,
-    bottom: `${layout.paddingBottom ?? 0}px`,
-    left: `${layout.paddingLeft ?? 0}px`,
-    width: 'auto',
-    height: 'auto',
     filter:
       props.content.image.brightness !== null && props.content.image.brightness !== undefined
         ? `brightness(${props.content.image.brightness})`

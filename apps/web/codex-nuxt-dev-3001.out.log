@@ -1052,3 +1052,123 @@ Error {
 [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2007ms
 [36mi[39m Vite server warmed up in 1ms
 [36mi[39m Vite client warmed up in 3ms
+[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+[shop-core | extensions] No extensions to load.
+[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+[36mi[39m Using yup with vee-validate
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+
+[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+[32m√[39m Vite client built in 50ms
+[32m√[39m Vite server built in 52ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1793ms
+[36mi[39m Vite server warmed up in 1ms
+[36mi[39m Vite client warmed up in 3ms
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3001/search?term=epic&sort=default.recommended_sorting
+
+ 
+[31mℹ Error: [nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function. This is probably not a Nuxt bug. Find out more at [36mhttps://nuxt.com/docs/4.x/guide/concepts/auto-imports#vue-and-nuxt-composables[39m.[39m
+
+ ⁃ at useNuxtApp [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/app/nuxt.js:263:13)[39m
+ ⁃ at t [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/@plentymarkets/shop-core/dist/runtime/composables/useT.js:5:53)[39m
+ ⁃ at title [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/apps/web/app/pages/search.vue:155:48)[39m
+
+   [2m150[22m [2m┃[22m      title[34m:[0m [36mtrue[0m[34m,[0m
+   [2m151[22m [2m┃[22m      rating[34m:[0m [36mtrue[0m[34m,[0m
+   [2m152[22m [2m┃[22m      previewText[34m:[0m [36mtrue[0m[34m,[0m
+   [2m153[22m [2m┃[22m      price[34m:[0m [36mtrue[0m[34m,[0m
+   [2m154[22m [2m┃[22m      addToCart[34m:[0m [36mtrue[0m[34m,[0m
+ [41m❯ 155 ┃      manufacturer: true,[49m
+   [2m156[22m [2m┃[22m    }[34m,[0m
+   [2m157[22m [2m┃[22m    fieldsOrder[34m:[0m [[32m'title'[0m[34m,[0m [32m'manufacturer'[0m[34m,[0m [32m'rating'[0m[34m,[0m [32m'previewText'[0m[34m,[0m [32m'price'[0m[34m,[0m [32m'addToCart'[0m][34m,[0m
+   [2m158[22m [2m┃[22m    fieldsDisabled[34m:[0m [[32m'title'[0m][34m,[0m
+   [2m159[22m [2m┃[22m    contentAlignment[34m:[0m [32m'left'[0m[34m,[0m
+   [2m160[22m [2m┃[22m    cardBorders[34m:[0m [36mtrue[0m[34m,[0m
+
+ ⁃ at walkResolver [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:72:13)[39m
+ ⁃ at walkResolver [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:82:17)[39m
+ ⁃ at normalizeEntryToTags [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:197:11)[39m
+ ⁃ at Object.resolveTags [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.Ct24BOby.mjs:81:19)[39m
+[2m ⁃ at [3mprocess.processTicksAndRejections[23m ([3mnode:internal/process/task_queues:104:5[23m)[22m
+ ⁃ at async renderSSRHead [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/server.mjs:158:48)[39m
+ ⁃ at async Object.render [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer.mjs:259:68)[39m
+
+[31m[CAUSE][39m
+Error {
+  stack: '[nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function. This is probably not a Nuxt bug. Find out more at [36mhttps://nuxt.com/docs/4.x/guide/concepts/auto-imports#vue-and-nuxt-composables[39m.\n' +
+  'at useNuxtApp (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/app/nuxt.js:263:13)\n' +
+  'at t (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/@plentymarkets/shop-core/dist/runtime/composables/useT.js:5:53)\n' +
+  'at title (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/apps/web/app/pages/search.vue:155:48)\n' +
+  'at walkResolver (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:72:13)\n' +
+  'at walkResolver (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:82:17)\n' +
+  'at normalizeEntryToTags (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:197:11)\n' +
+  'at Object.resolveTags (J:/Github/'... 430 more characters,
+  message: '[nuxt] A composable that requires access to the Nuxt instance was 
+  called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup 
+  function. This is probably not a Nuxt bug. Find out more at 
+  [36mhttps://nuxt.com/docs/4.x/guide/concepts/auto-imports#vue-and-nuxt-composables[39m.',
+}
+[41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3001/search?term=epic&sort=default.recommended_sorting
+
+ 
+[31mℹ Error: [nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function. This is probably not a Nuxt bug. Find out more at [36mhttps://nuxt.com/docs/4.x/guide/concepts/auto-imports#vue-and-nuxt-composables[39m.[39m
+
+ ⁃ at useNuxtApp [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/app/nuxt.js:263:13)[39m
+ ⁃ at t [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/@plentymarkets/shop-core/dist/runtime/composables/useT.js:5:53)[39m
+ ⁃ at title [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/apps/web/app/pages/search.vue:155:48)[39m
+
+   [2m150[22m [2m┃[22m      title[34m:[0m [36mtrue[0m[34m,[0m
+   [2m151[22m [2m┃[22m      rating[34m:[0m [36mtrue[0m[34m,[0m
+   [2m152[22m [2m┃[22m      previewText[34m:[0m [36mtrue[0m[34m,[0m
+   [2m153[22m [2m┃[22m      price[34m:[0m [36mtrue[0m[34m,[0m
+   [2m154[22m [2m┃[22m      addToCart[34m:[0m [36mtrue[0m[34m,[0m
+ [41m❯ 155 ┃      manufacturer: true,[49m
+   [2m156[22m [2m┃[22m    }[34m,[0m
+   [2m157[22m [2m┃[22m    fieldsOrder[34m:[0m [[32m'title'[0m[34m,[0m [32m'manufacturer'[0m[34m,[0m [32m'rating'[0m[34m,[0m [32m'previewText'[0m[34m,[0m [32m'price'[0m[34m,[0m [32m'addToCart'[0m][34m,[0m
+   [2m158[22m [2m┃[22m    fieldsDisabled[34m:[0m [[32m'title'[0m][34m,[0m
+   [2m159[22m [2m┃[22m    contentAlignment[34m:[0m [32m'left'[0m[34m,[0m
+   [2m160[22m [2m┃[22m    cardBorders[34m:[0m [36mtrue[0m[34m,[0m
+
+ ⁃ at walkResolver [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:72:13)[39m
+ ⁃ at walkResolver [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:82:17)[39m
+ ⁃ at normalizeEntryToTags [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:197:11)[39m
+ ⁃ at Object.resolveTags [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.Ct24BOby.mjs:81:19)[39m
+[2m ⁃ at [3mprocess.processTicksAndRejections[23m ([3mnode:internal/process/task_queues:104:5[23m)[22m
+ ⁃ at async renderSSRHead [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/server.mjs:158:48)[39m
+ ⁃ at async Object.render [33m(J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer.mjs:259:68)[39m
+
+[31m[CAUSE][39m
+Error {
+  stack: '[nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function. This is probably not a Nuxt bug. Find out more at [36mhttps://nuxt.com/docs/4.x/guide/concepts/auto-imports#vue-and-nuxt-composables[39m.\n' +
+  'at useNuxtApp (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/nuxt/dist/app/nuxt.js:263:13)\n' +
+  'at t (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/@plentymarkets/shop-core/dist/runtime/composables/useT.js:5:53)\n' +
+  'at title (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/apps/web/app/pages/search.vue:155:48)\n' +
+  'at walkResolver (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:72:13)\n' +
+  'at walkResolver (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:82:17)\n' +
+  'at normalizeEntryToTags (J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/unhead/dist/shared/unhead.B5FWS6X0.mjs:197:11)\n' +
+  'at Object.resolveTags (J:/Github/'... 430 more characters,
+  message: '[nuxt] A composable that requires access to the Nuxt instance was 
+  called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup 
+  function. This is probably not a Nuxt bug. Find out more at 
+  [36mhttps://nuxt.com/docs/4.x/guide/concepts/auto-imports#vue-and-nuxt-composables[39m.',
+}
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x3)[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x4)[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x5)[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x6)[22m
+[36mi[39m [32mhmr update [39m[2m/@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m[2m (x7)[22m
+[36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+[shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+[shop-core | extensions] No extensions to load.
+[90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+[36mi[39m Using yup with vee-validate
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+
+[shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+[32m√[39m Vite client built in 50ms
+[32m√[39m Vite server built in 51ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1816ms
+[36mi[39m Vite server warmed up in 0ms
+[36mi[39m Vite client warmed up in 3ms
