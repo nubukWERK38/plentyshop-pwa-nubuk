@@ -54,10 +54,10 @@
               />
               <ul class="purchase-card__more-infos">
                 <li>
-                  <NuxtLink :to="localePath(RETURN_CATEGORY_PATH)" title="Wie läuft eine Retoure ab?">
+                  <button type="button" title="Wie läuft eine Retoure ab?" @click="openInfoModal('return')">
                     <i class="fa fa-angle-right" aria-hidden="true" />
                     Wie läuft eine Retoure ab?
-                  </NuxtLink>
+                  </button>
                 </li>
                 <li>
                   <button type="button" title="Fragen zum Produkt?" @click="openProductQuestionTab">
@@ -66,10 +66,10 @@
                   </button>
                 </li>
                 <li>
-                  <NuxtLink :to="localePath(LEASING_CATEGORY_PATH)" title="Mit Bike-Leasing bis zu 40% sparen">
+                  <button type="button" title="Mit Bike-Leasing bis zu 40% sparen" @click="openInfoModal('leasing')">
                     <i class="fa fa-angle-right" aria-hidden="true" />
                     Mit Bike-Leasing bis zu 40% sparen
-                  </NuxtLink>
+                  </button>
                 </li>
                 <li>
                   <button type="button" title="Herstellerangaben" @click="openManufacturerDetails">
@@ -278,6 +278,37 @@
         </section>
       </div>
     </div>
+
+    <ClientOnly>
+      <UiModal
+        v-model="infoModalOpen"
+        aria-labelledby="purchase-card-info-modal-title"
+        tag="section"
+        role="dialog"
+        class="purchase-card__info-modal"
+        overlay-classes="purchase-card__info-modal-overlay"
+      >
+        <header class="purchase-card__info-modal-header">
+          <h2 id="purchase-card-info-modal-title" class="purchase-card__info-modal-title">{{ infoModalTitle }}</h2>
+          <UiButton
+            type="button"
+            variant="tertiary"
+            square
+            class="text-white hover:bg-white/10 active:bg-white/20"
+            :aria-label="t('common.navigation.closeDrawer')"
+            @click="closeInfoModal"
+          >
+            <SfIconClose />
+          </UiButton>
+        </header>
+
+        <div v-if="infoModalLoading" class="purchase-card__info-modal-loading">
+          <SfLoaderCircular size="lg" />
+        </div>
+        <div v-else-if="infoModalError" class="purchase-card__info-modal-error">Inhalt konnte nicht geladen werden.</div>
+        <div v-else class="purchase-card__info-modal-content no-preflight" v-html="infoModalContent" />
+      </UiModal>
+    </ClientOnly>
   </form>
 </template>
 
@@ -297,6 +328,7 @@ import {
   SfTooltip,
   SfLink,
   SfIconExpandMore,
+  SfIconClose,
 } from '@storefront-ui/vue';
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';
@@ -389,6 +421,22 @@ const localePath = useLocalePath();
 const { openDrawer } = useProductLegalDetailsDrawer();
 const LEASING_CATEGORY_PATH = '/ueber-uns/leasingpartner';
 const RETURN_CATEGORY_PATH = '/ueber-uns/retoure';
+type InfoModalType = 'return' | 'leasing';
+const infoModalOpen = ref(false);
+const infoModalTitle = ref('');
+const infoModalContent = ref('');
+const infoModalLoading = ref(false);
+const infoModalError = ref(false);
+const infoModalPages: Record<InfoModalType, { title: string; path: string }> = {
+  return: {
+    title: 'Wie läuft eine Retoure ab?',
+    path: RETURN_CATEGORY_PATH,
+  },
+  leasing: {
+    title: 'Mit Bike-Leasing bis zu 40% sparen',
+    path: LEASING_CATEGORY_PATH,
+  },
+};
 
 const manufacturer = computed(() => {
   try {
@@ -606,6 +654,43 @@ const scrollToReviews = () => {
 
 const openManufacturerDetails = () => {
   openDrawer();
+};
+
+const closeInfoModal = () => {
+  infoModalOpen.value = false;
+};
+
+const extractInfoModalContent = (html: string) => {
+  const documentFragment = new DOMParser().parseFromString(html, 'text/html');
+  const content =
+    documentFragment.querySelector('[data-testid="category-page-content"]') ??
+    documentFragment.querySelector('main') ??
+    documentFragment.body;
+
+  content.querySelectorAll('script, style, noscript').forEach((element) => element.remove());
+
+  return content.innerHTML;
+};
+
+const openInfoModal = async (type: InfoModalType) => {
+  const page = infoModalPages[type];
+
+  infoModalTitle.value = page.title;
+  infoModalContent.value = '';
+  infoModalError.value = false;
+  infoModalLoading.value = true;
+  infoModalOpen.value = true;
+
+  try {
+    const response = await fetch(localePath(page.path));
+    if (!response.ok) throw new Error(`Failed to load ${page.path}`);
+
+    infoModalContent.value = extractInfoModalContent(await response.text());
+  } catch {
+    infoModalError.value = true;
+  } finally {
+    infoModalLoading.value = false;
+  }
 };
 
 const dispatchProductQuestionTabEvent = () => {
@@ -941,6 +1026,61 @@ const openProductQuestionTab = () => {
 .purchase-card :deep(label[for='unit-combination'] + div select) {
   margin-top: 0;
   padding-top: 0;
+}
+
+:global(.purchase-card__info-modal-overlay) {
+  z-index: 10000;
+  background: rgb(29 44 54 / 54%);
+}
+
+:global(.purchase-card__info-modal) {
+  width: min(960px, calc(100vw - 32px));
+  max-height: min(820px, calc(100vh - 32px));
+  overflow: hidden;
+  border: 0;
+  border-radius: 6px;
+  padding: 0;
+  background: #fff;
+  color: #071625;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 28%);
+}
+
+:global(.purchase-card__info-modal-header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--ci-primary);
+  color: #fff;
+}
+
+:global(.purchase-card__info-modal-title) {
+  margin: 0;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+:global(.purchase-card__info-modal-loading),
+:global(.purchase-card__info-modal-error) {
+  display: flex;
+  min-height: 240px;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+:global(.purchase-card__info-modal-content) {
+  max-height: calc(min(820px, 100vh - 32px) - 80px);
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+:global(.purchase-card__info-modal-content a) {
+  color: var(--ci-primary);
+  text-decoration: underline;
 }
 
 @media (max-width: 767px) {

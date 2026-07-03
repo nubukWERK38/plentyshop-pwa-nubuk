@@ -459,6 +459,9 @@
     "misConfigured": "Unser Kontaktformular ist aufgrund einer fehlenden Konfiguration vorübergehend deaktiviert. Bitte schauen Sie später noch einmal vorbei oder kontaktieren Sie uns über alternative Kontaktmöglichkeiten.",
     "privacyPolicy": "Hiermit bestätige ich, dass ich die {privacyPolicy} gelesen habe.",
     "success": "Nachricht erfolgreich gesendet",
+    "successTitle": "Vielen Dank für Ihre Nachricht.",
+    "successMessage": "Ihre Anfrage wurde erfolgreich übermittelt. Wir melden uns schnellstmöglich bei Ihnen.",
+    "newRequest": "Neue Anfrage senden",
     "info": {
       "heading": "Kontaktinformationen",
       "email": "E-Mail"
