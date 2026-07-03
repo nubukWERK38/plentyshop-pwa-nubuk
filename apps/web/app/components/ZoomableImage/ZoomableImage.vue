@@ -78,8 +78,10 @@ const imageTitle =
 
 const normalizeSrcsetUrl = (url?: string) => {
   const trimmedUrl = url?.trim();
+  if (!trimmedUrl || /^<.*>$/.test(trimmedUrl)) return '';
+  if (!/^(https?:)?\/\/|^\//.test(trimmedUrl)) return '';
 
-  return trimmedUrl ? encodeURI(trimmedUrl) : '';
+  return encodeURI(trimmedUrl);
 };
 
 const getSourceSet = (image: ImagesData) => {
@@ -121,7 +123,7 @@ const nuxtImgProps = computed<Record<string, unknown>>(() => ({
     : { 'object-contain h-full w-full': true, [`demo-trigger-${index.value}`]: true },
   'data-zoom': imageUrl,
   quality: 80,
-  srcset: getSourceSet(image.value),
+  srcset: getSourceSet(image.value) || undefined,
   sizes: '2xs:370px xs:720px sm:740px md:1400px',
   draggable: 'false',
   loading: isFirstImage.value ? 'eager' : 'lazy',

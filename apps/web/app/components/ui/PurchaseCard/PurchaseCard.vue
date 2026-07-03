@@ -487,7 +487,13 @@ const brandLogo = computed(() => {
   return getNormalizedBrandLogo(manufacturer.value);
 });
 const variationNumber = computed(() => productGetters.getVariationNumber(props.product));
-const availabilityName = computed(() => productGetters.getAvailabilityName(props.product));
+const availabilityName = computed(() => {
+  try {
+    return productGetters.getAvailabilityName(props.product) || '';
+  } catch {
+    return '';
+  }
+});
 const orderPropertiesGroups = computed(() =>
   Object.values(productPropertyGetters.getOrderPropertiesGroups(props.product)),
 );

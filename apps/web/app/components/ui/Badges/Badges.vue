@@ -19,13 +19,13 @@
       </template>
 
       <SfListItem
-        v-if="useAvailability && productGetters.getAvailabilityName(product)"
+        v-if="useAvailability && availabilityName"
         size="sm"
         class="text-xs font-medium select-none rounded-md !w-fit !cursor-text !px-2 grid mt-2"
-        :class="[productGetters.getAgenciesAvailabilityCLass(product)]"
+        :class="[availabilityClass]"
         :style="availabilityStyles"
       >
-        {{ productGetters.getAvailabilityName(product) }}
+        {{ availabilityName }}
       </SfListItem>
     </ul>
   </div>
@@ -45,18 +45,40 @@ const productTags = computed(() => {
   return tagGetters.getTags(product);
 });
 
-const availabilityStyles = computed(() => {
-  if (!useAvailability) return {};
+const availabilityName = computed(() => {
+  if (!useAvailability) return '';
 
-  return {
-    backgroundColor: productGetters.getAvailabilityBackgroundColor(product),
-    color: productGetters.getAvailabilityTextColor(product),
-  };
+  try {
+    return productGetters.getAvailabilityName(product) || '';
+  } catch {
+    return '';
+  }
 });
 
-const haveBadges = computed(
-  () => (useTags && productTags.value.length > 0) || (useAvailability && productGetters.getAvailabilityName(product)),
-);
+const availabilityClass = computed(() => {
+  if (!availabilityName.value) return '';
+
+  try {
+    return productGetters.getAgenciesAvailabilityCLass(product);
+  } catch {
+    return '';
+  }
+});
+
+const availabilityStyles = computed(() => {
+  if (!availabilityName.value) return {};
+
+  try {
+    return {
+      backgroundColor: productGetters.getAvailabilityBackgroundColor(product),
+      color: productGetters.getAvailabilityTextColor(product),
+    };
+  } catch {
+    return {};
+  }
+});
+
+const haveBadges = computed(() => (useTags && productTags.value.length > 0) || Boolean(availabilityName.value));
 
 const onTagClick = (tag: ProductTag) => {
   navigateTo(localePath(`/tag/${tagGetters.getTagName(tag)}_${tagGetters.getTagId(tag)}`));

@@ -3,11 +3,11 @@
     data-testid="category-per-page"
     aria-label="Show products per page"
     :style="layoutStyle"
-    :class="useSelectionModeCompact ? 'relative z-10 flex justify-end mb-0 pointer-events-none' : ''"
+    :class="useSelectionModeCompact ? 'relative z-10 flex justify-end mb-4' : ''"
   >
     <CategoryItemsPerPage
       :key="useSelectionModeCompact ? 'ph' : 'no-ph'"
-      :class="useSelectionModeCompact ? 'w-[160px] shrink-0 pointer-events-auto' : 'mb-6'"
+      :class="useSelectionModeCompact ? 'w-full sm:w-[160px] shrink-0' : 'mb-6'"
       :selection-mode-compact="useSelectionModeCompact"
       :total-products="productsCatalog.pagination?.totals ?? 0"
     />
