@@ -1,7 +1,13 @@
 <template>
   <div
     data-testid="multi-grid-structure"
-    :class="[getGridClasses(), { 'multi-grid--image-teaser-2x2': isTwoByTwoImageTeaserGrid }]"
+    :class="[
+      getGridClasses(),
+      {
+        'multi-grid--image-teaser-2x2': isTwoByTwoImageTeaserGrid,
+        'multi-grid--image-text-row': isTwoColumnImageTextBoxRow,
+      },
+    ]"
     :style="gridInlineStyle"
   >
     <div
@@ -16,7 +22,10 @@
         v-for="(row, rowIndex) in column"
         :key="row.meta.uuid"
         class="group/row relative"
-        :class="{ 'multi-grid__row--image-teaser-2x2': isTwoByTwoImageTeaserGrid }"
+        :class="{
+          'multi-grid__row--image-teaser-2x2': isTwoByTwoImageTeaserGrid,
+          'multi-grid__row--image-text-row': isTwoColumnImageTextBoxRow,
+        }"
         :style="getRowInlineStyle(colIndex, rowIndex)"
         :data-uuid="row.meta.uuid"
         @mouseenter="onRowEnter(row)"
@@ -101,8 +110,14 @@ const isTwoByTwoImageTeaserGrid = computed(() => {
 
   return columnCounts.length === 2 && columnCounts.every((count) => count === 2);
 });
+const isTwoColumnImageTextBoxRow = computed(() => {
+  if (configuration.columnWidths?.length !== 2) return false;
+  if (columns.value.length !== 2) return false;
+
+  return columns.value.every((column) => column.length === 1 && column[0]?.name === 'ImageTextBox');
+});
 const gridGapValue = computed(() => {
-  if (isTwoByTwoImageTeaserGrid.value) {
+  if (isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value) {
     return 'var(--ci-teaser-grid-gap)';
   }
 
@@ -136,7 +151,11 @@ const gridInlineStyle = computed(() => ({
     configuration.layout?.marginTop !== undefined ? `${configuration.layout.marginTop}px` : defaultSectionSpacing,
   marginRight: configuration.layout?.marginRight !== undefined ? `${configuration.layout.marginRight}px` : '0px',
   marginBottom:
-    configuration.layout?.marginBottom !== undefined ? `${configuration.layout.marginBottom}px` : defaultSectionSpacing,
+    isTwoColumnImageTextBoxRow.value && configuration.layout?.marginBottom
+      ? gridGapValue.value
+      : configuration.layout?.marginBottom !== undefined
+        ? `${configuration.layout.marginBottom}px`
+        : defaultSectionSpacing,
   marginLeft: configuration.layout?.marginLeft !== undefined ? `${configuration.layout.marginLeft}px` : '0px',
   paddingTop: isTwoByTwoImageTeaserGrid.value
     ? gridGapValue.value
@@ -166,15 +185,17 @@ const verticalAlignmentMap: Record<string, string> = {
 
 const columnInlineStyle = computed(() => ({
   rowGap: gridGapValue.value,
-  alignItems: isTwoByTwoImageTeaserGrid.value
-    ? 'stretch'
-    : horizontalAlignmentMap[configuration.layout?.horizontalAlignment || 'left'],
-  justifyContent: isTwoByTwoImageTeaserGrid.value
-    ? 'stretch'
-    : verticalAlignmentMap[configuration.layout?.verticalAlignment || 'top'],
+  alignItems:
+    isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value
+      ? 'stretch'
+      : horizontalAlignmentMap[configuration.layout?.horizontalAlignment || 'left'],
+  justifyContent:
+    isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value
+      ? 'stretch'
+      : verticalAlignmentMap[configuration.layout?.verticalAlignment || 'top'],
 }));
 const getGridClasses = () => {
-  if (isTwoByTwoImageTeaserGrid.value) {
+  if (isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value) {
     return gridClassFor({ mobile: 1, tablet: 2, desktop: 2 }, ['items-stretch']);
   }
 
@@ -182,7 +203,7 @@ const getGridClasses = () => {
 };
 
 const getColumnClasses = (colIndex: number) => {
-  if (isTwoByTwoImageTeaserGrid.value) {
+  if (isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value) {
     return [];
   }
 
@@ -303,6 +324,39 @@ const columns = computed<Block[][]>(() => {
 .multi-grid__row--image-teaser-2x2 :deep(.image-text-box img) {
   height: 100%;
   object-fit: cover;
+}
+
+.multi-grid--image-text-row .multi-grid__column {
+  min-width: 0;
+}
+
+.multi-grid__row--image-text-row {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 16 / 9;
+}
+
+.multi-grid__row--image-text-row :deep(> *),
+.multi-grid__row--image-text-row :deep(.h-full),
+.multi-grid__row--image-text-row :deep(.block-wrapper),
+.multi-grid__row--image-text-row :deep(.image-text-box),
+.multi-grid__row--image-text-row :deep(.image-text-box > div),
+.multi-grid__row--image-text-row :deep(.image-text-box [class*='overflow-hidden']) {
+  width: 100%;
+  height: 100% !important;
+  min-width: 0;
+  min-height: 0 !important;
+}
+
+.multi-grid__row--image-text-row :deep(.image-text-box img) {
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.multi-grid__row--image-text-row :deep(.image-text-box .absolute) {
+  height: auto !important;
 }
 
 @media (min-width: 768px) {

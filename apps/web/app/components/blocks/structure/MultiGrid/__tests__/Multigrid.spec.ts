@@ -156,6 +156,47 @@ describe('MultiGrid block', () => {
     expect(firstRowStyle).toContain('--mg-row: 1');
   });
 
+  it('should stretch two image text boxes as an equal teaser row', () => {
+    const teaserBlocks = Array.from({ length: 2 }, (_, index) => ({
+      name: 'ImageTextBox',
+      type: 'content',
+      content: {},
+      meta: { uuid: `image-text-${index}` },
+      parent_slot: index,
+    }));
+
+    const wrapper = mount(MultiGrid, {
+      props: {
+        name: 'MultiGrid',
+        type: 'structure',
+        content: teaserBlocks,
+        configuration: {
+          columnWidths: [6, 6],
+          layout: {
+            backgroundColor: '#ffffff',
+            gap: 'M',
+            marginBottom: 20,
+          },
+        },
+        meta: { uuid: 'image-text-row' },
+      },
+    });
+
+    const grid = wrapper.find('[data-testid="multi-grid-structure"]');
+    const gridStyle = grid.attributes('style');
+    const gridClasses = grid.classes();
+    const columnStyle = wrapper.find('[data-testid="multi-grid-column"]').attributes('style');
+
+    expect(gridClasses).toContain('multi-grid--image-text-row');
+    expect(gridClasses).toContain('md:grid-cols-2');
+    expect(gridClasses).toContain('lg:grid-cols-2');
+    expect(gridStyle).toContain('gap: var(--ci-teaser-grid-gap)');
+    expect(gridStyle).toContain('var(--ci-teaser-grid-gap)');
+    expect(columnStyle).toContain('align-items: stretch');
+    expect(columnStyle).toContain('justify-content: stretch');
+    expect(wrapper.find('.multi-grid__row--image-text-row').exists()).toBe(true);
+  });
+
   it('should apply layout styles (margin, background color) to the grid container', () => {
     const wrapper = mount(MultiGrid, {
       props: {
