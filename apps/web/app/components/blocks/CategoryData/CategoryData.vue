@@ -75,7 +75,7 @@
           :data-testid="'category-data-overlay-' + meta.uuid"
         >
           <div
-            :class="categoryDataContentClass"
+            :class="[categoryDataContentClass, 'category-data-image-content']"
             :style="{
               backgroundColor: props.content.text.background
                 ? hexToRgba(props.content.text.bgColor, props.content.text.bgOpacity)
@@ -99,6 +99,7 @@
               :texts="texts"
               :show-subcategories="shouldRenderSubcategories"
               :subcategories="directSubcategories"
+              :max-subcategory-rows="4"
             />
           </div>
         </div>
@@ -368,6 +369,15 @@ const categoryDataContentClass = computed(() => {
 .category-data-image-overlay {
   width: 50%;
   background: linear-gradient(90deg, rgb(65 112 56 / 70%) 0%, rgb(45 125 174 / 62%) 100%);
+}
+
+.category-data-image-content {
+  transform: translateY(-20px);
+}
+
+.category-data-image-frame :deep(#category-headline) {
+  margin: 0 0 1rem;
+  line-height: 1.18;
 }
 </style>
 

@@ -54,7 +54,13 @@
         />
       </ClientOnly>
 
-      <component :is="getBlockComponent" v-if="getBlockComponent" v-bind="contentProps" :index="index">
+      <component
+        :is="getBlockComponent"
+        v-if="getBlockComponent"
+        :key="blockComponentKey"
+        v-bind="contentProps"
+        :index="index"
+      >
         <template v-if="block.type === 'structure'" #content="slotProps">
           <PageBlock
             v-if="shouldShowBlock(slotProps.contentBlock, enableActions)"
@@ -143,6 +149,8 @@ const getBlockComponent = computed(() => {
   if (!props.block.name) return null;
   return getCachedBlockComponent(props.block.name);
 });
+
+const blockComponentKey = computed(() => `${props.block.name}-${props.block.meta.uuid}`);
 
 const blockIsCurrentlyOpen = computed(() => blockUuid.value === props.block.meta.uuid);
 
