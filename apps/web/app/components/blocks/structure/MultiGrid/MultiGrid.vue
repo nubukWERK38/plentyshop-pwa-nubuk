@@ -1,5 +1,9 @@
 <template>
-  <div data-testid="multi-grid-structure" :class="getGridClasses()" :style="gridInlineStyle">
+  <div
+    data-testid="multi-grid-structure"
+    :class="[getGridClasses(), { 'multi-grid--image-teaser-2x2': isTwoByTwoImageTeaserGrid }]"
+    :style="gridInlineStyle"
+  >
     <div
       v-for="(column, colIndex) in columns"
       :key="colIndex"
@@ -9,9 +13,11 @@
       data-testid="multi-grid-column"
     >
       <div
-        v-for="row in column"
+        v-for="(row, rowIndex) in column"
         :key="row.meta.uuid"
         class="group/row relative"
+        :class="{ 'multi-grid__row--image-teaser-2x2': isTwoByTwoImageTeaserGrid }"
+        :style="getRowInlineStyle(colIndex, rowIndex)"
         :data-uuid="row.meta.uuid"
         @mouseenter="onRowEnter(row)"
         @mouseleave="onRowLeave"
@@ -160,8 +166,12 @@ const verticalAlignmentMap: Record<string, string> = {
 
 const columnInlineStyle = computed(() => ({
   rowGap: gridGapValue.value,
-  alignItems: horizontalAlignmentMap[configuration.layout?.horizontalAlignment || 'left'],
-  justifyContent: verticalAlignmentMap[configuration.layout?.verticalAlignment || 'top'],
+  alignItems: isTwoByTwoImageTeaserGrid.value
+    ? 'stretch'
+    : horizontalAlignmentMap[configuration.layout?.horizontalAlignment || 'left'],
+  justifyContent: isTwoByTwoImageTeaserGrid.value
+    ? 'stretch'
+    : verticalAlignmentMap[configuration.layout?.verticalAlignment || 'top'],
 }));
 const getGridClasses = () => {
   if (isTwoByTwoImageTeaserGrid.value) {
@@ -187,6 +197,15 @@ const getColumnClasses = (colIndex: number) => {
   }
 
   return classes;
+};
+
+const getRowInlineStyle = (colIndex: number, rowIndex: number) => {
+  if (!isTwoByTwoImageTeaserGrid.value) return undefined;
+
+  return {
+    '--mg-col': `${colIndex + 1}`,
+    '--mg-row': `${rowIndex + 1}`,
+  };
 };
 
 const getBlockActions = () => ({
@@ -259,5 +278,62 @@ const columns = computed<Block[][]>(() => {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+}
+
+.multi-grid--image-teaser-2x2 .multi-grid__column {
+  display: grid;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.multi-grid__row--image-teaser-2x2 {
+  display: flex;
+  min-height: 0;
+}
+
+.multi-grid__row--image-teaser-2x2 :deep(.image-text-box) {
+  display: flex;
+  width: 100%;
+}
+
+.multi-grid__row--image-teaser-2x2 :deep(.image-text-box > *) {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.multi-grid__row--image-teaser-2x2 :deep(.image-text-box img) {
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .multi-grid--image-teaser-2x2 {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  .multi-grid--image-teaser-2x2 .multi-grid__column {
+    display: contents;
+  }
+
+  .multi-grid__row--image-teaser-2x2 {
+    grid-column: var(--mg-col);
+    grid-row: var(--mg-row);
+    width: 100%;
+    height: 100%;
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(> *),
+  .multi-grid__row--image-teaser-2x2 :deep(.h-full),
+  .multi-grid__row--image-teaser-2x2 :deep(.block-wrapper),
+  .multi-grid__row--image-teaser-2x2 :deep(.image-banner-neo),
+  .multi-grid__row--image-teaser-2x2 :deep(.image-banner-neo__swiper),
+  .multi-grid__row--image-teaser-2x2 :deep(.image-banner-neo__swiper-slide),
+  .multi-grid__row--image-teaser-2x2 :deep(.image-banner-neo__slide),
+  .multi-grid__row--image-teaser-2x2 :deep([data-testid='image-block']),
+  .multi-grid__row--image-teaser-2x2 :deep([data-testid='image-text-box']) {
+    width: 100%;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
 }
 </style>

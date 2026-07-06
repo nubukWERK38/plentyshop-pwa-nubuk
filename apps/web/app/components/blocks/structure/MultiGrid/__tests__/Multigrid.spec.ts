@@ -143,12 +143,17 @@ describe('MultiGrid block', () => {
 
     expect(gridClasses).toContain('md:grid-cols-2');
     expect(gridClasses).toContain('lg:grid-cols-2');
+    expect(gridClasses).toContain('multi-grid--image-teaser-2x2');
     expect(columnClasses).not.toContain('col-span-6');
     expect(gridStyle).toContain('gap: var(--ci-teaser-grid-gap)');
     expect(gridStyle).toContain('padding: var(--ci-teaser-grid-gap) 0px');
-    expect(wrapper.find('[data-testid="multi-grid-column"]').attributes('style')).toContain(
-      'row-gap: var(--ci-teaser-grid-gap)',
-    );
+    const columnStyle = wrapper.find('[data-testid="multi-grid-column"]').attributes('style');
+    expect(columnStyle).toContain('row-gap: var(--ci-teaser-grid-gap)');
+    expect(columnStyle).toContain('align-items: stretch');
+    expect(columnStyle).toContain('justify-content: stretch');
+    const firstRowStyle = wrapper.find('.multi-grid__row--image-teaser-2x2').attributes('style');
+    expect(firstRowStyle).toContain('--mg-col: 1');
+    expect(firstRowStyle).toContain('--mg-row: 1');
   });
 
   it('should apply layout styles (margin, background color) to the grid container', () => {
