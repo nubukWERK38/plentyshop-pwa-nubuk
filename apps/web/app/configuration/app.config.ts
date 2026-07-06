@@ -3,7 +3,7 @@ export const metaDefaults = {
   description: process.env.NUXT_PUBLIC_META_DESCRIPTION || process.env.METADESC || 'Demo shop for PlentyONE Shop',
   keywords: process.env.NUXT_PUBLIC_META_KEYWORDS || process.env.METAKEYWORDS || 'PlentyONE, plentyshop, pwa',
   robots: process.env.NUXT_PUBLIC_ROBOTS || 'all',
-  themeColor: process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#062633',
+  themeColor: process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#212529',
 };
 
 export const openGraph = {

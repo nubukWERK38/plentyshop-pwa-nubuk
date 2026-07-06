@@ -20,6 +20,7 @@
             clientPreview && enableActions && !isTablet && root && !isDragging,
         },
       ]"
+      :style="blockWrapperStyle"
     >
       <ClientOnly>
         <button
@@ -153,6 +154,32 @@ const getBlockComponent = computed(() => {
 const blockComponentKey = computed(() => `${props.block.name}-${props.block.meta.uuid}`);
 
 const blockIsCurrentlyOpen = computed(() => blockUuid.value === props.block.meta.uuid);
+
+type BlockWrapperPadding = {
+  paddingTop?: number;
+  paddingBottom?: number;
+  paddingLeft?: number;
+  paddingRight?: number;
+};
+
+const toPixelValue = (value: unknown) => {
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? `${numberValue}px` : '0px';
+};
+
+const blockWrapperStyle = computed(() => {
+  const configuration = props.block.configuration as { blockPadding?: BlockWrapperPadding } | undefined;
+  const padding = configuration?.blockPadding;
+
+  if (!padding) return {};
+
+  return {
+    paddingTop: toPixelValue(padding.paddingTop),
+    paddingRight: toPixelValue(padding.paddingRight),
+    paddingBottom: toPixelValue(padding.paddingBottom),
+    paddingLeft: toPixelValue(padding.paddingLeft),
+  };
+});
 
 const contentProps = computed(() => {
   const baseProps = props.root ? { ...props.block } : { ...props.block, ...attrs };

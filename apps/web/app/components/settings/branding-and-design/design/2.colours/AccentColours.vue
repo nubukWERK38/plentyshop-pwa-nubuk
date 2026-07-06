@@ -105,10 +105,10 @@ const bindAccentColor = (settingKey: string, paletteKey: string, fallback: strin
   });
 };
 
-const accentColor1 = bindAccentColor('accentColor1', 'accent1', '#1f3a5f');
-const accentColor2 = bindAccentColor('accentColor2', 'accent2', '#2f5d62');
-const accentColor3 = bindAccentColor('accentColor3', 'accent3', '#6a8d73');
-const accentColor4 = bindAccentColor('accentColor4', 'accent4', '#d98324');
+const accentColor1 = bindAccentColor('accentColor1', 'accent1', '#D1FF00');
+const accentColor2 = bindAccentColor('accentColor2', 'accent2', '#ED4B4B');
+const accentColor3 = bindAccentColor('accentColor3', 'accent3', '#FFFFFF');
+const accentColor4 = bindAccentColor('accentColor4', 'accent4', '#FFFFFF');
 </script>
 
 <i18n lang="json">

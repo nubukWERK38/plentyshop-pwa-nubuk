@@ -76,16 +76,44 @@ const accentColor2 = computed(() => getAccentColor2Setting());
 const accentColor3 = computed(() => getAccentColor3Setting());
 const accentColor4 = computed(() => getAccentColor4Setting());
 
-const shopColors = computed(() => [
-  { id: 'primary', previewColor: primaryColor.value, value: 'rgb(var(--colors-2-primary-500))' },
-  { id: 'secondary', previewColor: secondaryColor.value, value: 'rgb(var(--colors-2-secondary-500))' },
-  { id: 'accent1', previewColor: accentColor1.value, value: 'rgb(var(--colors-2-accent1-500))' },
-  { id: 'accent2', previewColor: accentColor2.value, value: 'rgb(var(--colors-2-accent2-500))' },
-  { id: 'accent3', previewColor: accentColor3.value, value: 'rgb(var(--colors-2-accent3-500))' },
-  { id: 'accent4', previewColor: accentColor4.value, value: 'rgb(var(--colors-2-accent4-500))' },
+type ShopColorDefinition = {
+  id: string;
+  previewColor: string;
+  value: string;
+  aliases: string[];
+};
+
+const normalizeColorValue = (value: string | null | undefined) => value?.trim().toLowerCase() ?? '';
+
+const createShopColor = (id: string, value: string | null | undefined, token: string): ShopColorDefinition => ({
+  id,
+  previewColor: value || token,
+  value: value || token,
+  aliases: [token],
+});
+
+const shopColorDefinitions = computed(() => [
+  createShopColor('primary', primaryColor.value, 'rgb(var(--colors-2-primary-500))'),
+  createShopColor('secondary', secondaryColor.value, 'rgb(var(--colors-2-secondary-500))'),
+  createShopColor('accent1', accentColor1.value, 'rgb(var(--colors-2-accent1-500))'),
+  createShopColor('accent2', accentColor2.value, 'rgb(var(--colors-2-accent2-500))'),
+  createShopColor('accent3', accentColor3.value, 'rgb(var(--colors-2-accent3-500))'),
+  createShopColor('accent4', accentColor4.value, 'rgb(var(--colors-2-accent4-500))'),
 ]);
 
-const selectedShopColor = computed(() => shopColors.value.find((shopColor) => shopColor.value === props.modelValue));
+const shopColors = computed(() =>
+  shopColorDefinitions.value.map(({ id, previewColor, value }) => ({ id, previewColor, value })),
+);
+
+const selectedShopColor = computed(() => {
+  const modelValue = normalizeColorValue(props.modelValue);
+
+  return shopColorDefinitions.value.find((shopColor) =>
+    [shopColor.value, shopColor.previewColor, ...shopColor.aliases].some(
+      (value) => normalizeColorValue(value) === modelValue,
+    ),
+  );
+});
 const activeTab = ref<'shop' | 'picker'>(props.showShopColors && selectedShopColor.value ? 'shop' : 'picker');
 
 const previewColor = computed(() => selectedShopColor.value?.previewColor || props.modelValue || '#ffffff');

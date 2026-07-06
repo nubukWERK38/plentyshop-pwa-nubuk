@@ -393,8 +393,6 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
     return {
       tag: 'a',
       href: slide.text.ctaLink,
-      target: '_blank',
-      rel: 'noopener noreferrer',
       title: buildSeoLinkTitle(slide.text.ctaLabel, 'Nubuk Bikes Shop'),
     };
   }

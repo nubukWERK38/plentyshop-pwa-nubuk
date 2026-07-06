@@ -14,8 +14,8 @@ describe('ColorPickerPanel', () => {
         modelValue: '#000000',
         activeTab: 'picker',
         shopColors: [
-          { id: 'primary', previewColor: '#111111', value: 'rgb(var(--colors-2-primary-500))' },
-          { id: 'secondary', previewColor: '#222222', value: 'rgb(var(--colors-2-secondary-500))' },
+          { id: 'primary', previewColor: '#111111', value: '#111111' },
+          { id: 'secondary', previewColor: '#222222', value: '#222222' },
         ],
         ...props,
       },
@@ -70,14 +70,14 @@ describe('ColorPickerPanel', () => {
     expect(wrapper.text()).toContain('These are your primary shop colors');
   });
 
-  it('should render primary and secondary color buttons with correct styles and emit tokens', async () => {
+  it('should render primary and secondary color buttons with correct styles and emit color values', async () => {
     const wrapper = mount(ColorPickerPanel, {
       props: {
         modelValue: '#000000',
         activeTab: 'shop',
         shopColors: [
-          { id: 'primary', previewColor: '#ff0000', value: 'rgb(var(--colors-2-primary-500))' },
-          { id: 'secondary', previewColor: '#00ff00', value: 'rgb(var(--colors-2-secondary-500))' },
+          { id: 'primary', previewColor: '#ff0000', value: '#ff0000' },
+          { id: 'secondary', previewColor: '#00ff00', value: '#00ff00' },
         ],
       },
       global: {
@@ -106,7 +106,7 @@ describe('ColorPickerPanel', () => {
     await primaryButton.trigger('click');
     await secondaryButton.trigger('click');
 
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['rgb(var(--colors-2-primary-500))']);
-    expect(wrapper.emitted('update:modelValue')?.[1]).toEqual(['rgb(var(--colors-2-secondary-500))']);
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['#ff0000']);
+    expect(wrapper.emitted('update:modelValue')?.[1]).toEqual(['#00ff00']);
   });
 });

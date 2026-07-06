@@ -71,7 +71,7 @@ export default {
   sortingDynamicInherit: process.env.NUXT_PUBLIC_SORTING_DINAMIC_INHERIT || '[]',
   sortingDynamicPrio1: process.env.NUXT_PUBLIC_SORTING_DYNAMIC_PRIO1 || 'filter.prices.price_asc',
   sortingDynamicPrio2: process.env.NUXT_PUBLIC_SORTING_DYNAMIC_PRIO2 || 'filter.prices.price_asc',
-  themeColor: process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#062633',
+  themeColor: process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#212529',
   headerLogo:
     process.env.NUXT_PUBLIC_HEADER_LOGO ||
     process.env.LOGO ||
@@ -79,11 +79,11 @@ export default {
   storename: process.env.NAME || 'PlentyONE GmbH',
   font: process.env.NUXT_PUBLIC_FONT || 'Red Hat Text',
   horizontalBlockSize: process.env.NUXT_PUBLIC_HORIZONTAL_BLOCK_SIZE || 's',
-  primaryColor: process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#062633',
-  accentColor1: process.env.NUXT_PUBLIC_ACCENT_COLOR_1 || '#1f3a5f',
-  accentColor2: process.env.NUXT_PUBLIC_ACCENT_COLOR_2 || '#2f5d62',
-  accentColor3: process.env.NUXT_PUBLIC_ACCENT_COLOR_3 || '#6a8d73',
-  accentColor4: process.env.NUXT_PUBLIC_ACCENT_COLOR_4 || '#d98324',
+  primaryColor: process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#212529',
+  accentColor1: process.env.NUXT_PUBLIC_ACCENT_COLOR_1 || '#D1FF00',
+  accentColor2: process.env.NUXT_PUBLIC_ACCENT_COLOR_2 || '#ED4B4B',
+  accentColor3: process.env.NUXT_PUBLIC_ACCENT_COLOR_3 || '#FFFFFF',
+  accentColor4: process.env.NUXT_PUBLIC_ACCENT_COLOR_4 || '#FFFFFF',
   defaultSortingOption: process.env.NUXT_PUBLIC_DEFAULT_SORTING_OPTION ?? 'texts.name1_asc',
   defaultSortingSearch: process.env.NUXT_PUBLIC_DEFAULT_SORTING_SEARCH ?? 'default.recommended_sorting',
   availableSortingOptions:
@@ -93,9 +93,9 @@ export default {
   recommendedSecondSortingOption: process.env.NUXT_PUBLIC_RECOMMENDED_SECOND_SORTING_OPTION ?? 'sorting.price.avg_asc',
   recommendedThirdSortingOption:
     process.env.NUXT_PUBLIC_RECOMMENDED_THIRD_SORTING_OPTION ?? 'variation.availability.averageDays_asc',
-  secondaryColor: process.env.NUXT_PUBLIC_SECONDARY_COLOR || '#31687d',
+  secondaryColor: process.env.NUXT_PUBLIC_SECONDARY_COLOR || '#26577F',
   headerBackgroundColor:
-    process.env.NUXT_PUBLIC_HEADER_BACKGROUND_COLOR || process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#062633',
+    process.env.NUXT_PUBLIC_HEADER_BACKGROUND_COLOR || process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#212529',
   iconColor: process.env.NUXT_PUBLIC_ICON_COLOR || '#ffffff',
   showCustomerWishComponent: process.env.NUXT_PUBLIC_SHOW_CUSTOMER_WISH_COMPONENT === 'true',
   showCustomerReferenceComponent: process.env.NUXT_PUBLIC_SHOW_CUSTOMER_REFERENCE_COMPONENT === 'true',

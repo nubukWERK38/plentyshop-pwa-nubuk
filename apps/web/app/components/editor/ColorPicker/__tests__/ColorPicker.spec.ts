@@ -49,7 +49,28 @@ describe('ColorPicker', () => {
     expect(props.showShopColors).toBe(true);
   });
 
-  it('should resolve a shop color token to its preview color and open the shop tab', async () => {
+  it('should resolve a shop color value to its preview color and open the shop tab', async () => {
+    useSiteSettings.mockImplementation((setting?: string) => {
+      const settings: Record<string, string> = {
+        accentColor1: '#ccff00',
+      };
+
+      return { getSetting: vi.fn().mockReturnValue(settings[setting ?? ''] ?? '#000000') };
+    });
+
+    const wrapper = createWrapper({ modelValue: '#ccff00' });
+
+    const trigger = wrapper.get('div[style]');
+    const style = trigger.attributes('style') ?? '';
+
+    expect(style).toContain('background-color: #ccff00');
+
+    await trigger.trigger('click');
+
+    expect(wrapper.findComponent({ name: 'EditorColorPickerPanel' }).props('activeTab')).toBe('shop');
+  });
+
+  it('should still resolve legacy shop color tokens to their preview color', async () => {
     useSiteSettings.mockImplementation((setting?: string) => {
       const settings: Record<string, string> = {
         accentColor1: '#ccff00',
@@ -89,7 +110,7 @@ describe('ColorPicker', () => {
   it('should emit update:modelValue when panel emits update', async () => {
     const wrapper = mount(ColorPicker, {
       props: {
-        modelValue: '#000000',
+        modelValue: '#123456',
       },
       global: {
         stubs: {
@@ -148,7 +169,7 @@ describe('ColorPicker', () => {
   it('should change activeTab when panel emits update:activeTab', async () => {
     const wrapper = mount(ColorPicker, {
       props: {
-        modelValue: '#000000',
+        modelValue: '#123456',
       },
       global: {
         stubs: {

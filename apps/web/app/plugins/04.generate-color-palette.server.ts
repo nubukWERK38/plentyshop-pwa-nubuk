@@ -43,13 +43,13 @@ export default defineNuxtPlugin({
       const { getSetting: getAccentColor4 } = useSiteSettings('accentColor4');
       const { getSetting: getHeaderBackgroundColor } = useSiteSettings('headerBackgroundColor');
 
-      const primaryColor = getPrimaryColor() || '#062633';
-      const secondaryColor = getSecondaryColor() || '#31687d';
-      const accentColor1 = getAccentColor1() || '#1f3a5f';
-      const accentColor2 = getAccentColor2() || '#2f5d62';
-      const accentColor3 = getAccentColor3() || '#6a8d73';
-      const accentColor4 = getAccentColor4() || '#d98324';
-      const headerColor = getHeaderBackgroundColor() || primaryColor || '#062633';
+      const primaryColor = getPrimaryColor() || '#212529';
+      const secondaryColor = getSecondaryColor() || '#26577F';
+      const accentColor1 = getAccentColor1() || '#D1FF00';
+      const accentColor2 = getAccentColor2() || '#ED4B4B';
+      const accentColor3 = getAccentColor3() || '#FFFFFF';
+      const accentColor4 = getAccentColor4() || '#FFFFFF';
+      const headerColor = getHeaderBackgroundColor() || primaryColor || '#212529';
       const primaryPalette = buildPalette('primary', primaryColor);
       const secondaryPalette = buildPalette('secondary', secondaryColor);
       const accentPalette1 = buildPalette('accent1', accentColor1);

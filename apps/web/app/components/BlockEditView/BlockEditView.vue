@@ -33,6 +33,11 @@
         @set-edit-title="handleSetEditTitle"
         @clear-edit-title="clearCustomTitle"
       />
+      <EditorBlockPaddingSettings
+        v-if="showGlobalPaddingSettings"
+        v-model="blockWrapperPadding"
+        data-testid="global-block-padding-settings"
+      />
     </div>
   </div>
 </template>
@@ -95,6 +100,68 @@ const getComponent = (name: string) => {
 const currentComponent = computed(() => getComponent(blockType.value));
 
 const block = computed(() => findOrDeleteBlockByUuid(allBlocks.value, blockUuid.value));
+
+type BlockWrapperPadding = {
+  paddingTop?: number;
+  paddingBottom?: number;
+  paddingLeft?: number;
+  paddingRight?: number;
+};
+
+const blocksWithNativePaddingSettings = new Set([
+  'CategoryData',
+  'CustomerReview',
+  'FAQ',
+  'Image',
+  'ImageBannerNeo',
+  'ImageGallery',
+  'ItemData',
+  'ItemText',
+  'Navigation',
+  'PerPageFilter',
+  'PriceCard',
+  'ProductDownloads',
+  'ProductLegalInformation',
+  'ProductQuestion',
+  'Sort',
+  'Tabs',
+  'TechnicalData',
+  'TextCard',
+  'ThumbSliderNeo',
+  'UtilityBar',
+]);
+
+const normalizePadding = (padding?: BlockWrapperPadding): Required<BlockWrapperPadding> => ({
+  paddingTop: Number(padding?.paddingTop ?? 0),
+  paddingBottom: Number(padding?.paddingBottom ?? 0),
+  paddingLeft: Number(padding?.paddingLeft ?? 0),
+  paddingRight: Number(padding?.paddingRight ?? 0),
+});
+
+const showGlobalPaddingSettings = computed(() => {
+  const currentBlock = block.value;
+  if (!currentBlock?.name || currentBlock.type !== 'content' || isGlobalBlock(currentBlock)) return false;
+  return !blocksWithNativePaddingSettings.has(currentBlock.name);
+});
+
+const blockWrapperPadding = computed({
+  get: () => {
+    const configuration = block.value?.configuration as { blockPadding?: BlockWrapperPadding } | undefined;
+    return normalizePadding(configuration?.blockPadding);
+  },
+  set: (value: BlockWrapperPadding) => {
+    const currentBlock = block.value;
+    if (!currentBlock) return;
+
+    const currentConfiguration = (currentBlock.configuration as Record<string, unknown> | undefined) ?? {};
+
+    currentBlock.configuration = {
+      visible: currentConfiguration.visible !== false,
+      ...currentConfiguration,
+      blockPadding: normalizePadding(value),
+    };
+  },
+});
 
 const blockDisplayName = computed(() => {
   if (blockType.value === 'Carousel') {
