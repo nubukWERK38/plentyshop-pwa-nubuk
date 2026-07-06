@@ -22,7 +22,7 @@
       <div
         v-for="(row, rowIndex) in column"
         :key="row.meta.uuid"
-        class="group/row relative"
+        class="multi-grid__row group/row relative w-full"
         :class="{
           'multi-grid__row--image-teaser-2x2': isTwoByTwoImageTeaserGrid,
           'multi-grid__row--image-text-row': isTwoColumnImageTextBoxRow,

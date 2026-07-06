@@ -2,7 +2,7 @@
   <div :class="['h-full flex scroll-smooth relative', galleryDirClass, galleryGapClass]" data-testid="gallery">
     <div
       ref="mainBox"
-      class="after:block after:pt-[100%] flex-1 relative overflow-hidden w-full max-h-[600px]"
+      class="after:block after:pt-[100%] flex-1 min-w-0 relative overflow-hidden w-full max-h-[600px]"
       data-testid="gallery-images"
     >
       <Swiper
@@ -15,7 +15,11 @@
         @swiper="onMainInit"
         @slide-change="onMainSlideChange"
       >
-        <SwiperSlide v-for="(image, index) in images" :key="`main-${index}`" class="flex items-center justify-center">
+        <SwiperSlide
+          v-for="(image, index) in images"
+          :key="`main-${index}`"
+          class="!h-full !w-full flex items-center justify-center"
+        >
           <ZoomableImage
             :images="images"
             :image="image"

@@ -44,7 +44,7 @@
           v-if="imageUrl"
           :src="imageUrl"
           :alt="props.content.image?.alt ?? ''"
-          :class="['object-cover', 'w-full', 'h-full']"
+          :class="['relative z-0 object-cover', 'w-full', 'h-full']"
           :style="{
             filter: props.content.image?.brightness ? 'brightness(' + (props.content.image?.brightness ?? 1) + ')' : '',
             width: '100%',
@@ -56,14 +56,14 @@
 
         <div
           v-if="imageUrl"
-          class="category-data-image-overlay pointer-events-none absolute inset-0"
+          class="category-data-image-overlay pointer-events-none absolute inset-y-0 left-0 z-[1]"
           :data-testid="'category-data-image-overlay-' + meta.uuid"
         />
 
         <div
           v-if="shouldShowTextBlock"
           :class="[
-            'absolute max-w-screen-3xl mx-auto inset-0 z-[1] p-4 flex flex-col md:basis-2/4',
+            'absolute max-w-screen-3xl mx-auto inset-0 z-[2] p-4 flex flex-col md:basis-2/4',
             { 'md:p-10': props.content.text.bgColor },
           ]"
           :style="{
@@ -366,12 +366,8 @@ const categoryDataContentClass = computed(() => {
 }
 
 .category-data-image-overlay {
-  background: linear-gradient(
-    90deg,
-    rgba(31, 63, 36, 0.62) 0%,
-    rgba(40, 79, 112, 0.45) 45%,
-    rgba(17, 20, 22, 0.16) 100%
-  );
+  width: 50%;
+  background: linear-gradient(90deg, rgb(65 112 56 / 70%) 0%, rgb(45 125 174 / 62%) 100%);
 }
 </style>
 

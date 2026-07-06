@@ -629,15 +629,7 @@
             ]
           }
         }
-      }
-    ]
-  },
-  "section-spacing": {
-    "category": "section-spacing",
-    "accessControl": ["content", "productCategory", "product"],
-    "title": "Sektions-Abstand",
-    "blockName": "SectionSpacing",
-    "variations": [
+      },
       {
         "title": "Sektions-Abstand",
         "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/navigation-thumbnail.svg",
