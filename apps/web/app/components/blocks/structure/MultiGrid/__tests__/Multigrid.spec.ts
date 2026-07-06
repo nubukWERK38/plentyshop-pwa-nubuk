@@ -112,6 +112,46 @@ describe('MultiGrid block', () => {
     expect(columnStyle).toContain('justify-content: flex-end');
   });
 
+  it('should align the USP text grid to the container start', () => {
+    const wrapper = mount(MultiGrid, {
+      props: {
+        name: 'MultiGrid',
+        type: 'structure',
+        content: [
+          {
+            name: 'TextCard',
+            type: 'text',
+            content: { text: { htmlDescription: '<p>Intro</p>' } },
+            meta: { uuid: 'usp-text' },
+            parent_slot: 0,
+          },
+          {
+            name: 'TextCard',
+            type: 'text',
+            content: { text: { htmlDescription: '<div class="zipBox">USP</div>' } },
+            meta: { uuid: 'usp-box' },
+            parent_slot: 1,
+          },
+        ],
+        configuration: {
+          columnWidths: [6, 6],
+          layout: {
+            horizontalAlignment: 'right',
+            verticalAlignment: 'center',
+          },
+        },
+        meta: { uuid: 'usp-grid' },
+      },
+    });
+
+    const gridClasses = wrapper.find('[data-testid="multi-grid-structure"]').classes();
+    const columnStyle = wrapper.find('[data-testid="multi-grid-column"]').attributes('style');
+
+    expect(gridClasses).toContain('multi-grid--usp-text');
+    expect(columnStyle).toContain('align-items: stretch');
+    expect(columnStyle).toContain('justify-content: flex-start');
+  });
+
   it('should use triple base gap for a 2x2 image teaser grid', () => {
     const teaserBlocks = Array.from({ length: 4 }, (_, index) => ({
       name: 'ImageTextBox',

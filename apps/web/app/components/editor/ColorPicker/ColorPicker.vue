@@ -49,7 +49,6 @@ const emit = defineEmits<{
 
 const open = ref(false);
 const root = ref<HTMLElement | null>(null);
-const activeTab = ref<'shop' | 'picker'>('picker');
 
 const instanceId = `color-picker-${Math.random().toString(36).slice(2)}`;
 const activeId = useState<string | null>('editorColorPickerActiveId', () => null);
@@ -63,12 +62,6 @@ const dropdownPositionClass = computed(() => {
   }
   return '';
 });
-const style = computed(() => ({
-  backgroundColor: props.modelValue || '#ffffff',
-}));
-
-const previewColor = computed(() => style.value.backgroundColor as string);
-
 const { getSetting: getPrimaryColorSetting } = useSiteSettings('primaryColor');
 const { getSetting: getSecondaryColorSetting } = useSiteSettings('secondaryColor');
 const { getSetting: getAccentColor1Setting } = useSiteSettings('accentColor1');
@@ -92,12 +85,30 @@ const shopColors = computed(() => [
   { id: 'accent4', previewColor: accentColor4.value, value: 'rgb(var(--colors-2-accent4-500))' },
 ]);
 
+const selectedShopColor = computed(() => shopColors.value.find((shopColor) => shopColor.value === props.modelValue));
+const activeTab = ref<'shop' | 'picker'>(props.showShopColors && selectedShopColor.value ? 'shop' : 'picker');
+
+const previewColor = computed(() => selectedShopColor.value?.previewColor || props.modelValue || '#ffffff');
+
+const style = computed(() => ({
+  backgroundColor: previewColor.value,
+}));
+
 watch(
   activeId,
   (newId) => {
     open.value = newId === instanceId;
   },
   { immediate: true },
+);
+
+watch(
+  () => props.modelValue,
+  () => {
+    if (props.showShopColors && selectedShopColor.value) {
+      activeTab.value = 'shop';
+    }
+  },
 );
 
 const openDropdown = () => {

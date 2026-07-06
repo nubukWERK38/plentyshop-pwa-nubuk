@@ -49,6 +49,27 @@ describe('ColorPicker', () => {
     expect(props.showShopColors).toBe(true);
   });
 
+  it('should resolve a shop color token to its preview color and open the shop tab', async () => {
+    useSiteSettings.mockImplementation((setting?: string) => {
+      const settings: Record<string, string> = {
+        accentColor1: '#ccff00',
+      };
+
+      return { getSetting: vi.fn().mockReturnValue(settings[setting ?? ''] ?? '#000000') };
+    });
+
+    const wrapper = createWrapper({ modelValue: 'rgb(var(--colors-2-accent1-500))' });
+
+    const trigger = wrapper.get('div[style]');
+    const style = trigger.attributes('style') ?? '';
+
+    expect(style).toContain('background-color: #ccff00');
+
+    await trigger.trigger('click');
+
+    expect(wrapper.findComponent({ name: 'EditorColorPickerPanel' }).props('activeTab')).toBe('shop');
+  });
+
   it('should toggle dropdown open and closed when trigger is clicked', async () => {
     const wrapper = createWrapper();
 

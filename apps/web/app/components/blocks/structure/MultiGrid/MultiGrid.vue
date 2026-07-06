@@ -6,6 +6,7 @@
       {
         'multi-grid--image-teaser-2x2': isTwoByTwoImageTeaserGrid,
         'multi-grid--image-text-row': isTwoColumnImageTextBoxRow,
+        'multi-grid--usp-text': isUspTextGrid,
       },
     ]"
     :style="gridInlineStyle"
@@ -116,6 +117,20 @@ const isTwoColumnImageTextBoxRow = computed(() => {
 
   return columns.value.every((column) => column.length === 1 && column[0]?.name === 'ImageTextBox');
 });
+
+const containsZipBox = (value: unknown): boolean => {
+  if (typeof value === 'string') return value.includes('zipBox');
+  if (Array.isArray(value)) return value.some(containsZipBox);
+  if (!value || typeof value !== 'object') return false;
+
+  return Object.values(value).some(containsZipBox);
+};
+
+const isUspTextGrid = computed(() => {
+  if (configuration.columnWidths?.length !== 2) return false;
+
+  return content.some((block) => containsZipBox(block.content));
+});
 const gridGapValue = computed(() => {
   if (isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value) {
     return 'var(--ci-teaser-grid-gap)';
@@ -188,11 +203,15 @@ const columnInlineStyle = computed(() => ({
   alignItems:
     isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value
       ? 'stretch'
-      : horizontalAlignmentMap[configuration.layout?.horizontalAlignment || 'left'],
+      : isUspTextGrid.value
+        ? 'stretch'
+        : horizontalAlignmentMap[configuration.layout?.horizontalAlignment || 'left'],
   justifyContent:
     isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value
       ? 'stretch'
-      : verticalAlignmentMap[configuration.layout?.verticalAlignment || 'top'],
+      : isUspTextGrid.value
+        ? 'flex-start'
+        : verticalAlignmentMap[configuration.layout?.verticalAlignment || 'top'],
 }));
 const getGridClasses = () => {
   if (isTwoByTwoImageTeaserGrid.value || isTwoColumnImageTextBoxRow.value) {
@@ -357,6 +376,22 @@ const columns = computed<Block[][]>(() => {
 
 .multi-grid__row--image-text-row :deep(.image-text-box .absolute) {
   height: auto !important;
+}
+
+.multi-grid--usp-text {
+  width: 100%;
+  max-width: 1470px;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.multi-grid--usp-text :deep([data-testid='text-card']) {
+  width: 100%;
+  height: auto !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
 }
 
 @media (min-width: 768px) {
