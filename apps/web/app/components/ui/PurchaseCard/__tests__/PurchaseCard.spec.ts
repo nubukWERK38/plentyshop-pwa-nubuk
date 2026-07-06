@@ -28,4 +28,25 @@ describe('<PurchaseCard />', () => {
 
     expect(wrapper.getByTestId('purchase-card'));
   });
+
+  it('should render without availability data', () => {
+    const productWithoutAvailability = JSON.parse(JSON.stringify(ProductMock));
+    delete productWithoutAvailability.variation.availability;
+
+    const wrapper = mount(UiPurchaseCard, {
+      props: {
+        product: productWithoutAvailability,
+        reviewAverage: {} as ReviewCounts,
+      },
+      global: {
+        stubs: {
+          PayPalExpressButton: true,
+          PayPalPayLaterBanner: true,
+          UnitContentSelect: true,
+        },
+      },
+    });
+
+    expect(wrapper.find('[data-testid="badges"]').exists()).toBe(false);
+  });
 });

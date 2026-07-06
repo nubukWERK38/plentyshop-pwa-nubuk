@@ -5,32 +5,39 @@
     :back-label-mobile="t('common.actions.back')"
     :heading="t('common.labels.checkout')"
   >
-    <div class="md:w-full md:flex md:justify-center">
-      <div class="flex flex-col gap-4 p-2 md:p-6 rounded-md w-full md:w-2/3 lg:w-1/2 3xl:w-2/5">
-        <h2 class="font-bold text-lg">{{ t('checkout.guestCheckout') }}</h2>
+    <div class="w-full px-2 md:px-6">
+      <div
+        class="mx-auto grid w-full max-w-[1280px] gap-6"
+        :class="loadedConfig && isAvailable('guestLoginPage').value ? 'lg:grid-cols-3' : 'lg:grid-cols-2'"
+      >
+        <section class="flex flex-col rounded-md border border-neutral-200 bg-white p-5 shadow-sm">
+          <h2 class="font-bold text-lg">{{ t('checkout.guestCheckout') }}</h2>
 
-        <UiButton
-          data-testid="guest-checkout-button"
-          :tag="NuxtLink"
-          :to="localePath(paths.checkout)"
-          class="w-full my-4"
+          <UiButton
+            data-testid="guest-checkout-button"
+            :tag="NuxtLink"
+            :to="localePath(paths.checkout)"
+            class="mt-6 w-full"
+          >
+            {{ t('checkout.continueAsGuest') }}
+          </UiButton>
+        </section>
+
+        <section
+          v-if="loadedConfig && isAvailable('guestLoginPage').value"
+          class="flex flex-col rounded-md border border-neutral-200 bg-white p-5 shadow-sm"
         >
-          {{ t('checkout.continueAsGuest') }}
-        </UiButton>
+          <h2 class="font-bold text-lg">{{ t('checkout.expressCheckout') }}</h2>
 
-        <OrDivider />
-
-        <template v-if="loadedConfig && isAvailable('guestLoginPage').value">
-          <PayPalExpressButton class="mt-4" location="guestLoginPage" type="CartPreview" />
+          <PayPalExpressButton class="mt-6" location="guestLoginPage" type="CartPreview" />
           <PayPalPayLaterBanner
             placement="cart"
             location="guestLoginPage"
             :amount="cartGetters.getTotal(cartGetters.getTotals(cart))"
           />
-          <OrDivider />
-        </template>
+        </section>
 
-        <form :class="{ 'mt-4': isAvailable('guestLoginPage').value }" @submit.prevent="loginUser">
+        <form class="rounded-md border border-neutral-200 bg-white p-5 shadow-sm" @submit.prevent="loginUser">
           <h2 class="font-bold text-lg">{{ t('checkout.loginFastCheckout') }}</h2>
 
           <label>
@@ -60,6 +67,7 @@
           </div>
         </form>
       </div>
+
       <UiModal
         v-if="isAuthenticationOpen"
         v-model="isAuthenticationOpen"

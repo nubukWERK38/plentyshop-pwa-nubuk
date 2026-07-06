@@ -70,12 +70,9 @@ const { shouldEnableEditorFeatures } = useEditorState();
 const { isDragging, shouldDisplayPlaceholder } = useBlockManager();
 const { siteConfigurationDrawerOpen, siteConfigurationDrawerView } = useSiteConfiguration();
 const attrs = useAttrs() as { enableActions?: boolean };
-const { getSetting: getBlockSize } = useSiteSettings('verticalBlockSize');
-const blockSize = computed(() => getBlockSize());
 
 const drawerOpen = computed(() => siteConfigurationDrawerOpen.value);
 const drawerView = computed(() => siteConfigurationDrawerView.value);
-const defaultMarginBottom = computed(() => getVerticalPixels(blockSize.value));
 
 const onRowEnter = (row: Block) => {
   hoveredRowUuid.value = row.meta.uuid;
@@ -196,9 +193,7 @@ const gridInlineStyle = computed(() => ({
   marginRight:
     configuration.value.layout?.marginRight !== undefined ? `${configuration.value.layout.marginRight}px` : '0px',
   marginBottom:
-    configuration.value.layout?.marginBottom !== undefined
-      ? `${configuration.value.layout.marginBottom}px`
-      : `${defaultMarginBottom.value}px`,
+    configuration.value.layout?.marginBottom !== undefined ? `${configuration.value.layout.marginBottom}px` : '0px',
   marginLeft:
     configuration.value.layout?.marginLeft !== undefined ? `${configuration.value.layout.marginLeft}px` : '0px',
   paddingTop:

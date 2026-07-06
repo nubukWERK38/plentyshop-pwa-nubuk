@@ -305,7 +305,9 @@
         <div v-if="infoModalLoading" class="purchase-card__info-modal-loading">
           <SfLoaderCircular size="lg" />
         </div>
-        <div v-else-if="infoModalError" class="purchase-card__info-modal-error">Inhalt konnte nicht geladen werden.</div>
+        <div v-else-if="infoModalError" class="purchase-card__info-modal-error">
+          Inhalt konnte nicht geladen werden.
+        </div>
         <div v-else class="purchase-card__info-modal-content no-preflight" v-html="infoModalContent" />
       </UiModal>
     </ClientOnly>
@@ -487,7 +489,13 @@ const brandLogo = computed(() => {
   return getNormalizedBrandLogo(manufacturer.value);
 });
 const variationNumber = computed(() => productGetters.getVariationNumber(props.product));
-const availabilityName = computed(() => productGetters.getAvailabilityName(props.product));
+const availabilityName = computed(() => {
+  try {
+    return productGetters.getAvailabilityName(props.product) || '';
+  } catch {
+    return '';
+  }
+});
 const orderPropertiesGroups = computed(() =>
   Object.values(productPropertyGetters.getOrderPropertiesGroups(props.product)),
 );
@@ -736,6 +744,16 @@ const openProductQuestionTab = () => {
   text-transform: uppercase;
 }
 
+.purchase-card__brand-logo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(250px, 100%);
+  max-height: 72px;
+  object-fit: contain;
+  object-position: left center;
+}
+
 .purchase-card__name {
   margin-bottom: 8px;
   font-size: 1.5rem;
@@ -858,11 +876,14 @@ const openProductQuestionTab = () => {
 }
 
 .purchase-card__leasing-options {
-  padding: 0 20px 18px;
+  padding: 0 20px 20px;
 }
 
 .purchase-card__leasing-panel :deep(.order-properties__group) {
   margin: 0;
+  padding: 14px 18px;
+  background: #f8f9f9;
+  color: #071625;
 }
 
 .purchase-card__leasing-panel :deep(.order-properties__group-heading),
@@ -871,7 +892,34 @@ const openProductQuestionTab = () => {
 }
 
 .purchase-card__leasing-panel :deep(.order-properties__row) {
-  margin-top: 10px;
+  width: 100%;
+  margin-top: 0;
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc;
+  color: #071625;
+}
+
+.purchase-card__leasing-panel :deep(.order-properties__row:last-child) {
+  border-bottom: 0;
+}
+
+.purchase-card__leasing-panel :deep(.order-properties__row > div) {
+  width: 100%;
+}
+
+.purchase-card__leasing-panel :deep(label[for^='prop-']) {
+  color: #071625;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.purchase-card__leasing-panel :deep(input[type='checkbox']) {
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  color: #071625;
 }
 
 .purchase-card__price-block {
@@ -1086,6 +1134,10 @@ const openProductQuestionTab = () => {
 @media (max-width: 767px) {
   .purchase-card__brand {
     font-size: 1.75rem;
+  }
+
+  .purchase-card__brand-logo {
+    max-height: 56px;
   }
 
   .purchase-card__cart-row {

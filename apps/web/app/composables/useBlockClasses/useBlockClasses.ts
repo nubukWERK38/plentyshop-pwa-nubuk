@@ -12,7 +12,7 @@ const getFullWidthFromControls = (obj: unknown): boolean | undefined => {
 const hasFullWidth = (block: Block): boolean => {
   const explicit =
     block.type === 'content'
-      ? getFullWidthFromObject(block.content) ?? getFullWidthFromControls(block.content)
+      ? (getFullWidthFromObject(block.content) ?? getFullWidthFromControls(block.content))
       : getFullWidthFromObject(block.configuration);
   if (explicit !== undefined) return explicit;
   const rule = resolveBlockLayoutRule(block.name);
@@ -21,19 +21,16 @@ const hasFullWidth = (block: Block): boolean => {
 
 export const useBlockClasses = (block: Block): ComputedRef<Record<string, boolean>> => {
   const { getSetting } = useSiteSettings('horizontalBlockSize');
-  const { getSetting: getVerticalSetting } = useSiteSettings('verticalBlockSize');
 
   return computed(() => {
     const fullWidth = hasFullWidth(block);
     const rule = resolveBlockLayoutRule(block.name);
     const horizontalSpacing = getSetting();
-    const verticalSpacing = getVerticalSetting();
 
     return buildBlockClasses(block, {
       fullWidth,
       rule,
       horizontalSpacing,
-      verticalSpacing,
     });
   });
 };

@@ -25,6 +25,7 @@ const blockTypeNames: Record<string, string> = {
   HeaderContainer: 'Header Container',
   ContactFlags: 'Kontaktfähnchen',
   BreadcrumbsWidget: 'Breadcrumbs',
+  SectionSpacing: 'Sektions-Abstand',
 };
 
 export const getBlockDisplayName = (blockName: string): string => {

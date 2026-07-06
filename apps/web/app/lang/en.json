@@ -311,6 +311,7 @@
       "customerWish": "Notes and requests",
       "customerWishMessage": "Enter your message to us here."
     },
+    "expressCheckout": "Express checkout",
     "guestCheckout": "Guest checkout",
     "loginFastCheckout": "Login to checkout faster",
     "payment": {

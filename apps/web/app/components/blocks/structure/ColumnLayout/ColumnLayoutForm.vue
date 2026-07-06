@@ -142,7 +142,10 @@
             :key="gapOption"
             type="button"
             data-testid="gap-btn"
-            :class="[gapBtnClasses, { 'bg-editor-button text-white': gapOption === columnLayoutStructure.configuration.layout.gap }]"
+            :class="[
+              gapBtnClasses,
+              { 'bg-editor-button text-white': gapOption === columnLayoutStructure.configuration.layout.gap },
+            ]"
             @click="columnLayoutStructure.configuration.layout.gap = gapOption"
           >
             {{ getEditorTranslation('gap-size-' + gapOption.toLowerCase()) }}
@@ -312,9 +315,6 @@ const { blockUuid } = useSiteConfiguration();
 const resolvedUuid = computed(() => props.uuid || blockUuid.value);
 const { allBlocks: data } = useBlocks();
 const { findOrDeleteBlockByUuid } = useBlockManager();
-const { getSetting: getBlockSize } = useSiteSettings('verticalBlockSize');
-const blockSize = computed(() => getBlockSize());
-const defaultMarginBottom = computed(() => getVerticalPixels(blockSize.value));
 
 const clampColumnCount = (count: number) => {
   if (!Number.isFinite(count)) return 1;
@@ -471,7 +471,7 @@ const columnLayoutStructure = computed(() => {
     block.configuration.layout = {
       marginTop: 0,
       marginRight: 0,
-      marginBottom: defaultMarginBottom.value,
+      marginBottom: 0,
       marginLeft: 0,
       paddingTop: 0,
       paddingRight: 0,
@@ -509,7 +509,7 @@ const columnLayoutStructure = computed(() => {
   if (block.configuration.layout.paddingBottom === undefined) block.configuration.layout.paddingBottom = 0;
   if (block.configuration.layout.paddingLeft === undefined) block.configuration.layout.paddingLeft = 0;
   if (block.configuration.layout.marginBottom === undefined || block.configuration.layout.marginBottom === null) {
-    block.configuration.layout.marginBottom = defaultMarginBottom.value;
+    block.configuration.layout.marginBottom = 0;
   }
 
   syncSlotContent(block, normalizedColumns);

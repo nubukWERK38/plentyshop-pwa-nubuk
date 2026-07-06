@@ -5,11 +5,13 @@ import { CategoryMock } from '../../../../../__tests__/__mocks__/category.mock';
 import type { CategoryDetails } from '@plentymarkets/shop-api';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 
-const { useEditorStateMock } = vi.hoisted(() => ({
+const { useEditorStateMock, useRouteMock } = vi.hoisted(() => ({
   useEditorStateMock: vi.fn(),
+  useRouteMock: vi.fn(),
 }));
 
 mockNuxtImport('useEditorState', () => useEditorStateMock);
+mockNuxtImport('useRoute', () => useRouteMock);
 
 vi.mock('@plentymarkets/shop-api', () => {
   return {
@@ -19,6 +21,11 @@ vi.mock('@plentymarkets/shop-api', () => {
       getCategoryDescription2: (category: CategoryDetails) => category?.description2 ?? '',
       getCategoryShortDescription: (category: CategoryDetails) => category?.shortDescription ?? '',
       getCategoryDetails: (category: CategoryDetails) => category,
+      getId: (category: { id?: number }) => category?.id ?? 0,
+    },
+    categoryTreeGetters: {
+      generateBreadcrumbFromCategory: () => [],
+      findCategoryById: () => null,
     },
   };
 });
@@ -67,6 +74,9 @@ describe('CategoryData', () => {
       isPreviewMode: ref(false),
       isLiveMode: ref(false),
     });
+    useRouteMock.mockReturnValue({
+      path: '/',
+    });
   });
 
   mockNuxtImport('useProducts', () => {
@@ -84,5 +94,27 @@ describe('CategoryData', () => {
     });
 
     expect(wrapper.find('[data-testid="category-data"]').exists()).toBe(true);
+  });
+
+  it('should hide subcategories in image header on brand world page', () => {
+    useRouteMock.mockReturnValue({
+      path: '/markenwelt/',
+    });
+
+    const wrapper = mount(CategoryData, {
+      props: {
+        ...mockProps,
+        content: {
+          ...mockProps.content,
+          displayCategoryImage: 'image-1',
+          showSubcategories: true,
+          image: {
+            alt: '',
+          },
+        },
+      },
+    });
+
+    expect(wrapper.find('[data-testid="category-subcategories"]').exists()).toBe(false);
   });
 });

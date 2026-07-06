@@ -632,6 +632,36 @@
       }
     ]
   },
+  "section-spacing": {
+    "category": "section-spacing",
+    "accessControl": ["content", "productCategory", "product"],
+    "title": "Sektions-Abstand",
+    "blockName": "SectionSpacing",
+    "variations": [
+      {
+        "title": "Sektions-Abstand",
+        "image": "https://cdn02.plentymarkets.com/v5vzmmmcb10k/frontend/PWA/Blocks/navigation-thumbnail.svg",
+        "template": {
+          "en": {
+            "name": "SectionSpacing",
+            "type": "content",
+            "meta": { "uuid": "bb2c20a8-4ed4-4ef7-a3e4-2ce73d994a01", "isGlobalTemplate": false },
+            "content": {
+              "height": 60
+            }
+          },
+          "de": {
+            "name": "SectionSpacing",
+            "type": "content",
+            "meta": { "uuid": "bb2c20a8-4ed4-4ef7-a3e4-2ce73d994a02", "isGlobalTemplate": false },
+            "content": {
+              "height": 60
+            }
+          }
+        }
+      }
+    ]
+  },
   "image-banner": {
     "category": "image-banner",
     "accessControl": ["content", "productCategory", "product"],

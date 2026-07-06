@@ -138,8 +138,6 @@ const gridGapValue = computed(() => {
 
   return `${baseGapPixels.value}px`;
 });
-const defaultSectionSpacing = 'var(--ci-section-spacing)';
-
 const gradientBackground = computed(() => {
   if (configuration.layout?.gradientEnabled !== true) return undefined;
 
@@ -162,15 +160,14 @@ const gridInlineStyle = computed(() => ({
     ? undefined
     : (configuration.layout?.backgroundColor ?? 'transparent'),
   gap: gridGapValue.value,
-  marginTop:
-    configuration.layout?.marginTop !== undefined ? `${configuration.layout.marginTop}px` : defaultSectionSpacing,
+  marginTop: configuration.layout?.marginTop !== undefined ? `${configuration.layout.marginTop}px` : '0px',
   marginRight: configuration.layout?.marginRight !== undefined ? `${configuration.layout.marginRight}px` : '0px',
   marginBottom:
     isTwoColumnImageTextBoxRow.value && configuration.layout?.marginBottom
       ? gridGapValue.value
       : configuration.layout?.marginBottom !== undefined
         ? `${configuration.layout.marginBottom}px`
-        : defaultSectionSpacing,
+        : '0px',
   marginLeft: configuration.layout?.marginLeft !== undefined ? `${configuration.layout.marginLeft}px` : '0px',
   paddingTop: isTwoByTwoImageTeaserGrid.value
     ? gridGapValue.value

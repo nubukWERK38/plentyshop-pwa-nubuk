@@ -170,7 +170,6 @@
             {{ getEditorTranslation('spacing-between') }} {{ getGapPx(multiGridStructure.configuration.layout.gap) }}px
           </div>
         </div>
-
       </div>
       <div v-if="multiGridStructure.configuration.columnWidths?.length" class="py-4">
         <UiFormLabel>{{ getEditorTranslation('sticky-columns') }}</UiFormLabel>
@@ -355,7 +354,7 @@ const { blockUuid } = useSiteConfiguration();
 const resolvedUuid = computed(() => props.uuid || blockUuid.value);
 const { allBlocks: data } = useBlocks();
 const { findOrDeleteBlockByUuid } = useBlockManager();
-const defaultSectionSpacing = 60;
+const defaultSpacing = 0;
 const isTwoColumnMultigrid = computed(() => {
   return multiGridStructure.value.configuration?.columnWidths?.length === 2;
 });
@@ -427,9 +426,9 @@ const multiGridStructure = computed(() => {
 
   if (!block.configuration.layout) {
     block.configuration.layout = {
-      marginTop: defaultSectionSpacing,
+      marginTop: defaultSpacing,
       marginRight: 0,
-      marginBottom: defaultSectionSpacing,
+      marginBottom: defaultSpacing,
       marginLeft: 0,
       paddingTop: 0,
       paddingRight: 0,
@@ -461,8 +460,7 @@ const multiGridStructure = computed(() => {
     if (block.configuration.layout.gradientStartY === undefined) block.configuration.layout.gradientStartY = 50;
     if (!block.configuration.layout.horizontalAlignment) block.configuration.layout.horizontalAlignment = 'left';
     if (!block.configuration.layout.verticalAlignment) block.configuration.layout.verticalAlignment = 'top';
-    if (block.configuration.layout.marginTop === undefined)
-      block.configuration.layout.marginTop = defaultSectionSpacing;
+    if (block.configuration.layout.marginTop === undefined) block.configuration.layout.marginTop = defaultSpacing;
     if (block.configuration.layout.marginRight === undefined) block.configuration.layout.marginRight = 0;
     if (block.configuration.layout.marginLeft === undefined) block.configuration.layout.marginLeft = 0;
     if (block.configuration.layout.paddingTop === undefined) block.configuration.layout.paddingTop = 0;
@@ -470,7 +468,7 @@ const multiGridStructure = computed(() => {
     if (block.configuration.layout.paddingBottom === undefined) block.configuration.layout.paddingBottom = 0;
     if (block.configuration.layout.paddingLeft === undefined) block.configuration.layout.paddingLeft = 0;
     if (block.configuration.layout.marginBottom === undefined || block.configuration.layout.marginBottom === null) {
-      block.configuration.layout.marginBottom = defaultSectionSpacing;
+      block.configuration.layout.marginBottom = defaultSpacing;
     }
   }
   syncSlotContent(block);

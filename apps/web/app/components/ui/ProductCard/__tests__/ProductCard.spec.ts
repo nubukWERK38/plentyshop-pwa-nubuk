@@ -59,4 +59,20 @@ describe('<ProductCard />', () => {
 
     expect(wrapper.find('[data-testid="image-slot"]').exists()).toBe(false);
   });
+
+  it('should render regular price in black when no discount is available', () => {
+    const productWithoutDiscount = JSON.parse(JSON.stringify(ProductMock));
+    productWithoutDiscount.prices.rrp.price.value = productWithoutDiscount.prices.default.price.value;
+    productWithoutDiscount.prices.rrp.unitPrice.value = productWithoutDiscount.prices.default.unitPrice.value;
+
+    const wrapper = mount(UiProductCard, {
+      props: {
+        product: productWithoutDiscount,
+      },
+    });
+
+    expect(wrapper.find('[data-testid="product-card-vertical-price"]').classes()).toContain(
+      'product-card__price--regular',
+    );
+  });
 });

@@ -139,6 +139,7 @@
 
         <span
           class="product-card__price ml-auto whitespace-nowrap text-base font-bold leading-none"
+          :class="{ 'product-card__price--regular': !hasComparablePrice }"
           data-testid="product-card-vertical-price"
         >
           <span v-if="showFromText" class="mr-1">{{ t('account.ordersAndReturns.orderDetails.priceFrom') }}</span>

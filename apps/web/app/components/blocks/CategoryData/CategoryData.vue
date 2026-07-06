@@ -33,32 +33,37 @@
           :fields="props.content.fields"
           :fields-order="props.content.fieldsOrder"
           :texts="texts"
-          :show-subcategories="props.content.showSubcategories ?? false"
+          :show-subcategories="shouldRenderSubcategories"
           :subcategories="directSubcategories"
         />
       </div>
     </template>
     <template v-else>
-      <div class="relative">
+      <div class="category-data-image-frame relative overflow-hidden">
         <NuxtImg
           v-if="imageUrl"
           :src="imageUrl"
           :alt="props.content.image?.alt ?? ''"
-          :class="['object-cover', 'w-full']"
+          :class="['object-cover', 'w-full', 'h-full']"
           :style="{
             filter: props.content.image?.brightness ? 'brightness(' + (props.content.image?.brightness ?? 1) + ')' : '',
-            aspectRatio: 'auto 640 / 360',
             width: '100%',
-            height: 'auto',
+            height: '100%',
           }"
           :loading="'lazy'"
           :data-testid="'category-data-image-' + meta.uuid"
         />
 
         <div
+          v-if="imageUrl"
+          class="category-data-image-overlay pointer-events-none absolute inset-0"
+          :data-testid="'category-data-image-overlay-' + meta.uuid"
+        />
+
+        <div
           v-if="shouldShowTextBlock"
           :class="[
-            'absolute max-w-screen-3xl mx-auto inset-0 p-4 flex flex-col md:basis-2/4',
+            'absolute max-w-screen-3xl mx-auto inset-0 z-[1] p-4 flex flex-col md:basis-2/4',
             { 'md:p-10': props.content.text.bgColor },
           ]"
           :style="{
@@ -92,7 +97,7 @@
               :fields="props.content.fields"
               :fields-order="props.content.fieldsOrder"
               :texts="texts"
-              :show-subcategories="props.content.showSubcategories ?? false"
+              :show-subcategories="shouldRenderSubcategories"
               :subcategories="directSubcategories"
             />
           </div>
@@ -112,6 +117,7 @@ const runtimeConfig = useRuntimeConfig();
 
 const props = defineProps<CategoryDataProps>();
 const sdk = useSdk();
+const route = useRoute();
 const { hexToRgba, getTextAlignment, getContentPosition, isMobile } = useBlockContentHelper();
 const { data: productsCatalog } = useProducts();
 const { data: categoryTree } = useCategoryTree();
@@ -308,6 +314,14 @@ watchEffect(() => {
 const shouldRenderInlineBreadcrumb = computed(
   () => canHostInlineBreadcrumb.value && inlineBreadcrumbHost.value === inlineBreadcrumbKey.value,
 );
+const isBrandWorldCategory = computed(() => {
+  const normalizedPath = route.path.toLowerCase().replace(/\/+$/, '');
+  return normalizedPath.split('/').includes('markenwelt') || details.value.name?.toLowerCase() === 'markenwelt';
+});
+const shouldRenderSubcategories = computed(() => {
+  const isImageHeader = props.content.displayCategoryImage !== 'off';
+  return (props.content.showSubcategories ?? false) && !(isImageHeader && isBrandWorldCategory.value);
+});
 const imagePath = computed(() => {
   if (props.content.displayCategoryImage === 'image-1') {
     return details.value.imagePath;
@@ -345,6 +359,22 @@ const categoryDataContentClass = computed(() => {
   return isMobile.value ? 'p-4 md:p-6 rounded-lg w-full' : 'p-4 md:p-6 rounded-lg md:max-w-[50%] mx-5';
 });
 </script>
+
+<style scoped>
+.category-data-image-frame {
+  height: clamp(220px, 22vw, 380px);
+}
+
+.category-data-image-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(31, 63, 36, 0.62) 0%,
+    rgba(40, 79, 112, 0.45) 45%,
+    rgba(17, 20, 22, 0.16) 100%
+  );
+}
+</style>
+
 <i18n lang="json">
 {
   "en": {
