@@ -311,10 +311,10 @@ onUnmounted(() => debounceInput.cancel());
   }
 
   :global(.mobile-search [data-testid='search-bar-input']) {
-    height: 46px;
+    height: auto;
     border: 1px solid #d8dde2;
     border-radius: 0;
-    background: #f3f6f5;
+    background: #ffffff;
     color: #071625;
     font-size: 16px;
   }

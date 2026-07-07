@@ -2,7 +2,7 @@
   <section
     ref="blockRef"
     class="product-recommended-products w-screen"
-    :class="backgroundVariantClass"
+    :class="[backgroundVariantClass, { 'product-recommended-products--no-pogo': isNoPogoActionBlock }]"
     :style="sectionStyle"
   >
     <div v-bind="$attrs" :style="blockStyle" class="product-recommended-products__inner w-full">
@@ -230,6 +230,9 @@ const normalizedTextContent = computed(() =>
     .filter(Boolean)
     .join(' ')
     .toLowerCase(),
+);
+const isNoPogoActionBlock = computed(
+  () => normalizedTextContent.value.includes('no pogo') && normalizedTextContent.value.includes('aktion'),
 );
 const ctaButton = computed(() => {
   const configuredButton = props.content.button;
@@ -533,7 +536,8 @@ watch(
 
 .product-recommended-products :deep(.product-recommended-products__card .size-48) {
   width: 100%;
-  height: clamp(170px, 15vw, 220px);
+  height: auto;
+  aspect-ratio: 1 / 1;
   padding: 1rem 1.25rem 0.25rem;
 }
 
@@ -565,9 +569,29 @@ watch(
 }
 
 @media (max-width: 767px) {
+  .product-recommended-products--no-pogo {
+    display: none;
+  }
+
   .product-recommended-products__fallback-heading {
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
+  }
+
+  .product-recommended-products__header {
+    display: block;
+    overflow: hidden;
+  }
+
+  .product-recommended-products__text {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .product-recommended-products__text :deep(img) {
+    max-width: 100%;
+    height: auto;
+    margin-left: 0 !important;
   }
 
   .product-recommended-products__cta-row {

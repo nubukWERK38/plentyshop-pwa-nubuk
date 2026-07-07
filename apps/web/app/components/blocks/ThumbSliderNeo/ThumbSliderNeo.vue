@@ -286,6 +286,7 @@ const wrapperStyle = computed<CSSProperties>(() => ({
 const sliderStyle = computed<CSSProperties>(() => ({
   // Background matches tile color so nav clip-path areas and gaps between tiles appear consistent
   backgroundColor: controls.value.tileBackgroundColor,
+  '--thumb-slider-neo-nav-height': `${controls.value.navHeight}px`,
 }));
 
 const headerVisible = computed(() => Boolean(contentHeader.value.subline || contentHeader.value.headline));
@@ -383,12 +384,19 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
 
 .thumb-slider-neo__slider {
   position: relative;
+  height: var(--thumb-slider-neo-nav-height);
 }
 
 .thumb-slider-neo__swiper {
   position: relative;
   z-index: 1;
   width: 100%;
+  height: 100%;
+}
+
+.thumb-slider-neo__swiper :deep(.swiper-wrapper),
+.thumb-slider-neo__swiper :deep(.swiper-slide) {
+  height: 100%;
 }
 
 .thumb-slider-neo__accent {
@@ -414,12 +422,13 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
   border-radius: 0.25rem;
   overflow: hidden;
   transform-origin: center;
+  height: 100%;
 }
 
 .thumb-slider-neo__image {
   display: block;
   width: 100%;
-  height: 185px;
+  height: 100%;
   object-fit: contain;
   transform: skewX(calc(var(--tw-skew-x, 0deg) * -1));
 }

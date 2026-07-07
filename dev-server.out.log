@@ -54,3 +54,435 @@ web:dev: [32m√[39m Vite server built in 154ms
 web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2919ms
 web:dev: [36mi[39m Vite server warmed up in 1ms
 web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [36mi[39m [32mpage reload [39m[2mcomponents/ui/ProductCard/ProductCard.vue[22m
+web:dev: [36mi[39m [32mhmr update [39m[2m/components/ui/ProductCard/ProductCard.vue, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css?direct, /@fs/J:/Github/Neuer Ordner/plentyshop-pwa-nubuk/node_modules/tailwindcss/tailwind.css[22m
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/imports.d.ts[39m in 665.16ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mrouter.options.mjs[39m in 691.93ms
+web:dev: [32m√[39m Vite client built in 67ms
+web:dev: [32m√[39m Vite server built in 62ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2431ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 1ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 55ms
+web:dev: [32m√[39m Vite server built in 116ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1624ms
+web:dev: [36mi[39m Vite server warmed up in 0ms
+web:dev: [36mi[39m Vite client warmed up in 1ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 62ms
+web:dev: [32m√[39m Vite server built in 108ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2261ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 56ms
+web:dev: [32m√[39m Vite server built in 60ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2416ms
+web:dev: [36mi[39m Vite server warmed up in 0ms
+web:dev: [36mi[39m Vite client warmed up in 1ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 68ms
+web:dev: [32m√[39m Vite server built in 71ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3139ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2F&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 60ms
+web:dev: [32m√[39m Vite server built in 74ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2915ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2F&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 57ms
+web:dev: [32m√[39m Vite server built in 55ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2250ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [36mi[39m .nuxt/dist directory has been removed. Restarting Nuxt...
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 62ms
+web:dev: [32m√[39m Vite server built in 72ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2858ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 2ms
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/__nuxt_error?error=true&url=%2F&statusCode=500&statusMessage=Server+Error&message=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs&stack=Cannot+find+module+%27J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5C%5Cdist%5Cserver%5Cserver.mjs%27+imported+from+J:%5CGithub%5CNeuer+Ordner%5Cplentyshop-pwa-nubuk%5Capps%5Cweb%5C.nuxt%5Cdev%5Cindex.mjs%0Aat+finalizeResolution+(node:internal%2Fmodules%2Fesm%2Fresolve:271:11)%0Aat+moduleResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:861:10)%0Aat+defaultResolve+(node:internal%2Fmodules%2Fesm%2Fresolve:988:11)%0Aat+%23cachedDefaultResolve+(node:internal%2Fmodules%2Fesm%2Floader:697:20)%0Aat+%23resolveAndMaybeBlockOnLoaderThread+(node:internal%2Fmodules%2Fesm%2Floader:714:38)%0Aat+ModuleLoader.resolveSync+(node:internal%2Fmodules%2Fesm%2Floader:746:52)%0Aat+%23resolve+(node:internal%2Fmodules%2Fesm%2Floader:679:17)%0Aat+ModuleLoader.getOrCreateModuleJob+(node:internal%2Fmodules%2Fesm%2Floader:599:35)%0Aat+node:internal%2Fmodules%2Fesm%2Floader:628:32%0Aat+TracingChannel.tracePromise+(node:diagnostics_channel:362:14)
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }
+web:dev: [41m[30m ERROR [39m[49m [request error] [unhandled] [GET] http://localhost:3000/
+web:dev: 
+web:dev:  
+web:dev: [31mℹ Error: Cannot find module '.\.nuxt\\dist\server\server.mjs' imported from .\.nuxt\dev\index.mjs[39m
+web:dev: 
+web:dev: [2m ⁃ at [3mfinalizeResolution[23m ([3mnode:internal/modules/esm/resolve:271:11[23m)[22m
+web:dev: [2m ⁃ at [3mmoduleResolve[23m ([3mnode:internal/modules/esm/resolve:861:10[23m)[22m
+web:dev: [2m ⁃ at [3mdefaultResolve[23m ([3mnode:internal/modules/esm/resolve:988:11[23m)[22m
+web:dev: [2m ⁃ at [3m#cachedDefaultResolve[23m ([3mnode:internal/modules/esm/loader:697:20[23m)[22m
+web:dev: [2m ⁃ at [3m#resolveAndMaybeBlockOnLoaderThread[23m ([3mnode:internal/modules/esm/loader:714:38[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.resolveSync[23m ([3mnode:internal/modules/esm/loader:746:52[23m)[22m
+web:dev: [2m ⁃ at [3m#resolve[23m ([3mnode:internal/modules/esm/loader:679:17[23m)[22m
+web:dev: [2m ⁃ at [3mModuleLoader.getOrCreateModuleJob[23m ([3mnode:internal/modules/esm/loader:599:35[23m)[22m
+web:dev: [2m ⁃ ([3mnode:internal/modules/esm/loader:628:32[23m)[22m
+web:dev: [2m ⁃ at [3mTracingChannel.tracePromise[23m ([3mnode:diagnostics_channel:362:14[23m)[22m
+web:dev: 
+web:dev: [31m[CAUSE][39m
+web:dev: Error {
+web:dev:   stack: "Cannot find module 'J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' imported from J:\\Github\\Neuer Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs\n" +
+web:dev:   '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n' +
+web:dev:   '    at moduleResolve (node:internal/modules/esm/resolve:861:10)\n' +
+web:dev:   '    at defaultResolve (node:internal/modules/esm/resolve:988:11)\n' +
+web:dev:   '    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\n' +
+web:dev:   '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\n' +
+web:dev:   '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\n' +
+web:dev:   '    at #resolve (node:internal/modules/esm/loader:679:17)\n' +
+web:dev:   '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\n' +
+web:dev:   '    at node:internal/modules/esm/loader:628:32\n' +
+web:dev:   '    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)',
+web:dev:   code: 'ERR_MODULE_NOT_FOUND',
+web:dev:   url: 'file:///J:/Github/Neuer%20Ordner/plentyshop-pwa-nubuk/apps/web/.nuxt//dist/server/server.mjs',
+web:dev:   message: "Cannot find module 'J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\\\dist\\server\\server.mjs' 
+web:dev:   imported from J:\\Github\\Neuer 
+web:dev:   Ordner\\plentyshop-pwa-nubuk\\apps\\web\\.nuxt\\dev\\index.mjs",
+web:dev: }

@@ -178,7 +178,8 @@ const handleScrollableNavigation = (direction: 'prev' | 'next', event: Scrollabl
 
 .product-slider :deep(.product-slider__item .size-48) {
   width: 100%;
-  height: clamp(220px, 21vw, 300px);
+  height: auto;
+  aspect-ratio: 1 / 1;
   padding: 1.5rem 1.25rem 0.75rem;
 }
 
@@ -280,7 +281,8 @@ const handleScrollableNavigation = (direction: 'prev' | 'next', event: Scrollabl
   }
 
   .product-slider :deep(.product-slider__item .size-48) {
-    height: clamp(210px, 62vw, 260px);
+    height: auto;
+    aspect-ratio: 1 / 1;
     padding: 1rem 1rem 0.5rem;
   }
 }
