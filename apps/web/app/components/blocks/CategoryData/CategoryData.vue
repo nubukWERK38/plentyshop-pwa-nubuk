@@ -464,10 +464,14 @@ const isBrandWorldCategory = computed(() => {
   return normalizedPath.split('/').includes('markenwelt') || details.value.name?.toLowerCase() === 'markenwelt';
 });
 const shouldRenderSubcategories = computed(() => {
+  if (isMobile.value) return false;
+
   const isImageHeader = props.content.displayCategoryImage !== 'off';
   return (props.content.showSubcategories ?? true) && !(isImageHeader && isBrandWorldCategory.value);
 });
 const shouldRenderBrands = computed(() => {
+  if (isMobile.value) return false;
+
   return props.content.showBrands ?? true;
 });
 

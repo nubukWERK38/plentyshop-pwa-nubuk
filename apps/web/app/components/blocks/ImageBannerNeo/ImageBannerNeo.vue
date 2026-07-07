@@ -559,4 +559,34 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
   border-color: var(--ibn-cta-hover-border) !important;
   color: var(--ibn-cta-hover-text) !important;
 }
+
+@media (max-width: 767px) {
+  .image-banner-neo__swiper,
+  .image-banner-neo :deep(.swiper-wrapper),
+  .image-banner-neo__swiper-slide,
+  .image-banner-neo__slide {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .image-banner-neo__slide {
+    grid-template-rows: none;
+  }
+
+  .image-banner-neo__image-wrap {
+    min-height: 180px;
+  }
+
+  .image-banner-neo__text {
+    min-height: 220px;
+    margin: 0 !important;
+    padding: 24px !important;
+  }
+
+  .image-banner-neo__text::before,
+  .image-banner-neo__text::after {
+    display: none;
+  }
+}
 </style>

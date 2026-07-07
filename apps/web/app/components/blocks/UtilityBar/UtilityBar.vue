@@ -94,7 +94,11 @@
           <SfIconMenu aria-hidden="true" />
         </UiButton>
 
-        <div v-if="isSectionVisible('logo')" class="nubuk-utility-row__logo flex items-center" :style="getSectionColumnStyle('logo')">
+        <div
+          v-if="isSectionVisible('logo')"
+          class="nubuk-utility-row__logo flex items-center"
+          :style="getSectionColumnStyle('logo')"
+        >
           <NuxtLink
             id="blockified-logo"
             data-testid="logo-link"
@@ -111,7 +115,9 @@
             ref="iconSearchContainerRef"
             :style="getSectionColumnStyle('search')"
             :class="[
-              isFullSearchMode || isIconSearchExpanded || isSearchClosing ? 'utility-bar__search-container--expanded' : 'flex-none w-10 shrink-0',
+              isFullSearchMode || isIconSearchExpanded || isSearchClosing
+                ? 'utility-bar__search-container--expanded'
+                : 'flex-none w-10 shrink-0',
             ]"
           >
             <template v-if="isFullSearchMode">
@@ -225,7 +231,7 @@
             variant="tertiary"
           >
             <template #prefix>
-              <SfIconShoppingCart />              
+              <SfIconShoppingCart />
             </template>
             <span class="nubuk-cart-total">{{ cartTotalFormatted }}</span>
           </UiButton>
@@ -332,7 +338,7 @@
     <NuxtLazyHydrate v-if="viewport.isLessThan('lg')" when-idle>
       <SfModal
         v-model="isSearchModalOpen"
-        class="w-full h-full z-50"
+        class="mobile-search-modal w-full h-full z-[5000]"
         tag="section"
         role="dialog"
         aria-labelledby="search-modal-title"
@@ -351,7 +357,7 @@
             {{ t('common.actions.search') }}
           </h3>
         </header>
-        <UiSearch class="w-[100%]" :close="searchModalClose" />
+        <UiSearch class="mobile-search" :close="searchModalClose" :autofocus="true" />
       </SfModal>
     </NuxtLazyHydrate>
   </div>
@@ -589,7 +595,7 @@ const navigateToLogin = () => {
 <style scoped>
 :deep(input[data-testid='search-bar-input']) {
   min-width: 172px;
-  background: #E9E9EA !important;
+  background: #e9e9ea !important;
 }
 
 .nubuk-utility-shell {

@@ -536,6 +536,14 @@ registerBlockVisibility(props.meta.uuid, true);
   opacity: 0.75;
 }
 
+@media (max-width: 767px) {
+  [data-testid='product-question-block'],
+  .product-question {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 @media (min-width: 768px) {
   .product-question__form {
     grid-template-columns: repeat(2, minmax(0, 1fr));

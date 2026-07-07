@@ -30,7 +30,11 @@
           >
             <SfIconCancel aria-hidden="true" />
           </button>
-          <SfLoaderCircular v-else-if="variant === 'header' && (loading || loadingSuggestions)" class="shrink-0" aria-hidden="true" />
+          <SfLoaderCircular
+            v-else-if="variant === 'header' && (loading || loadingSuggestions)"
+            class="shrink-0"
+            aria-hidden="true"
+          />
           <SfIconSearch v-else-if="variant === 'header'" class="shrink-0" aria-hidden="true" />
         </template>
       </SfInput>
@@ -128,6 +132,7 @@ import { debounce } from '~/utils/debounce';
 const props = defineProps<{
   close?: () => boolean;
   variant?: 'default' | 'header';
+  autofocus?: boolean;
 }>();
 
 const localePath = useLocalePath();
@@ -221,6 +226,12 @@ watch(
   },
 );
 
+onMounted(() => {
+  if (props.autofocus) {
+    nextTick(handleInputFocus);
+  }
+});
+
 onUnmounted(() => debounceInput.cancel());
 </script>
 
@@ -228,18 +239,18 @@ onUnmounted(() => debounceInput.cancel());
 .header-search-form {
   width: 100%;
   border: 0;
-  background: #E9E9EA !important;
+  background: #e9e9ea !important;
 }
 .header-search-form > span {
   border: 0;
   border-radius: 0;
-  background: #E9E9EA !important;
+  background: #e9e9ea !important;
   --tw-ring-opacity: 0;
 }
 .header-search-form input {
   border: 0;
   border-radius: 0;
-  background: #E9E9EA !important;
+  background: #e9e9ea !important;
 }
 
 .header-search-input {
@@ -284,6 +295,42 @@ onUnmounted(() => debounceInput.cancel());
     width: 70vw;
     max-width: calc(100vw - 2rem);
     transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 767px) {
+  :global(.mobile-search) {
+    width: 100%;
+    padding: 72px 16px 0;
+  }
+
+  :global(.mobile-search form),
+  :global(.mobile-search [data-testid='search-bar-input']) {
+    width: 100%;
+    min-width: 0;
+  }
+
+  :global(.mobile-search [data-testid='search-bar-input']) {
+    height: 46px;
+    border: 1px solid #d8dde2;
+    border-radius: 0;
+    background: #f3f6f5;
+    color: #071625;
+    font-size: 16px;
+  }
+
+  :global(.mobile-search [data-testid='search-bar-input']::placeholder) {
+    color: #66717c;
+    opacity: 1;
+  }
+
+  :global(.mobile-search .search-suggestions) {
+    position: static;
+    max-height: calc(100vh - 160px);
+    margin-top: 12px;
+    padding: 16px;
+    border: 0;
+    box-shadow: none;
   }
 }
 </style>

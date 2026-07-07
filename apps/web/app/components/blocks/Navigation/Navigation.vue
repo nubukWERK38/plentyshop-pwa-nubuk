@@ -137,7 +137,7 @@
         placement="left"
         class="right-12 max-w-96 bg-white overflow-y-auto z-[1000]"
       >
-        <nav>
+        <nav ref="drawerFocusReference">
           <div class="flex items-center justify-between p-4">
             <p class="typography-text-base font-medium">{{ t('common.actions.browseProducts') }}</p>
             <UiButton
@@ -271,6 +271,7 @@ const isUsingTouch = ref(false);
 const lastTouchTime = ref(0);
 const categoryTree = ref(categoryTreeGetters.getTree(props.categories));
 const drawerReference = ref();
+const drawerFocusReference = ref<HTMLElement>();
 const megaMenuReference = ref();
 const triggerReference = ref();
 const tappedCategories = ref<Map<number, boolean>>(new Map());
@@ -526,7 +527,7 @@ watch(isOpen, (isDrawerOpen) => {
   }
 });
 
-useTrapFocus(drawerReference, trapFocusOptions);
+useTrapFocus(drawerFocusReference, trapFocusOptions);
 </script>
 
 <style scoped>

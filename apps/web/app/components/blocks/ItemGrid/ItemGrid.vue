@@ -85,3 +85,17 @@ watch([currentPage, categoryId], ([newPage, newCategory], [oldPage, oldCategory]
   }
 });
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  [data-testid='category-grid'] {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  [data-testid='category-grid'] :deep([data-testid='product-card']) {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+</style>

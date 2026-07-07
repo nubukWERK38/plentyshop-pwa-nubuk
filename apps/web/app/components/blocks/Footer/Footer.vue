@@ -1,10 +1,5 @@
 <template>
-  <footer
-    v-if="resolvedContent"
-    class="footer-block"
-    :style="footerStyle"
-    data-testid="footer"
-  >
+  <footer v-if="resolvedContent" class="footer-block" :style="footerStyle" data-testid="footer">
     <div class="footer-block__inner">
       <div class="footer-block__content" :style="contentPanelStyle">
         <div class="footer-block__content-bg" :style="contentBackgroundStyle" />
@@ -30,11 +25,7 @@
                 </SfLink>
               </SfListItem>
             </ul>
-            <div
-              v-if="column?.description"
-              class="footer-block__html"
-              v-html="column.description"
-            />
+            <div v-if="column?.description" class="footer-block__html" v-html="column.description" />
             <div v-if="hasColumnButton(column)" class="pt-2 flex">
               <UiButton
                 :tag="NuxtLink"
@@ -159,8 +150,8 @@ const getColumnSwitches = (column: FooterColumn) => {
   background-repeat: no-repeat;
   background-size: cover;
   padding: 72px 100px 0;
-      max-width: 1540px;
-    margin: 0 auto;
+  max-width: 1540px;
+  margin: 0 auto;
 }
 
 .footer-block__inner {
@@ -174,7 +165,6 @@ const getColumnSwitches = (column: FooterColumn) => {
   padding: 34px 42px 30px;
   color: #fff !important;
 }
-
 
 .footer-block__content-bg {
   position: absolute;
@@ -233,11 +223,12 @@ const getColumnSwitches = (column: FooterColumn) => {
 
 @media (max-width: 767px) {
   .footer-block {
-    padding-top: 32px;
+    padding: 32px 16px 0;
+    max-width: 100%;
   }
 
   .footer-block__content {
-    padding: 28px 22px;
+    padding: 28px 20px;
   }
 
   .footer-block__columns {

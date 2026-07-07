@@ -422,4 +422,23 @@ const columns = computed<Block[][]>(() => {
     max-height: none !important;
   }
 }
+
+@media (max-width: 767px) {
+  [data-testid='multi-grid-structure'] {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding-right: 16px !important;
+    padding-left: 16px !important;
+  }
+
+  .multi-grid--usp-text {
+    padding-right: 16px !important;
+    padding-left: 16px !important;
+  }
+
+  .multi-grid--image-teaser-2x2,
+  .multi-grid--image-text-row {
+    gap: 16px !important;
+  }
+}
 </style>

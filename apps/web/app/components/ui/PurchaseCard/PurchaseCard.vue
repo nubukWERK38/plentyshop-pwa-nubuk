@@ -1138,6 +1138,14 @@ const openProductQuestionTab = () => {
 }
 
 @media (max-width: 767px) {
+  .purchase-card,
+  .purchase-card__content,
+  .purchase-card__cart-section,
+  .purchase-card__paypal-buttons {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .purchase-card__brand {
     font-size: 1.75rem;
   }
@@ -1150,6 +1158,20 @@ const openProductQuestionTab = () => {
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 12px;
+    width: 100%;
+  }
+
+  .purchase-card__cart-tooltip {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .purchase-card__cart-button {
+    width: 100%;
+  }
+
+  .purchase-card__paypal-buttons :deep(*) {
+    max-width: 100%;
   }
 }
 </style>

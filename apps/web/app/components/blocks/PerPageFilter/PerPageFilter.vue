@@ -29,3 +29,22 @@ const layoutStyle = computed(() => {
   };
 });
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  [data-testid='category-per-page'] {
+    width: 100% !important;
+    justify-content: stretch !important;
+    padding-right: 16px !important;
+    padding-left: 16px !important;
+    pointer-events: auto !important;
+  }
+
+  [data-testid='category-per-page'] :deep([data-testid='category-items-per-page']),
+  [data-testid='category-per-page'] :deep(.category-items-per-page--compact) {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 auto !important;
+  }
+}
+</style>

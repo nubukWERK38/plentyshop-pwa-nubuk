@@ -12,7 +12,7 @@
       size="sm"
       :tag="link ? NuxtLink : undefined"
       :to="link || undefined"
-      @click="id === 'products' && open()"
+      @click="id === 'products' && openProductsMenu()"
     >
       <template #prefix>
         <div class="relative">
@@ -65,7 +65,8 @@ const route = useRoute();
 const { wishlistItemIds } = useWishlist();
 const { data: cart } = useCart();
 const { isAuthorized } = useCustomer();
-const { open } = useMegaMenu();
+const { activeNode, open } = useMegaMenu();
+const { setDrawerOpen } = useDrawerState();
 
 const fixedItems = computed<NavbarItem[]>(() => [
   {
@@ -125,6 +126,12 @@ const badgeStyle = computed(() => ({
   color: props.backgroundColor,
   outlineColor: props.backgroundColor,
 }));
+
+const openProductsMenu = () => {
+  activeNode.value = [];
+  open();
+  setDrawerOpen(true);
+};
 
 const cartItemsCount = computed(() => cart.value?.items?.reduce((price, { quantity }) => price + quantity, 0) ?? 0);
 const NuxtLink = resolveComponent('NuxtLink');
