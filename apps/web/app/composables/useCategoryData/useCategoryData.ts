@@ -49,19 +49,38 @@ export const useCategoryData = () => {
     return IMAGE_KEYS.some((k) => !isBlank(img[k]));
   });
 
-  const details = computed(() => categoryGetters.getCategoryDetails(category.value) || ({} as CategoryDetails));
-  const showImageSlotHint = computed<boolean>(() => {
+  const category = computed<Category>(() => productsCatalog.value?.category || ({} as Category));
+  const getDetailsFromCategory = (categoryData?: Category | null): CategoryDetails => {
+    if (!categoryData) return {} as CategoryDetails;
+
+    const categoryDetails = categoryGetters.getCategoryDetails(categoryData) as CategoryDetails | undefined;
+    const fallbackDetails = (categoryData as Category & { details?: CategoryDetails[] }).details;
+
+    return categoryDetails || fallbackDetails?.[0] || ({} as CategoryDetails);
+  };
+  const details = computed(() => getDetailsFromCategory(category.value));
+  const getImagePathFromDetails = (categoryDetails: CategoryDetails, imageSlot: 'image-1' | 'image-2') => {
+    if (imageSlot === 'image-1') {
+      return categoryDetails.imagePath || categoryDetails.plenty_category_details_image_path || '';
+    }
+
+    return categoryDetails.image2Path || categoryDetails.plenty_category_details_image2_path || '';
+  };
+
+  const headerImagePath = computed(() => {
     const display = categoryDataBlock.value.displayCategoryImage;
     if (display === 'image-1') {
-      return !details.value.imagePath;
+      return getImagePathFromDetails(details.value, 'image-1');
     }
     if (display === 'image-2') {
-      return !details.value.image2Path;
+      return getImagePathFromDetails(details.value, 'image-2');
     }
-    return false;
+    return '';
   });
-
-  const category = computed<Category>(() => productsCatalog.value?.category || ({} as Category));
+  const showImageSlotHint = computed<boolean>(() => {
+    const display = categoryDataBlock.value.displayCategoryImage;
+    return display !== 'off' && !headerImagePath.value;
+  });
 
   const getFieldText = (key: CategoryDataFieldKey): string => {
     switch (key) {

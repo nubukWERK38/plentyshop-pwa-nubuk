@@ -6,38 +6,40 @@
       <div
         v-if="shouldShowTextBlock || shouldRenderInlineBreadcrumb"
         data-testid="text-card"
-        :class="['w-full']"
+        :class="['category-data-text-header w-full', { 'category-data-empty-image-header': isImageHeaderWithoutImage }]"
         :style="{
           color: props.content.text.color,
           backgroundColor: props.content.text.bgColor,
         }"
       >
-        <div
-          v-if="showNoTextMessage && !shouldRenderInlineBreadcrumb"
-          class="text-center"
-          role="alert"
-          aria-live="polite"
-          data-testid="no-text-selected"
-        >
-          {{ getEditorTranslation('no-text-fields-selected') }}
+        <div class="category-data-inner">
+          <div
+            v-if="showNoTextMessage && !shouldRenderInlineBreadcrumb"
+            class="text-center"
+            role="alert"
+            aria-live="polite"
+            data-testid="no-text-selected"
+          >
+            {{ getEditorTranslation('no-text-fields-selected') }}
+          </div>
+          <div
+            v-if="shouldRenderInlineBreadcrumb"
+            :class="{ 'mb-10': detailsReady }"
+            data-testid="category-data-breadcrumbs"
+          >
+            <UiBreadcrumbs :breadcrumbs="breadcrumbs" />
+          </div>
+          <FieldsOrder
+            v-if="detailsReady"
+            :fields="props.content.fields"
+            :fields-order="props.content.fieldsOrder"
+            :texts="texts"
+            :show-subcategories="shouldRenderSubcategories"
+            :subcategories="visibleSubcategories"
+            :show-brands="shouldRenderBrands"
+            :brands="visibleBrands"
+          />
         </div>
-        <div
-          v-if="shouldRenderInlineBreadcrumb"
-          :class="{ 'mb-10': detailsReady }"
-          data-testid="category-data-breadcrumbs"
-        >
-          <UiBreadcrumbs :breadcrumbs="breadcrumbs" />
-        </div>
-        <FieldsOrder
-          v-if="detailsReady"
-          :fields="props.content.fields"
-          :fields-order="props.content.fieldsOrder"
-          :texts="texts"
-          :show-subcategories="shouldRenderSubcategories"
-          :subcategories="visibleSubcategories"
-          :show-brands="shouldRenderBrands"
-          :brands="visibleBrands"
-        />
       </div>
     </template>
     <template v-else>
@@ -64,47 +66,50 @@
 
         <div
           v-if="shouldShowTextBlock"
-          :class="[
-            'absolute max-w-screen-3xl mx-auto inset-0 z-[2] p-4 flex flex-col md:basis-2/4',
-            { 'md:p-10': props.content.text.bgColor },
-          ]"
+          :class="['category-data-image-text-wrap absolute inset-0 z-[2] flex flex-col']"
           :style="{
             color: props.content.text.color,
             textAlign: getTextAlignment(props.content.text.textAlignment ?? ''),
-            alignItems: getContentPosition(props.content.text.align ?? ''),
-            justifyContent: getContentPosition(props.content.text.justify ?? ''),
           }"
           :data-testid="'category-data-overlay-' + meta.uuid"
         >
           <div
-            :class="[categoryDataContentClass, 'category-data-image-content']"
+            :class="['category-data-inner', 'category-data-image-inner']"
             :style="{
-              backgroundColor: props.content.text.background
-                ? hexToRgba(props.content.text.bgColor, props.content.text.bgOpacity)
-                : '',
+              alignItems: getContentPosition(props.content.text.align ?? ''),
+              justifyContent: getContentPosition(props.content.text.justify ?? ''),
             }"
-            :data-testid="'category-data-content-' + meta.uuid"
           >
             <div
-              v-if="showNoTextMessage"
-              class="text-center"
-              role="alert"
-              aria-live="polite"
-              data-testid="no-text-selected"
+              :class="[categoryDataContentClass, 'category-data-image-content']"
+              :style="{
+                backgroundColor: props.content.text.background
+                  ? hexToRgba(props.content.text.bgColor, props.content.text.bgOpacity)
+                  : '',
+              }"
+              :data-testid="'category-data-content-' + meta.uuid"
             >
-              {{ getEditorTranslation('no-text-fields-selected') }}
+              <div
+                v-if="showNoTextMessage"
+                class="text-center"
+                role="alert"
+                aria-live="polite"
+                data-testid="no-text-selected"
+              >
+                {{ getEditorTranslation('no-text-fields-selected') }}
+              </div>
+              <FieldsOrder
+                v-else-if="detailsReady"
+                :fields="props.content.fields"
+                :fields-order="props.content.fieldsOrder"
+                :texts="texts"
+                :show-subcategories="shouldRenderSubcategories"
+                :subcategories="visibleSubcategories"
+                :show-brands="shouldRenderBrands"
+                :brands="visibleBrands"
+                :max-subcategory-rows="4"
+              />
             </div>
-            <FieldsOrder
-              v-else-if="detailsReady"
-              :fields="props.content.fields"
-              :fields-order="props.content.fieldsOrder"
-              :texts="texts"
-              :show-subcategories="shouldRenderSubcategories"
-              :subcategories="visibleSubcategories"
-              :show-brands="shouldRenderBrands"
-              :brands="visibleBrands"
-              :max-subcategory-rows="4"
-            />
           </div>
         </div>
       </div>
@@ -142,6 +147,41 @@ const { data: categoryTree } = useCategoryTree();
 const { buildCategoryMenuLink } = useLocalization();
 const localePath = useLocalePath();
 const category = computed(() => productsCatalog.value.category || ({} as Category));
+const getDetailsFromCategory = (categoryData?: Category | null): CategoryDetails => {
+  if (!categoryData) return {} as CategoryDetails;
+
+  const categoryDetails = categoryGetters.getCategoryDetails(categoryData) as CategoryDetails | undefined;
+  const fallbackDetails = (categoryData as Category & { details?: CategoryDetails[] }).details;
+
+  return categoryDetails || fallbackDetails?.[0] || ({} as CategoryDetails);
+};
+const details = computed(() => getDetailsFromCategory(category.value));
+const getParentCategoryId = (categoryData: Category) => {
+  const categoryWithParent = categoryData as Category & {
+    parentCategoryId?: number | string | null;
+    parentCategoryID?: number | string | null;
+    parentId?: number | string | null;
+  };
+
+  return Number(
+    categoryWithParent.parentCategoryId ?? categoryWithParent.parentCategoryID ?? categoryWithParent.parentId,
+  );
+};
+const parentCategoryId = computed(() => getParentCategoryId(category.value));
+const parentCategory = computed(() => {
+  if (!parentCategoryId.value) return null;
+
+  return categoryTreeGetters.findCategoryById(categoryTree.value, parentCategoryId.value) as Category | null;
+});
+const parentDetails = computed(() => getDetailsFromCategory(parentCategory.value));
+const getImagePathFromDetails = (categoryDetails: CategoryDetails, imageSlot: 'image-1' | 'image-2') => {
+  if (imageSlot === 'image-1') {
+    return categoryDetails.imagePath || categoryDetails.plenty_category_details_image_path || '';
+  }
+
+  return categoryDetails.image2Path || categoryDetails.plenty_category_details_image2_path || '';
+};
+
 const hiddenRootCategoryName = 'Produkte Neuer Shop';
 const enabledText = computed(
   () =>
@@ -156,7 +196,6 @@ const shouldShowTextBlock = computed(
   () => isEditMode.value || ((isPreviewMode.value || isLiveMode.value) && !showNoTextMessage.value),
 );
 
-const details = computed(() => categoryGetters.getCategoryDetails(category.value) || ({} as CategoryDetails));
 const fetchedDirectSubcategories = ref<CategoryEntry[]>([]);
 
 const getSubcategoryLink = (categoryId?: number | string) => {
@@ -307,9 +346,10 @@ const loadDirectSubcategories = async () => {
       break;
     }
 
-    collected.push(...(pageData.entries ?? []));
+    const entries = pageData.entries ?? [];
+    collected.push(...entries);
 
-    if (pageData.isLastPage) {
+    if (pageData.isLastPage || entries.length === 0) {
       break;
     }
 
@@ -348,13 +388,50 @@ const detailsReady = computed(() => {
   const textsData = texts.value;
   return !!(textsData.name || textsData.description1 || textsData.description2 || textsData.shortDescription);
 });
+
+const getParentPathFromRoute = () => {
+  const normalizedPath = route.path.replace(/\/+$/, '');
+  const segments = normalizedPath.split('/').filter(Boolean);
+  if (segments.length <= 1) return '/';
+
+  return `/${segments.slice(0, -1).join('/')}/`;
+};
+
+const fallbackBreadcrumbs = computed(() => {
+  const items: { name: string; link: string }[] = [];
+  const parentName = parentDetails.value.name;
+  const currentName = details.value.name;
+
+  if (parentName) {
+    items.push({
+      name: parentName,
+      link: getParentPathFromRoute(),
+    });
+  }
+
+  if (currentName) {
+    items.push({
+      name: currentName,
+      link: route.path,
+    });
+  }
+
+  return items;
+});
+
 const breadcrumbs = computed(() => {
   if (!productsCatalog.value.category) return [];
 
-  const categoryBreadcrumbs = categoryTreeGetters.generateBreadcrumbFromCategory(
-    categoryTree.value,
-    categoryGetters.getId(productsCatalog.value.category),
-  );
+  let categoryBreadcrumbs = [
+    ...categoryTreeGetters.generateBreadcrumbFromCategory(
+      categoryTree.value,
+      categoryGetters.getId(productsCatalog.value.category),
+    ),
+  ];
+
+  if (categoryBreadcrumbs.length === 0) {
+    categoryBreadcrumbs = [...fallbackBreadcrumbs.value];
+  }
 
   categoryBreadcrumbs.unshift({ name: t('common.labels.home'), link: '/' });
   return categoryBreadcrumbs.filter((item) => item.name !== hiddenRootCategoryName);
@@ -393,12 +470,13 @@ const shouldRenderSubcategories = computed(() => {
 const shouldRenderBrands = computed(() => {
   return props.content.showBrands ?? true;
 });
+
 const imagePath = computed(() => {
   if (props.content.displayCategoryImage === 'image-1') {
-    return details.value.imagePath;
+    return getImagePathFromDetails(details.value, 'image-1');
   }
   if (props.content.displayCategoryImage === 'image-2') {
-    return details.value.image2Path;
+    return getImagePathFromDetails(details.value, 'image-2');
   }
   return '';
 });
@@ -410,6 +488,8 @@ const imageUrl = computed(() => {
 const categoryImageAlt = computed(() => {
   return props.content.image?.alt?.trim() || details.value.name || '';
 });
+
+const isImageHeaderWithoutImage = computed(() => props.content.displayCategoryImage !== 'off' && !imageUrl.value);
 
 const inlineStyle = computed(() => {
   const layout = props.content.layout || {};
@@ -440,6 +520,87 @@ const categoryDataContentClass = computed(() => {
   height: clamp(220px, 22vw, 380px);
 }
 
+.category-data-empty-image-header {
+  min-height: clamp(180px, 18vw, 280px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.category-data-inner {
+  width: 100%;
+  max-width: 1536px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.category-data-empty-image-header .category-data-inner {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.category-data-text-header .category-data-inner {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.category-data-empty-image-header :deep(.category-data-description > :not(ul):not(ol)) {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.category-data-empty-image-header :deep(.category-data-description > :first-child) {
+  margin-top: 0;
+}
+
+.category-data-empty-image-header :deep(.category-data-description > :last-child) {
+  margin-bottom: 0;
+}
+
+.category-data-empty-image-header :deep(#category-headline) {
+  color: var(--ci-dark) !important;
+}
+
+.category-data-empty-image-header :deep(.category-data-link-list),
+.category-data-empty-image-header :deep(.category-data-description-1) {
+  max-width: 100%;
+}
+
+.category-data-inner :deep(.category-data-description-1),
+.category-data-inner :deep(.category-data-description-1 *) {
+  font-family: 'Noto Sans', sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+}
+
+.category-data-inner :deep(.category-data-description-1 h1),
+.category-data-inner :deep(.category-data-description-1 .h1) {
+  font-size: 48px !important;
+}
+
+.category-data-inner :deep(.category-data-description-1 h2),
+.category-data-inner :deep(.category-data-description-1 .h2) {
+  font-size: 35px !important;
+}
+
+.category-data-inner :deep(.category-data-description-1 h3),
+.category-data-inner :deep(.category-data-description-1 .h3) {
+  font-size: 24px !important;
+}
+
+.category-data-inner :deep(.category-data-description-1 h4),
+.category-data-inner :deep(.category-data-description-1 .h4) {
+  font-size: 18px !important;
+}
+
+.category-data-image-inner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
 .category-data-image-overlay {
   width: 50%;
   background: linear-gradient(90deg, rgb(65 112 56 / 70%) 0%, rgb(45 125 174 / 62%) 100%);
@@ -452,6 +613,46 @@ const categoryDataContentClass = computed(() => {
 .category-data-image-frame :deep(#category-headline) {
   margin: 0 0 1rem;
   line-height: 1.18;
+}
+
+@media (min-width: 768px) {
+  .category-data-inner {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .category-data-empty-image-header :deep(#category-headline),
+  .category-data-empty-image-header :deep(.category-data-link-list),
+  .category-data-empty-image-header :deep(.category-data-description) {
+    margin-left: 0 !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-data-inner {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
+  .category-data-text-header .category-data-inner {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .category-data-empty-image-header :deep(.category-data-link-list) {
+    margin-left: 5rem;
+  }
+
+  .category-data-empty-image-header :deep(#category-headline) {
+    margin-left: 5rem;
+  }
+
+  .category-data-empty-image-header :deep(.category-data-link-list),
+  .category-data-empty-image-header :deep(.category-data-description-1) {
+    max-width: calc(100% - 5rem);
+  }
 }
 </style>
 

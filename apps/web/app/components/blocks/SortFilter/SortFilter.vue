@@ -6,7 +6,7 @@
       </div>
 
       <template v-for="key in orderedFilterKeys" :key="key">
-        <template v-if="key === 'category' && props.content?.fields.category">
+        <template v-if="key === 'category' && categoryTreeEnabled">
           <CategoryTree v-if="productsCatalog.category" :category="productsCatalog.category" />
         </template>
 
@@ -99,10 +99,11 @@ const clientPreview = computed(() => isInEditorClient.value);
 const showAllFiltersImmediately = computed(() => props.content?.showAllFiltersImmediately ?? true);
 const numberOfFiltersToShowInitially = computed(() => props.content?.numberOfFiltersToShowInitially ?? 0);
 const preferredFilterOrder: SortFilterFieldKey[] = ['manufacturer', 'price', 'availability', 'customizedFilters'];
+const categoryTreeEnabled = computed(() => props.content?.fields.category !== false);
 const orderedFilterKeys = computed(() => {
   const configuredOrder = props.content?.filtersOrder ?? [];
   const preferredKeys = preferredFilterOrder.filter((key) => configuredOrder.includes(key));
-  const categoryKey = configuredOrder.includes('category') ? ['category'] : [];
+  const categoryKey = categoryTreeEnabled.value ? ['category'] : [];
   const remainingKeys = configuredOrder.filter((key) => !preferredFilterOrder.includes(key) && key !== 'category');
 
   return [...preferredKeys, ...categoryKey, ...remainingKeys];
@@ -111,7 +112,8 @@ const orderedFilterKeys = computed(() => {
 watch(
   () => props.content?.fields,
   (newValue) => {
-    showSortAndFilter.value = !!newValue && Object.values(newValue as SortFilterFieldsVisibility).some(Boolean);
+    showSortAndFilter.value =
+      categoryTreeEnabled.value || (!!newValue && Object.values(newValue as SortFilterFieldsVisibility).some(Boolean));
   },
   { deep: true, immediate: true },
 );

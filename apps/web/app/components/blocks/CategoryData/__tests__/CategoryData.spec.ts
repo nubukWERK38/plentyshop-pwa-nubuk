@@ -5,15 +5,24 @@ import { CategoryMock } from '../../../../../__tests__/__mocks__/category.mock';
 import type { CategoryDetails } from '@plentymarkets/shop-api';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 
-const { useEditorStateMock, useProductsMock, useRouteMock } = vi.hoisted(() => ({
-  useEditorStateMock: vi.fn(),
-  useProductsMock: vi.fn(),
-  useRouteMock: vi.fn(),
-}));
+const { findCategoryByIdMock, getCategoriesSearchMock, useEditorStateMock, useProductsMock, useRouteMock } = vi.hoisted(
+  () => ({
+    findCategoryByIdMock: vi.fn(),
+    getCategoriesSearchMock: vi.fn(),
+    useEditorStateMock: vi.fn(),
+    useProductsMock: vi.fn(),
+    useRouteMock: vi.fn(),
+  }),
+);
 
 mockNuxtImport('useEditorState', () => useEditorStateMock);
 mockNuxtImport('useProducts', () => useProductsMock);
 mockNuxtImport('useRoute', () => useRouteMock);
+mockNuxtImport('useSdk', () => () => ({
+  plentysystems: {
+    getCategoriesSearch: getCategoriesSearchMock,
+  },
+}));
 
 vi.mock('@plentymarkets/shop-api', () => {
   return {
@@ -22,12 +31,13 @@ vi.mock('@plentymarkets/shop-api', () => {
       getCategoryDescription1: (category: CategoryDetails) => category?.description ?? '',
       getCategoryDescription2: (category: CategoryDetails) => category?.description2 ?? '',
       getCategoryShortDescription: (category: CategoryDetails) => category?.shortDescription ?? '',
-      getCategoryDetails: (category: CategoryDetails) => category,
+      getCategoryDetails: (category: CategoryDetails & { details?: CategoryDetails[] }) =>
+        category?.details?.[0] ?? category,
       getId: (category: { id?: number }) => category?.id ?? 0,
     },
     categoryTreeGetters: {
       generateBreadcrumbFromCategory: () => [],
-      findCategoryById: () => null,
+      findCategoryById: findCategoryByIdMock,
     },
     facetGetters: {
       getType: (facet: { type?: string }) => facet?.type ?? '',
@@ -80,6 +90,8 @@ const mockProps: CategoryDataProps = {
 describe('CategoryData', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    findCategoryByIdMock.mockReturnValue(null);
+    getCategoriesSearchMock.mockResolvedValue({ data: { entries: [] } });
     useProductsMock.mockReturnValue({
       data: computed(() => ({
         category: CategoryMock.details[0],
@@ -197,6 +209,120 @@ describe('CategoryData', () => {
     });
 
     expect(wrapper.find('img').attributes('alt')).toBe('Trail rider on e-bike');
+  });
+
+  it('does not use the parent category image when the current category image is empty', () => {
+    useProductsMock.mockReturnValue({
+      data: computed(() => ({
+        category: {
+          ...CategoryMock.details[0],
+          parentCategoryId: 16,
+          name: 'Schaltung',
+          imagePath: null,
+        },
+        facets: [],
+      })),
+    });
+    findCategoryByIdMock.mockReturnValue({
+      id: 16,
+      details: [
+        {
+          name: 'Teile',
+          imagePath: 'category/teile-header.jpg',
+        },
+      ],
+    });
+
+    const wrapper = mount(CategoryData, {
+      props: {
+        ...mockProps,
+        content: {
+          ...mockProps.content,
+          displayCategoryImage: 'image-1',
+        },
+      },
+      global: {
+        stubs: {
+          NuxtImg: {
+            template: '<img :src="src" :alt="alt" />',
+            props: ['src', 'alt'],
+          },
+        },
+      },
+    });
+
+    expect(wrapper.find('img').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="text-card"]').exists()).toBe(true);
+  });
+
+  it('adds header spacing when no image is available', () => {
+    useProductsMock.mockReturnValue({
+      data: computed(() => ({
+        category: {
+          ...CategoryMock.details[0],
+          name: 'Schaltung',
+          imagePath: null,
+        },
+        facets: [],
+      })),
+    });
+
+    const wrapper = mount(CategoryData, {
+      props: {
+        ...mockProps,
+        content: {
+          ...mockProps.content,
+          displayCategoryImage: 'image-1',
+        },
+      },
+    });
+
+    expect(wrapper.find('[data-testid="text-card"]').classes()).toContain('category-data-empty-image-header');
+  });
+
+  it('uses parent and current category as breadcrumb fallback when the category tree has no breadcrumb', () => {
+    useRouteMock.mockReturnValue({
+      path: '/produkte/teile/schaltung/',
+    });
+    useProductsMock.mockReturnValue({
+      data: computed(() => ({
+        category: {
+          ...CategoryMock.details[0],
+          id: 17,
+          parentCategoryId: 16,
+          name: 'Schaltung',
+        },
+        facets: [],
+      })),
+    });
+    findCategoryByIdMock.mockReturnValue({
+      id: 16,
+      details: [
+        {
+          name: 'Teile',
+        },
+      ],
+    });
+
+    const wrapper = mount(CategoryData, {
+      props: {
+        ...mockProps,
+      },
+      global: {
+        stubs: {
+          UiBreadcrumbs: {
+            template:
+              '<nav data-testid="breadcrumbs"><span v-for="item in breadcrumbs" :key="item.name">{{ item.name }}</span></nav>',
+            props: ['breadcrumbs'],
+          },
+        },
+      },
+    });
+
+    const breadcrumbs = wrapper.find('[data-testid="breadcrumbs"]').text();
+    expect(breadcrumbs).toContain('Home');
+    expect(breadcrumbs).toContain('Teile');
+    expect(breadcrumbs).toContain('Schaltung');
   });
 
   it('renders brand links from producer facet by default', () => {

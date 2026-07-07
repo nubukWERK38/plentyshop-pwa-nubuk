@@ -35,23 +35,35 @@ const { data: categoryTree } = useCategoryTree();
 const { buildCategoryMenuLink } = useLocalization();
 
 const localePath = useLocalePath();
+const getParentCategoryId = () => {
+  const categoryWithParent = props.category as typeof props.category & {
+    parentCategoryId?: number | string | null;
+    parentCategoryID?: number | string | null;
+    parentId?: number | string | null;
+  };
+
+  return Number(
+    categoryGetters.getParentId(props.category) ||
+      categoryWithParent.parentCategoryId ||
+      categoryWithParent.parentCategoryID ||
+      categoryWithParent.parentId ||
+      0,
+  );
+};
 const categoryTreeItem = computed(() =>
   categoryTreeGetters.findCategoryById(categoryTree.value, categoryGetters.getId(props.category)),
 );
-const parent = computed(() =>
-  categoryTreeGetters.findCategoryById(categoryTree.value, categoryGetters.getParentId(props.category)),
-);
+const parent = computed(() => categoryTreeGetters.findCategoryById(categoryTree.value, getParentCategoryId()));
 const isHiddenRootCategory = (category?: ApiCategoryTreeItem) =>
   Boolean(category && categoryTreeGetters.getName(category) === hiddenRootCategoryName);
 const visibleRoot = computed(() => {
-  if (!categoryTreeItem.value) return undefined;
+  if (!categoryTreeItem.value && !parent.value) return undefined;
   if (isHiddenRootCategory(categoryTreeItem.value)) return undefined;
   if (parent.value && !isHiddenRootCategory(parent.value)) return parent.value;
-  return categoryTreeItem.value;
+  return categoryTreeItem.value ?? parent.value;
 });
 const visibleRootId = computed(() => visibleRoot.value?.id);
 const visibleCategoryItems = computed(() => {
-  if (!categoryTreeItem.value) return [];
   if (isHiddenRootCategory(categoryTreeItem.value)) return categoryTreeGetters.getItems(categoryTreeItem.value) ?? [];
   if (!visibleRoot.value) return [];
 
