@@ -242,7 +242,7 @@ const ctaButton = computed(() => {
   return fallbackButton ? { ...fallbackButton, variant: 'primary' as const } : null;
 });
 const fallbackHeading = computed(() =>
-  hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das koennte auch was fuer Dich sein!' : '',
+  hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das könnte auch was für Dich sein!' : '',
 );
 
 const { data: recommendedProducts, loading, fetchProductRecommended } = useProductRecommended(props.meta.uuid);

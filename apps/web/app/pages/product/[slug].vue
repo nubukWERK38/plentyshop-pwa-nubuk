@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Product } from '@plentymarkets/shop-api';
+import type { Product, ProductParams } from '@plentymarkets/shop-api';
 import type { WatchStopHandle } from 'vue';
 import { productGetters } from '@plentymarkets/shop-api';
 import type { Locale } from '#i18n';
@@ -21,11 +21,14 @@ const { setCurrentProduct } = useProducts();
 const { setBlocksListContext } = useBlocksList();
 const { setProductMetaData, setProductRobotsMetaData, setProductCanonicalMetaData } = useStructuredData();
 const { buildProductLanguagePath } = useLocalization();
-const { productParams, productId } = createProductParams(route.params);
-const { productForEditor, fetchProduct, setProductMeta, setBreadcrumbs, breadcrumbs } = useProduct(productId);
+const initialProductRouteState = createProductParams(route.params);
+const productParams = reactive<ProductParams>({ ...initialProductRouteState.productParams });
+const productId = computed(() => productParams.id.toString());
+const initialProductId = initialProductRouteState.productId;
+const { productForEditor, fetchProduct, setProductMeta, setBreadcrumbs, breadcrumbs } = useProduct(initialProductId);
 const product = productForEditor;
 const { disableActions } = useEditor();
-const { fetchProductReviews, fetchProductAuthenticatedReviews } = useProductReviews(Number(productId));
+const { fetchProductReviews, fetchProductAuthenticatedReviews } = useProductReviews(Number(initialProductId));
 const { open } = useProductLegalDetailsDrawer();
 const { setPageMeta } = usePageMeta();
 const { resetNotification } = useEditModeNotification(disableActions);
@@ -46,38 +49,57 @@ definePageMeta({
 
 const showRecommended = ref(false);
 const recommendedSection = ref<HTMLElement | null>(null);
+const isRouteProductUpdate = ref(false);
 const productName = computed(() => productGetters.getName(product.value));
 const icon = 'sell';
-setPageMeta(productName.value, icon);
 
-await fetchProduct(productParams).then(() => {
-  usePlentyEvent().emit('frontend:productLoaded', {
-    product: product.value,
-  });
-});
+const syncProductParams = (nextProductParams: ProductParams) => {
+  productParams.id = nextProductParams.id;
 
-if (Object.keys(product.value).length === 0) {
+  if (nextProductParams.variationId) {
+    productParams.variationId = nextProductParams.variationId;
+  } else {
+    delete productParams.variationId;
+  }
+};
+
+const throwProductNotFound = () => {
   if (import.meta.client) showError({ statusCode: 404, statusMessage: 'Product not found' });
 
   throw createError({
     statusCode: 404,
     statusMessage: 'Product not found',
   });
-}
-
-setCurrentProduct(productForEditor.value || ({} as Product));
-setProductMeta();
-setBlocksListContext('product');
-setBreadcrumbs();
+};
 
 async function fetchReviews() {
   const productVariationId = productGetters.getVariationId(product.value);
-  await fetchProductReviews(Number(productId), productVariationId);
+  await fetchProductReviews(Number(productId.value), productVariationId);
   if (isAuthorized.value) {
-    await fetchProductAuthenticatedReviews(Number(productId), productVariationId);
+    await fetchProductAuthenticatedReviews(Number(productId.value), productVariationId);
   }
 }
-await fetchReviews();
+
+const loadProductPageData = async () => {
+  await fetchProduct(productParams).then(() => {
+    usePlentyEvent().emit('frontend:productLoaded', {
+      product: product.value,
+    });
+  });
+
+  if (Object.keys(product.value).length === 0) {
+    throwProductNotFound();
+  }
+
+  setCurrentProduct(productForEditor.value || ({} as Product));
+  setProductMeta();
+  setBlocksListContext('product');
+  setBreadcrumbs();
+  setPageMeta(productName.value, icon);
+  await fetchReviews();
+};
+
+await loadProductPageData();
 
 watch(
   disableActions,
@@ -94,7 +116,7 @@ watch(
 watch(
   () => product.value.texts.urlPath,
   (value, oldValue) => {
-    if (value !== oldValue) {
+    if (value !== oldValue && !isRouteProductUpdate.value) {
       navigateTo({
         path: buildProductLanguagePath(
           `/${productGetters.getUrlPath(product.value)}_${productGetters.getItemId(product.value)}`,
@@ -118,9 +140,23 @@ watch(
 
 watch(
   () => route.params,
-  () => {
-    const productName = computed(() => productGetters.getName(product.value));
-    const icon = 'sell';
+  async (params) => {
+    const { productParams: nextProductParams } = createProductParams(params);
+    const hasProductChanged =
+      nextProductParams.id.toString() !== productParams.id.toString() ||
+      (nextProductParams.variationId ?? '').toString() !== (productParams.variationId ?? '').toString();
+
+    if (hasProductChanged) {
+      syncProductParams(nextProductParams);
+      isRouteProductUpdate.value = true;
+      try {
+        await loadProductPageData();
+      } finally {
+        isRouteProductUpdate.value = false;
+      }
+      return;
+    }
+
     setPageMeta(productName.value, icon);
   },
   { immediate: true },
