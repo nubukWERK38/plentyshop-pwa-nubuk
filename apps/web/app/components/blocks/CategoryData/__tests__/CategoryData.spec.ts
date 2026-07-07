@@ -5,12 +5,14 @@ import { CategoryMock } from '../../../../../__tests__/__mocks__/category.mock';
 import type { CategoryDetails } from '@plentymarkets/shop-api';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 
-const { useEditorStateMock, useRouteMock } = vi.hoisted(() => ({
+const { useEditorStateMock, useProductsMock, useRouteMock } = vi.hoisted(() => ({
   useEditorStateMock: vi.fn(),
+  useProductsMock: vi.fn(),
   useRouteMock: vi.fn(),
 }));
 
 mockNuxtImport('useEditorState', () => useEditorStateMock);
+mockNuxtImport('useProducts', () => useProductsMock);
 mockNuxtImport('useRoute', () => useRouteMock);
 
 vi.mock('@plentymarkets/shop-api', () => {
@@ -27,6 +29,10 @@ vi.mock('@plentymarkets/shop-api', () => {
       generateBreadcrumbFromCategory: () => [],
       findCategoryById: () => null,
     },
+    facetGetters: {
+      getType: (facet: { type?: string }) => facet?.type ?? '',
+      getFilters: (facet: { values?: unknown[] }) => facet?.values ?? [],
+    },
   };
 });
 
@@ -35,7 +41,7 @@ const mockProps: CategoryDataProps = {
   type: 'content',
   content: {
     name: 'Category name',
-    showSubcategories: false,
+    showSubcategories: true,
     fields: {
       name: true,
       description1: false,
@@ -58,6 +64,11 @@ const mockProps: CategoryDataProps = {
       background: true,
     },
     image: {},
+    subcategoryMode: 'default',
+    subcategories: [],
+    showBrands: true,
+    brandMode: 'default',
+    brands: [],
   },
   category: CategoryMock,
   meta: {
@@ -69,6 +80,12 @@ const mockProps: CategoryDataProps = {
 describe('CategoryData', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    useProductsMock.mockReturnValue({
+      data: computed(() => ({
+        category: CategoryMock.details[0],
+        facets: [],
+      })),
+    });
     useEditorStateMock.mockReturnValue({
       isEditMode: ref(true),
       isPreviewMode: ref(false),
@@ -77,12 +94,6 @@ describe('CategoryData', () => {
     useRouteMock.mockReturnValue({
       path: '/',
     });
-  });
-
-  mockNuxtImport('useProducts', () => {
-    return () => {
-      return { data: computed(() => ({ category: CategoryMock.details })) };
-    };
   });
 
   it('should render category name', () => {
@@ -116,5 +127,142 @@ describe('CategoryData', () => {
     });
 
     expect(wrapper.find('[data-testid="category-subcategories"]').exists()).toBe(false);
+  });
+
+  it('uses the category name as image alt text when no manual alt text is set', () => {
+    useProductsMock.mockReturnValue({
+      data: computed(() => ({
+        category: {
+          ...CategoryMock.details[0],
+          name: 'E-Bikes',
+          imagePath: 'category/e-bikes.jpg',
+        },
+      })),
+    });
+
+    const wrapper = mount(CategoryData, {
+      props: {
+        ...mockProps,
+        content: {
+          ...mockProps.content,
+          displayCategoryImage: 'image-1',
+          image: {
+            alt: '',
+          },
+        },
+      },
+      global: {
+        stubs: {
+          NuxtImg: {
+            template: '<img :src="src" :alt="alt" />',
+            props: ['src', 'alt'],
+          },
+        },
+      },
+    });
+
+    expect(wrapper.find('img').attributes('alt')).toBe('E-Bikes');
+  });
+
+  it('uses manual image alt text when set', () => {
+    useProductsMock.mockReturnValue({
+      data: computed(() => ({
+        category: {
+          ...CategoryMock.details[0],
+          name: 'E-Bikes',
+          imagePath: 'category/e-bikes.jpg',
+        },
+      })),
+    });
+
+    const wrapper = mount(CategoryData, {
+      props: {
+        ...mockProps,
+        content: {
+          ...mockProps.content,
+          displayCategoryImage: 'image-1',
+          image: {
+            alt: 'Trail rider on e-bike',
+          },
+        },
+      },
+      global: {
+        stubs: {
+          NuxtImg: {
+            template: '<img :src="src" :alt="alt" />',
+            props: ['src', 'alt'],
+          },
+        },
+      },
+    });
+
+    expect(wrapper.find('img').attributes('alt')).toBe('Trail rider on e-bike');
+  });
+
+  it('renders brand links from producer facet by default', () => {
+    useProductsMock.mockReturnValue({
+      data: computed(() => ({
+        category: CategoryMock.details[0],
+        facets: [
+          {
+            type: 'producer',
+            values: [
+              { id: 11, name: 'Specialized' },
+              { id: 12, name: 'Merida' },
+            ],
+          },
+        ],
+      })),
+    });
+
+    const wrapper = mount(CategoryData, {
+      props: {
+        ...mockProps,
+      },
+      global: {
+        stubs: {
+          NuxtLink: {
+            template: '<a :href="to"><slot /></a>',
+            props: ['to'],
+          },
+        },
+      },
+    });
+
+    const brands = wrapper.findAll('[data-testid="category-brand-item"]');
+    expect(brands).toHaveLength(2);
+    expect(brands[0]!.text()).toBe('Specialized');
+    expect(brands[0]!.find('a').attributes('href')).toBe('/?facets=11');
+  });
+
+  it('renders manual subcategory and brand links when configured', () => {
+    const wrapper = mount(CategoryData, {
+      props: {
+        ...mockProps,
+        content: {
+          ...mockProps.content,
+          showSubcategories: true,
+          subcategoryMode: 'manual',
+          subcategories: [{ name: 'E-Mountainbikes', link: '/produkte/e-bikes/e-mountainbikes/' }],
+          brandMode: 'manual',
+          brands: [{ name: 'Haibike', link: '/marken/haibike/' }],
+        },
+      },
+      global: {
+        stubs: {
+          NuxtLink: {
+            template: '<a :href="to"><slot /></a>',
+            props: ['to'],
+          },
+        },
+      },
+    });
+
+    expect(wrapper.find('[data-testid="category-subcategory-item"]').text()).toBe('E-Mountainbikes');
+    expect(wrapper.find('[data-testid="category-subcategory-item"] a').attributes('href')).toBe(
+      '/produkte/e-bikes/e-mountainbikes/',
+    );
+    expect(wrapper.find('[data-testid="category-brand-item"]').text()).toBe('Haibike');
+    expect(wrapper.find('[data-testid="category-brand-item"] a').attributes('href')).toBe('/marken/haibike/');
   });
 });

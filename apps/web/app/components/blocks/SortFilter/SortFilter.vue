@@ -1,9 +1,9 @@
 <template>
   <div v-if="showSortAndFilter" data-testid="category-sort-filter">
     <CategorySidebar class="sidebar w-full" :is-open="isOpen" @close="close">
-      <h2 class="mb-2 border-b border-neutral-900 pb-4 text-lg font-bold text-neutral-900">
+      <div class="h2 mb-2 border-b border-neutral-900 pb-4 text-lg font-bold text-neutral-900">
         {{ t('common.labels.filters') }}
-      </h2>
+      </div>
 
       <template v-for="key in orderedFilterKeys" :key="key">
         <template v-if="key === 'category' && props.content?.fields.category">

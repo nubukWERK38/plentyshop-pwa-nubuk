@@ -3,6 +3,13 @@ export type CategoryDataFieldKey = 'name' | 'description1' | 'description2' | 's
 
 export type CategoryDataFieldsVisibility = Record<CategoryDataFieldKey, boolean>;
 
+export type CategoryDataLinkMode = 'default' | 'manual';
+
+export type CategoryDataLinkItem = {
+  name: string;
+  link: string;
+};
+
 export type CategoryDataProps = {
   name: string;
   type: string;
@@ -19,6 +26,11 @@ export type CategoryDataProps = {
 export type CategoryDataContent = {
   name: string;
   showSubcategories?: boolean;
+  subcategoryMode?: CategoryDataLinkMode;
+  subcategories?: CategoryDataLinkItem[];
+  showBrands?: boolean;
+  brandMode?: CategoryDataLinkMode;
+  brands?: CategoryDataLinkItem[];
   fields: CategoryDataFieldsVisibility;
   fieldsOrder: CategoryDataFieldKey[];
   fieldsDisabled: CategoryDataFieldKey[];
@@ -57,7 +69,4 @@ export interface CategoryData {
   shortDescription: string;
 }
 
-export type CategoryDataSubcategory = {
-  name: string;
-  link: string;
-};
+export type CategoryDataSubcategory = CategoryDataLinkItem;

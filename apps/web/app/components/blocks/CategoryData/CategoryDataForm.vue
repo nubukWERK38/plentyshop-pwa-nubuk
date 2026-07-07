@@ -68,7 +68,12 @@
           <UiFormLabel>{{ getEditorTranslation('show-subcategories-label') }}</UiFormLabel>
           <div class="mt-2 flex items-center gap-6">
             <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
-              <input v-model="categoryDataBlock.showSubcategories" type="radio" :value="true" name="show-subcategories" />
+              <input
+                v-model="categoryDataBlock.showSubcategories"
+                type="radio"
+                :value="true"
+                name="show-subcategories"
+              />
               <span>{{ getEditorTranslation('show-subcategories-yes') }}</span>
             </label>
             <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
@@ -81,6 +86,118 @@
               <span>{{ getEditorTranslation('show-subcategories-no') }}</span>
             </label>
           </div>
+        </div>
+
+        <div v-if="categoryDataBlock.showSubcategories" class="py-2">
+          <UiFormLabel>{{ getEditorTranslation('subcategories-source-label') }}</UiFormLabel>
+          <div class="mt-2 flex items-center gap-6">
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+              <input v-model="categoryDataBlock.subcategoryMode" type="radio" value="default" name="subcategory-mode" />
+              <span>{{ getEditorTranslation('source-default') }}</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+              <input v-model="categoryDataBlock.subcategoryMode" type="radio" value="manual" name="subcategory-mode" />
+              <span>{{ getEditorTranslation('source-manual') }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div v-if="categoryDataBlock.showSubcategories && categoryDataBlock.subcategoryMode === 'manual'" class="py-2">
+          <div class="space-y-3">
+            <div
+              v-for="(subcategory, index) in categoryDataBlock.subcategories"
+              :key="index"
+              class="rounded border border-neutral-200 p-3"
+            >
+              <div class="mb-2 flex items-center justify-between">
+                <span class="text-sm font-medium"
+                  >{{ getEditorTranslation('subcategory-item-label') }} {{ index + 1 }}</span
+                >
+                <button
+                  type="button"
+                  class="rounded-full p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+                  :aria-label="getEditorTranslation('remove-link-label')"
+                  @click="removeLinkItem('subcategories', index)"
+                >
+                  <SfIconDelete size="sm" />
+                </button>
+              </div>
+              <SfInput
+                v-model="subcategory.name"
+                class="mb-2"
+                type="text"
+                :placeholder="getEditorTranslation('link-name-placeholder')"
+              />
+              <SfInput
+                v-model="subcategory.link"
+                type="text"
+                :placeholder="getEditorTranslation('link-url-placeholder')"
+              />
+            </div>
+          </div>
+          <button type="button" class="mt-3 text-sm font-medium underline" @click="addLinkItem('subcategories')">
+            {{ getEditorTranslation('add-subcategory-link-label') }}
+          </button>
+        </div>
+
+        <div class="py-2">
+          <UiFormLabel>{{ getEditorTranslation('show-brands-label') }}</UiFormLabel>
+          <div class="mt-2 flex items-center gap-6">
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+              <input v-model="categoryDataBlock.showBrands" type="radio" :value="true" name="show-brands" />
+              <span>{{ getEditorTranslation('show-subcategories-yes') }}</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+              <input v-model="categoryDataBlock.showBrands" type="radio" :value="false" name="show-brands" />
+              <span>{{ getEditorTranslation('show-subcategories-no') }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div v-if="categoryDataBlock.showBrands" class="py-2">
+          <UiFormLabel>{{ getEditorTranslation('brands-source-label') }}</UiFormLabel>
+          <div class="mt-2 flex items-center gap-6">
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+              <input v-model="categoryDataBlock.brandMode" type="radio" value="default" name="brand-mode" />
+              <span>{{ getEditorTranslation('source-default') }}</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+              <input v-model="categoryDataBlock.brandMode" type="radio" value="manual" name="brand-mode" />
+              <span>{{ getEditorTranslation('source-manual') }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div v-if="categoryDataBlock.showBrands && categoryDataBlock.brandMode === 'manual'" class="py-2">
+          <div class="space-y-3">
+            <div
+              v-for="(brand, index) in categoryDataBlock.brands"
+              :key="index"
+              class="rounded border border-neutral-200 p-3"
+            >
+              <div class="mb-2 flex items-center justify-between">
+                <span class="text-sm font-medium">{{ getEditorTranslation('brand-item-label') }} {{ index + 1 }}</span>
+                <button
+                  type="button"
+                  class="rounded-full p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+                  :aria-label="getEditorTranslation('remove-link-label')"
+                  @click="removeLinkItem('brands', index)"
+                >
+                  <SfIconDelete size="sm" />
+                </button>
+              </div>
+              <SfInput
+                v-model="brand.name"
+                class="mb-2"
+                type="text"
+                :placeholder="getEditorTranslation('link-name-placeholder')"
+              />
+              <SfInput v-model="brand.link" type="text" :placeholder="getEditorTranslation('link-url-placeholder')" />
+            </div>
+          </div>
+          <button type="button" class="mt-3 text-sm font-medium underline" @click="addLinkItem('brands')">
+            {{ getEditorTranslation('add-brand-link-label') }}
+          </button>
         </div>
       </div>
     </UiAccordionItem>
@@ -511,7 +628,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CategoryDataFieldKey } from './types';
+import type { CategoryDataFieldKey, CategoryDataLinkItem } from './types';
 import {
   SfIconArrowBack,
   SfIconArrowDownward,
@@ -523,6 +640,7 @@ import {
   SfTooltip,
   SfIconInfo,
   SfIconWarning,
+  SfIconDelete,
 } from '@storefront-ui/vue';
 import dragIcon from '~/assets/icons/paths/drag.svg';
 import draggable from 'vuedraggable/src/vuedraggable';
@@ -544,6 +662,16 @@ const {
 
 const { blockUuid } = useSiteConfiguration();
 const { isFullWidth } = useFullWidthToggleForContent(categoryDataBlock);
+
+const addLinkItem = (key: 'subcategories' | 'brands') => {
+  const items = categoryDataBlock.value[key] as CategoryDataLinkItem[];
+  items.push({ name: '', link: '' });
+};
+
+const removeLinkItem = (key: 'subcategories' | 'brands', index: number) => {
+  const items = categoryDataBlock.value[key] as CategoryDataLinkItem[];
+  items.splice(index, 1);
+};
 </script>
 
 <i18n lang="json">
@@ -563,6 +691,18 @@ const { isFullWidth } = useFullWidthToggleForContent(categoryDataBlock);
     "show-subcategories-label": "Show direct subcategories",
     "show-subcategories-yes": "Yes",
     "show-subcategories-no": "No",
+    "subcategories-source-label": "Subcategory source",
+    "source-default": "Default",
+    "source-manual": "Manual",
+    "subcategory-item-label": "Subcategory",
+    "show-brands-label": "Show brands",
+    "brands-source-label": "Brand source",
+    "brand-item-label": "Brand",
+    "link-name-placeholder": "Name",
+    "link-url-placeholder": "Link",
+    "add-subcategory-link-label": "Add subcategory",
+    "add-brand-link-label": "Add brand",
+    "remove-link-label": "Remove",
     "padding-label": "Padding",
 
     "image-label": "Image",
@@ -629,6 +769,18 @@ const { isFullWidth } = useFullWidthToggleForContent(categoryDataBlock);
     "show-subcategories-label": "Show direct subcategories",
     "show-subcategories-yes": "Yes",
     "show-subcategories-no": "No",
+    "subcategories-source-label": "Subcategory source",
+    "source-default": "Default",
+    "source-manual": "Manual",
+    "subcategory-item-label": "Subcategory",
+    "show-brands-label": "Show brands",
+    "brands-source-label": "Brand source",
+    "brand-item-label": "Brand",
+    "link-name-placeholder": "Name",
+    "link-url-placeholder": "Link",
+    "add-subcategory-link-label": "Add subcategory",
+    "add-brand-link-label": "Add brand",
+    "remove-link-label": "Remove",
     "padding-label": "Padding",
 
     "image-label": "Image",

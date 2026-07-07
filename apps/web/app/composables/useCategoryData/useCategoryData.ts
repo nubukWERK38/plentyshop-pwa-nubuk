@@ -18,7 +18,22 @@ export const useCategoryData = () => {
       block.image.fillMode = 'fill';
     }
     if (block && typeof block.showSubcategories === 'undefined') {
-      block.showSubcategories = false;
+      block.showSubcategories = true;
+    }
+    if (block && typeof block.subcategoryMode === 'undefined') {
+      block.subcategoryMode = 'default';
+    }
+    if (block && !Array.isArray(block.subcategories)) {
+      block.subcategories = [];
+    }
+    if (block && typeof block.showBrands === 'undefined') {
+      block.showBrands = true;
+    }
+    if (block && typeof block.brandMode === 'undefined') {
+      block.brandMode = 'default';
+    }
+    if (block && !Array.isArray(block.brands)) {
+      block.brands = [];
     }
     return block;
   });

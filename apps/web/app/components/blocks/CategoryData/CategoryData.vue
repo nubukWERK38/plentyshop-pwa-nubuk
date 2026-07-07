@@ -34,7 +34,9 @@
           :fields-order="props.content.fieldsOrder"
           :texts="texts"
           :show-subcategories="shouldRenderSubcategories"
-          :subcategories="directSubcategories"
+          :subcategories="visibleSubcategories"
+          :show-brands="shouldRenderBrands"
+          :brands="visibleBrands"
         />
       </div>
     </template>
@@ -43,7 +45,7 @@
         <NuxtImg
           v-if="imageUrl"
           :src="imageUrl"
-          :alt="props.content.image?.alt ?? ''"
+          :alt="categoryImageAlt"
           :class="['relative z-0 object-cover', 'w-full', 'h-full']"
           :style="{
             filter: props.content.image?.brightness ? 'brightness(' + (props.content.image?.brightness ?? 1) + ')' : '',
@@ -98,7 +100,9 @@
               :fields-order="props.content.fieldsOrder"
               :texts="texts"
               :show-subcategories="shouldRenderSubcategories"
-              :subcategories="directSubcategories"
+              :subcategories="visibleSubcategories"
+              :show-brands="shouldRenderBrands"
+              :brands="visibleBrands"
               :max-subcategory-rows="4"
             />
           </div>
@@ -109,8 +113,21 @@
 </template>
 
 <script setup lang="ts">
-import { type Category, type CategoryEntry, categoryGetters, categoryTreeGetters } from '@plentymarkets/shop-api';
-import type { CategoryData, CategoryDataProps, CategoryDataSubcategory } from '~/components/blocks/CategoryData/types';
+import {
+  type Category,
+  type CategoryEntry,
+  type Filter,
+  type FilterGroup,
+  categoryGetters,
+  categoryTreeGetters,
+  facetGetters,
+} from '@plentymarkets/shop-api';
+import type {
+  CategoryData,
+  CategoryDataLinkItem,
+  CategoryDataProps,
+  CategoryDataSubcategory,
+} from '~/components/blocks/CategoryData/types';
 import type { CategoryDetails } from '@plentymarkets/shop-api/server/types';
 import FieldsOrder from './FieldsOrder.vue';
 
@@ -193,7 +210,7 @@ const categoryTreeSubcategories = computed<CategoryDataSubcategory[]>(() => {
     .filter((subcategory) => Boolean(subcategory.name?.trim()) && Boolean(subcategory.link));
 });
 
-const directSubcategories = computed<CategoryDataSubcategory[]>(() => {
+const defaultSubcategories = computed<CategoryDataSubcategory[]>(() => {
   const categoryWithChildren = category.value as Category & { children?: Category[] };
   const inlineChildren = (categoryWithChildren.children ?? [])
     .map(getSubcategoryFromNode)
@@ -212,11 +229,55 @@ const directSubcategories = computed<CategoryDataSubcategory[]>(() => {
     .filter((subcategory) => Boolean(subcategory.name?.trim()) && Boolean(subcategory.link));
 });
 
+const getValidManualLinks = (items?: CategoryDataLinkItem[]) => {
+  return (items ?? []).filter((item) => Boolean(item.name?.trim()) && Boolean(item.link?.trim()));
+};
+
+const visibleSubcategories = computed<CategoryDataSubcategory[]>(() => {
+  if (props.content.subcategoryMode === 'manual') {
+    return getValidManualLinks(props.content.subcategories);
+  }
+
+  return defaultSubcategories.value;
+});
+
+const producerFacet = computed<FilterGroup | undefined>(() => {
+  return productsCatalog.value.facets?.find((facet) => facetGetters.getType(facet) === 'producer') as
+    | FilterGroup
+    | undefined;
+});
+
+const getBrandFilterLink = (filter: Filter) => {
+  const filterId = typeof filter.id === 'string' ? filter.id : filter.id?.toString();
+  return filterId ? `${route.path}?facets=${filterId}` : '';
+};
+
+const defaultBrands = computed<CategoryDataLinkItem[]>(() => {
+  if (!producerFacet.value) return [];
+
+  return facetGetters
+    .getFilters(producerFacet.value)
+    .map((filter) => ({
+      name: filter.name ?? '',
+      link: getBrandFilterLink(filter),
+    }))
+    .filter((brand) => Boolean(brand.name?.trim()) && Boolean(brand.link));
+});
+
+const visibleBrands = computed<CategoryDataLinkItem[]>(() => {
+  if (props.content.brandMode === 'manual') {
+    return getValidManualLinks(props.content.brands);
+  }
+
+  return defaultBrands.value;
+});
+
 const loadDirectSubcategories = async () => {
   const categoryId = Number(category.value?.id);
   if (
     !categoryId ||
     !props.content.showSubcategories ||
+    props.content.subcategoryMode === 'manual' ||
     isLiveMode.value ||
     categoryTreeSubcategories.value.length > 0
   ) {
@@ -259,7 +320,13 @@ const loadDirectSubcategories = async () => {
 };
 
 watch(
-  () => [category.value?.id, props.content.showSubcategories, categoryTreeSubcategories.value.length, isLiveMode.value],
+  () => [
+    category.value?.id,
+    props.content.showSubcategories,
+    props.content.subcategoryMode,
+    categoryTreeSubcategories.value.length,
+    isLiveMode.value,
+  ],
   () => {
     void loadDirectSubcategories();
   },
@@ -321,7 +388,10 @@ const isBrandWorldCategory = computed(() => {
 });
 const shouldRenderSubcategories = computed(() => {
   const isImageHeader = props.content.displayCategoryImage !== 'off';
-  return (props.content.showSubcategories ?? false) && !(isImageHeader && isBrandWorldCategory.value);
+  return (props.content.showSubcategories ?? true) && !(isImageHeader && isBrandWorldCategory.value);
+});
+const shouldRenderBrands = computed(() => {
+  return props.content.showBrands ?? true;
 });
 const imagePath = computed(() => {
   if (props.content.displayCategoryImage === 'image-1') {
@@ -335,6 +405,10 @@ const imagePath = computed(() => {
 
 const imageUrl = computed(() => {
   return imagePath.value ? `${runtimeConfig.public.domain}/documents/${imagePath.value}` : '';
+});
+
+const categoryImageAlt = computed(() => {
+  return props.content.image?.alt?.trim() || details.value.name || '';
 });
 
 const inlineStyle = computed(() => {

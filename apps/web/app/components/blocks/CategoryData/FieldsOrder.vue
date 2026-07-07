@@ -9,7 +9,7 @@
         <ul
           v-if="showSubcategories && subcategories.length"
           ref="subcategoryListRef"
-          class="mt-3 ml-5 list-disc"
+          class="category-data-link-list mt-4"
           data-testid="category-subcategories"
           id="category-subcategories"
         >
@@ -20,7 +20,7 @@
             :class="`category-subcategory-item category-subcategory-item--${index}`"
             data-testid="category-subcategory-item"
           >
-            <NuxtLink :to="subcategory.link" class="underline-offset-2 hover:underline">
+            <NuxtLink :to="subcategory.link" class="category-data-link category-data-link--subcategory">
               {{ subcategory.name }}
             </NuxtLink>
           </li>
@@ -29,7 +29,20 @@
             class="category-subcategory-item category-subcategory-item--ellipsis"
             data-testid="category-subcategories-ellipsis"
           >
-            ...
+            <span class="category-data-link category-data-link--subcategory">...</span>
+          </li>
+        </ul>
+
+        <ul v-if="showBrands && brands.length" class="category-data-link-list mt-8" data-testid="category-brands">
+          <li
+            v-for="(brand, index) in brands"
+            :id="`category-brand-item-${index}`"
+            :key="`${brand.name}-${index}`"
+            data-testid="category-brand-item"
+          >
+            <NuxtLink :to="brand.link" class="category-data-link category-data-link--brand">
+              {{ brand.name }}
+            </NuxtLink>
           </li>
         </ul>
       </template>
@@ -63,6 +76,7 @@ import type {
   CategoryDataFieldKey,
   CategoryDataFieldsVisibility,
   CategoryData,
+  CategoryDataLinkItem,
   CategoryDataSubcategory,
 } from '~/components/blocks/CategoryData/types';
 
@@ -72,6 +86,8 @@ const props = defineProps<{
   texts: CategoryData;
   showSubcategories: boolean;
   subcategories: CategoryDataSubcategory[];
+  showBrands: boolean;
+  brands: CategoryDataLinkItem[];
   maxSubcategoryRows?: number;
 }>();
 
@@ -165,3 +181,38 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', updateVisibleSubcategories);
 });
 </script>
+
+<style scoped>
+.category-data-link-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.category-data-link {
+  display: inline-flex;
+  align-items: center;
+  background: rgb(10 17 18 / 92%);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.0625rem 0.375rem;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.category-data-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.125rem;
+}
+
+.category-data-link--subcategory {
+  color: #c8ff00;
+}
+
+.category-data-link--brand {
+  color: #fff;
+}
+</style>
