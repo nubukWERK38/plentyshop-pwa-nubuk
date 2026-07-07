@@ -50,10 +50,12 @@ const getParentCategoryId = () => {
       0,
   );
 };
-const categoryTreeItem = computed(() =>
-  categoryTreeGetters.findCategoryById(categoryTree.value, categoryGetters.getId(props.category)),
+const categoryTreeItem = computed(
+  () => categoryTreeGetters.findCategoryById(categoryTree.value, categoryGetters.getId(props.category)) ?? undefined,
 );
-const parent = computed(() => categoryTreeGetters.findCategoryById(categoryTree.value, getParentCategoryId()));
+const parent = computed(
+  () => categoryTreeGetters.findCategoryById(categoryTree.value, getParentCategoryId()) ?? undefined,
+);
 const isHiddenRootCategory = (category?: ApiCategoryTreeItem) =>
   Boolean(category && categoryTreeGetters.getName(category) === hiddenRootCategoryName);
 const visibleRoot = computed(() => {
@@ -64,7 +66,11 @@ const visibleRoot = computed(() => {
 });
 const visibleRootId = computed(() => visibleRoot.value?.id);
 const visibleCategoryItems = computed(() => {
-  if (isHiddenRootCategory(categoryTreeItem.value)) return categoryTreeGetters.getItems(categoryTreeItem.value) ?? [];
+  const currentCategoryTreeItem = categoryTreeItem.value;
+  if (currentCategoryTreeItem && isHiddenRootCategory(currentCategoryTreeItem)) {
+    return categoryTreeGetters.getItems(currentCategoryTreeItem) ?? [];
+  }
+
   if (!visibleRoot.value) return [];
 
   return [visibleRoot.value, ...(categoryTreeGetters.getItems(visibleRoot.value) ?? [])];

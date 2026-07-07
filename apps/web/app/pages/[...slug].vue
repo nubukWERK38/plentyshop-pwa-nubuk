@@ -20,6 +20,7 @@
 import { categoryGetters, categoryTreeGetters } from '@plentymarkets/shop-api';
 import type { Locale } from '#i18n';
 import { SfLoaderCircular } from '@storefront-ui/vue';
+import { getCategoryBlocksIdentifier } from '~/utils/categoryBlocks';
 
 defineI18nRoute({
   locales: process.env.LANGUAGELIST?.split(',') as Locale[],
@@ -36,9 +37,7 @@ const { data: categoryTree, getCategoryTree } = useCategoryTree();
 const routeDataReady = useState<Promise<void> | null>('routeDataReady');
 const { buildCategoryLanguagePath } = useLocalization();
 
-const identifier = computed(() =>
-  productsCatalog.value.category?.type === 'content' ? productsCatalog.value.category?.id : 0,
-);
+const identifier = computed(() => getCategoryBlocksIdentifier(productsCatalog.value.category, route.path));
 
 definePageMeta({
   layout: false,
@@ -138,7 +137,7 @@ watch(
 );
 
 watchEffect(() => {
-  route.meta.identifier = productsCatalog.value.category?.type === 'content' ? productsCatalog.value.category?.id : 0;
+  route.meta.identifier = getCategoryBlocksIdentifier(productsCatalog.value.category, route.path);
 });
 
 useHead({

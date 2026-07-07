@@ -1,0 +1,59 @@
+
+> @plentymarkets/plentyshop-pwa@1.15.0 dev
+> npm run turbo:disable-telemetry && turbo run dev
+
+
+> @plentymarkets/plentyshop-pwa@1.15.0 turbo:disable-telemetry
+> turbo telemetry disable
+
+Success!
+
+Status: Disabled
+
+You have opted-out of Turborepo anonymous telemetry. No data will be collected from your machine.
+Learn more: https://turborepo.dev/docs/telemetry
+• Packages in scope: @plentymarkets/shop-cli, server, web
+• Running dev in 3 packages
+• Remote caching disabled
+server:dev: cache bypass, force executing 5dd7de26af1505d5
+web:dev: cache bypass, force executing 4185afe83586cabb
+server:dev: 
+web:dev: 
+server:dev: > server@1.15.0 dev
+web:dev: > web@1.15.0 dev
+server:dev: > nodemon
+server:dev: 
+web:dev: > tsx ./build/index.ts && nuxt dev
+web:dev: 
+server:dev: [33m[nodemon] 3.1.11[39m
+server:dev: [33m[nodemon] to restart at any time, enter `rs`[39m
+server:dev: [33m[nodemon] watching path(s): **\* ..\web\.env[39m
+server:dev: [33m[nodemon] watching extensions: ts,env[39m
+server:dev: [32m[nodemon] starting `ts-node-dev src/index.ts`[39m
+web:dev: [INFO] Configuring application...
+web:dev: [WARN] The URL does not point to a .ico file. Aborting the download.
+server:dev: [INFO] 11:35:35 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+web:dev: |
+web:dev: •  [32mNuxt [1m4.4.2[22m[39m[90m (with [39m[90mNitro [1m2.13.2[22m[39m[90m, Vite [1m6.4.1[22m[39m[90m and Vue [1m3.5.31[22m[39m[90m)[39m
+web:dev: 
+web:dev: [32m  ➜ Local:   [39m [36m[4mhttp://localhost:[1m3000[22m/[24m[39m
+web:dev: [90m  ➜ Network:  use [37m--host[90m to expose[39m
+web:dev: 
+web:dev: [shop-core | extensions] No module.manifest.json found — no extensions will be loaded.
+server:dev: {"timestamp":"2026-07-07T09:35:36.930Z","severity":"INFO","message":"Middleware starting....","alokai":{"context":"middleware"}}
+server:dev: {"timestamp":"2026-07-07T09:35:36.972Z","severity":"INFO","message":"Middleware created!","alokai":{"context":"middleware"}}
+server:dev: [32m√[39m API server listening on http://0.0.0.0:8181
+web:dev: [shop-core | extensions] No extensions to load.
+web:dev: [90m[[90mnuxt:tailwindcss[90m][39m [36mi[39m Using default Tailwind CSS file
+web:dev: [36mi[39m Using yup with vee-validate
+web:dev: [33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v2.7.0)[22m
+web:dev: 
+web:dev: [shop-core] Hook(i18n:registerModule) Registering language overrides for locales: ""
+web:dev: [32m√[39m Vite client built in 84ms
+web:dev: [32m√[39m Vite server built in 202ms
+web:dev: [90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2278ms
+web:dev: [36mi[39m Vite server warmed up in 1ms
+web:dev: [36mi[39m Vite client warmed up in 3ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mplugins.client.mjs[39m in 1149.01ms
+web:dev: [90m[[90mnuxt[90m][39m [36mi[39m Compiled [36mtypes/plugins.d.ts[39m in 4470.22ms
+web:dev: [32m√[39m Vite server hmr 1 files in 0.003ms

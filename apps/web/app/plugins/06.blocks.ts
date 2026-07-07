@@ -1,3 +1,5 @@
+import { getCategoryBlocksIdentifier } from '~/utils/categoryBlocks';
+
 export default defineNuxtPlugin({
   name: 'blocks',
   parallel: true,
@@ -18,9 +20,7 @@ export default defineNuxtPlugin({
 
       const identifier = computed(() => {
         if (type === 'category' && productsCatalog.value) {
-          return (
-            productsCatalog.value.category?.type === 'content' ? productsCatalog.value.category?.id : 0
-          ) as number;
+          return getCategoryBlocksIdentifier(productsCatalog.value.category, router.currentRoute.value.path);
         }
 
         return (hasBlockIdentifier ? meta.identifier : 'index') as string | number;

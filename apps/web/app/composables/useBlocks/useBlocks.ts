@@ -1,6 +1,7 @@
 import type { ApiError, Block, GetBlocksResponse } from '@plentymarkets/shop-api';
 import type { UseBlocksState, UseBlocksReturn } from './types';
 import { assembleBlocks } from '~/utils/blocks/block-helpers';
+import { isSpecificCategoryBlocksIdentifier } from '~/utils/categoryBlocks';
 
 declare module '#app' {
   interface NuxtApp {
@@ -18,14 +19,19 @@ export const useBlocks: UseBlocksReturn = () => {
   }));
   const homepageHeaderContainer = useState<Block | null>('useBlocks-homepageHeaderContainer', () => null);
 
-  const isHomepageContext = (identifier: string | number, type: string) => type === 'immutable' && String(identifier) === 'index';
+  const isHomepageContext = (identifier: string | number, type: string) =>
+    type === 'immutable' && String(identifier) === 'index';
 
   const loadHomepageHeaderContainer = async (locale: string) => {
     if (homepageHeaderContainer.value) return homepageHeaderContainer.value;
 
     const key = `blocks-${locale}-immutable-index-header`;
     const { data, error } = await useAsyncData(key, () =>
-      useSdk().plentysystems.getBlocksWithGlobalBlocks({ identifier: 'index', type: 'immutable', enableGlobalBlocks: true }),
+      useSdk().plentysystems.getBlocksWithGlobalBlocks({
+        identifier: 'index',
+        type: 'immutable',
+        enableGlobalBlocks: true,
+      }),
     );
 
     if (error.value) {
@@ -34,7 +40,9 @@ export const useBlocks: UseBlocksReturn = () => {
     }
 
     const assembledHomepage = assembleBlocks(data.value?.data || ({} as GetBlocksResponse), 'immutable', 'index');
-    homepageHeaderContainer.value = assembledHomepage.HeaderContainer ? deepClone(assembledHomepage.HeaderContainer) : null;
+    homepageHeaderContainer.value = assembledHomepage.HeaderContainer
+      ? deepClone(assembledHomepage.HeaderContainer)
+      : null;
     return homepageHeaderContainer.value;
   };
 
@@ -76,17 +84,34 @@ export const useBlocks: UseBlocksReturn = () => {
 
     const { $i18n } = useNuxtApp();
     const loc = computed(() => $i18n.locale.value);
-    const key = `blocks-${loc.value}-${type}-${identifier}`;
 
-    const { data, error } = await useAsyncData(key, () =>
-      useSdk().plentysystems.getBlocksWithGlobalBlocks({ identifier, type, enableGlobalBlocks: true }),
+    const fetchBlocksResponse = async (blockIdentifier: string | number) => {
+      const key = `blocks-${loc.value}-${type}-${blockIdentifier}`;
+
+      const { data, error } = await useAsyncData(key, () =>
+        useSdk().plentysystems.getBlocksWithGlobalBlocks({
+          identifier: blockIdentifier,
+          type,
+          enableGlobalBlocks: true,
+        }),
+      );
+
+      if (error.value) {
+        console.warn('Failed to fetch blocks:', error.value.message);
+      }
+
+      return data.value?.data || ({} as GetBlocksResponse);
+    };
+
+    const rawBlocks = await fetchBlocksResponse(identifier);
+    const shouldLoadGlobalCategoryTemplate =
+      isSpecificCategoryBlocksIdentifier(identifier, type) &&
+      (!Array.isArray(rawBlocks.blocks) || rawBlocks.blocks.length === 0);
+    const assembled = assembleBlocks(
+      shouldLoadGlobalCategoryTemplate ? await fetchBlocksResponse(0) : rawBlocks,
+      type,
+      shouldLoadGlobalCategoryTemplate ? 0 : identifier,
     );
-
-    if (error.value) {
-      console.warn('Failed to fetch blocks:', error.value.message);
-    }
-
-    const assembled = assembleBlocks(data.value?.data || ({} as GetBlocksResponse), type, identifier);
 
     if (isHomepageContext(identifier, type)) {
       homepageHeaderContainer.value = assembled.HeaderContainer ? deepClone(assembled.HeaderContainer) : null;
@@ -133,7 +158,7 @@ export const useBlocks: UseBlocksReturn = () => {
               blocks:
                 Array.isArray(responseData?.blocks) && responseData.blocks.length > 0
                   ? responseData.blocks
-                  : state.value.data.blocks ?? [],
+                  : (state.value.data.blocks ?? []),
             };
 
       const assembled = assembleBlocks(effectiveData, type, identifier);

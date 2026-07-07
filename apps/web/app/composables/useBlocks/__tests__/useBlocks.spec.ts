@@ -189,6 +189,35 @@ describe('useBlocks', () => {
       await useBlocks().fetchBlocks('index', 'immutable');
       expect(mockStateRef.value.loading).toBe(false);
     });
+
+    it('should fall back to the global category template when a category has no specific blocks', async () => {
+      useAsyncData.mockImplementation((key: string, fetcher: () => unknown) => {
+        fetcher();
+        const responseData =
+          key === 'blocks-en-category-17'
+            ? { HeaderContainer: mockHeaderContainerBlock, blocks: [], Footer: mockFooterBlock }
+            : { HeaderContainer: mockHeaderContainerBlock, blocks: mockPageBlocks, Footer: mockFooterBlock };
+
+        return {
+          data: { value: { data: responseData } },
+          error: { value: null },
+        };
+      });
+
+      await useBlocks().fetchBlocks(17, 'category');
+
+      expect(mockGetBlocksWithGlobalBlocks).toHaveBeenCalledWith({
+        identifier: 17,
+        type: 'category',
+        enableGlobalBlocks: true,
+      });
+      expect(mockGetBlocksWithGlobalBlocks).toHaveBeenCalledWith({
+        identifier: 0,
+        type: 'category',
+        enableGlobalBlocks: true,
+      });
+      expect(mockStateRef.value.data.blocks).toEqual(mockPageBlocks);
+    });
   });
 
   describe('saveBlocks', () => {

@@ -1,4 +1,5 @@
 import type { Block } from '@plentymarkets/shop-api';
+import { getCategoryBlocksIdentifier } from '~/utils/categoryBlocks';
 
 export const useUpdatePageTemplate = () => {
   const updatePageTemplate = async (): Promise<boolean> => {
@@ -19,8 +20,8 @@ export const useUpdatePageTemplate = () => {
 
       let identifier: string | number = route.meta.identifier as string | number;
 
-      if (dataProducts.value?.category?.type === 'content' && dataProducts.value.category.id) {
-        identifier = dataProducts.value.category.id;
+      if (route.meta.type === 'category') {
+        identifier = getCategoryBlocksIdentifier(dataProducts.value?.category, route.path);
       }
 
       return await saveBlocks(identifier, route.meta.type as string, cleanedData);
