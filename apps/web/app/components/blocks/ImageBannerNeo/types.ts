@@ -6,6 +6,7 @@ export type ImageBannerNeoSpacing = {
 };
 
 export type ImageBannerNeoImageFit = 'cover' | 'contain';
+export type ImageBannerNeoCtaTarget = '_self' | '_blank';
 
 export type ImageBannerNeoSlide = {
   image: {
@@ -19,6 +20,7 @@ export type ImageBannerNeoSlide = {
     ctaLabel: string;
     ctaLink: string;
     ctaVariant: 'primary' | 'secondary';
+    ctaTarget: ImageBannerNeoCtaTarget;
     ctaColor: string;
     ctaTextColor: string;
     ctaHoverColor: string;

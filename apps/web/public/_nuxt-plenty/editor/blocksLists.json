@@ -1153,6 +1153,7 @@
                     "ctaLabel": "zu den Produkten",
                     "ctaLink": "/",
                     "ctaVariant": "primary",
+                    "ctaTarget": "_self",
                     "backgroundImage": "",
                     "backgroundColor": "#1f2937"
                   },
@@ -1198,6 +1199,7 @@
                     "ctaLabel": "zu den Produkten",
                     "ctaLink": "/",
                     "ctaVariant": "primary",
+                    "ctaTarget": "_self",
                     "backgroundImage": "",
                     "backgroundColor": "#1f2937"
                   },

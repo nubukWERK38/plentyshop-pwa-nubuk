@@ -154,6 +154,18 @@
         </div>
 
         <div>
+          <UiFormLabel class="mb-1">{{ getEditorTranslation('cta-target-label') }}</UiFormLabel>
+          <select
+            v-model="activeSlide.text.ctaTarget"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            data-testid="image-banner-neo-cta-target"
+          >
+            <option value="_self">{{ getEditorTranslation('cta-target-self-label') }}</option>
+            <option value="_blank">{{ getEditorTranslation('cta-target-blank-label') }}</option>
+          </select>
+        </div>
+
+        <div>
           <UiFormLabel class="mb-1">{{ getEditorTranslation('cta-color-label') }}</UiFormLabel>
           <EditorColorPicker v-model="activeSlide.text.ctaColor" class="w-full">
             <template #trigger="{ color, toggle }">
@@ -596,6 +608,7 @@ const defaultSlide = (): ImageBannerNeoSlide => ({
     ctaLabel: 'Jetzt entdecken',
     ctaLink: '/',
     ctaVariant: 'primary',
+    ctaTarget: '_self',
     ctaColor: '',
     ctaTextColor: '',
     ctaHoverColor: '',
@@ -657,6 +670,7 @@ const sliderContent = computed<ImageBannerNeoContent>(() => {
         if (!s.text.ctaLabel) s.text.ctaLabel = 'Jetzt entdecken';
         if (!s.text.ctaLink) s.text.ctaLink = '/';
         if (!s.text.ctaVariant) s.text.ctaVariant = 'primary';
+        if (s.text.ctaTarget !== '_blank') s.text.ctaTarget = '_self';
         if (s.text.ctaColor === undefined) s.text.ctaColor = '';
         if (s.text.ctaTextColor === undefined) s.text.ctaTextColor = '';
         if (s.text.ctaHoverColor === undefined) s.text.ctaHoverColor = '';
@@ -788,6 +802,9 @@ watch(
     "cta-label": "CTA label",
     "cta-link-label": "CTA link",
     "cta-variant-label": "CTA style",
+    "cta-target-label": "CTA link target",
+    "cta-target-self-label": "Same window / tab",
+    "cta-target-blank-label": "New tab",
     "cta-color-label": "CTA color",
     "cta-text-color-label": "CTA text color (optional)",
     "cta-hover-color-label": "CTA hover color (optional)",
@@ -842,6 +859,9 @@ watch(
     "cta-label": "CTA Text",
     "cta-link-label": "CTA Link",
     "cta-variant-label": "CTA Stil",
+    "cta-target-label": "CTA Linkziel",
+    "cta-target-self-label": "Gleiches Fenster / Tab",
+    "cta-target-blank-label": "Neuer Tab",
     "cta-color-label": "CTA Farbe",
     "cta-text-color-label": "CTA-Textfarbe (optional)",
     "cta-hover-color-label": "CTA-Hoverfarbe (optional)",
