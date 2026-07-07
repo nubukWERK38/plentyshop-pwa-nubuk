@@ -147,6 +147,11 @@ watch(
       (nextProductParams.variationId ?? '').toString() !== (productParams.variationId ?? '').toString();
 
     if (hasProductChanged) {
+      if (import.meta.client) {
+        window.location.assign(route.fullPath);
+        return;
+      }
+
       syncProductParams(nextProductParams);
       isRouteProductUpdate.value = true;
       try {

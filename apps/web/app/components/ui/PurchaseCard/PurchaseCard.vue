@@ -496,9 +496,15 @@ const availabilityName = computed(() => {
     return '';
   }
 });
-const orderPropertiesGroups = computed(() =>
-  Object.values(productPropertyGetters.getOrderPropertiesGroups(props.product)),
-);
+const orderPropertiesGroups = computed(() => {
+  if (!Array.isArray((props.product as { properties?: unknown }).properties)) return [];
+
+  try {
+    return Object.values(productPropertyGetters.getOrderPropertiesGroups(props.product));
+  } catch {
+    return [];
+  }
+});
 const firstOrderPropertiesGroup = computed(() => orderPropertiesGroups.value[0]);
 const hasOrderProperties = computed(() =>
   orderPropertiesGroups.value.some((group) => (group.orderProperties?.length ?? 0) > 0),
