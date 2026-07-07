@@ -31,8 +31,8 @@
 
       <div ref="imageContainerRef" :class="[{ 'size-48': isFromSlider }, 'relative']">
         <SfLink
-          :tag="NuxtLink"
-          :to="productPath"
+          :tag="productLinkTag"
+          v-bind="productLinkProps"
           :title="productLinkTitle"
           class="relative group/image flex items-center justify-center"
           data-testid="product-card-link"
@@ -116,8 +116,8 @@
       </div>
 
       <SfLink
-        :tag="NuxtLink"
-        :to="productPath"
+        :tag="productLinkTag"
+        v-bind="productLinkProps"
         :title="productLinkTitle"
         class="product-card__name line-clamp-2 no-underline text-base leading-[1.1] text-neutral-500 hover:text-neutral-700"
         variant="secondary"
@@ -194,6 +194,7 @@ const configuration = computed(() => props.configuration || ({} as ItemGridConte
 
 const { addModernImageExtension } = useModernImage();
 const localePath = useLocalePath();
+const route = useRoute();
 const { format } = usePriceFormatter();
 const { price, crossedPrice } = useProductPrice(product);
 const config = useRuntimeConfig();
@@ -281,6 +282,11 @@ const productPath = computed(() => {
   const shouldAppendVariation = productGetters.shouldAppendVariationToLink(product.value);
   return localePath(shouldAppendVariation ? `${basePath}_${variationId.value}` : basePath);
 });
+const shouldUseNativeProductLink = computed(() => route.meta.type === 'product');
+const productLinkTag = computed(() => (shouldUseNativeProductLink.value ? 'a' : NuxtLink));
+const productLinkProps = computed(() =>
+  shouldUseNativeProductLink.value ? { href: productPath.value } : { to: productPath.value },
+);
 
 const priority = computed(() => !props.isFromSlider && (props.index ?? 0) < 5);
 const {
