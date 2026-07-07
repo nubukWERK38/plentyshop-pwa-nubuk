@@ -27,17 +27,7 @@
         :style="{ backgroundColor: headerBackgroundColor }"
         data-testid="navbar-top-mobile"
       >
-        <div class="flex items-center flex-1 gap-2">
-          <UiButton
-            variant="tertiary"
-            square
-            :aria-label="t('common.navigation.openMenu')"
-            class="hover:!bg-header-400"
-            :style="{ color: iconColor }"
-            @click="openMegaMenu"
-          >
-            <SfIconMenu aria-hidden="true" />
-          </UiButton>
+        <div class="flex items-center flex-1 gap-2 px-4">
           <NuxtLink
             id="blockified-logo-mobile"
             data-testid="logo-link"
@@ -89,7 +79,7 @@
           :aria-label="t('common.navigation.openMenu')"
           class="mr-2 hover:!bg-header-400"
           :style="{ color: iconColor }"
-          @click="openMegaMenu"
+          @click="openMobileMenu"
         >
           <SfIconMenu aria-hidden="true" />
         </UiButton>
@@ -299,13 +289,6 @@
         </nav>
       </div>
     </header>
-    <BlocksNavbarBottom
-      v-if="viewport.isLessThan('md')"
-      :background-color="headerBackgroundColor"
-      :icon-color="iconColor"
-      :action-order="content.actions.order"
-      :action-visibility="content.actions.visibility"
-    />
     <LanguageSelector />
     <UiModal
       v-if="viewport.isGreaterOrEquals('md') && isAuthenticationOpen"
@@ -360,6 +343,91 @@
         <UiSearch class="mobile-search" :close="searchModalClose" :autofocus="true" />
       </SfModal>
     </NuxtLazyHydrate>
+
+    <template v-if="viewport.isLessThan('lg')">
+      <div v-if="isMegaMenuOpen" class="fixed inset-0 z-[4990] bg-neutral-900/50" @click="closeMobileMenu" />
+      <SfDrawer
+        :model-value="isMegaMenuOpen"
+        placement="left"
+        class="right-12 max-w-96 bg-white overflow-y-auto z-[5001]"
+        data-testid="mobile-mega-menu-drawer"
+      >
+        <nav>
+          <div class="flex items-center justify-between p-4 border-b border-b-neutral-200 border-b-solid">
+            <p class="typography-text-base font-medium">{{ t('common.actions.browseProducts') }}</p>
+            <UiButton
+              variant="tertiary"
+              square
+              :aria-label="t('common.navigation.closeMenu')"
+              class="ml-2"
+              @click="closeMobileMenu"
+            >
+              <SfIconClose aria-hidden="true" class="text-neutral-500" />
+            </UiButton>
+          </div>
+
+          <ul v-if="activeMobileMenu" class="mt-2 mb-6">
+            <li v-if="activeMobileMenu.id !== 0">
+              <SfListItem
+                size="lg"
+                tag="button"
+                type="button"
+                class="border-b border-b-neutral-200 border-b-solid hover:bg-secondary-100"
+                :aria-label="t('common.actions.back') + ' - ' + categoryTreeGetters.getName(activeMobileMenu)"
+                @click="goMobileMenuBack"
+              >
+                <div class="flex items-center">
+                  <SfIconArrowBack aria-hidden="true" class="text-neutral-500" />
+                  <p class="ml-5 font-medium">{{ categoryTreeGetters.getName(activeMobileMenu) }}</p>
+                </div>
+              </SfListItem>
+            </li>
+
+            <template v-for="node in activeMobileMenu.children" :key="node.id">
+              <li v-if="node.childCount === 0">
+                <SfListItem
+                  size="lg"
+                  :tag="NuxtLink"
+                  :href="localePath(generateMobileCategoryLink(node))"
+                  :title="getMobileCategoryLinkTitle(node)"
+                  class="hover:bg-secondary-100"
+                  @click="closeMobileMenu"
+                >
+                  <div class="flex items-center">
+                    <p class="text-left">{{ categoryTreeGetters.getName(node) }}</p>
+                    <SfCounter class="ml-2">{{ categoryTreeGetters.getCount(node) }}</SfCounter>
+                  </div>
+                </SfListItem>
+              </li>
+
+              <li v-else>
+                <div class="flex items-center hover:bg-secondary-100">
+                  <NuxtLink
+                    class="flex-1 m-0 px-4 py-3 text-left"
+                    :to="localePath(generateMobileCategoryLink(node))"
+                    :title="getMobileCategoryLinkTitle(node)"
+                    @click="closeMobileMenu"
+                  >
+                    <div class="flex items-center">
+                      <p class="text-left typography-text-lg">{{ categoryTreeGetters.getName(node) }}</p>
+                      <SfCounter class="ml-2">{{ categoryTreeGetters.getCount(node) }}</SfCounter>
+                    </div>
+                  </NuxtLink>
+                  <button
+                    type="button"
+                    class="flex justify-center items-center h-full w-16 px-4"
+                    :aria-label="t('common.navigation.showSubcategories') + ' - ' + categoryTreeGetters.getName(node)"
+                    @click="goMobileMenuNext(node.id)"
+                  >
+                    <SfIconChevronRight aria-hidden="true" class="text-neutral-500" />
+                  </button>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </nav>
+      </SfDrawer>
+    </template>
   </div>
 </template>
 
@@ -375,14 +443,19 @@ import {
   SfIconShoppingCart,
   SfListItem,
   SfModal,
+  SfDrawer,
+  SfCounter,
+  SfIconArrowBack,
+  SfIconChevronRight,
   SfIconFavorite,
   SfIconCheck,
   SfIconExpandMore,
   useDisclosure,
 } from '@storefront-ui/vue';
-import { cartGetters } from '@plentymarkets/shop-api';
+import { cartGetters, categoryTreeGetters, type CategoryTreeItem } from '@plentymarkets/shop-api';
 import { onClickOutside } from '@vueuse/core';
 import LanguageSelector from '~/components/LanguageSelector/LanguageSelector.vue';
+import { buildSeoLinkTitle } from '~/utils/seo';
 
 import type { UtilityBarProps } from './types';
 
@@ -401,7 +474,6 @@ const { data: cart } = useCart();
 const { format } = usePriceFormatter();
 const { wishlistItemIds } = useWishlist();
 const cartItemsCount = ref(0);
-const { open: openMegaMenu } = useMegaMenu();
 const { data: categoryTree, getCategoryTree } = useCategoryTree();
 
 const {
@@ -434,6 +506,7 @@ const utilityBarStyle = computed(() => ({
 }));
 const serviceBarItems = ['30 Tage Rückgaberecht', 'Ladengeschäfte mit Werkstatt', 'Kauf auf Rechnung', 'Bike Leasing'];
 const cartTotalFormatted = computed(() => format(cart.value ? cartGetters.getTotals(cart.value).total || 0 : 0));
+const hiddenMobileMenuRootCategoryName = 'Produkte Neuer Shop';
 
 const NuxtLink = resolveComponent('NuxtLink');
 const { localeCodes } = useI18n();
@@ -442,8 +515,17 @@ const localePath = useLocalePath();
 const { isOpen: isAccountDropdownOpen, toggle: accountDropdownToggle } = useDisclosure();
 const { isOpen: isAuthenticationOpen, open: openAuthentication, close: closeAuthentication } = useDisclosure();
 const { open: searchModalOpen, isOpen: isSearchModalOpen, close: searchModalClose } = useDisclosure();
-const { toggle: toggleLanguageSelect, isOpen: isLanguageSelectOpen } = useLocalization();
+const { toggle: toggleLanguageSelect, isOpen: isLanguageSelectOpen, buildCategoryMenuLink } = useLocalization();
 const { user, isAuthorized, logout } = useCustomer();
+const {
+  open: openMegaMenu,
+  close: closeMegaMenu,
+  isOpen: isMegaMenuOpen,
+  activeNode: activeMegaMenuNode,
+  category: megaMenuCategory,
+  setCategory: setMegaMenuCategory,
+} = useMegaMenu();
+const { setDrawerOpen } = useDrawerState();
 const viewport = useViewport();
 const runtimeConfig = useRuntimeConfig();
 const showConfigurationDrawer = runtimeConfig.public.showConfigurationDrawer;
@@ -482,8 +564,17 @@ onNuxtReady(async () => {
     await getCategoryTree();
   }
 
+  setMobileMegaMenuCategory(categoryTree.value);
   cartItemsCount.value = cart.value?.items?.reduce((price, { quantity }) => price + quantity, 0) ?? 0;
 });
+
+watch(
+  () => categoryTree.value,
+  (tree) => {
+    setMobileMegaMenuCategory(tree);
+  },
+  { deep: true, immediate: true },
+);
 
 const isIconSearchExpanded = ref(false);
 const showSearchIcon = ref(true);
@@ -524,6 +615,65 @@ const searchExpandOrigin = computed(() => {
   if (searchOrder === 0) return 'left center';
   return 'center center';
 });
+
+const findMobileMenuNode = (keys: number[], node: CategoryTreeItem): CategoryTreeItem => {
+  if (keys.length > 1) {
+    const [currentKey, ...restKeys] = keys;
+    return findMobileMenuNode(restKeys, node.children?.find((child) => child.id === currentKey) || node);
+  }
+
+  return node.children?.find((child) => child.id === keys[0]) || node;
+};
+
+const normalizeCategoryName = (name: string) => name.trim().toLocaleLowerCase();
+
+const findCategoryByName = (nodes: CategoryTreeItem[], name: string): CategoryTreeItem | null => {
+  const normalizedName = normalizeCategoryName(name);
+
+  for (const node of nodes) {
+    if (normalizeCategoryName(categoryTreeGetters.getName(node)) === normalizedName) {
+      return node;
+    }
+
+    const childMatch = findCategoryByName(node.children ?? [], name);
+    if (childMatch) return childMatch;
+  }
+
+  return null;
+};
+
+const setMobileMegaMenuCategory = (tree: CategoryTreeItem[]) => {
+  const hiddenRoot = findCategoryByName(tree, hiddenMobileMenuRootCategoryName);
+  setMegaMenuCategory(hiddenRoot?.children ?? []);
+};
+
+const activeMobileMenu = computed(() =>
+  megaMenuCategory.value ? findMobileMenuNode(activeMegaMenuNode.value, megaMenuCategory.value) : null,
+);
+
+const generateMobileCategoryLink = (category: CategoryTreeItem) => buildCategoryMenuLink(category, categoryTree.value);
+
+const getMobileCategoryLinkTitle = (category: CategoryTreeItem) =>
+  buildSeoLinkTitle(categoryTreeGetters.getName(category), 'Nubuk Bikes Fahrradshop');
+
+const openMobileMenu = () => {
+  activeMegaMenuNode.value = [];
+  openMegaMenu();
+  setDrawerOpen(true);
+};
+
+const closeMobileMenu = () => {
+  closeMegaMenu();
+  setDrawerOpen(false);
+};
+
+const goMobileMenuBack = () => {
+  activeMegaMenuNode.value = activeMegaMenuNode.value.slice(0, -1);
+};
+
+const goMobileMenuNext = (key: number) => {
+  activeMegaMenuNode.value = [...activeMegaMenuNode.value, key];
+};
 
 const expandIconSearch = () => {
   showSearchIcon.value = false;

@@ -7,7 +7,7 @@
     >
       <div class="flex items-center">
         <UiButton
-          v-if="viewport.isLessThan('lg')"
+          v-if="viewport.isGreaterOrEquals('md') && viewport.isLessThan('lg')"
           variant="tertiary"
           square
           :aria-label="t('common.navigation.openMenu')"
@@ -283,6 +283,7 @@ const tappedCategories = ref<Map<number, boolean>>(new Map());
 const TOUCH_DETECTION_THRESHOLD = 500;
 const categoryButtonClasses =
   'inline-flex items-center justify-center gap-2 font-medium text-base rounded-md py-2 px-4 group mr-2 !text-neutral-900 hover:bg-secondary-100 hover:!text-neutral-700 active:!bg-neutral-300 active:!text-neutral-900';
+const hiddenMobileMenuRootCategoryName = 'Produkte Neuer Shop';
 let removeHook: () => void;
 
 const trapFocusOptions = {
@@ -301,6 +302,32 @@ const findNode = (keys: number[], node: CategoryTreeItem): CategoryTreeItem => {
   } else {
     return node.children?.find((child) => child.id === keys[0]) || node;
   }
+};
+
+const normalizeCategoryName = (name: string) => name.trim().toLocaleLowerCase();
+
+const findCategoryByName = (nodes: CategoryTreeItem[], name: string): CategoryTreeItem | null => {
+  const normalizedName = normalizeCategoryName(name);
+
+  for (const node of nodes) {
+    if (normalizeCategoryName(categoryTreeGetters.getName(node)) === normalizedName) {
+      return node;
+    }
+
+    const childMatch = findCategoryByName(node.children ?? [], name);
+    if (childMatch) return childMatch;
+  }
+
+  return null;
+};
+
+const getMobileCategoryTree = (tree: CategoryTreeItem[]) => {
+  const hiddenRoot = findCategoryByName(tree, hiddenMobileMenuRootCategoryName);
+  return hiddenRoot?.children ?? tree;
+};
+
+const setMobileMenuCategory = () => {
+  setCategory(getMobileCategoryTree(categoryTree.value));
 };
 
 const generateCategoryLink = (category: CategoryTreeItem) => {
@@ -451,11 +478,11 @@ watch(
   () => props.categories,
   (categories: CategoryTreeItem[]) => {
     categoryTree.value = categoryTreeGetters.getTree(categories);
-    setCategory(categoryTree.value);
+    setMobileMenuCategory();
   },
 );
 
-setCategory(categoryTree.value);
+setMobileMenuCategory();
 
 useTrapFocus(drawerFocusReference, trapFocusOptions);
 </script>

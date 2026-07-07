@@ -1,8 +1,8 @@
 <template>
   <nav class="w-full fixed bottom-0 left-0 flex flex-row items-stretch md:hidden z-10" data-testid="navbar-bottom">
     <UiButton
-      v-for="{ label, icon, link } in items"
-      :key="label"
+      v-for="{ id, label, icon, link } in items"
+      :key="id"
       variant="tertiary"
       :class="[
         '!p-1 !pt-3 flex flex-col h-full w-full rounded-none bg-primary-500 text-white hover:text-white hover:bg-primary-800 active:text-white active:bg-primary-700 !text-xs !font-base',
@@ -11,7 +11,7 @@
       size="sm"
       :tag="link ? NuxtLink : undefined"
       :to="link || undefined"
-      @click="label === t('common.labels.products') && open()"
+      @click="id === 'products' && openProductsMenu()"
     >
       <template #prefix>
         <div class="relative">
@@ -22,13 +22,6 @@
             :max="99"
             class="translate-x-[5px] translate-y-[-3px] outline outline-primary-500 bg-white !text-neutral-900 group-hover:outline-primary-800 group-active:outline-primary-700 flex justify-center items-center text-xs min-w-[16px] min-h-[16px]"
           />
-          <SfBadge
-            v-if="label === t('common.labels.wishlist')"
-            :content="wishlistItemIds.length"
-            :max="99"
-            class="translate-x-[5px] translate-y-[-3px] outline outline-primary-500 bg-white !text-neutral-900 group-hover:outline-primary-800 group-active:outline-primary-700 flex justify-center items-center text-xs min-w-[16px] min-h-[16px]"
-            data-testid="wishlist-badge"
-          />
         </div>
       </template>
       {{ label }}
@@ -37,43 +30,48 @@
 </template>
 
 <script setup lang="ts">
-import { SfBadge, SfIconShoppingCart, SfIconHome, SfIconMenu, SfIconPerson, SfIconFavorite } from '@storefront-ui/vue';
+import { SfBadge, SfIconShoppingCart, SfIconHome, SfIconMenu, SfIconPerson } from '@storefront-ui/vue';
 import { useCustomer } from '~/composables/useCustomer';
 
 const localePath = useLocalePath();
 const route = useRoute();
-const { wishlistItemIds } = useWishlist();
 const { data: cart } = useCart();
 const { isAuthorized } = useCustomer();
-const { open } = useMegaMenu();
+const { activeNode, open } = useMegaMenu();
+const { setDrawerOpen } = useDrawerState();
 
 const items = computed(() => [
   {
+    id: 'home',
     label: t('common.labels.home'),
     icon: SfIconHome,
     link: localePath(paths.home),
   },
   {
+    id: 'products',
     label: t('common.labels.products'),
     icon: SfIconMenu,
     link: '',
   },
   {
-    label: t('common.labels.wishlist'),
-    icon: SfIconFavorite,
-    link: localePath(paths.wishlist),
-  },
-  {
+    id: 'cart',
     label: t('common.labels.cart'),
     icon: SfIconShoppingCart,
     link: localePath(paths.cart),
   },
   {
+    id: 'account',
     label: isAuthorized.value ? t('account.navBottomHeadingAccount') : t('account.navBottomHeadingLogin'),
     icon: SfIconPerson,
     link: isAuthorized.value ? localePath(paths.account) : localePath(paths.authLogin),
   },
 ]);
+
+const openProductsMenu = () => {
+  activeNode.value = [];
+  open();
+  setDrawerOpen(true);
+};
 
 const cartItemsCount = computed(() => cart.value?.items?.reduce((price, { quantity }) => price + quantity, 0) ?? 0);
 const NuxtLink = resolveComponent('NuxtLink');

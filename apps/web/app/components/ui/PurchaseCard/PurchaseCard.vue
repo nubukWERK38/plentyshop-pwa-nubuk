@@ -1140,10 +1140,51 @@ const openProductQuestionTab = () => {
 @media (max-width: 767px) {
   .purchase-card,
   .purchase-card__content,
+  .purchase-card__price-block,
+  .purchase-card__preview-text,
+  .purchase-card__leasing-panel,
   .purchase-card__cart-section,
   .purchase-card__paypal-buttons {
     width: 100%;
     max-width: 100%;
+  }
+
+  .purchase-card {
+    box-sizing: border-box;
+  }
+
+  .purchase-card__price-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .purchase-card__rrp {
+    order: 2;
+    width: 50%;
+    min-width: 0;
+    margin: 0;
+    padding: 0 0 0 10px;
+    float: none;
+    text-align: left;
+  }
+
+  .purchase-card__price-row {
+    order: 1;
+    width: 50%;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .purchase-card__price {
+    margin-left: 0;
+  }
+
+  .purchase-card__discount {
+    min-width: 58px;
+    min-height: 30px;
+    font-size: 0.875rem;
   }
 
   .purchase-card__brand {
@@ -1155,19 +1196,44 @@ const openProductQuestionTab = () => {
   }
 
   .purchase-card__cart-row {
-    flex-direction: row;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
     gap: 12px;
     width: 100%;
   }
 
+  .purchase-card__quantity {
+    width: 84px;
+    min-width: 84px;
+  }
+
   .purchase-card__cart-tooltip {
+    display: block;
+    width: 100%;
     min-width: 0;
-    flex: 1 1 auto;
   }
 
   .purchase-card__cart-button {
     width: 100%;
+  }
+
+  .purchase-card__leasing-summary {
+    min-height: auto;
+    padding: 16px;
+  }
+
+  .purchase-card__leasing-options {
+    padding: 0 16px 16px;
+  }
+
+  .purchase-card :deep([data-testid='product-attributes']),
+  .purchase-card :deep([data-testid='product-attributes'] > div),
+  .purchase-card :deep(label[for^='attribute-']),
+  .purchase-card :deep(label[for='unit-combination']),
+  .purchase-card :deep(select),
+  .purchase-card :deep([id='attribute-box']) {
+    width: 100%;
+    max-width: 100%;
   }
 
   .purchase-card__paypal-buttons :deep(*) {
