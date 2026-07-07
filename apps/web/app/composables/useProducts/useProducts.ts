@@ -80,7 +80,7 @@ export const useProducts: UseProductsReturn = (category = '') => {
       } as Facet;
 
       setupFakeBlocks(fakeBlocks, 'category');
-      handlePreviewProducts(state, $i18n.locale.value);
+      handlePreviewProducts(state, $i18n.locale.value, true);
 
       state.value.loading = false;
       return state.value.data;

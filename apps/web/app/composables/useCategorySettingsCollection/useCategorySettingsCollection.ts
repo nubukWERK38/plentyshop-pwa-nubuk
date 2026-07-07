@@ -11,14 +11,15 @@ export const useCategorySettingsCollection: useCategorySettingsCollectionReturn 
   const { send } = useNotification();
   const { movePagesInTree } = useCategoriesSearch();
 
-  const addCategorySettings = async (category: CategoryEntry) => {
-    const exists = state.value.data.some(
+  const addCategorySettings = async (category: CategoryEntry): Promise<CategoryEntry> => {
+    const existingCategory = state.value.data.find(
       (item) => item.id === category.id && (item.details?.[0]?.lang ?? '') === (category.details?.[0]?.lang ?? ''),
     );
-    if (exists) return;
+    if (existingCategory) return existingCategory;
 
     state.value.data.push(category);
     state.value.initialData.push(deepClone(category));
+    return category;
   };
 
   const hasChanges = computed(() => {

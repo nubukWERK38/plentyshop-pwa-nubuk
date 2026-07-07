@@ -5,11 +5,11 @@ import { fakeProductDE } from './facets/fakeProductDE';
 
 import type { UseProductsState } from '~/composables/useProducts/types';
 
-export const handlePreviewProducts = (state: Ref<UseProductsState>, lang: string) => {
+export const handlePreviewProducts = (state: Ref<UseProductsState>, lang: string, useExampleProducts = false) => {
   const { isInEditor } = useEditorState();
   const products = state.value.data.products ?? [];
 
-  if (!isInEditor.value || products.length > 0) return;
+  if (!isInEditor.value || products.length > 0 || !useExampleProducts) return;
 
   if (state.value.data.category.type === 'item') {
     const fakeFacetCall = lang === 'de' ? fakeFacetCallDE.data : fakeFacetCallEN.data;

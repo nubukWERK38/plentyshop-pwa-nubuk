@@ -15,12 +15,19 @@ export const useCategorySettings: useCategorySettingsReturn = (settingsId = '') 
   }));
   const { locale, defaultLocale } = useI18n();
   const { setCategoryId } = useCategoryIdHelper();
+  const setTrackedCategorySettings = async (category: CategoryEntry): Promise<CategoryEntry> => {
+    const { addCategorySettings } = useCategorySettingsCollection();
+    const trackedCategory = await addCategorySettings(category);
+
+    state.value.data = trackedCategory;
+    state.value.initialData = deepClone(trackedCategory);
+    return trackedCategory;
+  };
+
   const fetchCategorySettings = async (categoryId: number): Promise<CategoryEntry | null> => {
     const cacheKey = `${categoryId}-${locale.value}`;
     if (cache.value[cacheKey]) {
-      state.value.data = cache.value[cacheKey];
-      state.value.initialData = deepClone(cache.value[cacheKey]);
-      return cache.value[cacheKey];
+      return setTrackedCategorySettings(cache.value[cacheKey]);
     }
 
     state.value.loading = true;
@@ -29,15 +36,10 @@ export const useCategorySettings: useCategorySettingsReturn = (settingsId = '') 
       const result = await getCategory(categoryId);
 
       const cleanData = deepClone(result) as unknown as CategoryEntry;
-
-      const { addCategorySettings } = useCategorySettingsCollection();
-      await addCategorySettings(cleanData);
-      await nextTick();
+      const trackedCategory = await setTrackedCategorySettings(cleanData);
 
       cache.value[cacheKey] = cleanData;
-      state.value.data = cleanData;
-      state.value.initialData = deepClone(cleanData);
-      return cleanData ?? null;
+      return trackedCategory ?? null;
     } catch (error) {
       console.error('Error fetching category settings:', error);
       return null;

@@ -12,7 +12,7 @@ export interface useCategorySettingsCollection {
   loading: Readonly<Ref<boolean>>;
   hasChanges: ComputedRef<boolean>;
   isCategoryDirty: (id: number) => boolean;
-  addCategorySettings: (category: CategoryEntry) => Promise<void>;
+  addCategorySettings: (category: CategoryEntry) => Promise<CategoryEntry>;
   saveCategorySettings: () => Promise<boolean>;
   save: () => Promise<void>;
 }
