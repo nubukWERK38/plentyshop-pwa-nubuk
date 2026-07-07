@@ -1,3 +1,4 @@
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { handlePreviewProducts } from '../handle-preview-products';
 import type { UseProductsState } from '~/composables/useProducts/types';
 
