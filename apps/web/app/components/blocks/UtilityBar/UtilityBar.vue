@@ -367,35 +367,35 @@
           </div>
 
           <ul v-if="activeMobileMenu" class="mt-2 mb-6">
-            <li v-if="activeMobileMenu.id !== 0">
+            <li v-if="activeMobileMenu.id !== 'root'">
               <SfListItem
                 size="lg"
                 tag="button"
                 type="button"
                 class="border-b border-b-neutral-200 border-b-solid hover:bg-secondary-100"
-                :aria-label="t('common.actions.back') + ' - ' + categoryTreeGetters.getName(activeMobileMenu)"
+                :aria-label="t('common.actions.back') + ' - ' + activeMobileMenu.label"
                 @click="goMobileMenuBack"
               >
                 <div class="flex items-center">
                   <SfIconArrowBack aria-hidden="true" class="text-neutral-500" />
-                  <p class="ml-5 font-medium">{{ categoryTreeGetters.getName(activeMobileMenu) }}</p>
+                  <p class="ml-5 font-medium">{{ activeMobileMenu.label }}</p>
                 </div>
               </SfListItem>
             </li>
 
             <template v-for="node in activeMobileMenu.children" :key="node.id">
-              <li v-if="node.childCount === 0">
+              <li v-if="node.children.length === 0">
                 <SfListItem
                   size="lg"
                   :tag="NuxtLink"
-                  :href="localePath(generateMobileCategoryLink(node))"
-                  :title="getMobileCategoryLinkTitle(node)"
+                  :href="node.link"
+                  :title="node.title"
                   class="hover:bg-secondary-100"
                   @click="closeMobileMenu"
                 >
                   <div class="flex items-center">
-                    <p class="text-left">{{ categoryTreeGetters.getName(node) }}</p>
-                    <SfCounter class="ml-2">{{ categoryTreeGetters.getCount(node) }}</SfCounter>
+                    <p class="text-left">{{ node.label }}</p>
+                    <SfCounter v-if="node.count !== undefined" class="ml-2">{{ node.count }}</SfCounter>
                   </div>
                 </SfListItem>
               </li>
@@ -404,19 +404,19 @@
                 <div class="flex items-center hover:bg-secondary-100">
                   <NuxtLink
                     class="flex-1 m-0 px-4 py-3 text-left"
-                    :to="localePath(generateMobileCategoryLink(node))"
-                    :title="getMobileCategoryLinkTitle(node)"
+                    :to="node.link"
+                    :title="node.title"
                     @click="closeMobileMenu"
                   >
                     <div class="flex items-center">
-                      <p class="text-left typography-text-lg">{{ categoryTreeGetters.getName(node) }}</p>
-                      <SfCounter class="ml-2">{{ categoryTreeGetters.getCount(node) }}</SfCounter>
+                      <p class="text-left typography-text-lg">{{ node.label }}</p>
+                      <SfCounter v-if="node.count !== undefined" class="ml-2">{{ node.count }}</SfCounter>
                     </div>
                   </NuxtLink>
                   <button
                     type="button"
                     class="flex justify-center items-center h-full w-16 px-4"
-                    :aria-label="t('common.navigation.showSubcategories') + ' - ' + categoryTreeGetters.getName(node)"
+                    :aria-label="t('common.navigation.showSubcategories') + ' - ' + node.label"
                     @click="goMobileMenuNext(node.id)"
                   >
                     <SfIconChevronRight aria-hidden="true" class="text-neutral-500" />
@@ -452,17 +452,27 @@ import {
   SfIconExpandMore,
   useDisclosure,
 } from '@storefront-ui/vue';
-import { cartGetters, categoryTreeGetters, type CategoryTreeItem } from '@plentymarkets/shop-api';
+import { cartGetters, categoryTreeGetters, type CategoryTreeItem, type Block } from '@plentymarkets/shop-api';
 import { onClickOutside } from '@vueuse/core';
 import LanguageSelector from '~/components/LanguageSelector/LanguageSelector.vue';
 import { buildSeoLinkTitle } from '~/utils/seo';
 
 import type { UtilityBarProps } from './types';
+import type { BigMenueNeoCategoryLink, BigMenueNeoContent } from '~/components/blocks/BigMenueNeo/types';
 
 interface Props extends Partial<UtilityBarProps> {
   enableActions?: boolean;
   root?: boolean;
 }
+
+type MobileMenuItem = {
+  id: string;
+  label: string;
+  link: string;
+  title: string;
+  count?: number;
+  children: MobileMenuItem[];
+};
 
 const props = withDefaults(defineProps<Props>(), {
   enableActions: false,
@@ -475,6 +485,7 @@ const { format } = usePriceFormatter();
 const { wishlistItemIds } = useWishlist();
 const cartItemsCount = ref(0);
 const { data: categoryTree, getCategoryTree } = useCategoryTree();
+const { allBlocks } = useBlocks();
 
 const {
   content,
@@ -517,14 +528,7 @@ const { isOpen: isAuthenticationOpen, open: openAuthentication, close: closeAuth
 const { open: searchModalOpen, isOpen: isSearchModalOpen, close: searchModalClose } = useDisclosure();
 const { toggle: toggleLanguageSelect, isOpen: isLanguageSelectOpen, buildCategoryMenuLink } = useLocalization();
 const { user, isAuthorized, logout } = useCustomer();
-const {
-  open: openMegaMenu,
-  close: closeMegaMenu,
-  isOpen: isMegaMenuOpen,
-  activeNode: activeMegaMenuNode,
-  category: megaMenuCategory,
-  setCategory: setMegaMenuCategory,
-} = useMegaMenu();
+const { open: openMegaMenu, close: closeMegaMenu, isOpen: isMegaMenuOpen } = useMegaMenu();
 const { setDrawerOpen } = useDrawerState();
 const viewport = useViewport();
 const runtimeConfig = useRuntimeConfig();
@@ -532,6 +536,7 @@ const showConfigurationDrawer = runtimeConfig.public.showConfigurationDrawer;
 const { isEditing, disableActions } = useEditor();
 const isActive = computed(() => isLanguageSelectOpen);
 const isHeaderCompact = ref(false);
+const activeMobileMenuNode = ref<string[]>([]);
 
 const getPageScrollTop = () =>
   Math.max(
@@ -564,17 +569,8 @@ onNuxtReady(async () => {
     await getCategoryTree();
   }
 
-  setMobileMegaMenuCategory(categoryTree.value);
   cartItemsCount.value = cart.value?.items?.reduce((price, { quantity }) => price + quantity, 0) ?? 0;
 });
-
-watch(
-  () => categoryTree.value,
-  (tree) => {
-    setMobileMegaMenuCategory(tree);
-  },
-  { deep: true, immediate: true },
-);
 
 const isIconSearchExpanded = ref(false);
 const showSearchIcon = ref(true);
@@ -616,7 +612,25 @@ const searchExpandOrigin = computed(() => {
   return 'center center';
 });
 
-const findMobileMenuNode = (keys: number[], node: CategoryTreeItem): CategoryTreeItem => {
+const requestedMobileMenuCategoryNames = [
+  'E-Bikes',
+  'Fahrräder',
+  'Teile',
+  'Bekleidung',
+  'Werkstattbedarf',
+  'Zubehör',
+  'Markenwelt',
+  'Sale',
+];
+
+const normalizeCategoryName = (name: string) => name.trim().toLocaleLowerCase();
+
+const normalizePath = (path: string) => {
+  if (!path) return '/';
+  return path.startsWith('/') ? path : `/${path}`;
+};
+
+const findMobileMenuNode = (keys: string[], node: MobileMenuItem): MobileMenuItem => {
   if (keys.length > 1) {
     const [currentKey, ...restKeys] = keys;
     return findMobileMenuNode(restKeys, node.children?.find((child) => child.id === currentKey) || node);
@@ -624,8 +638,6 @@ const findMobileMenuNode = (keys: number[], node: CategoryTreeItem): CategoryTre
 
   return node.children?.find((child) => child.id === keys[0]) || node;
 };
-
-const normalizeCategoryName = (name: string) => name.trim().toLocaleLowerCase();
 
 const findCategoryByName = (nodes: CategoryTreeItem[], name: string): CategoryTreeItem | null => {
   const normalizedName = normalizeCategoryName(name);
@@ -642,22 +654,200 @@ const findCategoryByName = (nodes: CategoryTreeItem[], name: string): CategoryTr
   return null;
 };
 
-const setMobileMegaMenuCategory = (tree: CategoryTreeItem[]) => {
-  const hiddenRoot = findCategoryByName(tree, hiddenMobileMenuRootCategoryName);
-  setMegaMenuCategory(hiddenRoot?.children ?? []);
+const findCategoryById = (nodes: CategoryTreeItem[], id: number): CategoryTreeItem | null => {
+  for (const node of nodes) {
+    if (node.id === id) return node;
+
+    const childMatch = findCategoryById(node.children ?? [], id);
+    if (childMatch) return childMatch;
+  }
+
+  return null;
 };
 
-const activeMobileMenu = computed(() =>
-  megaMenuCategory.value ? findMobileMenuNode(activeMegaMenuNode.value, megaMenuCategory.value) : null,
-);
+const getMobileCategoryTree = (tree: CategoryTreeItem[]) => {
+  const hiddenRoot = findCategoryByName(tree, hiddenMobileMenuRootCategoryName);
+  const sourceTree = hiddenRoot?.children ?? tree;
+  const requiredMatches = requestedMobileMenuCategoryNames
+    .map((name) => findCategoryByName(sourceTree, name) ?? findCategoryByName(tree, name))
+    .filter((node): node is CategoryTreeItem => !!node);
+  const requiredIds = new Set(requiredMatches.map((node) => node.id));
+  const remainingCategories = sourceTree.filter((node) => !requiredIds.has(node.id));
+
+  return [...requiredMatches, ...remainingCategories];
+};
+
+const getCategoryLabel = (category: CategoryTreeItem) => categoryTreeGetters.getName(category);
 
 const generateMobileCategoryLink = (category: CategoryTreeItem) => buildCategoryMenuLink(category, categoryTree.value);
 
-const getMobileCategoryLinkTitle = (category: CategoryTreeItem) =>
-  buildSeoLinkTitle(categoryTreeGetters.getName(category), 'Nubuk Bikes Fahrradshop');
+const buildCategoryMobileMenuItem = (category: CategoryTreeItem): MobileMenuItem => {
+  const label = getCategoryLabel(category);
+
+  return {
+    id: `category-${category.id}`,
+    label,
+    link: localePath(generateMobileCategoryLink(category)),
+    title: buildSeoLinkTitle(label, 'Nubuk Bikes Fahrradshop'),
+    count: categoryTreeGetters.getCount(category),
+    children: (category.children ?? []).map(buildCategoryMobileMenuItem),
+  };
+};
+
+const isRenderableBigMenuCategoryLink = (category: BigMenueNeoCategoryLink) =>
+  !!category.customLabel?.trim() ||
+  (category.linkType === 'manualUrl' && !!category.manualUrl?.trim()) ||
+  (category.linkType === 'category' && category.categoryId !== null);
+
+const getFallbackBigMenuCategoryLabel = (category: BigMenueNeoCategoryLink) => {
+  if (category.categoryName?.trim()) return category.categoryName.trim();
+  const pathSegment = category.categoryPath?.split('/').filter(Boolean).pop();
+
+  if (pathSegment) {
+    try {
+      return decodeURIComponent(pathSegment).replace(/-/g, ' ');
+    } catch {
+      return pathSegment.replace(/-/g, ' ');
+    }
+  }
+
+  return category.categoryId ? `#${category.categoryId}` : '';
+};
+
+const getBigMenuCategoryLabel = (category: BigMenueNeoCategoryLink) => {
+  if (category.customLabel?.trim()) return category.customLabel.trim();
+  if (category.linkType === 'manualUrl') return category.manualUrl?.trim() || '';
+  if (!category.categoryId) return '';
+
+  const categoryTreeNode = findCategoryById(categoryTree.value || [], category.categoryId);
+  return categoryTreeNode ? getCategoryLabel(categoryTreeNode) : getFallbackBigMenuCategoryLabel(category);
+};
+
+const resolveBigMenuCategoryTo = (category: BigMenueNeoCategoryLink) => {
+  if (category.linkType === 'manualUrl') return category.manualUrl?.trim() || '/';
+
+  if (!category.categoryId) return '/';
+  if (category.categoryPath?.trim()) return localePath(normalizePath(category.categoryPath.trim()));
+
+  const categoryTreeNode = findCategoryById(categoryTree.value || [], category.categoryId);
+  return categoryTreeNode ? localePath(generateMobileCategoryLink(categoryTreeNode)) : '/';
+};
+
+const collectBigMenuNeoBlocks = (blocks: Block[]): Block[] => {
+  const matches: Block[] = [];
+
+  for (const block of blocks) {
+    if (block.name === 'BigMenueNeo') matches.push(block);
+    if (Array.isArray(block.content)) matches.push(...collectBigMenuNeoBlocks(block.content as Block[]));
+  }
+
+  return matches;
+};
+
+const hasBigMenuContent = (content?: Partial<BigMenueNeoContent> | null) =>
+  Array.isArray(content?.menus) &&
+  content.menus.some(
+    (menu) =>
+      isRenderableBigMenuCategoryLink(menu.category) ||
+      (menu.columns || []).some(
+        (column) =>
+          isRenderableBigMenuCategoryLink(column.category) ||
+          (column.items || []).some((item) => isRenderableBigMenuCategoryLink(item.category)),
+      ),
+  );
+
+const bigMenuNeoContent = computed(() => {
+  const block = collectBigMenuNeoBlocks(allBlocks.value).find((candidate) =>
+    hasBigMenuContent(candidate.content as BigMenueNeoContent),
+  );
+
+  return block ? (block.content as BigMenueNeoContent) : null;
+});
+
+const buildBigMenuMobileItems = (content: BigMenueNeoContent): MobileMenuItem[] =>
+  content.menus
+    .map((menu, menuIndex) => {
+      const children = (menu.columns || [])
+        .flatMap((column, columnIndex) => {
+          const level3Items = (column.items || [])
+            .filter((item) => isRenderableBigMenuCategoryLink(item.category))
+            .map((item, itemIndex): MobileMenuItem => {
+              const label = getBigMenuCategoryLabel(item.category);
+
+              return {
+                id: `big-menu-${menuIndex}-${columnIndex}-${itemIndex}-${item.id}`,
+                label,
+                link: resolveBigMenuCategoryTo(item.category),
+                title: buildSeoLinkTitle(label, 'Nubuk Bikes Fahrradshop'),
+                children: [],
+              };
+            })
+            .filter((item) => !!item.label);
+
+          if (!isRenderableBigMenuCategoryLink(column.category)) return level3Items;
+
+          const label = getBigMenuCategoryLabel(column.category);
+          if (!label) return level3Items;
+
+          return [
+            {
+              id: `big-menu-${menuIndex}-${columnIndex}-${column.id}`,
+              label,
+              link: resolveBigMenuCategoryTo(column.category),
+              title: buildSeoLinkTitle(label, 'Nubuk Bikes Fahrradshop'),
+              children: level3Items,
+            },
+          ];
+        })
+        .filter((item) => !!item.label);
+
+      if (!isRenderableBigMenuCategoryLink(menu.category)) return null;
+
+      const label = getBigMenuCategoryLabel(menu.category);
+      if (!label) return null;
+
+      return {
+        id: `big-menu-${menuIndex}-${menu.id}`,
+        label,
+        link: resolveBigMenuCategoryTo(menu.category),
+        title: buildSeoLinkTitle(label, 'Nubuk Bikes Fahrradshop'),
+        children,
+      };
+    })
+    .filter((item): item is MobileMenuItem => !!item);
+
+const appendMissingRequiredCategoryItems = (items: MobileMenuItem[]) => {
+  const existingLabels = new Set(items.map((item) => normalizeCategoryName(item.label)));
+  const sourceTree = getMobileCategoryTree(categoryTree.value);
+  const missingRequiredItems = requestedMobileMenuCategoryNames
+    .filter((name) => !existingLabels.has(normalizeCategoryName(name)))
+    .map((name) => findCategoryByName(sourceTree, name) ?? findCategoryByName(categoryTree.value, name))
+    .filter((node): node is CategoryTreeItem => !!node)
+    .map(buildCategoryMobileMenuItem);
+
+  return [...items, ...missingRequiredItems];
+};
+
+const mobileMenuRoot = computed<MobileMenuItem>(() => {
+  const bigMenuItems = bigMenuNeoContent.value ? buildBigMenuMobileItems(bigMenuNeoContent.value) : [];
+  const children =
+    bigMenuItems.length > 0
+      ? appendMissingRequiredCategoryItems(bigMenuItems)
+      : getMobileCategoryTree(categoryTree.value).map(buildCategoryMobileMenuItem);
+
+  return {
+    id: 'root',
+    label: t('common.actions.browseProducts'),
+    link: '/',
+    title: t('common.actions.browseProducts'),
+    children,
+  };
+});
+
+const activeMobileMenu = computed(() => findMobileMenuNode(activeMobileMenuNode.value, mobileMenuRoot.value));
 
 const openMobileMenu = () => {
-  activeMegaMenuNode.value = [];
+  activeMobileMenuNode.value = [];
   openMegaMenu();
   setDrawerOpen(true);
 };
@@ -668,11 +858,11 @@ const closeMobileMenu = () => {
 };
 
 const goMobileMenuBack = () => {
-  activeMegaMenuNode.value = activeMegaMenuNode.value.slice(0, -1);
+  activeMobileMenuNode.value = activeMobileMenuNode.value.slice(0, -1);
 };
 
-const goMobileMenuNext = (key: number) => {
-  activeMegaMenuNode.value = [...activeMegaMenuNode.value, key];
+const goMobileMenuNext = (key: string) => {
+  activeMobileMenuNode.value = [...activeMobileMenuNode.value, key];
 };
 
 const expandIconSearch = () => {
