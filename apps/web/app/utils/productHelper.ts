@@ -65,3 +65,10 @@ export const generateBreadcrumbs = (categoryTree: CategoryTreeItem[], product: P
 
   return breadcrumbs;
 };
+
+export const shouldShowPricePerUnit = (product?: Product | null): boolean => {
+  const unit = product?.unit;
+  if (!unit) return false;
+
+  return !(unit.unitOfMeasurement === 'C62' && unit.content === 1);
+};

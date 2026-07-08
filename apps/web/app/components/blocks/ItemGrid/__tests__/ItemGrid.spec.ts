@@ -178,7 +178,7 @@ describe('ItemGrid.vue', () => {
   });
 
   it('should render shipping information with a link', async () => {
-    const paths = { shipping: '/shipping' };
+    const paths = { shipping: '/ueber-uns/versand' };
 
     const wrapper = mount(ItemGrid, {
       props: { ...ItemGridMock },
@@ -199,7 +199,7 @@ describe('ItemGrid.vue', () => {
     const shippingInfo = wrapper.find('[data-testid="shipping-link"]');
     expect(shippingInfo.exists()).toBe(true);
     expect(shippingInfo.text()).toContain('Shipping');
-    expect(shippingInfo.attributes('href')).toBe('/shipping');
+    expect(shippingInfo.attributes('href')).toBe('/ueber-uns/versand');
   });
 
   it('should keep item count hidden when showItemCount is true', async () => {

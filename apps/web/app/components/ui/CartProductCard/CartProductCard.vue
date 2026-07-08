@@ -40,7 +40,7 @@
       <div v-if="!cartItem.variation?.bundleComponents && showBundleComponents">
         <div v-if="cartItem.variation" class="mt-2">
           <BasePrice
-            v-if="productGetters.showPricePerUnit(cartItem.variation)"
+            v-if="shouldShowPricePerUnit(cartItem.variation)"
             :base-price="basePriceSingleValue"
             :unit-content="productGetters.getUnitContent(cartItem.variation)"
             :unit-name="productGetters.getUnitName(cartItem.variation)"
@@ -143,6 +143,7 @@ import { productGetters, productBundleGetters, cartGetters, productImageGetters 
 import { SfLink, SfLoaderCircular, SfIconClose } from '@storefront-ui/vue';
 import type { CartProductCardProps } from '~/components/ui/CartProductCard/types';
 import type { Product } from '@plentymarkets/shop-api';
+import { shouldShowPricePerUnit } from '~/utils/productHelper';
 import { debounce } from '../../../utils/debounce';
 
 const { cartItem, disabled = false } = defineProps<CartProductCardProps>();

@@ -47,7 +47,7 @@
               <LowestPrice :product="product" />
               <div v-if="unitContentLabel" class="purchase-card__unit-content">Inhalt {{ unitContentLabel }}</div>
               <BasePrice
-                v-if="productGetters.showPricePerUnit(product)"
+                v-if="shouldShowPricePerUnit(product)"
                 :base-price="basePriceSingleValue"
                 :unit-content="productGetters.getUnitContent(product)"
                 :unit-name="productGetters.getUnitName(product)"
@@ -335,6 +335,7 @@ import {
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';
 import { paths } from '~/utils/paths';
+import { shouldShowPricePerUnit } from '~/utils/productHelper';
 
 const props = withDefaults(defineProps<PurchaseCardProps>(), {
   configuration: () => ({

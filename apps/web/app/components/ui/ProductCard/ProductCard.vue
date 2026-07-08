@@ -158,6 +158,7 @@ import type { ProductCardProps } from '~/components/ui/ProductCard/types';
 import { defaults } from '~/composables';
 import type { ItemGridContent } from '~/components/blocks/ItemGrid/types';
 import { buildProductLinkTitle } from '~/utils/seo';
+import { shouldShowPricePerUnit } from '~/utils/productHelper';
 
 const props = withDefaults(defineProps<ProductCardProps>(), {
   configuration: () => ({
@@ -267,7 +268,7 @@ const imageHeight = computed(() => productGetters.getImageHeight(product.value) 
 const basePrice = computed(() => productGetters.getDefaultBasePrice(product.value));
 const unitContent = computed(() => productGetters.getUnitContent(product.value));
 const unitName = computed(() => productGetters.getUnitName(product.value));
-const showBasePrice = computed(() => productGetters.showPricePerUnit(product.value));
+const showBasePrice = computed(() => shouldShowPricePerUnit(product.value));
 
 const variationId = computed(() => productGetters.getVariationId(product.value));
 const { isGlobalProductCategoryTemplate } = useProducts();

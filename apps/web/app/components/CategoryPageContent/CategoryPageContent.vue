@@ -45,7 +45,7 @@
               :base-price="productGetters.getDefaultBasePrice(product)"
               :unit-content="productGetters.getUnitContent(product)"
               :unit-name="productGetters.getUnitName(product)"
-              :show-base-price="productGetters.showPricePerUnit(product)"
+              :show-base-price="shouldShowPricePerUnit(product)"
             />
           </NuxtLazyHydrate>
         </section>
@@ -84,6 +84,7 @@ import { productGetters, productImageGetters } from '@plentymarkets/shop-api';
 import { SfIconTune, useDisclosure, SfLink } from '@storefront-ui/vue';
 import type { CategoryPageContentProps } from '~/components/CategoryPageContent/types';
 import { paths } from '~/utils/paths';
+import { shouldShowPricePerUnit } from '~/utils/productHelper';
 
 const { title, totalProducts, itemsPerPage = 24, products = [] } = defineProps<CategoryPageContentProps>();
 
