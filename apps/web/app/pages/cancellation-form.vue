@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full p-5 overflow-x-auto no-preflight" v-html="getHTMLTexts()" />
+  
 
   <div
-    v-if="config.enableContractWithdrawalButton"
+   
     class="mx-auto my-8 w-full max-w-4xl rounded-md border border-neutral-200 bg-white p-8"
   >
     <h2 class="mb-6 text-2xl font-semibold text-neutral-900">
@@ -113,7 +113,7 @@ const config = useRuntimeConfig().public;
 const { data, getLegalTexts } = useLegalInformation();
 const { loading, submitCancellation, validationSchema, turnstileSiteKey } = useCancellationForm();
 const { getSetting: getCancellationEmail } = useSiteSettings('cancellationFormRecipient');
-const cancellationEmail = getCancellationEmail() ?? '';
+const cancellationEmail = 'vertrieb@nubuk-bikes.de';
 const turnstileElement = ref();
 const turnstileLoad = ref(false);
 const { send } = useNotification();

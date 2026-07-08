@@ -462,3 +462,6 @@ select:focus {
 .header-search-form #search-bar[data-testid='search-bar-input'] {
   border: 0 !important;
 }
+textarea.ring-1 {
+  border: 1px solid #ddd !important;
+}
