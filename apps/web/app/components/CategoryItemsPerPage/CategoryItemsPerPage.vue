@@ -84,3 +84,17 @@ const updateItemsPerPage = (itemsPerPage: number): void => {
   updateItemsPerPageFromComposable(itemsPerPage);
 };
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  .category-items-per-page--compact > div,
+  .category-items-per-page--compact :deep([data-testid='select']) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .category-items-per-page--compact :deep([data-testid='select']) {
+    margin-bottom: 5px;
+  }
+}
+</style>

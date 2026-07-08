@@ -27,7 +27,7 @@
             :is="buttonTag"
             v-if="hasButton"
             v-bind="buttonProps"
-            class="inline-flex items-center px-4 py-2 font-medium"
+            class="image-text-box__button inline-flex items-center px-4 py-2 font-medium"
             :style="buttonStyle"
           >
             {{ content.button.label }}
@@ -36,39 +36,50 @@
       </div>
     </div>
 
-    <div v-else-if="isInside" class="relative">
-      <div v-if="hasImage" class="w-full overflow-hidden bg-neutral-100">
-        <NuxtImg
-          v-if="content.image.mobile"
-          :src="content.image.mobile"
-          :alt="content.image.alt"
-          class="block md:hidden w-full h-auto"
-          width="640"
-          height="360"
-        />
-        <NuxtImg
-          :src="content.image.desktop || content.image.mobile"
-          :alt="content.image.alt"
-          class="hidden md:block w-full h-auto"
-          width="1280"
-          height="720"
-        />
-      </div>
-      <div class="absolute inset-0 p-10 flex" :class="insideAlignClasses">
-        <div class="image-text-box__text">
-          <div v-if="hasText" class="max-w-none" v-html="content.text.html" />
-          <component
-            :is="buttonTag"
-            v-if="hasButton"
-            v-bind="buttonProps"
-            class="inline-flex items-center px-4 py-2 font-medium"
-            :style="buttonStyle"
-          >
-            {{ content.button.label }}
-          </component>
+    <template v-else-if="isInside">
+      <div class="image-text-box__inside-layout relative">
+        <div v-if="hasImage" class="w-full overflow-hidden bg-neutral-100">
+          <NuxtImg
+            v-if="content.image.mobile"
+            :src="content.image.mobile"
+            :alt="content.image.alt"
+            class="block md:hidden w-full h-auto"
+            width="640"
+            height="360"
+          />
+          <NuxtImg
+            :src="content.image.desktop || content.image.mobile"
+            :alt="content.image.alt"
+            class="hidden md:block w-full h-auto"
+            width="1280"
+            height="720"
+          />
+        </div>
+        <div class="image-text-box__inside absolute inset-0 p-10 flex" :class="insideAlignClasses">
+          <div class="image-text-box__text">
+            <div v-if="hasText" class="max-w-none" v-html="content.text.html" />
+            <component
+              :is="buttonTag"
+              v-if="hasButton"
+              v-bind="buttonProps"
+              class="image-text-box__button image-text-box__button--inside inline-flex items-center px-4 py-2 font-medium"
+              :style="buttonStyle"
+            >
+              {{ content.button.label }}
+            </component>
+          </div>
         </div>
       </div>
-    </div>
+      <component
+        :is="buttonTag"
+        v-if="hasButton"
+        v-bind="buttonProps"
+        class="image-text-box__button image-text-box__button--mobile-bar items-center px-4 py-2 font-medium"
+        :style="buttonStyle"
+      >
+        {{ content.button.label }}
+      </component>
+    </template>
 
     <div v-else-if="isOverlay" class="relative pb-10">
       <div v-if="hasImage" class="w-full overflow-hidden bg-neutral-100">
@@ -95,7 +106,7 @@
             :is="buttonTag"
             v-if="hasButton"
             v-bind="buttonProps"
-            class="inline-flex items-center px-4 py-2 font-medium"
+            class="image-text-box__button inline-flex items-center px-4 py-2 font-medium"
             :style="buttonStyle"
           >
             {{ content.button.label }}
@@ -111,7 +122,7 @@
           :is="buttonTag"
           v-if="hasButton"
           v-bind="buttonProps"
-          class="inline-flex items-center px-4 py-2 font-medium"
+          class="image-text-box__button inline-flex items-center px-4 py-2 font-medium"
           :style="buttonStyle"
         >
           {{ content.button.label }}
@@ -142,7 +153,7 @@
           :is="buttonTag"
           v-if="hasButton"
           v-bind="buttonProps"
-          class="inline-flex items-center px-4 py-2 font-medium"
+          class="image-text-box__button inline-flex items-center px-4 py-2 font-medium"
           :style="buttonStyle"
         >
           {{ content.button.label }}
@@ -237,3 +248,64 @@ const insideAlignClasses = computed(() => {
   return classes;
 });
 </script>
+
+<style scoped>
+.image-text-box__button {
+  text-decoration: none;
+}
+
+.image-text-box__button::after {
+  margin-left: 10px;
+  font-family: 'Font Awesome 7 Free', 'Font Awesome 6 Free', FontAwesome;
+  font-weight: 900;
+  content: '\f061';
+}
+
+.image-text-box__button--mobile-bar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .image-text-box__inside {
+    position: absolute !important;
+    inset: 0 !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    padding: 0 !important;
+    text-align: left !important;
+  }
+
+  .image-text-box__button--inside {
+    display: none;
+  }
+
+  .image-text-box__button--mobile-bar {
+    display: flex;
+  }
+
+  .image-text-box__inside .image-text-box__text {
+    display: flex;
+    width: 100%;
+    min-height: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .image-text-box__inside .image-text-box__text > .max-w-none {
+    padding: 0 32px 24px;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 35%);
+  }
+
+  .image-text-box__button--mobile-bar {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+    padding: 10px 16px;
+    color: #000000 !important;
+    font-size: 16px;
+    line-height: 1.35;
+    text-align: center;
+  }
+}
+</style>

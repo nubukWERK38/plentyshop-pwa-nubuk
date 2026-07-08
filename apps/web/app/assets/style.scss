@@ -526,8 +526,16 @@ select:focus {
     justify-content: flex-start !important;
   }
 
+  [data-testid='multi-grid-column']:has([data-testid='category-sort-filter']),
+  [data-testid='multi-grid-structure'] .multi-grid__row:has([data-testid='category-sort-filter']),
+  [data-testid='block-wrapper']:has([data-testid='category-sort-filter']),
+  [data-testid='category-sort-filter'] {
+    position: relative !important;
+    z-index: 100000 !important;
+  }
+
   [data-testid='category-sidebar'] {
-    z-index: 99999 !important;
+    z-index: 100001 !important;
   }
 
   [data-testid='category-grid'] {
@@ -661,7 +669,7 @@ select:focus {
     display: none !important;
   }
 
-  [data-testid='multi-grid-structure'] [class*='absolute'].inset-0 {
+  [data-testid='multi-grid-structure'] [class*='absolute'].inset-0:not(.image-text-box__inside) {
     position: static !important;
     padding: 20px !important;
   }

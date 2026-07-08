@@ -438,6 +438,26 @@ const columns = computed<Block[][]>(() => {
     padding-left: 16px !important;
   }
 
+  .multi-grid__row--image-text-row {
+    display: block;
+    aspect-ratio: auto;
+  }
+
+  .multi-grid__row--image-text-row :deep(> *),
+  .multi-grid__row--image-text-row :deep(.h-full),
+  .multi-grid__row--image-text-row :deep(.block-wrapper),
+  .multi-grid__row--image-text-row :deep(.image-text-box),
+  .multi-grid__row--image-text-row :deep(.image-text-box > div),
+  .multi-grid__row--image-text-row :deep(.image-text-box [class*='overflow-hidden']) {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .multi-grid__row--image-text-row :deep(.image-text-box img) {
+    height: auto !important;
+    object-fit: contain;
+  }
+
   .multi-grid__row--image-teaser-2x2 {
     min-height: 230px;
   }
