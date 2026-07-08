@@ -280,36 +280,38 @@
     </div>
 
     <ClientOnly>
-      <UiModal
-        v-model="infoModalOpen"
-        aria-labelledby="purchase-card-info-modal-title"
-        tag="section"
-        role="dialog"
-        class="purchase-card__info-modal"
-        overlay-classes="purchase-card__info-modal-overlay"
-      >
-        <header class="purchase-card__info-modal-header">
-          <h2 id="purchase-card-info-modal-title" class="purchase-card__info-modal-title">{{ infoModalTitle }}</h2>
-          <UiButton
-            type="button"
-            variant="tertiary"
-            square
-            class="text-white hover:bg-white/10 active:bg-white/20"
-            :aria-label="t('common.navigation.closeDrawer')"
-            @click="closeInfoModal"
-          >
-            <SfIconClose />
-          </UiButton>
-        </header>
+      <Teleport to="body">
+        <UiModal
+          v-model="infoModalOpen"
+          aria-labelledby="purchase-card-info-modal-title"
+          tag="section"
+          role="dialog"
+          class="purchase-card__info-modal"
+          overlay-classes="purchase-card__info-modal-overlay"
+        >
+          <header class="purchase-card__info-modal-header">
+            <h2 id="purchase-card-info-modal-title" class="purchase-card__info-modal-title">{{ infoModalTitle }}</h2>
+            <UiButton
+              type="button"
+              variant="tertiary"
+              square
+              class="text-white hover:bg-white/10 active:bg-white/20"
+              :aria-label="t('common.navigation.closeDrawer')"
+              @click="closeInfoModal"
+            >
+              <SfIconClose />
+            </UiButton>
+          </header>
 
-        <div v-if="infoModalLoading" class="purchase-card__info-modal-loading">
-          <SfLoaderCircular size="lg" />
-        </div>
-        <div v-else-if="infoModalError" class="purchase-card__info-modal-error">
-          Inhalt konnte nicht geladen werden.
-        </div>
-        <div v-else class="purchase-card__info-modal-content no-preflight" v-html="infoModalContent" />
-      </UiModal>
+          <div v-if="infoModalLoading" class="purchase-card__info-modal-loading">
+            <SfLoaderCircular size="lg" />
+          </div>
+          <div v-else-if="infoModalError" class="purchase-card__info-modal-error">
+            Inhalt konnte nicht geladen werden.
+          </div>
+          <div v-else class="purchase-card__info-modal-content no-preflight" v-html="infoModalContent" />
+        </UiModal>
+      </Teleport>
     </ClientOnly>
   </form>
 </template>
@@ -1084,7 +1086,7 @@ const openProductQuestionTab = () => {
 }
 
 :global(.purchase-card__info-modal-overlay) {
-  z-index: 10000;
+  z-index: 2147483400 !important;
   background: rgb(29 44 54 / 54%);
 }
 
