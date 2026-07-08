@@ -1,5 +1,35 @@
 # Scripts
 
+## GoLive checks
+
+Production-oriented checks for local, staging, and live URLs.
+
+```bash
+npm run golive:check
+npm run golive:smoke
+npm run golive:load
+```
+
+Configuration:
+
+- `GOLIVE_BASE_URL`: target URL, default `http://localhost:3000`
+- `GOLIVE_PATHS`: comma-separated paths, default `/,/healthz,/manifest.webmanifest,/offline,/cart,/search`
+- `GOLIVE_TIMEOUT_MS`: request timeout, default `10000`
+- `GOLIVE_CONCURRENCY`: load-test concurrency, default `10`
+- `GOLIVE_DURATION_SECONDS`: load-test duration, default `60`
+- `GOLIVE_MAX_ERROR_RATE`: max 5xx/network error rate, default `0.005`
+- `GOLIVE_MAX_P95_MS`: max p95 latency for load test, default `2500`
+- `GOLIVE_CYPRESS=1`: include Cypress smoke in `golive:check`
+- `GOLIVE_LIGHTHOUSE=1`: include Lighthouse desktop/mobile in `golive:check`
+
+Examples:
+
+```bash
+GOLIVE_BASE_URL=https://staging.example.com npm run golive:smoke
+GOLIVE_BASE_URL=https://staging.example.com GOLIVE_PATHS="/,/search,/cart,/product/example_123" npm run golive:load
+GOLIVE_CYPRESS=1 GOLIVE_LIGHTHOUSE=1 npm run golive:check
+```
+
 ## `spawn-worktree.sh`
 
 Creates one or more Git worktrees under `../pwa-worktree/` (folder name = branch name with `/` replaced by `-`), then bootstraps each worktree:
