@@ -18,6 +18,7 @@ export default {
   passwordMaxLength: Number(process.env.PASSWORD_MAX_LENGTH ?? 64),
   robots: process.env.NUXT_PUBLIC_ROBOTS || 'all',
   contactShopEmail: process.env.NUXT_PUBLIC_CONTACT_SHOP_EMAIL,
+  cancellationFormRecipient: process.env.NUXT_PUBLIC_CANCELLATION_FORM_RECIPIENT || 'vertrieb@nubuk-bikes.de',
   robotsHomePage: process.env.NUXT_PUBLIC_ROBOTS_HOME_PAGE || 'all',
   robotsContactPage: process.env.NUXT_PUBLIC_ROBOTS_CONTACT_PAGE || 'all',
   robotsCancellationRights: process.env.NUXT_PUBLIC_ROBOTS_CANCELLATION_RIGHTS || 'all',
