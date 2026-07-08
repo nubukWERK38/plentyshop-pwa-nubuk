@@ -326,9 +326,9 @@ const getMobileCategoryTree = (tree: CategoryTreeItem[]) => {
   return hiddenRoot?.children ?? tree;
 };
 
-const setMobileMenuCategory = () => {
+function setMobileMenuCategory() {
   setCategory(getMobileCategoryTree(categoryTree.value));
-};
+}
 
 const generateCategoryLink = (category: CategoryTreeItem) => {
   return buildCategoryMenuLink(category, categoryTree.value);
