@@ -537,6 +537,13 @@
       "Status": "Status"
     },
     "marketing": {
+      "cookies": {
+        "googleTagManager": {
+          "name": "Google Tag Manager",
+          "provider": "Google LLC",
+          "status": "Integrates Google Tag Manager to control analytics and marketing scripts."
+        }
+      },
       "description": "Marketing cookies are used by third parties and publishers to display personalised advertisements by following users across websites.",
       "label": "Marketing"
     },

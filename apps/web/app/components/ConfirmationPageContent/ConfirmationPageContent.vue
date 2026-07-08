@@ -109,7 +109,16 @@ const { isAuthorized } = useCustomer();
 const { getActiveShippingCountries } = useActiveShippingCountries();
 const localePath = useLocalePath();
 const bankDetails = orderGetters.getOrderPaymentBankDetails(order);
+const gtmTracking = useGtmTracking();
 useProcessingOrder().processingOrder.value = false;
 
 await getActiveShippingCountries();
+
+onMounted(() => {
+  gtmTracking.trackPurchase(order);
+});
+
+watch(gtmTracking.consent, (consented) => {
+  if (consented) gtmTracking.trackPurchase(order);
+});
 </script>
