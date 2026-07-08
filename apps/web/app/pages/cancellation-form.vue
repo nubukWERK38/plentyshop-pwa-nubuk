@@ -1,10 +1,5 @@
 <template>
-  
-
-  <div
-    
-    class="mx-auto my-8 w-full max-w-4xl rounded-md border border-neutral-200 bg-white p-8"
-  >
+  <div class="t2 mx-auto my-8 w-full max-w-4xl rounded-md border border-neutral-200 bg-white p-8">
     <h2 class="mb-6 text-2xl font-semibold text-neutral-900">
       {{ t('legal.cancellationForm') }}
     </h2>
@@ -109,11 +104,10 @@ definePageMeta({
   pageType: 'static',
 });
 
-const config = useRuntimeConfig().public;
 const { data, getLegalTexts } = useLegalInformation();
 const { loading, submitCancellation, validationSchema, turnstileSiteKey } = useCancellationForm();
 const { getSetting: getCancellationEmail } = useSiteSettings('cancellationFormRecipient');
-const cancellationEmail = 'vertrieb@nubuk-bikes.de';
+const cancellationEmail = getCancellationEmail() ?? '';
 const turnstileElement = ref();
 const turnstileLoad = ref(false);
 const { send } = useNotification();
