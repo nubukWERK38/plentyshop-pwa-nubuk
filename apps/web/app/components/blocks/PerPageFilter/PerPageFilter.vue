@@ -35,8 +35,8 @@ const layoutStyle = computed(() => {
   [data-testid='category-per-page'] {
     width: 100% !important;
     justify-content: stretch !important;
-    padding-right: 16px !important;
-    padding-left: 16px !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
     pointer-events: auto !important;
   }
 

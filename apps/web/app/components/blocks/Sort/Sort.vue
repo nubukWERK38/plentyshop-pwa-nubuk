@@ -50,8 +50,8 @@ const layoutStyle = computed(() => {
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 0.75rem !important;
-    padding-right: 16px !important;
-    padding-left: 16px !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
   }
 
   [data-testid='category-total-products'] {

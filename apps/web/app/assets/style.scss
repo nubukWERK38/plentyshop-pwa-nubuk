@@ -484,8 +484,8 @@ select:focus {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box;
-    padding-right: 16px !important;
-    padding-left: 16px !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
   }
 
   [data-testid='category-sort'] {
@@ -527,7 +527,7 @@ select:focus {
   }
 
   [data-testid='category-sidebar'] {
-    z-index: 5000 !important;
+    z-index: 99999 !important;
   }
 
   [data-testid='category-grid'] {
@@ -655,6 +655,12 @@ select:focus {
     max-width: 100% !important;
   }
 
+  .multi-grid__row:has([data-testid='text-card'] a[href*='no-pogo']),
+  .multi-grid__row:has([data-testid='text-card'] img[src*='NoPogo']),
+  .multi-grid__row:has([data-testid='text-card'] img[src*='no-pogo']) {
+    display: none !important;
+  }
+
   [data-testid='multi-grid-structure'] [class*='absolute'].inset-0 {
     position: static !important;
     padding: 20px !important;
@@ -676,20 +682,21 @@ select:focus {
   .zipBox {
     width: 100% !important;
     max-width: 100% !important;
-    filter: none;
+    filter: drop-shadow(15px -15px 0 var(--ci-accent));
   }
 
-  .zipBox,
   .zipBox * {
     transform: none !important;
-    clip-path: none !important;
   }
 
   .zipBox > .widget-inner {
-    width: 100% !important;
-    margin: 12px 0 24px !important;
-    padding: 30px !important;
-    clip-path: none;
+    width: calc(100% + 45px) !important;
+    max-width: calc(100% + 45px) !important;
+    margin: 0 0 50px -15px !important;
+    padding: 60px 30px !important;
+    background: linear-gradient(90deg, var(--ci-dark), var(--ci-primary)) !important;
+    color: #ffffff !important;
+    clip-path: polygon(0% 7%, 100% 0%, 100% 93%, 0% 100%) !important;
   }
 
   .zipBox h1,

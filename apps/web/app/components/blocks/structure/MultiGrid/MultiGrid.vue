@@ -431,14 +431,87 @@ const columns = computed<Block[][]>(() => {
     padding-left: 16px !important;
   }
 
-  .multi-grid--usp-text {
+  .multi-grid--image-teaser-2x2,
+  .multi-grid--image-text-row {
+    gap: 16px !important;
     padding-right: 16px !important;
     padding-left: 16px !important;
   }
 
-  .multi-grid--image-teaser-2x2,
-  .multi-grid--image-text-row {
-    gap: 16px !important;
+  .multi-grid__row--image-teaser-2x2 {
+    min-height: 230px;
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box),
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box > div) {
+    position: relative;
+    width: 100%;
+    min-height: 230px;
+    overflow: hidden;
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box [class*='overflow-hidden']) {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    height: 100%;
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box [class*='overflow-hidden']::after) {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.1) 0%, rgb(0 0 0 / 0.6) 100%);
+    content: '';
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box img) {
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover;
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box .space-y-4) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    margin: 0 !important;
+    padding: 0 30px 48px;
+    color: #ffffff;
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box h1),
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box h2),
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box h3) {
+    margin: 0;
+    color: #ffffff !important;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.05;
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box p) {
+    margin: 0 0 0.55rem;
+    color: #ffffff !important;
+    font-size: 1rem;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box a),
+  .multi-grid__row--image-teaser-2x2 :deep(.image-text-box button) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    background: #c8ff00 !important;
+    color: #111827 !important;
+    font-size: 1rem;
+    font-weight: 500;
   }
 }
 </style>

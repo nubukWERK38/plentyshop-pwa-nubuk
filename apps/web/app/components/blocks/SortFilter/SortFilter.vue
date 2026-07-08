@@ -123,8 +123,8 @@ watch(
 @media (max-width: 767px) {
   [data-testid='category-sort-filter'] {
     width: 100%;
-    padding-right: 16px;
-    padding-left: 16px;
+    padding-right: 0;
+    padding-left: 0;
   }
 
   .sort-filter__mobile-toggle {
