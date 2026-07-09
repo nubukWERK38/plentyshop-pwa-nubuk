@@ -225,10 +225,15 @@ apple-pay-button {
     text-align: left;
 
     &::before {
-      font-family: 'Font Awesome 7 Free', 'Font Awesome 6 Free', 'FontAwesome';
-      font-weight: 900;
-      content: '\f00c';
-      margin-right: 10px;
+      display: inline-block;
+      width: 0.45em;
+      height: 0.8em;
+      margin-right: 14px;
+      border: solid var(--ci-accent);
+      border-width: 0 3px 3px 0;
+      content: '';
+      transform: rotate(45deg) translateY(-1px);
+      transform-origin: center;
       color: var(--ci-accent);
     }
   }
@@ -779,6 +784,5 @@ select:focus {
   }
 }
 textarea.ring-1 {
-  border: 1px solid #ddd!important;
-
+  border: 1px solid #ddd !important;
 }
