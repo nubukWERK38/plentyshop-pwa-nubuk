@@ -44,13 +44,7 @@ export default eventHandler(async (event) => {
   setHeader(event, 'cache-control', 'public, max-age=31536000, immutable');
 
   try {
-    const file = await readFile(filePath);
-
-    if (extension === '.css') {
-      return file.toString('utf8').replace(/@font-face\{/g, '@font-face{font-display:swap;');
-    }
-
-    return file;
+    return await readFile(filePath);
   } catch {
     throw createError({ statusCode: 404 });
   }

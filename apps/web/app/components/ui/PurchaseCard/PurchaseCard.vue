@@ -309,7 +309,7 @@
           <div v-else-if="infoModalError" class="purchase-card__info-modal-error">
             Inhalt konnte nicht geladen werden.
           </div>
-          <div v-else class="purchase-card__info-modal-content no-preflight" v-html="infoModalContent" />
+          <div v-else class="purchase-card__info-modal-content" v-html="infoModalContent" />
         </UiModal>
       </Teleport>
     </ClientOnly>
