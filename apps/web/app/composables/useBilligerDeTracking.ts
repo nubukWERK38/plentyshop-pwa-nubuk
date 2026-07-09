@@ -1,11 +1,12 @@
 import type { Order } from '@plentymarkets/shop-api';
 import {
   BILLIGER_DE_COOKIE_NAME,
+  createBilligerDeConversionUrl,
   createBilligerDePurchasePayload,
-  createBilligerDePurchaseUrl,
+  getSoluteLandingPageUrl,
   hasTrackedBilligerDePurchase,
-  loadBilligerDeTrackingPixel,
   markBilligerDePurchaseTracked,
+  sendBilligerDeTrackingRequest,
 } from '~/utils/billigerDeTracking';
 
 export const useBilligerDeTracking = () => {
@@ -15,13 +16,13 @@ export const useBilligerDeTracking = () => {
   const trackPurchase = (order: Order) => {
     if (!import.meta.client || !consent.value || !config.enableBilligerDeTracking) return false;
 
-    const payload = createBilligerDePurchasePayload(order);
+    const payload = createBilligerDePurchasePayload(order, String(config.billigerDeTrackingFactor || '1'));
     if (!payload || hasTrackedBilligerDePurchase(sessionStorage, payload.orderId)) return false;
 
-    const trackingUrl = createBilligerDePurchaseUrl(String(config.billigerDeTrackingUrl || ''), payload);
-    if (!trackingUrl) return false;
+    const landingPageUrl = getSoluteLandingPageUrl(localStorage);
+    if (!landingPageUrl) return false;
 
-    loadBilligerDeTrackingPixel(trackingUrl);
+    sendBilligerDeTrackingRequest(createBilligerDeConversionUrl(payload, landingPageUrl));
     markBilligerDePurchaseTracked(sessionStorage, payload.orderId);
     return true;
   };

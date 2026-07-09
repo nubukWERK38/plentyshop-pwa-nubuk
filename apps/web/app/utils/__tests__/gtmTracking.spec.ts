@@ -7,10 +7,14 @@ import {
 } from '../gtmTracking';
 import {
   BILLIGER_DE_PURCHASE_STORAGE_PREFIX,
+  SOLUTE_CLICK_STORAGE_KEY,
+  createBilligerDeConversionUrl,
+  createBilligerDeLandingUrl,
   createBilligerDePurchasePayload,
-  createBilligerDePurchaseUrl,
+  getSoluteLandingPageUrl,
   hasTrackedBilligerDePurchase,
   markBilligerDePurchaseTracked,
+  storeSoluteClick,
 } from '../billigerDeTracking';
 
 const createOrder = (): Order =>
@@ -206,24 +210,39 @@ describe('billigerDeTracking', () => {
     const payload = createBilligerDePurchasePayload(createOrder());
 
     expect(payload).toEqual({
-      orderId: '644506',
-      value: 4.95,
-      currency: 'EUR',
-      tax: 0.79,
-      shipping: 0,
+      orderId: 'NjQ0NTA2',
+      value: 4.16,
+      factor: '1',
     });
   });
 
-  it('creates a purchase url from the configured template', () => {
-    const payload = createBilligerDePurchasePayload(createOrder());
+  it('creates tracking urls for solute landing and conversion requests', () => {
+    const landingPageUrl = 'https://www.example.com/product?soluteclid=abc-123&gclid=xyz';
+    const payload = createBilligerDePurchasePayload(createOrder(), '0.5');
 
     expect(payload).not.toBeNull();
-    expect(
-      createBilligerDePurchaseUrl(
-        'https://tracking.example/pixel?oid={orderId}&amount={value}&currency={currency}&tax={tax}&shipping={shipping}',
-        payload!,
-      ),
-    ).toBe('https://tracking.example/pixel?oid=644506&amount=4.95&currency=EUR&tax=0.79&shipping=0.00');
+    expect(createBilligerDeLandingUrl(landingPageUrl)).toBe(
+      'https://cmodul.solutenetwork.com/landing?url=https%3A%2F%2Fwww.example.com%2Fproduct%3Fsoluteclid%3Dabc-123%26gclid%3Dxyz',
+    );
+    expect(createBilligerDeConversionUrl(payload!, landingPageUrl)).toBe(
+      'https://cmodul.solutenetwork.com/conversion?val=4.16&oid=NjQ0NTA2&factor=0.5&url=https%3A%2F%2Fwww.example.com%2Fproduct%3Fsoluteclid%3Dabc-123%26gclid%3Dxyz',
+    );
+  });
+
+  it('stores and expires the solute landing page url', () => {
+    const storage = new Map<string, string>();
+    const storageMock = {
+      getItem: (key: string) => storage.get(key) ?? null,
+      setItem: (key: string, value: string) => storage.set(key, value),
+      removeItem: (key: string) => storage.delete(key),
+    };
+
+    storeSoluteClick(storageMock, 'https://www.example.com/product?soluteclid=abc-123', 1000);
+
+    expect(storage.get(SOLUTE_CLICK_STORAGE_KEY)).toBe('1000 https://www.example.com/product?soluteclid=abc-123');
+    expect(getSoluteLandingPageUrl(storageMock, 1000)).toBe('https://www.example.com/product?soluteclid=abc-123');
+    expect(getSoluteLandingPageUrl(storageMock, 1000 + 1000 * 60 * 60 * 24 * 31)).toBeNull();
+    expect(storage.has(SOLUTE_CLICK_STORAGE_KEY)).toBe(false);
   });
 
   it('deduplicates purchase tracking by order id', () => {
