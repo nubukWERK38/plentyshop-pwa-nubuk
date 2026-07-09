@@ -234,11 +234,11 @@
                     class="purchase-card__paypal-buttons mt-4"
                     @validation-callback="paypalHandleAddToCart"
                   />
-                  <PayPalPayLaterBanner
+                  <!--<PayPalPayLaterBanner
                     placement="product"
                     location="itemPage"
                     :amount="priceWithProperties * quantitySelectorValue"
-                  />
+                  />-->
                 </template>
                 <div class="purchase-card__tax-note mt-4 typography-text-xs flex gap-1">
                   <span>{{ t('common.labels.asterisk') }}</span>
