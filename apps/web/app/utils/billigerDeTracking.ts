@@ -15,6 +15,11 @@ type BilligerDePurchasePayload = {
 };
 
 type SoluteClickStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
+type BilligerDeOrderTotals = {
+  itemSumNet?: unknown;
+  totalNet?: unknown;
+  shippingNet?: unknown;
+};
 
 const toNumber = (value: unknown, fallback = 0) => {
   const number = Number(value);
@@ -33,11 +38,8 @@ export const createBilligerDePurchasePayload = (order: Order, factor = '1'): Bil
 
   if (!orderId) return null;
 
-  const totals = orderGetters.getTotals(order);
-  const totalsRecord = totals as Record<string, unknown>;
-  const value = roundCurrency(
-    toNumber(totalsRecord.itemSumNet, toNumber(totalsRecord.totalNet) - toNumber(totalsRecord.shippingNet)),
-  );
+  const totals = orderGetters.getTotals(order) as unknown as BilligerDeOrderTotals;
+  const value = roundCurrency(toNumber(totals.itemSumNet, toNumber(totals.totalNet) - toNumber(totals.shippingNet)));
 
   return {
     orderId: createSoluteOrderId(String(orderId)),
