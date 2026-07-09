@@ -1,6 +1,7 @@
 import type { UseUrlPageMetaReturn, StaticPageMeta, CategoriesPageMeta, UseUrlPageMetaState } from './types';
 import type { Facet, FacetSearchCriteria } from '@plentymarkets/shop-api';
 import type { Locale } from '#i18n';
+import { removeTrackingParamsFromCanonicalUrl } from '~/utils/seo';
 
 /**
  * @description Composable managing canonical data, og:url and href alernates
@@ -68,7 +69,9 @@ export const useUrlPageMeta: UseUrlPageMetaReturn = () => {
     const { defaultLocale } = useI18n();
     const { getAvailableLocales } = useLocalization();
 
-    const canonicalUrl = `${runtimeConfig.public.domain}${localePath(route.fullPath)}`;
+    const canonicalUrl = removeTrackingParamsFromCanonicalUrl(
+      `${runtimeConfig.public.domain}${localePath(route.fullPath)}`,
+    );
 
     const alternateLocales = getAvailableLocales().map((locale: Locale) => {
       return {
@@ -116,10 +119,11 @@ export const useUrlPageMeta: UseUrlPageMetaReturn = () => {
     const localePath = useLocalePath();
     const runtimeConfig = useRuntimeConfig();
 
-    const canonicalLink =
+    const canonicalLink = removeTrackingParamsFromCanonicalUrl(
       canonicalOverride && canonicalOverride.trim() !== ''
         ? canonicalOverride
-        : `${runtimeConfig.public.domain}${localePath(route.fullPath, $i18n.locale.value)}`;
+        : `${runtimeConfig.public.domain}${localePath(route.fullPath, $i18n.locale.value)}`,
+    );
 
     useHead({
       link: [
