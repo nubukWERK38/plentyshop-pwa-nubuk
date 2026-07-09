@@ -8,6 +8,9 @@
         filter: banner.image?.brightness ? 'brightness(' + (banner.image?.brightness ?? 1) + ')' : '',
         height: getImageHeight(),
       }"
+      :width="imageDimensions.width"
+      :height="imageDimensions.height"
+      sizes="100vw"
       :loading="props.lazyLoading"
       :data-testid="'banner-image-' + meta.uuid"
     />
@@ -82,6 +85,23 @@ const getImageUrl = () => {
     }
   }
 };
+
+const imageDimensions = computed(() => {
+  switch (viewport.breakpoint.value) {
+    case '4xl': {
+      return { width: '1920', height: '1080' };
+    }
+    case 'lg': {
+      return { width: '1280', height: '720' };
+    }
+    case 'md': {
+      return { width: '1024', height: '576' };
+    }
+    default: {
+      return { width: '640', height: '360' };
+    }
+  }
+});
 
 const bannerContentClass = computed(() => {
   return isMobile.value ? 'p-4 md:p-6 rounded-lg w-full' : 'p-4 md:p-6 rounded-lg md:max-w-[50%] mx-5';

@@ -10,6 +10,7 @@
             class="block md:hidden w-full h-auto"
             width="640"
             height="360"
+            sizes="100vw md:50vw"
           />
           <NuxtImg
             :src="content.image.desktop || content.image.mobile"
@@ -17,6 +18,7 @@
             class="hidden md:block w-full h-auto"
             width="1280"
             height="720"
+            sizes="100vw md:50vw"
           />
         </div>
       </div>
@@ -46,6 +48,7 @@
             class="block md:hidden w-full h-auto"
             width="640"
             height="360"
+            sizes="100vw"
           />
           <NuxtImg
             :src="content.image.desktop || content.image.mobile"
@@ -53,6 +56,7 @@
             class="hidden md:block w-full h-auto"
             width="1280"
             height="720"
+            sizes="100vw"
           />
         </div>
         <div class="image-text-box__inside absolute inset-0 p-10 flex" :class="insideAlignClasses">
@@ -90,6 +94,7 @@
           class="block md:hidden w-full h-auto"
           width="640"
           height="360"
+          sizes="100vw"
         />
         <NuxtImg
           :src="content.image.desktop || content.image.mobile"
@@ -97,6 +102,7 @@
           class="hidden md:block w-full h-auto"
           width="1280"
           height="720"
+          sizes="100vw"
         />
       </div>
       <div class="relative z-10 -mt-10 mx-4 md:mx-8 bg-white p-4 md:p-6 shadow-md">
@@ -137,6 +143,7 @@
           class="block md:hidden w-full h-auto"
           width="640"
           height="360"
+          sizes="100vw"
         />
         <NuxtImg
           :src="content.image.desktop || content.image.mobile"
@@ -144,6 +151,7 @@
           class="hidden md:block w-full h-auto"
           width="1280"
           height="720"
+          sizes="100vw"
         />
       </div>
 

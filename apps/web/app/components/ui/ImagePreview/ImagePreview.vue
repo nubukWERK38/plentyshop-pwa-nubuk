@@ -21,7 +21,13 @@
     </div>
 
     <div class="flex-1 flex items-center justify-center p-4">
-      <img :src="props.image || undefined" alt="Preview" class="max-w-full max-h-[600px] object-contain rounded-md" />
+      <img
+        :src="props.image || undefined"
+        alt="Preview"
+        :width="meta.width || 640"
+        :height="meta.height || 360"
+        class="max-w-full max-h-[600px] object-contain rounded-md"
+      />
     </div>
   </div>
 </template>

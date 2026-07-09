@@ -54,6 +54,9 @@
             width: '100%',
             height: '100%',
           }"
+          width="1536"
+          height="380"
+          sizes="100vw"
           :loading="'lazy'"
           :data-testid="'category-data-image-' + meta.uuid"
         />

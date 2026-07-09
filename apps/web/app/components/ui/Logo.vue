@@ -36,8 +36,8 @@ const storeName = runtimeConfig.public.storename;
 
 const imageExtension = computed(() => headerLogo.value.split('.').pop());
 const logo = ref<HTMLImageElement | null>(null);
-const imgWidth = ref<string>('');
-const imgHeight = ref<string>('');
+const imgWidth = ref<string>('150');
+const imgHeight = ref<string>('40');
 onMounted(() => {
   if (logo.value) {
     imgWidth.value = logo.value.clientWidth + '';

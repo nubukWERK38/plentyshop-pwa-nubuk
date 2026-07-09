@@ -31,6 +31,6 @@ export const appConfiguration = {
       { property: 'og:title', content: openGraph.title },
       { property: 'og:url', content: process.env.API_ENDPOINT },
     ],
-    link: [],
+    link: [{ rel: 'stylesheet', href: '/fontawesome/css/all.min.css' }],
   },
 };
