@@ -732,6 +732,8 @@ const openProductQuestionTab = () => {
 </script>
 
 <style scoped>
+
+
 .purchase-card {
   color: #071625;
   box-shadow: none;
@@ -1243,5 +1245,6 @@ const openProductQuestionTab = () => {
   .purchase-card__paypal-buttons :deep(*) {
     max-width: 100%;
   }
+  
 }
 </style>

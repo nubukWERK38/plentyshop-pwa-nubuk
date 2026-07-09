@@ -5,6 +5,13 @@ import {
   markPurchaseTracked,
   PURCHASE_STORAGE_PREFIX,
 } from '../gtmTracking';
+import {
+  BILLIGER_DE_PURCHASE_STORAGE_PREFIX,
+  createBilligerDePurchasePayload,
+  createBilligerDePurchaseUrl,
+  hasTrackedBilligerDePurchase,
+  markBilligerDePurchaseTracked,
+} from '../billigerDeTracking';
 
 const createOrder = (): Order =>
   ({
@@ -191,5 +198,46 @@ describe('gtmTracking', () => {
 
     expect(storage.get(`${PURCHASE_STORAGE_PREFIX}644506`)).toBe('1');
     expect(hasTrackedPurchase(sessionStorageMock, '644506')).toBe(true);
+  });
+});
+
+describe('billigerDeTracking', () => {
+  it('creates a purchase payload from an order', () => {
+    const payload = createBilligerDePurchasePayload(createOrder());
+
+    expect(payload).toEqual({
+      orderId: '644506',
+      value: 4.95,
+      currency: 'EUR',
+      tax: 0.79,
+      shipping: 0,
+    });
+  });
+
+  it('creates a purchase url from the configured template', () => {
+    const payload = createBilligerDePurchasePayload(createOrder());
+
+    expect(payload).not.toBeNull();
+    expect(
+      createBilligerDePurchaseUrl(
+        'https://tracking.example/pixel?oid={orderId}&amount={value}&currency={currency}&tax={tax}&shipping={shipping}',
+        payload!,
+      ),
+    ).toBe('https://tracking.example/pixel?oid=644506&amount=4.95&currency=EUR&tax=0.79&shipping=0.00');
+  });
+
+  it('deduplicates purchase tracking by order id', () => {
+    const storage = new Map<string, string>();
+    const sessionStorageMock = {
+      getItem: (key: string) => storage.get(key) ?? null,
+      setItem: (key: string, value: string) => storage.set(key, value),
+    };
+
+    expect(hasTrackedBilligerDePurchase(sessionStorageMock, '644506')).toBe(false);
+
+    markBilligerDePurchaseTracked(sessionStorageMock, '644506');
+
+    expect(storage.get(`${BILLIGER_DE_PURCHASE_STORAGE_PREFIX}644506`)).toBe('1');
+    expect(hasTrackedBilligerDePurchase(sessionStorageMock, '644506')).toBe(true);
   });
 });

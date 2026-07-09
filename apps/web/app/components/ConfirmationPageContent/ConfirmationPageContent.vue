@@ -110,15 +110,21 @@ const { getActiveShippingCountries } = useActiveShippingCountries();
 const localePath = useLocalePath();
 const bankDetails = orderGetters.getOrderPaymentBankDetails(order);
 const gtmTracking = useGtmTracking();
+const billigerDeTracking = useBilligerDeTracking();
 useProcessingOrder().processingOrder.value = false;
 
 await getActiveShippingCountries();
 
 onMounted(() => {
   gtmTracking.trackPurchase(order);
+  billigerDeTracking.trackPurchase(order);
 });
 
 watch(gtmTracking.consent, (consented) => {
   if (consented) gtmTracking.trackPurchase(order);
+});
+
+watch(billigerDeTracking.consent, (consented) => {
+  if (consented) billigerDeTracking.trackPurchase(order);
 });
 </script>

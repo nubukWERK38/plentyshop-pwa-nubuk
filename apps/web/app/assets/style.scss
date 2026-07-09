@@ -202,7 +202,7 @@ apple-pay-button {
   background: var(--ci-primary);
   background: linear-gradient(90deg, var(--ci-dark), var(--ci-primary));
   color: #fff;
-  padding: 60px 120px !important;
+  padding: 60px 120px;
   clip-path: polygon(10% 5%, 100% 0%, 90% 95%, 0% 100%);
   position: relative;
   margin-bottom: 170px;
@@ -817,4 +817,14 @@ select:focus {
 }
 textarea.ring-1 {
   border: 1px solid #ddd !important;
+}
+
+.purchase-card__info-modal-content h1 {
+  font-size: 30px
+  }
+  .purchase-card__info-modal-content .col-span-3 {
+    grid-column: span 6 /span 6;
+    border-bottom:1px solid #ccc;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
 }

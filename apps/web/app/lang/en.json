@@ -542,6 +542,11 @@
           "name": "Google Tag Manager",
           "provider": "Google LLC",
           "status": "Integrates Google Tag Manager to control analytics and marketing scripts."
+        },
+        "billigerDe": {
+          "name": "billiger.de Conversion Tracking",
+          "provider": "solute GmbH",
+          "status": "Tracks completed orders for billiger.de conversion tracking."
         }
       },
       "description": "Marketing cookies are used by third parties and publishers to display personalised advertisements by following users across websites.",

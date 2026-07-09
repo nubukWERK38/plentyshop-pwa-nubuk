@@ -72,6 +72,8 @@ export default {
   enableGtm: process.env.NUXT_PUBLIC_ENABLE_GTM !== 'false',
   gtmId: process.env.NUXT_PUBLIC_GTM_ID || 'GTM-PNQ9JRTG',
   googleAdsId: process.env.NUXT_PUBLIC_GOOGLE_ADS_ID || 'AW-990164997',
+  enableBilligerDeTracking: process.env.NUXT_PUBLIC_ENABLE_BILLIGER_DE_TRACKING === 'true',
+  billigerDeTrackingUrl: process.env.NUXT_PUBLIC_BILLIGER_DE_TRACKING_URL || '',
   sortingDynamicInherit: process.env.NUXT_PUBLIC_SORTING_DINAMIC_INHERIT || '[]',
   sortingDynamicPrio1: process.env.NUXT_PUBLIC_SORTING_DYNAMIC_PRIO1 || 'filter.prices.price_asc',
   sortingDynamicPrio2: process.env.NUXT_PUBLIC_SORTING_DYNAMIC_PRIO2 || 'filter.prices.price_asc',
