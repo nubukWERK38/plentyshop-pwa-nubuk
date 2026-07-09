@@ -244,33 +244,89 @@ apple-pay-button {
 }
 .footer-block p:has(.fa) {
   display: flex;
-  gap: 0 5px;
+  align-items: center;
+  gap: 0 10px;
+}
+
+.footer-block p:has(.fa-map-marker),
+.footer-block p:has(.fa-map-marker-alt),
+.footer-block p:has(.fa-location-dot) {
+  align-items: flex-start;
 }
 
 .footer-block .fa {
+  display: inline-flex;
+  flex: 0 0 14px;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 1em;
+  margin-right: 5px;
   color: var(--ci-accent);
+  line-height: 1;
 }
 
 .footer-block .fa::before,
 .no-preflight .fa::before {
-  display: inline-block;
+  display: block;
 }
 
 .footer-block .fa-envelope::before,
 .no-preflight .fa-envelope::before {
-  content: '\2709';
+  width: 14px;
+  height: 14px;
+  background-color: var(--ci-accent);
+  content: '';
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M3 5h18c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1H3c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1Zm9 8.2L4.8 7H4v.8l8 6.9 8-6.9V7h-.8L12 13.2Z'/%3E%3C/svg%3E");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M3 5h18c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1H3c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1Zm9 8.2L4.8 7H4v.8l8 6.9 8-6.9V7h-.8L12 13.2Z'/%3E%3C/svg%3E");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
 }
 
 .footer-block .fa-phone::before,
 .no-preflight .fa-phone::before {
-  content: '\260E';
+  width: 14px;
+  height: 14px;
+  background-color: var(--ci-accent);
+  content: '';
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.31-.31.76-.41 1.16-.28 1.27.42 2.64.65 4.03.65.63 0 1.13.5 1.13 1.13V20c0 .63-.5 1.13-1.13 1.13C10.83 21.13 2.87 13.17 2.87 3.4c0-.63.5-1.13 1.13-1.13h3.33c.63 0 1.13.5 1.13 1.13 0 1.39.23 2.76.65 4.03.12.4.03.85-.29 1.16l-2.2 2.2Z'/%3E%3C/svg%3E");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.31-.31.76-.41 1.16-.28 1.27.42 2.64.65 4.03.65.63 0 1.13.5 1.13 1.13V20c0 .63-.5 1.13-1.13 1.13C10.83 21.13 2.87 13.17 2.87 3.4c0-.63.5-1.13 1.13-1.13h3.33c.63 0 1.13.5 1.13 1.13 0 1.39.23 2.76.65 4.03.12.4.03.85-.29 1.16l-2.2 2.2Z'/%3E%3C/svg%3E");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
 }
 
+.footer-block .fa-map-marker::before,
 .footer-block .fa-map-marker-alt::before,
 .footer-block .fa-location-dot::before,
+.no-preflight .fa-map-marker::before,
 .no-preflight .fa-map-marker-alt::before,
 .no-preflight .fa-location-dot::before {
-  content: '\25CF';
+  width: 14px;
+  height: 14px;
+  background-color: var(--ci-accent);
+  content: '';
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z'/%3E%3C/svg%3E");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z'/%3E%3C/svg%3E");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.footer-block .fa-map-marker,
+.footer-block .fa-map-marker-alt,
+.footer-block .fa-location-dot {
+  margin-top: 3px;
 }
 
 .no-preflight .fa-tree::before,
@@ -820,11 +876,11 @@ textarea.ring-1 {
 }
 
 .purchase-card__info-modal-content h1 {
-  font-size: 30px
-  }
-  .purchase-card__info-modal-content .col-span-3 {
-    grid-column: span 6 /span 6;
-    border-bottom:1px solid #ccc;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+  font-size: 30px;
+}
+.purchase-card__info-modal-content .col-span-3 {
+  grid-column: span 6 / span 6;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
 }
