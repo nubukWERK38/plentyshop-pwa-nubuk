@@ -4,7 +4,7 @@
       <NuxtImg
         class="w-full h-auto border rounded-md border-neutral-200"
         :src="product.gallery?.[0]?.url ?? ''"
-        :alt="product.gallery?.[0]?.alt ?? product.attributes?.[0]?.name ?? ''"
+        :alt="product.gallery?.[0]?.alt?.trim() || getProductImageFallbackAlt(product.name, 0)"
         width="100"
         height="100"
         loading="lazy"
@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import type { ProductHorizontalProps } from '~/components/ui/ProductCardHorizontal/types';
+import { getProductImageFallbackAlt } from '~/utils/productImageAlt';
 
 defineProps<ProductHorizontalProps>();
 </script>

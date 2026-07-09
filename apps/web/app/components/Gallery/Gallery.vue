@@ -26,6 +26,7 @@
             :index="index"
             :active-index="activeIndex"
             :is-first-image="index === 0"
+            :product-name="productName"
             :disable-zoom="shouldEnableEditorFeatures || configuration.thumbnails.enableHoverZoom === false"
             class="cursor-zoom-in"
             @click="openLightbox(index)"
@@ -58,7 +59,7 @@
             @click="slideTo(index)"
           >
             <NuxtImg
-              :alt="productImageGetters.getImageAlternate(image) || productImageGetters.getCleanImageName(image) || ''"
+              :alt="getImageAlt(image, index)"
               :title="productImageGetters.getImageName(image) ? productImageGetters.getImageName(image) : null"
               class="rounded h-full w-full object-contain"
               :class="activeIndex === index ? 'border-primary-500' : ''"
@@ -161,7 +162,7 @@
               :key="`lightbox-${lightboxIndex}`"
               class="product-lightbox__image"
               :style="{ transform: `scale(${zoomLevel})` }"
-              :alt="getImageAlt(lightboxImage)"
+              :alt="getImageAlt(lightboxImage, lightboxIndex)"
               :title="getImageTitle(lightboxImage) || null"
               :src="getImageSrc(lightboxImage)"
               :width="productImageGetters.getImageWidth(lightboxImage) || undefined"
@@ -198,7 +199,7 @@
           >
             <NuxtImg
               class="product-lightbox__thumb-image"
-              :alt="getImageAlt(image)"
+              :alt="getImageAlt(image, index)"
               :src="productImageGetters.getImageUrlPreview(image) || getImageSrc(image)"
               :width="productImageGetters.getImageWidth(image) || 96"
               :height="productImageGetters.getImageHeight(image) || 96"
@@ -220,6 +221,7 @@ import { SfIconAdd, SfIconChevronLeft, SfIconChevronRight, SfIconClose, SfIconRe
 import { productImageGetters } from '@plentymarkets/shop-api';
 import type { ImagesData } from '@plentymarkets/shop-api';
 import type { GalleryProps } from '~/components/Gallery/types';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const props = withDefaults(defineProps<GalleryProps>(), {
   configuration: () => ({
@@ -238,6 +240,7 @@ const { shouldEnableEditorFeatures } = useEditorState();
 
 const configuration = computed(() => props.configuration);
 const { images } = toRefs(props);
+const productName = computed(() => props.productName ?? '');
 const activeIndex = ref(0);
 const isLightboxOpen = ref(false);
 const lightboxIndex = ref(0);
@@ -337,8 +340,7 @@ const getImageSrc = (image: ImagesData) =>
   productImageGetters.getImageUrlPreview(image) ||
   '';
 
-const getImageAlt = (image: ImagesData) =>
-  productImageGetters.getImageAlternate(image) || productImageGetters.getCleanImageName(image) || '';
+const getImageAlt = (image: ImagesData, index: number) => getProductImageAlt(image, productName.value, index);
 
 const getImageTitle = (image: ImagesData) =>
   productImageGetters.getImageName(image) || productImageGetters.getCleanImageName(image) || '';

@@ -69,7 +69,7 @@
               v-if="canLoadHoverImage && effectiveHoverImageUrl"
               ref="hoverImageRef"
               :src="effectiveHoverImageUrl"
-              :alt="imageAlt"
+              :alt="hoverImageAlt"
               :title="hoverImageTitle || null"
               :loading="lazy === false ? 'eager' : 'lazy'"
               fetchpriority="auto"
@@ -159,6 +159,7 @@ import { defaults } from '~/composables';
 import type { ItemGridContent } from '~/components/blocks/ItemGrid/types';
 import { buildProductLinkTitle } from '~/utils/seo';
 import { shouldShowPricePerUnit } from '~/utils/productHelper';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const props = withDefaults(defineProps<ProductCardProps>(), {
   configuration: () => ({
@@ -200,9 +201,8 @@ const { format } = usePriceFormatter();
 const { price, crossedPrice } = useProductPrice(product);
 const config = useRuntimeConfig();
 const useTagsOnCategoryPage = config.public.useTagsOnCategoryPage;
-const name = computed(
-  () => productGetters.getName(product.value) + productGetters.getGroupedAttributesString(product.value),
-);
+const productName = computed(() => productGetters.getName(product.value) || '');
+const name = computed(() => productName.value + productGetters.getGroupedAttributesString(product.value));
 const manufacturer = computed(() => {
   try {
     return productGetters.getManufacturer(product.value);
@@ -249,9 +249,8 @@ const effectiveHoverImageUrl = computed(() => {
   return src || '';
 });
 
-const imageAlt = computed(() =>
-  coverImage.value ? productImageGetters.getImageAlternate(coverImage.value) || name.value || '' : name.value || '',
-);
+const imageAlt = computed(() => getProductImageAlt(coverImage.value, productName.value, 0));
+const hoverImageAlt = computed(() => getProductImageAlt(secondCoverImage.value, productName.value, 1));
 const imageTitle = computed(() =>
   coverImage.value ? productImageGetters.getImageName(coverImage.value) || imageAlt.value : imageAlt.value,
 );

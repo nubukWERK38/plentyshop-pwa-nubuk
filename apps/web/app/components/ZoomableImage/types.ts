@@ -7,4 +7,5 @@ export type ZoomableImageProps = {
   activeIndex: number;
   isFirstImage: boolean;
   disableZoom?: boolean;
+  productName?: string;
 };

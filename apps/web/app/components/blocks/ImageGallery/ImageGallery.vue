@@ -9,7 +9,7 @@
       </h2>
     </header>
 
-    <Gallery :images="galleryImages" :configuration="normalizedContent" />
+    <Gallery :images="galleryImages" :configuration="normalizedContent" :product-name="productName" />
   </section>
 </template>
 
@@ -33,6 +33,8 @@ const galleryImages = computed(() => {
     return [];
   }
 });
+
+const productName = computed(() => (currentProduct.value ? productGetters.getName(currentProduct.value) : ''));
 
 const ensureSpacing = (spacing?: BoxSpacing) => ({
   top: spacing?.top ?? 0,

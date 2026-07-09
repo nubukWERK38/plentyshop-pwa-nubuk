@@ -10,7 +10,7 @@
           <NuxtImg
             ref="img"
             :src="getImageSource(variationId.toString())"
-            :alt="offerGetters.getOfferItemVariationName(variation)"
+            :alt="getProductImageAlt(null, offerGetters.getOfferItemVariationName(variation), key)"
             width="300"
             height="300"
             loading="lazy"
@@ -47,6 +47,7 @@
 import { SfLink } from '@storefront-ui/vue';
 import type { OfferProductCardProps } from './types';
 import { offerGetters } from '@plentymarkets/shop-api';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const props = defineProps<OfferProductCardProps>();
 const NuxtLink = resolveComponent('NuxtLink');
