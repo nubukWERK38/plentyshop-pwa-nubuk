@@ -55,25 +55,25 @@
               <ul class="purchase-card__more-infos">
                 <li>
                   <button type="button" title="Wie läuft eine Retoure ab?" @click="openInfoModal('return')">
-                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
                     Wie läuft eine Retoure ab?
                   </button>
                 </li>
                 <li>
                   <button type="button" title="Fragen zum Produkt?" @click="openProductQuestionTab">
-                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
                     Fragen zum Produkt?
                   </button>
                 </li>
                 <li>
                   <button type="button" title="Mit Bike-Leasing bis zu 40% sparen" @click="openInfoModal('leasing')">
-                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
                     Mit Bike-Leasing bis zu 40% sparen
                   </button>
                 </li>
                 <li>
                   <button type="button" title="Herstellerangaben" @click="openManufacturerDetails">
-                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
                     Herstellerangaben
                   </button>
                 </li>
@@ -333,6 +333,7 @@ import {
   SfLink,
   SfIconExpandMore,
   SfIconClose,
+  SfIconChevronRight,
 } from '@storefront-ui/vue';
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';

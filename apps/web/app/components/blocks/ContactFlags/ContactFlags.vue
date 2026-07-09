@@ -3,7 +3,7 @@
     <div v-if="showFlags" id="flags" class="contact-flags" :style="flagsStyle">
       <div v-for="flag in visibleFlags" :key="`${flag.label}-${flag.link}`" class="contact-flags__item">
         <a class="contact-flags__link" :href="flag.link" :style="linkStyle">
-          <i v-if="flag.icon" class="fa contact-flags__icon" :class="flag.icon" aria-hidden="true" />
+          <FontAwesomeIcon v-if="resolveIcon(flag.icon)" class="contact-flags__icon" :icon="resolveIcon(flag.icon)" />
           <span>{{ flag.label }}</span>
         </a>
       </div>
@@ -13,6 +13,8 @@
 
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faArrowRotateLeft, faEnvelope, faTruck } from '@fortawesome/free-solid-svg-icons';
 import type { ContactFlagsContent, ContactFlagsProps } from './types';
 import { createDefaultContactFlagsContent } from './defaults';
 
@@ -49,6 +51,20 @@ const linkStyle = computed<CSSProperties>(() => ({
   color: content.value.textColor || '#ffffff',
   '--contact-flags-icon-color': content.value.iconColor || '#ccff00',
 }));
+
+const contactFlagIcons: Record<string, IconDefinition> = {
+  envelope: faEnvelope,
+  'fa-envelope': faEnvelope,
+  undo: faArrowRotateLeft,
+  'fa-undo': faArrowRotateLeft,
+  truck: faTruck,
+  'fa-truck': faTruck,
+};
+
+const resolveIcon = (icon?: string) => {
+  const normalizedIcon = icon?.trim().replace(/^fa\s+/, '');
+  return normalizedIcon ? contactFlagIcons[normalizedIcon] : null;
+};
 </script>
 
 <style scoped>

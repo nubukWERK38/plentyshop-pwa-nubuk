@@ -250,6 +250,39 @@ apple-pay-button {
 .footer-block .fa {
   color: var(--ci-accent);
 }
+
+.footer-block .fa::before,
+.no-preflight .fa::before {
+  display: inline-block;
+}
+
+.footer-block .fa-envelope::before,
+.no-preflight .fa-envelope::before {
+  content: '\2709';
+}
+
+.footer-block .fa-phone::before,
+.no-preflight .fa-phone::before {
+  content: '\260E';
+}
+
+.footer-block .fa-map-marker-alt::before,
+.footer-block .fa-location-dot::before,
+.no-preflight .fa-map-marker-alt::before,
+.no-preflight .fa-location-dot::before {
+  content: '\25CF';
+}
+
+.no-preflight .fa-tree::before,
+.no-preflight .fa-heart::before,
+.no-preflight .fa-flask::before {
+  content: '\25CF';
+}
+
+.footer-block .fa-angle-right::before,
+.no-preflight .fa-angle-right::before {
+  content: '\203A';
+}
 .footer-block__html a {
   color: #fff;
   text-decoration: none;
@@ -279,8 +312,7 @@ apple-pay-button {
   font-size: 35px !important;
 }
 .image-text-box__text a::after {
-  content: '\f061';
-  font-family: FontAwesome;
+  content: '\2192';
   margin-left: 10px;
 }
 h1,

@@ -264,9 +264,7 @@ const insideAlignClasses = computed(() => {
 
 .image-text-box__button::after {
   margin-left: 10px;
-  font-family: 'Font Awesome 7 Free', 'Font Awesome 6 Free', FontAwesome;
-  font-weight: 900;
-  content: '\f061';
+  content: '\2192';
 }
 
 .image-text-box__button--mobile-bar {
