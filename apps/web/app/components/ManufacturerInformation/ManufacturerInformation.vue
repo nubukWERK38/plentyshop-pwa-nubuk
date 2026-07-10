@@ -25,9 +25,9 @@
       <p v-if="manufacturerInfo.email">{{ t('common.labels.email') }}: {{ manufacturerInfo.email }}</p>
       <p v-if="manufacturerInfo.contactUrl">{{ t('manufacturer.contactUrl') }}: {{ manufacturerInfo.contactUrl }}</p>
       <p v-if="manufacturerInfo.url">
-        <NuxtLink :to="manufacturerInfo.url" target="_blank"
-          >{{ t('manufacturer.homepage') }}: {{ manufacturerInfo.url }}</NuxtLink
-        >
+        <a :href="normalizedManufacturerUrl" target="_blank" rel="noopener noreferrer">
+          {{ t('manufacturer.homepage') }}: {{ manufacturerInfo.url }}
+        </a>
       </p>
     </div>
   </div>
@@ -96,6 +96,17 @@ const manufacturerInfo = computed(() => {
     url: manufacturerGetters.getManufacturerUrl(manufacturer.value),
   };
 });
+
+const normalizeExternalUrl = (url: string) => {
+  const trimmedUrl = url.trim();
+  if (/^https?:\/\//i.test(trimmedUrl)) return trimmedUrl;
+  if (/^\/\//.test(trimmedUrl)) return `https:${trimmedUrl}`;
+  return `https://${trimmedUrl}`;
+};
+
+const normalizedManufacturerUrl = computed(() =>
+  manufacturerInfo.value.url ? normalizeExternalUrl(manufacturerInfo.value.url) : '',
+);
 
 const hasAnyInfo = computed(() => {
   const info = manufacturerInfo.value;
