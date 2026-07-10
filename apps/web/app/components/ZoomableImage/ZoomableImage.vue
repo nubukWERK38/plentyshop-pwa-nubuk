@@ -52,6 +52,7 @@ import { productImageGetters } from '@plentymarkets/shop-api';
 import { SfLoaderCircular } from '@storefront-ui/vue';
 import type { ImagesData } from '@plentymarkets/shop-api';
 import type { ZoomableImageProps } from '~/components/ZoomableImage/types';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const props = defineProps<ZoomableImageProps>();
 
@@ -71,8 +72,7 @@ const isMobile = computed(() => viewport.isLessThan('lg'));
 const showZoomHint = ref(false);
 
 const imageUrl = productImageGetters.getImageUrl(image.value);
-const imageAlt =
-  productImageGetters.getImageAlternate(image.value) || productImageGetters.getCleanImageName(image.value) || '';
+const imageAlt = getProductImageAlt(image.value, props.productName, index.value);
 const imageTitle =
   productImageGetters.getImageName(image.value) || productImageGetters.getCleanImageName(image.value) || '';
 

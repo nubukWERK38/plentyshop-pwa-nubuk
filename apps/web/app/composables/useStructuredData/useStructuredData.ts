@@ -8,7 +8,13 @@ import type {
 } from './types';
 import { productGetters, reviewGetters, productSeoSettingsGetters, productImageGetters } from '@plentymarkets/shop-api';
 import type { Product, CanonicalAlternate } from '@plentymarkets/shop-api';
-import { SEO_SITE_NAME, getSiteOrigin, stripHtmlForSeo, toAbsoluteUrl } from '~/utils/seo';
+import {
+  SEO_SITE_NAME,
+  getSiteOrigin,
+  removeTrackingParamsFromCanonicalUrl,
+  stripHtmlForSeo,
+  toAbsoluteUrl,
+} from '~/utils/seo';
 
 /**
  * @description Composable managing meta data
@@ -243,7 +249,7 @@ export const useStructuredData: useStructuredDataReturn = () => {
     const canonical = productSeoSettingsGetters.getCanonical(product);
 
     if (canonical) {
-      const canonicalUrl = productSeoSettingsGetters.getCanonicalHref(canonical);
+      const canonicalUrl = removeTrackingParamsFromCanonicalUrl(productSeoSettingsGetters.getCanonicalHref(canonical));
       useHead({
         link: [{ rel: 'canonical', href: canonicalUrl }],
       });

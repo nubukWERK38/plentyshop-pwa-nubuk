@@ -67,7 +67,7 @@
       </template>
     </CategorySidebar>
 
-    <UiButton variant="tertiary" class="md:hidden whitespace-nowrap" @click="open">
+    <UiButton variant="tertiary" class="sort-filter__mobile-toggle md:hidden whitespace-nowrap" @click="open">
       <template #prefix>
         <SfIconTune />
       </template>
@@ -118,6 +118,21 @@ watch(
   { deep: true, immediate: true },
 );
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  [data-testid='category-sort-filter'] {
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .sort-filter__mobile-toggle {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+</style>
 
 <i18n lang="json">
 {

@@ -1,5 +1,9 @@
 <template>
-  <section class="thumb-slider-neo w-full" :style="wrapperStyle" data-testid="thumb-slider-neo">
+  <section
+    :class="['thumb-slider-neo w-full', { 'thumb-slider-neo--editor': shouldEnableEditorFeatures }]"
+    :style="wrapperStyle"
+    data-testid="thumb-slider-neo"
+  >
     <div class="thumb-slider-neo__inner">
       <header v-if="headerVisible" class="thumb-slider-neo__header" :style="headerStyle">
         <p v-if="contentHeader.subline" class="thumb-slider-neo__subline" :style="sublineStyle">
@@ -105,6 +109,7 @@ const props = defineProps<ThumbSliderNeoProps>();
 
 const localePath = useLocalePath();
 const NuxtLink = resolveComponent('NuxtLink');
+const { shouldEnableEditorFeatures } = useEditorState();
 const sliderId = computed(() => (props.meta?.uuid || 'thumb-slider-neo').replace(/[^a-zA-Z0-9_-]/g, ''));
 const isTopBlock = computed(() => props.index === 0);
 const isPriorityImage = (index: number) => isTopBlock.value && index === 0;
@@ -152,7 +157,7 @@ const controls = computed(() => {
     slidesPerViewMobile: raw.slidesPerViewMobile ?? 2,
     slidesPerGroup: raw.slidesPerGroup ?? 1,
     tileGap: raw.tileGap ?? 8,
-    tileSkew: raw.tileSkew ?? -8,
+    tileSkew: raw.tileSkew ?? -30,
     tileBackgroundColor: raw.tileBackgroundColor ?? '#111827',
     tileTextColor: raw.tileTextColor ?? '#ffffff',
     tileTextAlign: raw.tileTextAlign ?? 'left',
@@ -247,7 +252,7 @@ const autoplayConfig = computed(() => {
 const breakpoints = computed(() => ({
   0: {
     slidesPerView: mobileSlidesPerView.value,
-    spaceBetween: controls.value.tileGap,
+    spaceBetween: 0,
   },
   768: {
     slidesPerView: desktopSlidesPerView.value,
@@ -286,6 +291,7 @@ const wrapperStyle = computed<CSSProperties>(() => ({
 const sliderStyle = computed<CSSProperties>(() => ({
   // Background matches tile color so nav clip-path areas and gaps between tiles appear consistent
   backgroundColor: controls.value.tileBackgroundColor,
+  '--thumb-slider-neo-nav-height': `${controls.value.navHeight}px`,
 }));
 
 const headerVisible = computed(() => Boolean(contentHeader.value.subline || contentHeader.value.headline));
@@ -327,6 +333,7 @@ const tileStyle = computed<CSSProperties>(() => {
     background: gradientToCss(controls.value.tileGradient),
     backgroundColor: controls.value.tileGradient.enabled ? undefined : controls.value.tileBackgroundColor,
     transform: `skewX(${controls.value.tileSkew}deg)`,
+    '--thumb-slider-neo-tile-counter-skew': `${controls.value.tileSkew * -1}deg`,
     paddingTop: `${controls.value.tilePadding.top}px`,
     paddingRight: gap === 0 ? '0px' : `${controls.value.tilePadding.right}px`,
     paddingBottom: `${controls.value.tilePadding.bottom}px`,
@@ -363,7 +370,8 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
 
 <style scoped>
 .thumb-slider-neo {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .thumb-slider-neo__header {
@@ -383,12 +391,19 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
 
 .thumb-slider-neo__slider {
   position: relative;
+  height: var(--thumb-slider-neo-nav-height);
 }
 
 .thumb-slider-neo__swiper {
   position: relative;
   z-index: 1;
   width: 100%;
+  height: 100%;
+}
+
+.thumb-slider-neo__swiper :deep(.swiper-wrapper),
+.thumb-slider-neo__swiper :deep(.swiper-slide) {
+  height: 100%;
 }
 
 .thumb-slider-neo__accent {
@@ -399,14 +414,16 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
 }
 
 .thumb-slider-neo__accent--top {
-  top: -28px;
+  top: -45px;
   right: 0;
+  height: 30px !important;
   clip-path: polygon(30px 0, 100% 0, 100% 100%, 0 100%);
 }
 
 .thumb-slider-neo__accent--bottom {
-  bottom: -1px;
+  bottom: -45px;
   left: 0;
+  height: 30px !important;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
 }
 
@@ -414,21 +431,22 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
   border-radius: 0.25rem;
   overflow: hidden;
   transform-origin: center;
+  height: 100%;
 }
 
 .thumb-slider-neo__image {
   display: block;
   width: 100%;
-  height: 185px;
+  height: 100%;
   object-fit: contain;
-  transform: skewX(calc(var(--tw-skew-x, 0deg) * -1));
+  transform: skewX(var(--thumb-slider-neo-tile-counter-skew));
 }
 
 .thumb-slider-neo__text {
   margin-top: 0.45rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  transform: skewX(calc(var(--tw-skew-x, 0deg) * -1));
+  transform: skewX(var(--thumb-slider-neo-tile-counter-skew));
 }
 
 .thumb-slider-neo__nav {
@@ -437,6 +455,7 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
   z-index: 2;
   display: inline-flex;
   width: 8%;
+  height: 159px !important;
   min-width: 2.5rem;
   align-items: center;
   justify-content: center;
@@ -464,5 +483,159 @@ const accentBarBottomStyle = computed<CSSProperties>(() => ({
 .thumb-slider-neo__nav :deep(svg) {
   width: 2rem;
   height: 2rem;
+}
+
+.thumb-slider-neo--editor .thumb-slider-neo__swiper {
+  z-index: 3;
+}
+
+.thumb-slider-neo--editor .thumb-slider-neo__accent,
+.thumb-slider-neo--editor .thumb-slider-neo__nav {
+  z-index: 0;
+}
+
+.thumb-slider-neo--editor .thumb-slider-neo__nav {
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .thumb-slider-neo__slider {
+    margin-bottom: 45px;
+  }
+
+  .thumb-slider-neo__slider::after {
+    position: absolute;
+    bottom: -45px;
+    left: 0;
+    z-index: 3;
+    display: block;
+    width: 32%;
+    height: 30px;
+    background: #c8ff00;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+    content: '';
+    pointer-events: none;
+  }
+
+  .thumb-slider-neo__accent--bottom {
+    display: none;
+  }
+
+  .thumb-slider-neo__tile {
+    margin-right: 10px;
+    background: #222 !important;
+    transform: skewX(-30deg) !important;
+  }
+
+  .thumb-slider-neo__image,
+  .thumb-slider-neo__text {
+    transform: skewX(30deg) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .thumb-slider-neo {
+    overflow-x: hidden;
+    overflow-y: visible;
+    padding-right: 0 !important;
+    padding-bottom: 30px !important;
+    padding-left: 0 !important;
+  }
+
+  .thumb-slider-neo__header {
+    margin-bottom: 5.4rem !important;
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+  }
+
+  .thumb-slider-neo__subline {
+    color: #8b8f94 !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+  }
+
+  .thumb-slider-neo__headline {
+    color: #111827 !important;
+    font-size: 1.75rem !important;
+    font-weight: 800 !important;
+    line-height: 1.08;
+  }
+
+  .thumb-slider-neo__slider {
+    height: 150px !important;
+    overflow: visible;
+    background: transparent !important;
+  }
+
+  .thumb-slider-neo__slider::before {
+    position: absolute;
+    top: -20px;
+    right: 0;
+    z-index: 2;
+    display: block;
+    width: 32%;
+    height: 30px;
+    background: #c8ff00;
+    clip-path: polygon(30px 0, 100% 0, 100% 100%, 0 100%);
+    content: '';
+    pointer-events: none;
+  }
+
+  .thumb-slider-neo__slider::after {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    z-index: 2;
+    display: block;
+    width: 32%;
+    height: 30px;
+    background: #c8ff00;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 30px) 100%, 0 100%);
+    content: '';
+    pointer-events: none;
+  }
+
+  .thumb-slider-neo__swiper {
+    overflow: visible;
+  }
+
+  .thumb-slider-neo__swiper :deep(.swiper-slide) {
+    position: relative;
+  }
+
+  .thumb-slider-neo__tile {
+    position: absolute;
+    top: 15px;
+    height: 80% !important;
+    margin-right: 10px;
+    background: #222222 !important;
+    border-radius: 0;
+    transform: skewX(-36deg) !important;
+  }
+
+  .thumb-slider-neo__image {
+    width: 100%;
+    height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 none !important;
+    background: none transparent;
+    object-fit: contain;
+    transform: skewX(30deg);
+  }
+
+  .thumb-slider-neo__nav {
+    display: none;
+  }
+
+  .thumb-slider-neo__accent--top {
+    display: none;
+  }
+
+  .thumb-slider-neo__accent--bottom {
+    display: none;
+  }
 }
 </style>

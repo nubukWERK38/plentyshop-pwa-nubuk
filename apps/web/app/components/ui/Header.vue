@@ -66,7 +66,7 @@
           square
         >
           <template #prefix>
-            <SfIconShoppingCart />            
+            <SfIconShoppingCart />
           </template>
         </UiButton>
         <SfDropdown v-if="isAuthorized" v-model="isAccountDropdownOpen" placement="bottom-end" class="z-50">
@@ -174,7 +174,7 @@
   <NuxtLazyHydrate v-if="viewport.isLessThan('lg')" when-idle>
     <SfModal
       v-model="isSearchModalOpen"
-      class="w-full h-full z-50"
+      class="mobile-search-modal w-full h-full z-[5000]"
       tag="section"
       role="dialog"
       aria-labelledby="search-modal-title"
@@ -193,7 +193,7 @@
           {{ t('common.actions.search') }}
         </h3>
       </header>
-      <UiSearch :close="searchModalClose" />
+      <UiSearch class="mobile-search" :close="searchModalClose" :autofocus="true" />
     </SfModal>
   </NuxtLazyHydrate>
 </template>

@@ -12,7 +12,7 @@
       size="sm"
       :tag="link ? NuxtLink : undefined"
       :to="link || undefined"
-      @click="id === 'products' && open()"
+      @click="id === 'products' && openProductsMenu()"
     >
       <template #prefix>
         <div class="relative">
@@ -24,14 +24,6 @@
             :style="badgeStyle"
             class="translate-x-[5px] translate-y-[-3px] outline flex justify-center items-center text-xs min-w-[16px] min-h-[16px]"
           />
-          <SfBadge
-            v-if="id === 'wishlist'"
-            :content="wishlistItemIds.length"
-            :max="99"
-            :style="badgeStyle"
-            class="translate-x-[5px] translate-y-[-3px] outline flex justify-center items-center text-xs min-w-[16px] min-h-[16px]"
-            data-testid="wishlist-badge"
-          />
         </div>
       </template>
       {{ label }}
@@ -40,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { SfBadge, SfIconShoppingCart, SfIconHome, SfIconMenu, SfIconPerson, SfIconFavorite } from '@storefront-ui/vue';
+import { SfBadge, SfIconShoppingCart, SfIconHome, SfIconMenu, SfIconPerson } from '@storefront-ui/vue';
 import { useCustomer } from '~/composables/useCustomer';
 import type { ActionType } from '~/components/blocks/UtilityBar/types';
 import type { NavbarItem } from './types';
@@ -53,8 +45,8 @@ const props = withDefaults(
     iconColor?: string;
   }>(),
   {
-    actionOrder: () => ['language', 'wishlist', 'cart', 'account'],
-    actionVisibility: () => ({ language: true, wishlist: true, cart: true, account: true }),
+    actionOrder: () => ['language', 'cart', 'account'],
+    actionVisibility: () => ({ language: true, cart: true, account: true }),
     backgroundColor: '#0f4c81',
     iconColor: '#ffffff',
   },
@@ -62,10 +54,10 @@ const props = withDefaults(
 
 const localePath = useLocalePath();
 const route = useRoute();
-const { wishlistItemIds } = useWishlist();
 const { data: cart } = useCart();
 const { isAuthorized } = useCustomer();
-const { open } = useMegaMenu();
+const { activeNode, open } = useMegaMenu();
+const { setDrawerOpen } = useDrawerState();
 
 const fixedItems = computed<NavbarItem[]>(() => [
   {
@@ -82,13 +74,7 @@ const fixedItems = computed<NavbarItem[]>(() => [
   },
 ]);
 
-const configurableActionItems = computed<Record<'wishlist' | 'cart' | 'account', NavbarItem>>(() => ({
-  wishlist: {
-    id: 'wishlist',
-    label: t('common.labels.wishlist'),
-    icon: SfIconFavorite,
-    link: localePath(paths.wishlist),
-  },
+const configurableActionItems = computed<Record<'cart' | 'account', NavbarItem>>(() => ({
   cart: {
     id: 'cart',
     label: t('common.labels.cart'),
@@ -104,12 +90,12 @@ const configurableActionItems = computed<Record<'wishlist' | 'cart' | 'account',
 }));
 
 const orderedActionItems = computed<NavbarItem[]>(() => {
-  const allowedActions: ActionType[] = ['wishlist', 'cart', 'account'];
+  const allowedActions: ActionType[] = ['cart', 'account'];
 
   return props.actionOrder
     .filter((action) => allowedActions.includes(action))
     .filter((action) => props.actionVisibility[action] !== false)
-    .map((action) => configurableActionItems.value[action as 'wishlist' | 'cart' | 'account'])
+    .map((action) => configurableActionItems.value[action as 'cart' | 'account'])
     .filter((item): item is NavbarItem => Boolean(item));
 });
 
@@ -125,6 +111,12 @@ const badgeStyle = computed(() => ({
   color: props.backgroundColor,
   outlineColor: props.backgroundColor,
 }));
+
+const openProductsMenu = () => {
+  activeNode.value = [];
+  open();
+  setDrawerOpen(true);
+};
 
 const cartItemsCount = computed(() => cart.value?.items?.reduce((price, { quantity }) => price + quantity, 0) ?? 0);
 const NuxtLink = resolveComponent('NuxtLink');

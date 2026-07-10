@@ -5,19 +5,20 @@ import { fakeProductDE } from './facets/fakeProductDE';
 
 import type { UseProductsState } from '~/composables/useProducts/types';
 
-export const handlePreviewProducts = (state: Ref<UseProductsState>, lang: string) => {
+export const handlePreviewProducts = (state: Ref<UseProductsState>, lang: string, useExampleProducts = false) => {
   const { isInEditor } = useEditorState();
-  if (!isInEditor.value || state.value.data.products.length > 0) return;
+  const products = state.value.data.products ?? [];
+
+  if (!isInEditor.value || products.length > 0 || !useExampleProducts) return;
 
   if (state.value.data.category.type === 'item') {
     const fakeFacetCall = lang === 'de' ? fakeFacetCallDE.data : fakeFacetCallEN.data;
 
     state.value.data = {
       ...state.value.data,
-      category: fakeFacetCall.category,
       facets: fakeFacetCall.facets,
       pagination: fakeFacetCall.pagination,
-      languageUrls: fakeFacetCall.languageUrls,
+      languageUrls: state.value.data.languageUrls ?? fakeFacetCall.languageUrls,
     };
     const fakeProduct = lang === 'de' ? fakeProductDE : fakeProductEN;
     const exampleProductName = lang === 'de' ? 'Beispielprodukt ' : 'Example Product ';

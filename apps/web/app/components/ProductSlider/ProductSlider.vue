@@ -178,7 +178,8 @@ const handleScrollableNavigation = (direction: 'prev' | 'next', event: Scrollabl
 
 .product-slider :deep(.product-slider__item .size-48) {
   width: 100%;
-  height: clamp(220px, 21vw, 300px);
+  height: auto;
+  aspect-ratio: 1 / 1;
   padding: 1.5rem 1.25rem 0.75rem;
 }
 
@@ -267,6 +268,22 @@ const handleScrollableNavigation = (direction: 'prev' | 'next', event: Scrollabl
 @media (min-width: 768px) {
   .product-slider__nav:not(:disabled) {
     display: flex;
+  }
+}
+
+@media (max-width: 767px) {
+  .product-slider :deep(.product-slider__item),
+  .product-slider--fixed-items :deep(.product-slider__item) {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+    flex-basis: 100%;
+  }
+
+  .product-slider :deep(.product-slider__item .size-48) {
+    height: auto;
+    aspect-ratio: 1 / 1;
+    padding: 1rem 1rem 0.5rem;
   }
 }
 </style>

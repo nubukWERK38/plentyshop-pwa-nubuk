@@ -12,7 +12,7 @@
       :model-value="true"
       :disable-click-away="true"
       :disable-esc="true"
-      class="w-full rounded shadow-none md:translate-x-0 z-[100] md:z-0 md:static md:!block -translate-x-full shrink-0 bg-white overflow-y-auto"
+      class="!fixed inset-0 h-dvh w-full rounded shadow-none md:!static md:!inset-auto md:h-auto md:translate-x-0 z-[99999] md:z-0 md:!block -translate-x-full shrink-0 bg-white overflow-y-auto"
       data-testid="category-sidebar"
     >
       <div class="grid grid-rows-category-sidebar md:h-full md:block">
@@ -24,7 +24,9 @@
             </template>
           </UiButton>
         </div>
-        <slot class="overflow-y-auto md:overflow-y-visible py-4 md:p-0" />
+        <div class="category-sidebar__content overflow-y-auto px-4 py-4 md:overflow-y-visible md:p-0">
+          <slot />
+        </div>
         <div class="p-4 md:mt-2 flex flex-wrap justify-between border-t border-t-neutral-200 md:border-0 gap-3">
           <UiButton class="md:hidden whitespace-nowrap flex flex-1" variant="primary" @click="$emit('close')">
             {{ t('common.actions.showProducts') }}

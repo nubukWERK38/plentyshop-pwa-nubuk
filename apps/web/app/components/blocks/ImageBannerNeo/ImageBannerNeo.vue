@@ -30,6 +30,7 @@
               :style="imageStyle"
               width="1024"
               height="576"
+              sizes="100vw md:50vw"
               :data-testid="`image-banner-neo-image-${slideIndex}`"
             />
           </div>
@@ -116,7 +117,12 @@
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import type { CSSProperties } from 'vue';
-import type { ImageBannerNeoImageFit, ImageBannerNeoProps, ImageBannerNeoSlide } from './types';
+import type {
+  ImageBannerNeoCtaTarget,
+  ImageBannerNeoImageFit,
+  ImageBannerNeoProps,
+  ImageBannerNeoSlide,
+} from './types';
 import { buildSeoLinkTitle } from '~/utils/seo';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -151,6 +157,7 @@ const ensureSlide = (slide?: Partial<ImageBannerNeoSlide>): ImageBannerNeoSlide 
     ctaLabel: slide?.text?.ctaLabel || '',
     ctaLink: slide?.text?.ctaLink || '',
     ctaVariant: slide?.text?.ctaVariant || 'primary',
+    ctaTarget: slide?.text?.ctaTarget === '_blank' ? '_blank' : '_self',
     ctaColor: slide?.text?.ctaColor || '',
     ctaTextColor: slide?.text?.ctaTextColor || '',
     ctaHoverColor: slide?.text?.ctaHoverColor || '',
@@ -341,6 +348,8 @@ const getTextAreaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
 
 const isExternalLink = (link: string) => /^(https?:)?\/\//.test(link);
 
+const resolveCtaTarget = (target?: ImageBannerNeoCtaTarget) => (target === '_blank' ? '_blank' : '_self');
+
 const toRgb = (hexColor: string) => {
   const hex = hexColor.replace('#', '').trim();
   if (!/^[0-9a-fA-F]{6}$/.test(hex)) return null;
@@ -389,11 +398,15 @@ const getCtaStyle = (slide: ImageBannerNeoSlide): CSSProperties => {
 };
 
 const getCtaProps = (slide: ImageBannerNeoSlide) => {
+  const target = resolveCtaTarget(slide.text.ctaTarget);
+  const targetProps = target === '_blank' ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+
   if (isExternalLink(slide.text.ctaLink)) {
     return {
       tag: 'a',
       href: slide.text.ctaLink,
       title: buildSeoLinkTitle(slide.text.ctaLabel, 'Nubuk Bikes Shop'),
+      ...targetProps,
     };
   }
 
@@ -401,6 +414,7 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
     tag: NuxtLink,
     to: localePath(slide.text.ctaLink),
     title: buildSeoLinkTitle(slide.text.ctaLabel, 'Nubuk Bikes Shop'),
+    ...targetProps,
   };
 };
 </script>
@@ -545,5 +559,35 @@ const getCtaProps = (slide: ImageBannerNeoSlide) => {
   background-color: var(--ibn-cta-hover-bg) !important;
   border-color: var(--ibn-cta-hover-border) !important;
   color: var(--ibn-cta-hover-text) !important;
+}
+
+@media (max-width: 767px) {
+  .image-banner-neo__swiper,
+  .image-banner-neo :deep(.swiper-wrapper),
+  .image-banner-neo__swiper-slide,
+  .image-banner-neo__slide {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .image-banner-neo__slide {
+    grid-template-rows: none;
+  }
+
+  .image-banner-neo__image-wrap {
+    min-height: 180px;
+  }
+
+  .image-banner-neo__text {
+    min-height: 220px;
+    margin: 0 !important;
+    padding: 24px !important;
+  }
+
+  .image-banner-neo__text::before,
+  .image-banner-neo__text::after {
+    display: none;
+  }
 }
 </style>

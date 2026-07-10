@@ -54,6 +54,9 @@
             width: '100%',
             height: '100%',
           }"
+          width="1536"
+          height="380"
+          sizes="100vw"
           :loading="'lazy'"
           :data-testid="'category-data-image-' + meta.uuid"
         />
@@ -464,10 +467,14 @@ const isBrandWorldCategory = computed(() => {
   return normalizedPath.split('/').includes('markenwelt') || details.value.name?.toLowerCase() === 'markenwelt';
 });
 const shouldRenderSubcategories = computed(() => {
+  if (isMobile.value) return false;
+
   const isImageHeader = props.content.displayCategoryImage !== 'off';
   return (props.content.showSubcategories ?? true) && !(isImageHeader && isBrandWorldCategory.value);
 });
 const shouldRenderBrands = computed(() => {
+  if (isMobile.value) return false;
+
   return props.content.showBrands ?? true;
 });
 

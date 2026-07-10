@@ -47,7 +47,7 @@
               <LowestPrice :product="product" />
               <div v-if="unitContentLabel" class="purchase-card__unit-content">Inhalt {{ unitContentLabel }}</div>
               <BasePrice
-                v-if="productGetters.showPricePerUnit(product)"
+                v-if="shouldShowPricePerUnit(product)"
                 :base-price="basePriceSingleValue"
                 :unit-content="productGetters.getUnitContent(product)"
                 :unit-name="productGetters.getUnitName(product)"
@@ -55,25 +55,25 @@
               <ul class="purchase-card__more-infos">
                 <li>
                   <button type="button" title="Wie läuft eine Retoure ab?" @click="openInfoModal('return')">
-                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
                     Wie läuft eine Retoure ab?
                   </button>
                 </li>
                 <li>
                   <button type="button" title="Fragen zum Produkt?" @click="openProductQuestionTab">
-                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
                     Fragen zum Produkt?
                   </button>
                 </li>
                 <li>
                   <button type="button" title="Mit Bike-Leasing bis zu 40% sparen" @click="openInfoModal('leasing')">
-                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
                     Mit Bike-Leasing bis zu 40% sparen
                   </button>
                 </li>
                 <li>
                   <button type="button" title="Herstellerangaben" @click="openManufacturerDetails">
-                    <i class="fa fa-angle-right" aria-hidden="true" />
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
                     Herstellerangaben
                   </button>
                 </li>
@@ -234,11 +234,11 @@
                     class="purchase-card__paypal-buttons mt-4"
                     @validation-callback="paypalHandleAddToCart"
                   />
-                  <PayPalPayLaterBanner
+                  <!--<PayPalPayLaterBanner
                     placement="product"
                     location="itemPage"
                     :amount="priceWithProperties * quantitySelectorValue"
-                  />
+                  />-->
                 </template>
                 <div class="purchase-card__tax-note mt-4 typography-text-xs flex gap-1">
                   <span>{{ t('common.labels.asterisk') }}</span>
@@ -280,36 +280,38 @@
     </div>
 
     <ClientOnly>
-      <UiModal
-        v-model="infoModalOpen"
-        aria-labelledby="purchase-card-info-modal-title"
-        tag="section"
-        role="dialog"
-        class="purchase-card__info-modal"
-        overlay-classes="purchase-card__info-modal-overlay"
-      >
-        <header class="purchase-card__info-modal-header">
-          <h2 id="purchase-card-info-modal-title" class="purchase-card__info-modal-title">{{ infoModalTitle }}</h2>
-          <UiButton
-            type="button"
-            variant="tertiary"
-            square
-            class="text-white hover:bg-white/10 active:bg-white/20"
-            :aria-label="t('common.navigation.closeDrawer')"
-            @click="closeInfoModal"
-          >
-            <SfIconClose />
-          </UiButton>
-        </header>
+      <Teleport to="body">
+        <UiModal
+          v-model="infoModalOpen"
+          aria-labelledby="purchase-card-info-modal-title"
+          tag="section"
+          role="dialog"
+          class="purchase-card__info-modal"
+          overlay-classes="purchase-card__info-modal-overlay"
+        >
+          <header class="purchase-card__info-modal-header">
+            <h2 id="purchase-card-info-modal-title" class="purchase-card__info-modal-title">{{ infoModalTitle }}</h2>
+            <UiButton
+              type="button"
+              variant="tertiary"
+              square
+              class="text-white hover:bg-white/10 active:bg-white/20"
+              :aria-label="t('common.navigation.closeDrawer')"
+              @click="closeInfoModal"
+            >
+              <SfIconClose />
+            </UiButton>
+          </header>
 
-        <div v-if="infoModalLoading" class="purchase-card__info-modal-loading">
-          <SfLoaderCircular size="lg" />
-        </div>
-        <div v-else-if="infoModalError" class="purchase-card__info-modal-error">
-          Inhalt konnte nicht geladen werden.
-        </div>
-        <div v-else class="purchase-card__info-modal-content no-preflight" v-html="infoModalContent" />
-      </UiModal>
+          <div v-if="infoModalLoading" class="purchase-card__info-modal-loading">
+            <SfLoaderCircular size="lg" />
+          </div>
+          <div v-else-if="infoModalError" class="purchase-card__info-modal-error">
+            Inhalt konnte nicht geladen werden.
+          </div>
+          <div v-else class="purchase-card__info-modal-content" v-html="infoModalContent" />
+        </UiModal>
+      </Teleport>
     </ClientOnly>
   </form>
 </template>
@@ -331,10 +333,12 @@ import {
   SfLink,
   SfIconExpandMore,
   SfIconClose,
+  SfIconChevronRight,
 } from '@storefront-ui/vue';
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';
 import { paths } from '~/utils/paths';
+import { shouldShowPricePerUnit } from '~/utils/productHelper';
 
 const props = withDefaults(defineProps<PurchaseCardProps>(), {
   configuration: () => ({
@@ -496,9 +500,15 @@ const availabilityName = computed(() => {
     return '';
   }
 });
-const orderPropertiesGroups = computed(() =>
-  Object.values(productPropertyGetters.getOrderPropertiesGroups(props.product)),
-);
+const orderPropertiesGroups = computed(() => {
+  if (!Array.isArray((props.product as { properties?: unknown }).properties)) return [];
+
+  try {
+    return Object.values(productPropertyGetters.getOrderPropertiesGroups(props.product));
+  } catch {
+    return [];
+  }
+});
 const firstOrderPropertiesGroup = computed(() => orderPropertiesGroups.value[0]);
 const hasOrderProperties = computed(() =>
   orderPropertiesGroups.value.some((group) => (group.orderProperties?.length ?? 0) > 0),
@@ -722,6 +732,8 @@ const openProductQuestionTab = () => {
 </script>
 
 <style scoped>
+
+
 .purchase-card {
   color: #071625;
   box-shadow: none;
@@ -1077,7 +1089,7 @@ const openProductQuestionTab = () => {
 }
 
 :global(.purchase-card__info-modal-overlay) {
-  z-index: 10000;
+  z-index: 2147483400 !important;
   background: rgb(29 44 54 / 54%);
 }
 
@@ -1132,6 +1144,55 @@ const openProductQuestionTab = () => {
 }
 
 @media (max-width: 767px) {
+  .purchase-card,
+  .purchase-card__content,
+  .purchase-card__price-block,
+  .purchase-card__preview-text,
+  .purchase-card__leasing-panel,
+  .purchase-card__cart-section,
+  .purchase-card__paypal-buttons {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .purchase-card {
+    box-sizing: border-box;
+  }
+
+  .purchase-card__price-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .purchase-card__rrp {
+    order: 2;
+    width: 50%;
+    min-width: 0;
+    margin: 0;
+    padding: 0 0 0 10px;
+    float: none;
+    text-align: left;
+  }
+
+  .purchase-card__price-row {
+    order: 1;
+    width: 50%;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .purchase-card__price {
+    margin-left: 0;
+  }
+
+  .purchase-card__discount {
+    min-width: 58px;
+    min-height: 30px;
+    font-size: 0.875rem;
+  }
+
   .purchase-card__brand {
     font-size: 1.75rem;
   }
@@ -1141,9 +1202,49 @@ const openProductQuestionTab = () => {
   }
 
   .purchase-card__cart-row {
-    flex-direction: row;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
     gap: 12px;
+    width: 100%;
   }
+
+  .purchase-card__quantity {
+    width: 84px;
+    min-width: 84px;
+  }
+
+  .purchase-card__cart-tooltip {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .purchase-card__cart-button {
+    width: 100%;
+  }
+
+  .purchase-card__leasing-summary {
+    min-height: auto;
+    padding: 16px;
+  }
+
+  .purchase-card__leasing-options {
+    padding: 0 16px 16px;
+  }
+
+  .purchase-card :deep([data-testid='product-attributes']),
+  .purchase-card :deep([data-testid='product-attributes'] > div),
+  .purchase-card :deep(label[for^='attribute-']),
+  .purchase-card :deep(label[for='unit-combination']),
+  .purchase-card :deep(select),
+  .purchase-card :deep([id='attribute-box']) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .purchase-card__paypal-buttons :deep(*) {
+    max-width: 100%;
+  }
+  
 }
 </style>

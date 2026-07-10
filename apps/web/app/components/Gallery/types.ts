@@ -51,4 +51,5 @@ export type ImageGalleryContent = {
 export type GalleryProps = {
   configuration?: ImageGalleryContent;
   images: ImagesData[];
+  productName?: string;
 };

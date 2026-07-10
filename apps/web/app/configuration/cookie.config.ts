@@ -65,7 +65,25 @@ export default {
       name: 'CookieBar.marketing.label',
       showMore: false,
       description: 'CookieBar.marketing.description',
-      cookies: [],
+      cookies: [
+        {
+          name: 'CookieBar.marketing.cookies.googleTagManager.name',
+          Provider: 'CookieBar.marketing.cookies.googleTagManager.provider',
+          Status: 'CookieBar.marketing.cookies.googleTagManager.status',
+          PrivacyPolicy: 'https://policies.google.com/privacy',
+          Lifespan: 'Variabel',
+          accepted: false,
+          cookieNames: ['^_ga', '^_gid', '^_gat', '^_gcl', '^_gac'],
+        },
+        {
+          name: 'CookieBar.marketing.cookies.billigerDe.name',
+          Provider: 'CookieBar.marketing.cookies.billigerDe.provider',
+          Status: 'CookieBar.marketing.cookies.billigerDe.status',
+          PrivacyPolicy: 'https://www.billiger.de/service/datenschutz.htm',
+          Lifespan: 'Session',
+          accepted: false,
+        },
+      ],
     },
   ],
 } as CookieGroupFromNuxtConfig;

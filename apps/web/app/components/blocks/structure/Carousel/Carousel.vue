@@ -13,7 +13,7 @@
       :autoplay="autoplayConfig"
       :pagination="paginationConfig"
       :navigation="navigationConfig"
-      class="!z-0 !w-full !max-h-[85vh]"
+      class="carousel__swiper !z-0 !w-full !max-h-[85vh]"
       @swiper="onSwiperInit"
       @slide-change="onSlideChange"
     >
@@ -295,5 +295,14 @@ watch(
 .carousel__slide-shell {
   width: 100%;
   min-height: 100%;
+}
+
+.carousel__swiper:not(.swiper-initialized) :deep(.swiper-wrapper) {
+  display: block;
+  transform: none !important;
+}
+
+.carousel__swiper:not(.swiper-initialized) :deep(.swiper-slide:not(:first-child)) {
+  display: none;
 }
 </style>

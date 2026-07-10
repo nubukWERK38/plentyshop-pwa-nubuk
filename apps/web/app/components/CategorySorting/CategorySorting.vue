@@ -60,3 +60,17 @@ const selected = computed<string>({
   },
 });
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  .category-sorting--compact > div,
+  .category-sorting--compact :deep([data-testid='select']) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .category-sorting--compact :deep([data-testid='select']) {
+    margin-bottom: 5px;
+  }
+}
+</style>

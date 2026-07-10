@@ -125,6 +125,7 @@
 import { orderGetters, productBundleGetters, productImageGetters } from '@plentymarkets/shop-api';
 import { SfLink, SfIconOpenInNew, SfLoaderCircular } from '@storefront-ui/vue';
 import type { OrderSummaryProductCardProps } from './types';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const { formatWithSymbol } = usePriceFormatter();
 const { addModernImageExtension } = useModernImage();
@@ -160,6 +161,6 @@ onMounted(() => {
 
 const imageAlt = computed(() => {
   const image = props.order.variations[props.orderItem.itemVariationId.toString()]?.images?.all?.[0];
-  return image ? productImageGetters.getImageAlternate(image) : '';
+  return getProductImageAlt(image, orderGetters.getItemName(props.orderItem), 0);
 });
 </script>

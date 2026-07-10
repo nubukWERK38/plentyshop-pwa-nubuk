@@ -41,6 +41,7 @@
 
 <script setup lang="ts">
 import { productPropertyGetters } from '@plentymarkets/shop-api';
+import type { Product } from '@plentymarkets/shop-api';
 import type { ComponentsMapper, OrderPropertiesProps } from './types';
 import OrderPropertyInput from '~/components/OrderPropertyInput/OrderPropertyInput.vue';
 import OrderPropertySelect from '~/components/OrderPropertySelect/OrderPropertySelect.vue';
@@ -49,8 +50,17 @@ import OrderPropertyFileUpload from '~/components/OrderPropertyFileUpload/OrderP
 import { SfIconInfo, SfTooltip } from '@storefront-ui/vue';
 
 const props = defineProps<OrderPropertiesProps>();
-const orderPropertiesGroups = computed(() => productPropertyGetters.getOrderPropertiesGroups(props.product));
-const hasTooltip = productPropertyGetters.hasOrderPropertiesGroupsTooltips(orderPropertiesGroups.value);
+const getOrderPropertiesGroups = (product: Product) => {
+  if (!Array.isArray((product as { properties?: unknown }).properties)) return [];
+
+  try {
+    return productPropertyGetters.getOrderPropertiesGroups(product);
+  } catch {
+    return [];
+  }
+};
+const orderPropertiesGroups = computed(() => getOrderPropertiesGroups(props.product));
+const hasTooltip = computed(() => productPropertyGetters.hasOrderPropertiesGroupsTooltips(orderPropertiesGroups.value));
 const componentsMapper: ComponentsMapper = {
   empty: OrderPropertyCheckbox,
   int: OrderPropertyInput,

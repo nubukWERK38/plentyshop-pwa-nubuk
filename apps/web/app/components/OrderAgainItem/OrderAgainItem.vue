@@ -7,7 +7,7 @@
           addModernImageExtension(orderGetters.getOrderVariationImage(order, item)) ||
           '/_nuxt-plenty/images/placeholder.png'
         "
-        :alt="orderGetters.getItemName(item)"
+        :alt="imageAlt"
         width="300"
         height="300"
         loading="lazy"
@@ -154,6 +154,7 @@
 import { SfIconArrowDownward, SfIconArrowUpward, SfIconError, SfListItem } from '@storefront-ui/vue';
 import type { OrderAgainItemProps } from './types';
 import { cartGetters, orderGetters, productPropertyGetters } from '@plentymarkets/shop-api';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const props = defineProps<OrderAgainItemProps>();
 
@@ -172,4 +173,12 @@ const amount = showNetPrices.value
   : orderGetters.getItemPriceByCurrency(props.item, currency.value);
 
 itemPrice.value = amount ? roundAmount(amount) : null;
+
+const imageAlt = computed(() =>
+  getProductImageAlt(
+    orderGetters.getOrderVariationFirstImage(props.order, props.item),
+    orderGetters.getItemName(props.item),
+    0,
+  ),
+);
 </script>

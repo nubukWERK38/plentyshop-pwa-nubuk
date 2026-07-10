@@ -159,6 +159,7 @@ import type { Product } from '@plentymarkets/shop-api';
 import { cartGetters, productGetters, productImageGetters } from '@plentymarkets/shop-api';
 import ProductPrice from '~/components/ProductPrice/ProductPrice.vue';
 import { paths } from '~/utils/paths';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const props = defineProps<QuickCheckoutProps>();
 
@@ -207,7 +208,7 @@ const totals = computed(() => {
 
 const imageAlt = computed(() => {
   const image = props.product?.images?.all?.[0];
-  return image ? productImageGetters.getImageAlternate(image) : '';
+  return getProductImageAlt(image, productGetters.getName(props.product), 0);
 });
 
 const showPayPalButtons = computed(() => !isInEditor.value && isPaypalAvailable('quickCheckout').value);

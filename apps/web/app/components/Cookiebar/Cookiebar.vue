@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="visible"
+    v-if="cookiebarReady && visible"
     class="fixed max-sm:flex max-sm:flex-col max-sm:justify-between z-50 w-full xl:w-3/5 xl:right-2 bottom-0 max-md:bottom-[3.9rem] shadow-2xl p-3 bg-white rounded overflow-auto end-0 sm:top-auto"
   >
     <div v-if="!furtherSettingsOn">
@@ -152,7 +152,10 @@
   </div>
 
   <!-- Button to Open Cookie Tab -->
-  <div v-if="!visible" class="z-10 h-auto w-12 fixed bottom-[4.3rem] md:bottom-2 left-2 xl:left-auto xl:right-2">
+  <div
+    v-if="cookiebarReady && !visible"
+    class="z-10 h-auto w-12 fixed bottom-[4.3rem] md:bottom-2 left-2 xl:left-auto xl:right-2"
+  >
     <SfTooltip :label="t('CookieBar.Cookie Settings')" placement="left">
       <UiButton
         variant="secondary"
@@ -189,6 +192,13 @@ const {
 const NuxtLink = resolveComponent('NuxtLink');
 const localePath = useLocalePath();
 const furtherSettingsOn = ref(false);
+const cookiebarReady = ref(false);
+
+onMounted(() => {
+  requestAnimationFrame(() => {
+    cookiebarReady.value = true;
+  });
+});
 
 const privacyPolicy = computed(() => localePath(paths.privacyPolicy));
 const legalDisclosure = computed(() => localePath(paths.legalDisclosure));

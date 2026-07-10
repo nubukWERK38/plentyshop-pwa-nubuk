@@ -38,7 +38,9 @@ import { buildSeoLinkTitle } from '~/utils/seo';
 
 const props = defineProps<TextContentProps>();
 
-const renderedHtmlDescription = computed(() => decodeHtmlEntities(props.text?.htmlDescription));
+const renderedHtmlDescription = computed(() =>
+  normalizeRichTextImages(decodeHtmlEntities(props.text?.htmlDescription)),
+);
 
 const textAlignmentClass = computed(() => {
   switch (props.text?.textAlignment) {

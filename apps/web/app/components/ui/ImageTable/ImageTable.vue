@@ -33,6 +33,8 @@
                   data-testid="image-table-thumbnail"
                   :src="item.previewUrl || item.publicUrl"
                   alt="table thumbnail"
+                  width="32"
+                  height="32"
                   class="w-8 h-8 rounded object-cover"
                 />
                 <span data-testid="image-table-file-name">{{ item.fileName }}</span>

@@ -13,11 +13,11 @@
               {{ t('common.labels.filters') }}
             </h2>
 
-            <template v-if="facetGetters.hasFilters(productsCatalog.facets)">
+            <template v-if="facetGetters.hasFilters(productsCatalog.facets ?? [])">
               <CategoryFiltersSort
                 v-for="key in filterRenderKeys"
                 :key="key"
-                :facets="productsCatalog.facets"
+                :facets="productsCatalog.facets ?? []"
                 :configuration="filterConfiguration"
                 :render-key="key"
                 :show-all="key === 'customizedFilters'"
@@ -44,14 +44,14 @@
                 <CategoryItemsPerPage
                   class="w-[160px] shrink-0"
                   selection-mode-compact
-                  :total-products="productsCatalog.pagination.totals"
+                  :total-products="totalProducts"
                 />
               </div>
             </div>
 
             <section v-if="productsCatalog.products?.length" :class="gridClasses" data-testid="category-grid">
               <NuxtLazyHydrate
-                v-for="(product, index) in productsCatalog.products"
+                v-for="(product, index) in productsCatalog.products ?? []"
                 :key="productGetters.getVariationId(product)"
                 when-visible
               >
@@ -60,7 +60,7 @@
             </section>
             <LazyCategoryEmptyState v-else />
 
-            <div v-if="productsCatalog.pagination.totals > 0" class="mt-4 mb-4 typography-text-xs flex gap-1">
+            <div v-if="totalProducts > 0" class="mt-4 mb-4 typography-text-xs flex gap-1">
               <span>{{ t('common.labels.asterisk') }}</span>
               <span v-if="showNetPrices">{{ t('product.priceExclVAT') }}</span>
               <span v-else>{{ t('product.priceInclVAT') }}</span>
@@ -78,10 +78,10 @@
             </div>
 
             <UiPagination
-              v-if="productsCatalog.pagination.totals > 0"
-              :key="`${productsCatalog.pagination.totals}-${productsPerPage}`"
+              v-if="totalProducts > 0"
+              :key="`${totalProducts}-${productsPerPage}`"
               :current-page="getFacetsFromURL().page ?? 1"
-              :total-items="productsCatalog.pagination.totals"
+              :total-items="totalProducts"
               :page-size="Number(productsPerPage)"
               :max-visible-pages="maxVisiblePages"
             />
@@ -174,7 +174,8 @@ const gridClasses = gridClassFor(
   ['gap-4', 'md:gap-6', 'mb-10', 'md:mb-5'],
 );
 const maxVisiblePages = computed(() => (viewport.isGreaterOrEquals('lg') ? 5 : 2));
-const totalProducts = computed(() => Number(productsCatalog.value.pagination?.totals) || 0);
+const totalProducts = computed(() => Number(productsCatalog.value?.pagination?.totals) || 0);
+const searchTitle = t('search.title');
 
 const handleQueryUpdate = async () => {
   await getSearch(getFacetsFromURL());
@@ -193,7 +194,7 @@ await getRobots();
 setRobotForStaticPage('SearchResult');
 
 useHead({
-  title: () => t('search.title'),
+  title: searchTitle,
   meta: [
     { name: 'description', content: () => getMetaDescription() },
     { name: 'keywords', content: () => getMetaKeywords() },

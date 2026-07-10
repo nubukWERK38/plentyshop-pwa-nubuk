@@ -2,7 +2,13 @@
   <section
     ref="blockRef"
     class="product-recommended-products w-screen"
-    :class="backgroundVariantClass"
+    :class="[
+      backgroundVariantClass,
+      {
+        'product-recommended-products--no-pogo': isNoPogoActionBlock,
+        'product-recommended-products--topseller-parts': isTopsellerPartsBlock,
+      },
+    ]"
     :style="sectionStyle"
   >
     <div v-bind="$attrs" :style="blockStyle" class="product-recommended-products__inner w-full">
@@ -231,6 +237,12 @@ const normalizedTextContent = computed(() =>
     .join(' ')
     .toLowerCase(),
 );
+const isNoPogoActionBlock = computed(
+  () => normalizedTextContent.value.includes('no pogo') && normalizedTextContent.value.includes('aktion'),
+);
+const isTopsellerPartsBlock = computed(
+  () => normalizedTextContent.value.includes('topseller') && normalizedTextContent.value.includes('parts'),
+);
 const ctaButton = computed(() => {
   const configuredButton = props.content.button;
   if (configuredButton?.label && configuredButton?.link) return configuredButton;
@@ -242,7 +254,7 @@ const ctaButton = computed(() => {
   return fallbackButton ? { ...fallbackButton, variant: 'primary' as const } : null;
 });
 const fallbackHeading = computed(() =>
-  hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das koennte auch was fuer Dich sein!' : '',
+  hasCurrentProductContext.value && !hasConfiguredText.value ? 'Das könnte auch was für Dich sein!' : '',
 );
 
 const { data: recommendedProducts, loading, fetchProductRecommended } = useProductRecommended(props.meta.uuid);
@@ -533,7 +545,8 @@ watch(
 
 .product-recommended-products :deep(.product-recommended-products__card .size-48) {
   width: 100%;
-  height: clamp(170px, 15vw, 220px);
+  height: auto;
+  aspect-ratio: 1 / 1;
   padding: 1rem 1.25rem 0.25rem;
 }
 
@@ -565,9 +578,101 @@ watch(
 }
 
 @media (max-width: 767px) {
+  .product-recommended-products--no-pogo {
+    display: none !important;
+  }
+
+  .product-recommended-products--topseller-parts {
+    padding: 4.75rem 0 2.25rem;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__inner {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__header {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__text {
+    text-align: center;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__text :deep(.rte-prose) {
+    text-align: center;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__text :deep(h1),
+  .product-recommended-products--topseller-parts .product-recommended-products__text :deep(h2) {
+    margin: 0.35rem 0 0;
+    color: #ffffff !important;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__text :deep(p) {
+    margin: 0;
+    color: #ffffff !important;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .product-recommended-products--topseller-parts :deep(.product-slider) {
+    order: 10;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__cta-row {
+    order: 20;
+    justify-content: stretch;
+    margin: 1.25rem 0 0;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__cta {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 1rem;
+    background: #c8ff00;
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .product-recommended-products--topseller-parts .product-recommended-products__cta:hover,
+  .product-recommended-products--topseller-parts .product-recommended-products__cta:focus-visible {
+    background: #b7ec00;
+    color: #111827;
+  }
+
+  .product-recommended-products--topseller-parts :deep(.product-slider__legal) {
+    order: 30;
+  }
+
   .product-recommended-products__fallback-heading {
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
+  }
+
+  .product-recommended-products__header {
+    display: block;
+    overflow: hidden;
+  }
+
+  .product-recommended-products__text {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .product-recommended-products__text :deep(img) {
+    max-width: 100%;
+    height: auto;
+    margin-left: 0 !important;
   }
 
   .product-recommended-products__cta-row {

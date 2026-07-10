@@ -42,3 +42,29 @@ const layoutStyle = computed(() => {
   };
 });
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  [data-testid='category-sort'] {
+    width: 100% !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  [data-testid='category-total-products'] {
+    width: 100%;
+    margin-right: 0 !important;
+    text-align: left;
+  }
+
+  [data-testid='category-sort'] :deep([data-testid='category-sorting']),
+  [data-testid='category-sort'] :deep(.category-sorting--compact) {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 auto !important;
+  }
+}
+</style>

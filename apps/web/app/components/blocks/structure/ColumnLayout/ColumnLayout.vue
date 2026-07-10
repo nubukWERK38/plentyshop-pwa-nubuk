@@ -251,3 +251,14 @@ const columns = computed<Block[][]>(() => {
   return slots;
 });
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  [data-testid='column-layout-structure'] {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding-right: 16px !important;
+    padding-left: 16px !important;
+  }
+}
+</style>

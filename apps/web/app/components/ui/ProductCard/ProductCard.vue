@@ -31,8 +31,8 @@
 
       <div ref="imageContainerRef" :class="[{ 'size-48': isFromSlider }, 'relative']">
         <SfLink
-          :tag="NuxtLink"
-          :to="productPath"
+          :tag="productLinkTag"
+          v-bind="productLinkProps"
           :title="productLinkTitle"
           class="relative group/image flex items-center justify-center"
           data-testid="product-card-link"
@@ -69,7 +69,7 @@
               v-if="canLoadHoverImage && effectiveHoverImageUrl"
               ref="hoverImageRef"
               :src="effectiveHoverImageUrl"
-              :alt="imageAlt"
+              :alt="hoverImageAlt"
               :title="hoverImageTitle || null"
               :loading="lazy === false ? 'eager' : 'lazy'"
               fetchpriority="auto"
@@ -116,8 +116,8 @@
       </div>
 
       <SfLink
-        :tag="NuxtLink"
-        :to="productPath"
+        :tag="productLinkTag"
+        v-bind="productLinkProps"
         :title="productLinkTitle"
         class="product-card__name line-clamp-2 no-underline text-base leading-[1.1] text-neutral-500 hover:text-neutral-700"
         variant="secondary"
@@ -158,6 +158,8 @@ import type { ProductCardProps } from '~/components/ui/ProductCard/types';
 import { defaults } from '~/composables';
 import type { ItemGridContent } from '~/components/blocks/ItemGrid/types';
 import { buildProductLinkTitle } from '~/utils/seo';
+import { shouldShowPricePerUnit } from '~/utils/productHelper';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const props = withDefaults(defineProps<ProductCardProps>(), {
   configuration: () => ({
@@ -194,13 +196,13 @@ const configuration = computed(() => props.configuration || ({} as ItemGridConte
 
 const { addModernImageExtension } = useModernImage();
 const localePath = useLocalePath();
+const route = useRoute();
 const { format } = usePriceFormatter();
 const { price, crossedPrice } = useProductPrice(product);
 const config = useRuntimeConfig();
 const useTagsOnCategoryPage = config.public.useTagsOnCategoryPage;
-const name = computed(
-  () => productGetters.getName(product.value) + productGetters.getGroupedAttributesString(product.value),
-);
+const productName = computed(() => productGetters.getName(product.value) || '');
+const name = computed(() => productName.value + productGetters.getGroupedAttributesString(product.value));
 const manufacturer = computed(() => {
   try {
     return productGetters.getManufacturer(product.value);
@@ -247,9 +249,8 @@ const effectiveHoverImageUrl = computed(() => {
   return src || '';
 });
 
-const imageAlt = computed(() =>
-  coverImage.value ? productImageGetters.getImageAlternate(coverImage.value) || name.value || '' : name.value || '',
-);
+const imageAlt = computed(() => getProductImageAlt(coverImage.value, productName.value, 0));
+const hoverImageAlt = computed(() => getProductImageAlt(secondCoverImage.value, productName.value, 1));
 const imageTitle = computed(() =>
   coverImage.value ? productImageGetters.getImageName(coverImage.value) || imageAlt.value : imageAlt.value,
 );
@@ -266,7 +267,7 @@ const imageHeight = computed(() => productGetters.getImageHeight(product.value) 
 const basePrice = computed(() => productGetters.getDefaultBasePrice(product.value));
 const unitContent = computed(() => productGetters.getUnitContent(product.value));
 const unitName = computed(() => productGetters.getUnitName(product.value));
-const showBasePrice = computed(() => productGetters.showPricePerUnit(product.value));
+const showBasePrice = computed(() => shouldShowPricePerUnit(product.value));
 
 const variationId = computed(() => productGetters.getVariationId(product.value));
 const { isGlobalProductCategoryTemplate } = useProducts();
@@ -281,6 +282,11 @@ const productPath = computed(() => {
   const shouldAppendVariation = productGetters.shouldAppendVariationToLink(product.value);
   return localePath(shouldAppendVariation ? `${basePath}_${variationId.value}` : basePath);
 });
+const shouldUseNativeProductLink = computed(() => route.meta.type === 'product');
+const productLinkTag = computed(() => (shouldUseNativeProductLink.value ? 'a' : NuxtLink));
+const productLinkProps = computed(() =>
+  shouldUseNativeProductLink.value ? { href: productPath.value } : { to: productPath.value },
+);
 
 const priority = computed(() => !props.isFromSlider && (props.index ?? 0) < 5);
 const {

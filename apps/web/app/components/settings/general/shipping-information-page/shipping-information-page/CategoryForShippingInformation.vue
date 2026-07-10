@@ -31,12 +31,12 @@ const shippingTextCategoryId = computed({
 <i18n lang="json">
 {
   "en": {
-    "description": "Select the category whose template data will be used for the /shipping page. By default, this page is also referenced wherever shipping prices are mentioned.",
+    "description": "Select the category whose template data will be used for the /ueber-uns/versand page. By default, this page is also referenced wherever shipping prices are mentioned.",
     "label": "Category for shipping information page",
     "tooltip": "Which category should be used to provide the template for the shipping information?"
   },
   "de": {
-    "description": "Select the category whose template data will be used for the /shipping page. By default, this page is also referenced wherever shipping prices are mentioned.",
+    "description": "Select the category whose template data will be used for the /ueber-uns/versand page. By default, this page is also referenced wherever shipping prices are mentioned.",
     "label": "Category for shipping information page",
     "tooltip": "Which category should be used to provide the template for the shipping information?"
   }

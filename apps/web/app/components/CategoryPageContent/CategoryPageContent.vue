@@ -33,9 +33,7 @@
               :rating="productGetters.getAverageRating(product, 'half')"
               :image-url="addModernImageExtension(productGetters.getCoverImage(product))"
               :image-alt="
-                productImageGetters.getImageAlternate(productImageGetters.getFirstImage(product)) ||
-                productGetters.getName(product) ||
-                ''
+                getProductImageAlt(productImageGetters.getFirstImage(product), productGetters.getName(product), 0)
               "
               :image-title="productImageGetters.getImageName(productImageGetters.getFirstImage(product)) || ''"
               :image-height="productGetters.getImageHeight(product) || 600"
@@ -45,7 +43,7 @@
               :base-price="productGetters.getDefaultBasePrice(product)"
               :unit-content="productGetters.getUnitContent(product)"
               :unit-name="productGetters.getUnitName(product)"
-              :show-base-price="productGetters.showPricePerUnit(product)"
+              :show-base-price="shouldShowPricePerUnit(product)"
             />
           </NuxtLazyHydrate>
         </section>
@@ -84,6 +82,8 @@ import { productGetters, productImageGetters } from '@plentymarkets/shop-api';
 import { SfIconTune, useDisclosure, SfLink } from '@storefront-ui/vue';
 import type { CategoryPageContentProps } from '~/components/CategoryPageContent/types';
 import { paths } from '~/utils/paths';
+import { shouldShowPricePerUnit } from '~/utils/productHelper';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const { title, totalProducts, itemsPerPage = 24, products = [] } = defineProps<CategoryPageContentProps>();
 

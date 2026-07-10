@@ -8,6 +8,17 @@ import type {
   PlentyEvents,
 } from '@plentymarkets/shop-api';
 
+const cloneCart = (cart: Cart): Cart => ({
+  ...cart,
+  items: cart.items?.map((item) => ({ ...item })),
+});
+
+const applyCartAmountDelta = (cart: Cart, delta: number): Cart => ({
+  ...cart,
+  itemSum: Number(((cart.itemSum ?? 0) + delta).toFixed(2)),
+  basketAmount: Number(((cart.basketAmount ?? 0) + delta).toFixed(2)),
+});
+
 const migrateVariationData = (oldCart: Cart, nextCart: Cart = {} as Cart): Cart => {
   if (!oldCart || !oldCart.items || !nextCart || !nextCart.items) {
     return nextCart;
@@ -84,7 +95,13 @@ export const useCart = () => {
    * ```
    */
   const clearCartItems = () => {
-    state.value.data.items = [];
+    state.value.data = applyCartAmountDelta(
+      {
+        ...state.value.data,
+        items: [],
+      },
+      -(state.value.data.items?.reduce((sum, item) => sum + item.price * item.quantity, 0) ?? 0),
+    );
   };
 
   /**
@@ -216,6 +233,22 @@ export const useCart = () => {
    */
   const setCartItemQuantity = async (params: SetCartItemQuantityParams) => {
     state.value.loading = true;
+    const previousCart = cloneCart(state.value.data);
+    const cartItem = state.value.data.items?.find((item) => item.id === params.cartItemId);
+
+    if (cartItem) {
+      const quantityDelta = params.quantity - cartItem.quantity;
+      state.value.data = applyCartAmountDelta(
+        {
+          ...state.value.data,
+          items: state.value.data.items?.map((item) =>
+            item.id === params.cartItemId ? { ...item, quantity: params.quantity } : item,
+          ),
+        },
+        cartItem.price * quantityDelta,
+      );
+    }
+
     try {
       const { data } = await useSdk().plentysystems.setCartItemQuantity({
         productId: params.productId,
@@ -226,6 +259,7 @@ export const useCart = () => {
       if (isCartItemError(data as unknown as Cart | CartItemError)) {
         const { send } = useNotification();
         const responseData = data as CartItemError;
+        state.value.data = previousCart;
         state.value.data.itemQuantity = responseData.availableStock;
 
         send({ message: t('storefrontError.cart.reachedMaximumQuantity'), type: 'warning' });
@@ -244,6 +278,7 @@ export const useCart = () => {
       }
       return state.value.data;
     } catch (error) {
+      state.value.data = previousCart;
       useHandleError(error as ApiError);
       return state.value.data;
     } finally {
@@ -263,6 +298,15 @@ export const useCart = () => {
    */
   const deleteCartItem = async (cartItem: CartItem) => {
     state.value.loading = true;
+    const previousCart = cloneCart(state.value.data);
+    state.value.data = applyCartAmountDelta(
+      {
+        ...state.value.data,
+        items: state.value.data.items?.filter((item) => item.id !== cartItem.id),
+      },
+      -(cartItem.price * cartItem.quantity),
+    );
+
     try {
       const { data } = await useSdk().plentysystems.deleteCartItem({
         cartItemId: cartItem.id,
@@ -276,6 +320,7 @@ export const useCart = () => {
       });
       return state.value.data;
     } catch (error) {
+      state.value.data = previousCart;
       useHandleError(error as ApiError);
       return state.value.data;
     } finally {

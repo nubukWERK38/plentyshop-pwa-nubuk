@@ -11,7 +11,7 @@
           ref="image"
           :src="addModernImageExtension(productBundleGetters.getBundleItemImage(item))"
           class="size-28 aspect-square object-contain pr-4"
-          :alt="productBundleGetters.getBundleItemName(item)"
+          :alt="getProductImageAlt(null, productBundleGetters.getBundleItemName(item), index)"
           loading="lazy"
         />
       </SfLink>
@@ -21,7 +21,7 @@
         ref="image"
         :src="addModernImageExtension(productBundleGetters.getBundleItemImage(item))"
         class="size-28 aspect-square mr-4 object-contain"
-        :alt="productBundleGetters.getBundleItemName(item)"
+        :alt="getProductImageAlt(null, productBundleGetters.getBundleItemName(item), index)"
         loading="lazy"
       />
 
@@ -53,6 +53,7 @@
 import { type ProductBundleComponent, productBundleGetters } from '@plentymarkets/shop-api';
 import type { BundleOrderItemsProps } from '~/components/BundleOrderItems/types';
 import { SfLink } from '@storefront-ui/vue';
+import { getProductImageAlt } from '~/utils/productImageAlt';
 
 const { product } = defineProps<BundleOrderItemsProps>();
 const NuxtLink = resolveComponent('NuxtLink');

@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['@fortawesome/vue-fontawesome'],
   },
-  css: ['@fortawesome/fontawesome-free/css/all.min.css', '~/assets/richtext.css'],
+  css: ['~/assets/richtext.css'],
   typescript: {
     typeCheck: false, // type checking runs via `npm run typecheck`, on build, and in CI (fitness-code-quality)
   },
@@ -243,8 +243,10 @@ export default defineNuxtConfig({
     },
   },
   pwa: {
-    registerType: 'prompt',
+    registerType: 'autoUpdate',
     workbox: {
+      skipWaiting: true,
+      clientsClaim: true,
       navigateFallback: null,
       globPatterns: ['**/*.{js,json,css,html,ico,svg,png,webp,ico,woff,woff2,ttf,eit,otf}', '_nuxt-plenty/icons/*'],
       globIgnores: ['manifest**.webmanifest'],
@@ -260,6 +262,10 @@ export default defineNuxtConfig({
           urlPattern: ({ request }) => request.mode === 'navigate',
           handler: 'NetworkFirst',
           options: {
+            cacheName: 'plenty-navigation-cache',
+            cacheableResponse: {
+              statuses: [200],
+            },
             precacheFallback: {
               fallbackURL: '/offline',
             },

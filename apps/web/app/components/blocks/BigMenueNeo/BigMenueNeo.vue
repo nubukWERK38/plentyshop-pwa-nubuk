@@ -700,7 +700,11 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
+  .big-menue-neo {
+    display: none;
+  }
+
   .big-menue-neo__columns {
     grid-template-columns: 1fr;
   }

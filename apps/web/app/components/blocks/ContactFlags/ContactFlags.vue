@@ -3,7 +3,19 @@
     <div v-if="showFlags" id="flags" class="contact-flags" :style="flagsStyle">
       <div v-for="flag in visibleFlags" :key="`${flag.label}-${flag.link}`" class="contact-flags__item">
         <a class="contact-flags__link" :href="flag.link" :style="linkStyle">
-          <i v-if="flag.icon" class="fa contact-flags__icon" :class="flag.icon" aria-hidden="true" />
+          <svg
+            v-if="resolveIconPaths(flag.icon)"
+            class="contact-flags__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path v-for="path in resolveIconPaths(flag.icon)" :key="path" :d="path" />
+          </svg>
           <span>{{ flag.label }}</span>
         </a>
       </div>
@@ -49,6 +61,28 @@ const linkStyle = computed<CSSProperties>(() => ({
   color: content.value.textColor || '#ffffff',
   '--contact-flags-icon-color': content.value.iconColor || '#ccff00',
 }));
+
+const contactFlagIcons: Record<string, string[]> = {
+  envelope: ['M4 4h16v16H4z', 'm22 6-10 7L2 6'],
+  undo: ['M3 7v6h6', 'M21 17a9 9 0 0 0-15-6.7L3 13'],
+  truck: [
+    'M4 6h10v12H4z',
+    'M14 10h4l3 4v4h-3',
+    'M6 18a2 2 0 1 0 4 0 2 2 0 0 0-4 0',
+    'M16 18a2 2 0 1 0 4 0 2 2 0 0 0-4 0',
+  ],
+};
+
+const normalizeIcon = (icon?: string) =>
+  icon
+    ?.trim()
+    .replace(/^fa[srbl]?\s+/, '')
+    .replace(/^fa-/, '') || '';
+
+const resolveIconPaths = (icon?: string) => {
+  const normalizedIcon = normalizeIcon(icon);
+  return normalizedIcon ? contactFlagIcons[normalizedIcon] : null;
+};
 </script>
 
 <style scoped>

@@ -9,7 +9,7 @@
   </div>
   <LowestPrice :product="product" />
   <BasePrice
-    v-if="productGetters.showPricePerUnit(product)"
+    v-if="shouldShowPricePerUnit(product)"
     :base-price="basePriceSingleValue"
     :unit-content="productGetters.getUnitContent(product)"
     :unit-name="productGetters.getUnitName(product)"
@@ -19,6 +19,7 @@
 <script setup lang="ts">
 import { productBundleGetters, productGetters, cartGetters } from '@plentymarkets/shop-api';
 import type { ProductPriceProps } from '~/components/ProductPrice/types';
+import { shouldShowPricePerUnit } from '~/utils/productHelper';
 
 const props = defineProps<ProductPriceProps>();
 
