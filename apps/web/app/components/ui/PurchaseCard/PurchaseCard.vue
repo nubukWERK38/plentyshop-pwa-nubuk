@@ -241,13 +241,18 @@
                   />-->
                 </template>
                 <div v-if="showEasyCreditButton" data-testid="easycredit-button" class="purchase-card__easycredit mt-3">
-                  <div
-                    :id="easyCreditInlineComponentId"
-                    ref="easyCreditInlineComponent"
-                    class="purchase-card__easycredit-widget"
-                    @click.capture="handleEasyCreditInlineClick"
-                  />
-                  <p class="purchase-card__easycredit-debug">{{ easyCreditDebugMessage }}</p>
+                  <img class="purchase-card__easycredit-logo" :src="EASY_CREDIT_LOGO_URL" alt="easyCredit" />
+                  <div class="purchase-card__easycredit-content">
+                    <div
+                      :id="easyCreditInlineComponentId"
+                      ref="easyCreditInlineComponent"
+                      class="purchase-card__easycredit-widget"
+                      @click.capture="handleEasyCreditInlineClick"
+                    />
+                    <p v-if="showEasyCreditDebug" class="purchase-card__easycredit-debug">
+                      {{ easyCreditDebugMessage }}
+                    </p>
+                  </div>
                 </div>
                 <div class="purchase-card__tax-note mt-4 typography-text-xs flex gap-1">
                   <span>{{ t('common.labels.asterisk') }}</span>
@@ -330,7 +335,10 @@
           overlay-classes="purchase-card__easycredit-modal-overlay"
         >
           <header class="purchase-card__easycredit-modal-header">
-            <h2 id="easycredit-modal-title" class="purchase-card__easycredit-modal-title">easyCredit-Ratenkauf</h2>
+            <h2 id="easycredit-modal-title" class="purchase-card__easycredit-modal-title">
+              <img class="purchase-card__easycredit-modal-logo" :src="EASY_CREDIT_LOGO_URL" alt="" aria-hidden="true" />
+              <span>easyCredit-Ratenkauf</span>
+            </h2>
             <UiButton
               type="button"
               variant="tertiary"
@@ -343,8 +351,12 @@
             </UiButton>
           </header>
           <div class="purchase-card__easycredit-modal-content">
-            <div :id="easyCreditModalComponentId" ref="easyCreditModalComponent" class="purchase-card__easycredit-widget" />
-            <p class="purchase-card__easycredit-debug">{{ easyCreditDebugMessage }}</p>
+            <div
+              :id="easyCreditModalComponentId"
+              ref="easyCreditModalComponent"
+              class="purchase-card__easycredit-widget"
+            />
+            <p v-if="showEasyCreditDebug" class="purchase-card__easycredit-debug">{{ easyCreditDebugMessage }}</p>
           </div>
         </UiModal>
       </Teleport>
@@ -464,10 +476,12 @@ const { openDrawer } = useProductLegalDetailsDrawer();
 const LEASING_CATEGORY_PATH = '/ueber-uns/leasingpartner';
 const RETURN_CATEGORY_PATH = '/ueber-uns/retoure';
 const EASY_CREDIT_WEBSHOP_ID = '1.de.11459.4';
+const EASY_CREDIT_LOGO_URL = 'https://cdn03.plentyone.com/0bcmhf2jth7k/frontend/easyCredit.svg';
 const EASY_CREDIT_JQUERY_URL = 'https://code.jquery.com/jquery-1.11.3.min.js';
 const EASY_CREDIT_SCRIPT_URL = 'https://ratenkauf.easycredit.de/widget/ratenrechner/v2/ratenrechner.js';
 const EASY_CREDIT_CSS_URL = 'https://ratenkauf.easycredit.de/ratenkauf/js/ratenrechner/v1/ratenrechner.css';
 const EASY_CREDIT_MIN_AMOUNT = 200;
+const showEasyCreditDebug = false;
 type InfoModalType = 'return' | 'leasing';
 const infoModalOpen = ref(false);
 const infoModalTitle = ref('');
@@ -967,8 +981,6 @@ const openProductQuestionTab = () => {
 </script>
 
 <style scoped>
-
-
 .purchase-card {
   color: #071625;
   box-shadow: none;
@@ -1286,11 +1298,27 @@ const openProductQuestionTab = () => {
 }
 
 .purchase-card__easycredit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
   min-height: 44px;
-  padding: 10px;
-  background: #ededed;
-  color: #6f6f6f;
+  padding: 10px 0 0;
+  background: transparent;
+  color: #0066b3;
+  text-align: center;
+}
+
+.purchase-card__easycredit-logo {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+}
+
+.purchase-card__easycredit-content {
+  min-width: 0;
+  flex: 0 1 auto;
 }
 
 :global(.purchase-card__easycredit-modal-overlay) {
@@ -1321,11 +1349,20 @@ const openProductQuestionTab = () => {
 }
 
 :global(.purchase-card__easycredit-modal-title) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0;
   color: #1c76bd;
   font-size: 1.125rem;
   font-weight: 700;
   line-height: 1.2;
+}
+
+.purchase-card__easycredit-modal-logo {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
 }
 
 :global(.purchase-card__easycredit-close) {
@@ -1341,6 +1378,12 @@ const openProductQuestionTab = () => {
 .purchase-card__easycredit-widget {
   width: 100%;
   min-height: 24px;
+  color: #0066b3;
+  text-align: center;
+}
+
+.purchase-card__easycredit-widget :deep(*) {
+  color: #0066b3 !important;
 }
 
 .purchase-card__easycredit-modal-content .purchase-card__easycredit-widget {
@@ -1350,7 +1393,12 @@ const openProductQuestionTab = () => {
 .purchase-card__easycredit-widget :deep(.styleKurzText),
 .purchase-card__easycredit-widget :deep(.styleRate),
 .purchase-card__easycredit-widget :deep(.styleLink) {
-  color: var(--ci-primary);
+  color: #0066b3 !important;
+}
+
+.purchase-card__easycredit-widget :deep(.styleKurzText),
+.purchase-card__easycredit-widget :deep(.styleRate) {
+  font-weight: 700 !important;
 }
 
 .purchase-card__easycredit-widget :deep(.styleLink) {
@@ -1564,6 +1612,5 @@ const openProductQuestionTab = () => {
   .purchase-card__paypal-buttons :deep(*) {
     max-width: 100%;
   }
-  
 }
 </style>
