@@ -56,7 +56,6 @@
           }"
           width="1536"
           height="380"
-          sizes="100vw"
           :loading="'lazy'"
           :data-testid="'category-data-image-' + meta.uuid"
         />

@@ -61,7 +61,6 @@
                 class="thumb-slider-neo__image"
                 width="400"
                 height="220"
-                sizes="(max-width: 767px) 50vw, 20vw"
                 :loading="isPriorityImage(index) ? 'eager' : 'lazy'"
                 :fetchpriority="isPriorityImage(index) ? 'high' : 'auto'"
                 :preload="isPriorityImage(index)"

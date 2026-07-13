@@ -166,14 +166,15 @@ describe('CategoryData', () => {
       global: {
         stubs: {
           NuxtImg: {
-            template: '<img :src="src" :alt="alt" />',
-            props: ['src', 'alt'],
+            template: '<img :src="src" :alt="alt" :sizes="sizes" />',
+            props: ['src', 'alt', 'sizes'],
           },
         },
       },
     });
 
     expect(wrapper.find('img').attributes('alt')).toBe('E-Bikes');
+    expect(wrapper.find('img').attributes('sizes')).toBeUndefined();
   });
 
   it('uses manual image alt text when set', () => {

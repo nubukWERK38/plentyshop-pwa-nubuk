@@ -8,10 +8,10 @@
 
         <ul
           v-if="showSubcategories && subcategories.length"
+          id="category-subcategories"
           ref="subcategoryListRef"
           class="category-data-link-list mt-4"
           data-testid="category-subcategories"
-          id="category-subcategories"
         >
           <li
             v-for="(subcategory, index) in visibleSubcategories"
@@ -105,7 +105,7 @@ const renderOrder = computed<CategoryDataFieldKey[]>(() =>
     : (['name', 'description1', 'description2', 'shortDescription'] as CategoryDataFieldKey[]),
 );
 
-const subcategoryListRef = ref<HTMLElement | null>(null);
+const subcategoryListRef = ref<HTMLElement[]>([]);
 const visibleSubcategoryCount = ref(props.subcategories.length);
 const hasSubcategoryRowLimit = computed(() => Number.isFinite(props.maxSubcategoryRows) && props.maxSubcategoryRows);
 
@@ -119,7 +119,7 @@ const hasHiddenSubcategories = computed(
 );
 
 const getRowIndex = (item: HTMLElement, firstRowTop: number) => {
-  const rowTops = Array.from(subcategoryListRef.value?.querySelectorAll<HTMLElement>('[data-subcategory-row]') ?? [])
+  const rowTops = Array.from(subcategoryListRef.value[0]?.querySelectorAll<HTMLElement>('[data-subcategory-row]') ?? [])
     .map((element) => Math.round(element.offsetTop - firstRowTop))
     .filter((value, index, values) => values.indexOf(value) === index)
     .sort((a, b) => a - b);
@@ -131,7 +131,7 @@ const getRowIndex = (item: HTMLElement, firstRowTop: number) => {
 const reduceUntilEllipsisFits = async (firstRowTop: number, maxRows: number) => {
   await nextTick();
 
-  const ellipsis = subcategoryListRef.value?.querySelector<HTMLElement>(
+  const ellipsis = subcategoryListRef.value[0]?.querySelector<HTMLElement>(
     '[data-testid="category-subcategories-ellipsis"]',
   );
   if (!ellipsis) return;
@@ -151,7 +151,7 @@ const updateVisibleSubcategories = async () => {
   visibleSubcategoryCount.value = props.subcategories.length;
   await nextTick();
 
-  const list = subcategoryListRef.value;
+  const list = subcategoryListRef.value[0];
   const items = Array.from(list?.querySelectorAll<HTMLElement>('[data-testid="category-subcategory-item"]') ?? []);
   const firstItem = items[0];
   const maxRows = props.maxSubcategoryRows ?? 0;

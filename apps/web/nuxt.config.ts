@@ -118,6 +118,7 @@ export default defineNuxtConfig({
     '/favicon.ico': { redirect: { to: '/_nuxt-plenty/favicon.ico', statusCode: 301 } },
   },
   image: {
+    // The passthrough provider cannot generate responsive width variants; do not use NuxtImg `sizes` with it.
     provider: 'none',
   },
   pages: true,

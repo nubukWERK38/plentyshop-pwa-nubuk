@@ -10,7 +10,6 @@
       }"
       :width="imageDimensions.width"
       :height="imageDimensions.height"
-      sizes="100vw"
       :loading="props.lazyLoading"
       :data-testid="'banner-image-' + meta.uuid"
     />

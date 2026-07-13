@@ -30,7 +30,6 @@
               :style="imageStyle"
               width="1024"
               height="576"
-              sizes="100vw md:50vw"
               :data-testid="`image-banner-neo-image-${slideIndex}`"
             />
           </div>
