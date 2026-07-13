@@ -620,9 +620,8 @@ const availabilityIconByTone = {
 } as const;
 
 const getAvailabilityId = () => {
-  const variation = props.product?.variation as Record<string, unknown> | undefined;
-  const availability = variation?.availability as Record<string, unknown> | undefined;
-  const id = Number(variation?.availabilityId ?? availability?.id);
+  const variation = props.product?.variation;
+  const id = Number(variation?.availabilityId ?? variation?.availability?.id);
 
   return Number.isNaN(id) ? 0 : id;
 };
