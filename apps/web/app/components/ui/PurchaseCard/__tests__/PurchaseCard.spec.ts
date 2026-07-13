@@ -49,4 +49,28 @@ describe('<PurchaseCard />', () => {
 
     expect(wrapper.find('[data-testid="badges"]').exists()).toBe(false);
   });
+
+  it('should render in-stock availability in green', () => {
+    const inStockProduct = JSON.parse(JSON.stringify(ProductMock));
+    inStockProduct.variation.availabilityId = 1;
+    inStockProduct.variation.availability.names.name = 'LAGERND, VERSANDBEREIT IN 1 WERKTAG';
+
+    const wrapper = mount(UiPurchaseCard, {
+      props: {
+        product: inStockProduct,
+        reviewAverage: {} as ReviewCounts,
+      },
+      global: {
+        stubs: {
+          PayPalExpressButton: true,
+          PayPalPayLaterBanner: true,
+          UnitContentSelect: true,
+        },
+      },
+    });
+
+    expect(wrapper.find('.purchase-card__availability-icon--success').exists()).toBe(true);
+    expect(wrapper.text()).toContain('Lagernd, Versandbereit in 1 Werktag');
+    expect(wrapper.text()).not.toContain('LAGERND, VERSANDBEREIT IN 1 WERKTAG');
+  });
 });

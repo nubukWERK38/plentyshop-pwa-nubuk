@@ -84,8 +84,14 @@
             </template>
             <template v-if="key === 'availability' && configuration?.fields.availability">
               <div v-if="availabilityName" class="purchase-card__availability" data-testid="badges">
-                <span class="purchase-card__availability-dot" aria-hidden="true" />
-                <span>{{ availabilityName }}</span>
+                <span
+                  class="purchase-card__availability-icon"
+                  :class="`purchase-card__availability-icon--${availabilityStatus.tone}`"
+                  aria-hidden="true"
+                >
+                  <component :is="availabilityStatus.icon" size="xs" />
+                </span>
+                <span class="purchase-card__availability-text">{{ formattedAvailabilityName }}</span>
               </div>
             </template>
             <template v-if="key === 'variationProperties' && configuration?.fields.variationProperties">
@@ -382,6 +388,10 @@ import {
   SfIconExpandMore,
   SfIconClose,
   SfIconChevronRight,
+  SfIconCheckCircle,
+  SfIconSchedule,
+  SfIconCancel,
+  SfIconWarehouse,
 } from '@storefront-ui/vue';
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';
@@ -562,6 +572,80 @@ const availabilityName = computed(() => {
   } catch {
     return '';
   }
+});
+
+const formatAvailabilityName = (name: string) => {
+  const trimmedName = name.trim();
+  const hasLowercaseLetters = /[a-zäöüß]/.test(trimmedName);
+  const hasUppercaseLetters = /[A-ZÄÖÜ]/.test(trimmedName);
+
+  if (!trimmedName || hasLowercaseLetters || !hasUppercaseLetters) return trimmedName;
+
+  return trimmedName
+    .toLocaleLowerCase('de-DE')
+    .split(/(,\s*)/)
+    .map((part) => {
+      if (!part || part.includes(',')) return part;
+
+      return part.charAt(0).toLocaleUpperCase('de-DE') + part.slice(1);
+    })
+    .join('')
+    .replace(/\blt\b/g, 'LT')
+    .replace(/\bwerktag(e)?\b/g, (match) => match.charAt(0).toLocaleUpperCase('de-DE') + match.slice(1));
+};
+
+const formattedAvailabilityName = computed(() => formatAvailabilityName(availabilityName.value));
+
+type AvailabilityTone = 'success' | 'orange' | 'info' | 'neutral' | 'danger';
+
+const availabilityToneById: Record<number, AvailabilityTone> = {
+  1: 'success',
+  2: 'orange',
+  3: 'info',
+  4: 'neutral',
+  5: 'danger',
+  6: 'danger',
+  7: 'danger',
+  8: 'danger',
+  9: 'danger',
+  10: 'neutral',
+};
+
+const availabilityIconByTone = {
+  success: SfIconCheckCircle,
+  orange: SfIconCheckCircle,
+  info: SfIconSchedule,
+  neutral: SfIconWarehouse,
+  danger: SfIconCancel,
+} as const;
+
+const getAvailabilityId = () => {
+  const variation = props.product?.variation as Record<string, unknown> | undefined;
+  const availability = variation?.availability as Record<string, unknown> | undefined;
+  const id = Number(variation?.availabilityId ?? availability?.id);
+
+  return Number.isNaN(id) ? 0 : id;
+};
+
+const getFallbackAvailabilityTone = (name: string): AvailabilityTone => {
+  const normalizedName = name.toLowerCase();
+
+  if (/ausverkauft|sold out|out of stock|vorbestell/.test(normalizedName)) return 'danger';
+  if (/lagernd|sofort|in stock|available/.test(normalizedName)) return 'success';
+  if (/bestellbar|backorder|preorder/.test(normalizedName)) return 'orange';
+  if (/3-7|lieferzeit|versandbereit/.test(normalizedName)) return 'info';
+  if (/store|filiale|store erhältlich/.test(normalizedName)) return 'neutral';
+
+  return 'neutral';
+};
+
+const availabilityStatus = computed(() => {
+  const tone = availabilityToneById[getAvailabilityId()] ?? getFallbackAvailabilityTone(availabilityName.value);
+
+  return {
+    tone,
+    icon: availabilityIconByTone[tone],
+  };
 });
 const orderPropertiesGroups = computed(() => {
   if (!Array.isArray((props.product as { properties?: unknown }).properties)) return [];
@@ -1034,15 +1118,46 @@ const openProductQuestionTab = () => {
   color: #071625;
   font-size: 0.875rem;
   line-height: 1.25;
-  text-transform: uppercase;
 }
 
-.purchase-card__availability-dot {
-  width: 8px;
-  height: 8px;
-  flex: 0 0 8px;
+.purchase-card__availability-icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
-  background: #ff9d00;
+  color: #fff;
+}
+
+.purchase-card__availability-icon--success {
+  background: #24a148;
+}
+
+.purchase-card__availability-icon--orange {
+  background: #f97316;
+}
+
+.purchase-card__availability-icon--info {
+  background: #2563eb;
+}
+
+.purchase-card__availability-icon--neutral {
+  background: #8b949e;
+}
+
+.purchase-card__availability-icon--danger {
+  background: #dc2626;
+}
+
+.purchase-card__availability-icon :deep(svg) {
+  width: 14px;
+  height: 14px;
+}
+
+.purchase-card__availability-text {
+  text-transform: none;
 }
 
 .purchase-card__preview-text {
