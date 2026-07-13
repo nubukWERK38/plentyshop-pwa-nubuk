@@ -12,7 +12,12 @@ describe('FieldsOrder', () => {
           shortDescription: false,
         },
         fieldsOrder: ['name', 'description1', 'description2', 'shortDescription'],
-        texts: { name: 'E-Bikes' },
+        texts: {
+          name: 'E-Bikes',
+          description1: '',
+          description2: '',
+          shortDescription: '',
+        },
         showSubcategories: true,
         subcategories: [
           { name: 'E-Mountainbikes', link: '/e-mountainbikes' },
