@@ -51,21 +51,21 @@
         v-else-if="key === 'description1' && texts.description1"
         class="category-data-description category-data-description-1 no-preflight"
         data-testid="category-description-1"
-        v-html="texts.description1"
+        v-html="normalizedTexts.description1"
       />
 
       <div
         v-else-if="key === 'description2' && texts.description2"
         class="category-data-description no-preflight"
         data-testid="category-description-2"
-        v-html="texts.description2"
+        v-html="normalizedTexts.description2"
       />
 
       <div
         v-else-if="key === 'shortDescription' && texts.shortDescription"
         class="category-data-description no-preflight"
         data-testid="category-short-description"
-        v-html="texts.shortDescription"
+        v-html="normalizedTexts.shortDescription"
       />
     </template>
   </template>
@@ -79,6 +79,7 @@ import type {
   CategoryDataLinkItem,
   CategoryDataSubcategory,
 } from '~/components/blocks/CategoryData/types';
+import { normalizeRichTextLinks } from '~/utils/normalizeRichTextLinks';
 
 const props = defineProps<{
   fields: CategoryDataFieldsVisibility;
@@ -90,6 +91,13 @@ const props = defineProps<{
   brands: CategoryDataLinkItem[];
   maxSubcategoryRows?: number;
 }>();
+
+const currentOrigin = useRequestURL().origin;
+const normalizedTexts = computed(() => ({
+  description1: normalizeRichTextLinks(props.texts.description1, currentOrigin),
+  description2: normalizeRichTextLinks(props.texts.description2, currentOrigin),
+  shortDescription: normalizeRichTextLinks(props.texts.shortDescription, currentOrigin),
+}));
 
 const renderOrder = computed<CategoryDataFieldKey[]>(() =>
   props.fieldsOrder?.length
