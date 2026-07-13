@@ -22,6 +22,7 @@ export type UseSearchReturn = () => UseSearch;
 export interface UseSearchSuggestionsState {
   results: ItemSearchAutocompleteResult | null;
   searchTerm: string;
+  pendingSearchTerm: string;
   loading: boolean;
   currentRequestId: number;
 }
