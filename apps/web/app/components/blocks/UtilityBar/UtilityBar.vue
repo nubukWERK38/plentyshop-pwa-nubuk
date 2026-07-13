@@ -1108,7 +1108,6 @@ const navigateToLogin = () => {
   min-height: 58px;
   padding-top: 5px !important;
   padding-bottom: 5px !important;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 8%);
 }
 
 .nubuk-utility-shell--compact .utility-bar__desktop-inner--boxed {
