@@ -127,6 +127,7 @@
 <script setup lang="ts">
 import { SfIconCancel, SfIconSearch, SfInput, SfLoaderCircular } from '@storefront-ui/vue';
 import { onClickOutside, unrefElement } from '@vueuse/core';
+import { SEARCH_RELEVANCE_SORT } from '~/utils/pathHelper';
 import { debounce } from '~/utils/debounce';
 
 const props = defineProps<{
@@ -140,7 +141,6 @@ const router = useRouter();
 const route = useRoute();
 const { updateSearchTerm } = useCategoryFilter();
 const { loading } = useSearch();
-const { getSetting: defaultSortingSearch } = useSiteSettings('defaultSortingSearch');
 const rootRef = ref<HTMLElement | null>(null);
 const isOpen = ref(false);
 
@@ -183,16 +183,16 @@ const handleSubmit = () => {
   props.close?.();
   updateSearchTerm(inputModel.value);
   emit('frontend:searchProduct', inputModel.value);
-  router.push({ path: localePath(paths.search), query: { term: inputModel.value, sort: defaultSortingSearch() } });
+  router.push({ path: localePath(paths.search), query: { term: inputModel.value, sort: SEARCH_RELEVANCE_SORT } });
   handleReset();
 };
 const handleSearch = () => {
-  if (inputModel.value.length > 1) {
+  if (inputModel.value.trim().length > 1) {
     handleOpen();
     searchSuggestions(inputModel.value);
   }
 };
-const debounceInput = debounce(handleSearch, 120);
+const debounceInput = debounce(handleSearch, 250);
 
 const handleOpen = () => {
   isOpen.value = true;
@@ -207,14 +207,13 @@ onClickOutside(rootRef, () => {
 });
 
 watch(inputModel, () => {
-  if (inputModel.value === '') {
+  if (inputModel.value.trim().length < 2) {
+    debounceInput.cancel();
     resetSuggestions();
     handleClose();
     return;
   }
-  if (inputModel.value.length > 1) {
-    debounceInput();
-  }
+  debounceInput();
 });
 
 watch(

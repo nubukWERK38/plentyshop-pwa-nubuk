@@ -84,8 +84,14 @@
             </template>
             <template v-if="key === 'availability' && configuration?.fields.availability">
               <div v-if="availabilityName" class="purchase-card__availability" data-testid="badges">
-                <span class="purchase-card__availability-dot" aria-hidden="true" />
-                <span>{{ availabilityName }}</span>
+                <span
+                  class="purchase-card__availability-icon"
+                  :class="`purchase-card__availability-icon--${availabilityStatus.tone}`"
+                  aria-hidden="true"
+                >
+                  <component :is="availabilityStatus.icon" size="xs" />
+                </span>
+                <span class="purchase-card__availability-text">{{ formattedAvailabilityName }}</span>
               </div>
             </template>
             <template v-if="key === 'variationProperties' && configuration?.fields.variationProperties">
@@ -240,6 +246,20 @@
                     :amount="priceWithProperties * quantitySelectorValue"
                   />-->
                 </template>
+                <div v-if="showEasyCreditButton" data-testid="easycredit-button" class="purchase-card__easycredit mt-3">
+                  <img class="purchase-card__easycredit-logo" :src="EASY_CREDIT_LOGO_URL" alt="easyCredit" />
+                  <div class="purchase-card__easycredit-content">
+                    <div
+                      :id="easyCreditInlineComponentId"
+                      ref="easyCreditInlineComponent"
+                      class="purchase-card__easycredit-widget"
+                      @click.capture="handleEasyCreditInlineClick"
+                    />
+                    <p v-if="showEasyCreditDebug" class="purchase-card__easycredit-debug">
+                      {{ easyCreditDebugMessage }}
+                    </p>
+                  </div>
+                </div>
                 <div class="purchase-card__tax-note mt-4 typography-text-xs flex gap-1">
                   <span>{{ t('common.labels.asterisk') }}</span>
                   <span>{{ showNetPrices ? t('product.priceExclVAT') : t('product.priceInclVAT') }}</span>
@@ -311,6 +331,40 @@
           </div>
           <div v-else class="purchase-card__info-modal-content" v-html="infoModalContent" />
         </UiModal>
+
+        <UiModal
+          v-model="easyCreditModalOpen"
+          aria-labelledby="easycredit-modal-title"
+          tag="section"
+          role="dialog"
+          class="purchase-card__easycredit-modal"
+          overlay-classes="purchase-card__easycredit-modal-overlay"
+        >
+          <header class="purchase-card__easycredit-modal-header">
+            <h2 id="easycredit-modal-title" class="purchase-card__easycredit-modal-title">
+              <img class="purchase-card__easycredit-modal-logo" :src="EASY_CREDIT_LOGO_URL" alt="" aria-hidden="true" />
+              <span>easyCredit-Ratenkauf</span>
+            </h2>
+            <UiButton
+              type="button"
+              variant="tertiary"
+              square
+              class="purchase-card__easycredit-close"
+              :aria-label="t('common.navigation.closeDrawer')"
+              @click="closeEasyCreditModal"
+            >
+              <SfIconClose />
+            </UiButton>
+          </header>
+          <div class="purchase-card__easycredit-modal-content">
+            <div
+              :id="easyCreditModalComponentId"
+              ref="easyCreditModalComponent"
+              class="purchase-card__easycredit-widget"
+            />
+            <p v-if="showEasyCreditDebug" class="purchase-card__easycredit-debug">{{ easyCreditDebugMessage }}</p>
+          </div>
+        </UiModal>
       </Teleport>
     </ClientOnly>
   </form>
@@ -334,6 +388,10 @@ import {
   SfIconExpandMore,
   SfIconClose,
   SfIconChevronRight,
+  SfIconCheckCircle,
+  SfIconSchedule,
+  SfIconCancel,
+  SfIconWarehouse,
 } from '@storefront-ui/vue';
 import type { PriceCardPadding, PurchaseCardProps } from '~/components/ui/PurchaseCard/types';
 import type { PayPalAddToCartCallback } from '#paypal/types';
@@ -427,12 +485,27 @@ const localePath = useLocalePath();
 const { openDrawer } = useProductLegalDetailsDrawer();
 const LEASING_CATEGORY_PATH = '/ueber-uns/leasingpartner';
 const RETURN_CATEGORY_PATH = '/ueber-uns/retoure';
+const EASY_CREDIT_WEBSHOP_ID = '1.de.11459.4';
+const EASY_CREDIT_LOGO_URL = 'https://cdn03.plentyone.com/0bcmhf2jth7k/frontend/easyCredit.svg';
+const EASY_CREDIT_JQUERY_URL = 'https://code.jquery.com/jquery-1.11.3.min.js';
+const EASY_CREDIT_SCRIPT_URL = 'https://ratenkauf.easycredit.de/widget/ratenrechner/v2/ratenrechner.js';
+const EASY_CREDIT_CSS_URL = 'https://ratenkauf.easycredit.de/ratenkauf/js/ratenrechner/v1/ratenrechner.css';
+const EASY_CREDIT_MIN_AMOUNT = 200;
+const showEasyCreditDebug = false;
 type InfoModalType = 'return' | 'leasing';
 const infoModalOpen = ref(false);
 const infoModalTitle = ref('');
 const infoModalContent = ref('');
 const infoModalLoading = ref(false);
 const infoModalError = ref(false);
+const easyCreditModalOpen = ref(false);
+const easyCreditInlineComponent = ref<HTMLElement | null>(null);
+const easyCreditModalComponent = ref<HTMLElement | null>(null);
+const easyCreditStatus = ref<'idle' | 'loading' | 'loaded' | 'rendered' | 'empty' | 'belowMinimum' | 'error'>('idle');
+const easyCreditError = ref('');
+const easyCreditIdBase = useId().replace(/[^a-zA-Z0-9_-]/g, '');
+const easyCreditInlineComponentId = `easycredit-ratenrechner-inline-${easyCreditIdBase}`;
+const easyCreditModalComponentId = `easycredit-ratenrechner-modal-${easyCreditIdBase}`;
 const infoModalPages: Record<InfoModalType, { title: string; path: string }> = {
   return: {
     title: 'Wie läuft eine Retoure ab?',
@@ -500,6 +573,79 @@ const availabilityName = computed(() => {
     return '';
   }
 });
+
+const formatAvailabilityName = (name: string) => {
+  const trimmedName = name.trim();
+  const hasLowercaseLetters = /[a-zäöüß]/.test(trimmedName);
+  const hasUppercaseLetters = /[A-ZÄÖÜ]/.test(trimmedName);
+
+  if (!trimmedName || hasLowercaseLetters || !hasUppercaseLetters) return trimmedName;
+
+  return trimmedName
+    .toLocaleLowerCase('de-DE')
+    .split(/(,\s*)/)
+    .map((part) => {
+      if (!part || part.includes(',')) return part;
+
+      return part.charAt(0).toLocaleUpperCase('de-DE') + part.slice(1);
+    })
+    .join('')
+    .replace(/\blt\b/g, 'LT')
+    .replace(/\bwerktag(e)?\b/g, (match) => match.charAt(0).toLocaleUpperCase('de-DE') + match.slice(1));
+};
+
+const formattedAvailabilityName = computed(() => formatAvailabilityName(availabilityName.value));
+
+type AvailabilityTone = 'success' | 'orange' | 'info' | 'neutral' | 'danger';
+
+const availabilityToneById: Record<number, AvailabilityTone> = {
+  1: 'success',
+  2: 'orange',
+  3: 'info',
+  4: 'neutral',
+  5: 'danger',
+  6: 'danger',
+  7: 'danger',
+  8: 'danger',
+  9: 'danger',
+  10: 'neutral',
+};
+
+const availabilityIconByTone = {
+  success: SfIconCheckCircle,
+  orange: SfIconCheckCircle,
+  info: SfIconSchedule,
+  neutral: SfIconWarehouse,
+  danger: SfIconCancel,
+} as const;
+
+const getAvailabilityId = () => {
+  const variation = props.product?.variation;
+  const id = Number(variation?.availabilityId ?? variation?.availability?.id);
+
+  return Number.isNaN(id) ? 0 : id;
+};
+
+const getFallbackAvailabilityTone = (name: string): AvailabilityTone => {
+  const normalizedName = name.toLowerCase();
+
+  if (/ausverkauft|sold out|out of stock|vorbestell/.test(normalizedName)) return 'danger';
+  if (/lagernd|sofort|in stock|available/.test(normalizedName)) return 'success';
+  if (/bestellbar|backorder|preorder/.test(normalizedName)) return 'orange';
+  if (/3-7|lieferzeit|versandbereit/.test(normalizedName)) return 'info';
+  if (/store|filiale|store erhältlich/.test(normalizedName)) return 'neutral';
+
+  return 'neutral';
+};
+
+const availabilityStatus = computed(() => {
+  const tone = availabilityToneById[getAvailabilityId()] ?? getFallbackAvailabilityTone(availabilityName.value);
+
+  return {
+    tone,
+    icon: availabilityIconByTone[tone],
+  };
+});
 const orderPropertiesGroups = computed(() => {
   if (!Array.isArray((props.product as { properties?: unknown }).properties)) return [];
 
@@ -550,6 +696,7 @@ const inlineStyle = computed(() => {
 onMounted(() => {
   resetInvalidFields();
   resetAttributeFields();
+  renderEasyCreditInlineWidget();
 });
 
 onBeforeRouteLeave(() => {
@@ -659,6 +806,191 @@ const isNotValidVariation = computed(() => (getCombination() ? '' : t('product.a
 const showPayPalButtons = computed(
   () => !isInEditor.value && Boolean(getCombination()) && productGetters.isSalable(props?.product),
 );
+const showEasyCreditButton = computed(
+  () => !isInEditor.value && Boolean(getCombination()) && productGetters.isSalable(props?.product),
+);
+
+const roundCurrency = (value: number) => Math.round(value * 100) / 100;
+
+const easyCreditPurchaseAmount = computed(() => roundCurrency(priceWithProperties.value * quantitySelectorValue.value));
+const easyCreditDebugMessage = computed(() => {
+  const amount = format(easyCreditPurchaseAmount.value);
+
+  switch (easyCreditStatus.value) {
+    case 'idle':
+      return `easyCredit Debug: wartet auf Initialisierung, Betrag ${amount}.`;
+    case 'loading':
+      return `easyCredit Debug: Script wird geladen, Betrag ${amount}.`;
+    case 'loaded':
+      return `easyCredit Debug: Script geladen, Widget wird gerendert, Betrag ${amount}.`;
+    case 'rendered':
+      return `easyCredit Debug: Widget wurde gerendert, Betrag ${amount}.`;
+    case 'empty':
+      return `easyCredit Debug: Script geladen, aber Widget blieb leer. Betrag ${amount}.`;
+    case 'belowMinimum':
+      return `easyCredit Debug: Betrag ${amount} liegt unter 200 EUR, easyCredit blendet den Rechner laut Doku aus.`;
+    case 'error':
+      return `easyCredit Debug: Script/Widget konnte nicht geladen werden. ${easyCreditError.value}`;
+    default:
+      return `easyCredit Debug: unbekannter Status, Betrag ${amount}.`;
+  }
+});
+
+type EasyCreditRatenrechnerPlugin = {
+  anzeige: (
+    id: string,
+    options: {
+      webshopId: string;
+      finanzierungsbetrag: number;
+      textVariante: 'KURZ';
+      euro: 'SYMBOL';
+    },
+  ) => void;
+};
+
+declare global {
+  interface Window {
+    jQuery?: unknown;
+    jQuery_1_11_3?: unknown;
+    rkPlugin?: EasyCreditRatenrechnerPlugin;
+  }
+}
+
+useHead({
+  link: [{ rel: 'stylesheet', type: 'text/css', href: EASY_CREDIT_CSS_URL }],
+});
+
+const loadExternalScript = async (src: string, isReady: () => boolean) => {
+  if (isReady()) return;
+
+  const existingScript = document.querySelector(`script[src="${src}"]`) as HTMLScriptElement | null;
+  if (existingScript) {
+    existingScript.remove();
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.type = 'text/javascript';
+    script.async = false;
+    script.addEventListener('load', () => resolve());
+    script.addEventListener('error', () => reject(new Error(`Script konnte nicht geladen werden: ${src}`)));
+    document.head.appendChild(script);
+  });
+};
+
+const waitForEasyCreditPlugin = async () => {
+  if (window.rkPlugin) return window.rkPlugin;
+
+  easyCreditStatus.value = 'loading';
+  await loadExternalScript(EASY_CREDIT_JQUERY_URL, () => Boolean(window.jQuery));
+
+  if (window.jQuery && !window.jQuery_1_11_3) {
+    window.jQuery_1_11_3 = window.jQuery;
+  }
+
+  await loadExternalScript(EASY_CREDIT_SCRIPT_URL, () => Boolean(window.rkPlugin));
+
+  return await new Promise<EasyCreditRatenrechnerPlugin>((resolve, reject) => {
+    let attempts = 0;
+    const timer = window.setInterval(() => {
+      attempts += 1;
+      if (window.rkPlugin) {
+        window.clearInterval(timer);
+        resolve(window.rkPlugin);
+      }
+      if (attempts >= 80) {
+        window.clearInterval(timer);
+        reject(new Error('easyCredit Ratenrechner konnte nicht geladen werden.'));
+      }
+    }, 100);
+  });
+};
+
+const expandEasyCreditCalculator = (container: HTMLElement) => {
+  const clickableElements = Array.from(
+    container.querySelectorAll<HTMLElement>('a, button, [role="button"], [onclick]'),
+  );
+  const trigger =
+    clickableElements.find((element) => /mehr informationen|ratenkauf/i.test(element.textContent ?? '')) ??
+    clickableElements[0];
+
+  trigger?.click();
+};
+
+const renderEasyCreditWidget = async (container: HTMLElement | null, componentId: string, expandCalculator = false) => {
+  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') return;
+  if (!import.meta.client || !showEasyCreditButton.value || !container) return;
+
+  if (easyCreditPurchaseAmount.value < EASY_CREDIT_MIN_AMOUNT) {
+    easyCreditStatus.value = 'belowMinimum';
+    container.innerHTML = '';
+    return;
+  }
+
+  try {
+    easyCreditError.value = '';
+    container.innerHTML = '';
+    const rkPlugin = await waitForEasyCreditPlugin();
+    easyCreditStatus.value = 'loaded';
+    rkPlugin.anzeige(componentId, {
+      webshopId: EASY_CREDIT_WEBSHOP_ID,
+      finanzierungsbetrag: easyCreditPurchaseAmount.value,
+      textVariante: 'KURZ',
+      euro: 'SYMBOL',
+    });
+    await nextTick();
+    window.setTimeout(() => {
+      if (expandCalculator) expandEasyCreditCalculator(container);
+      easyCreditStatus.value = container.textContent?.trim() ? 'rendered' : 'empty';
+    }, 300);
+  } catch (error) {
+    easyCreditStatus.value = 'error';
+    easyCreditError.value = error instanceof Error ? error.message : String(error);
+    container.innerHTML = '';
+  }
+};
+
+const renderEasyCreditInlineWidget = async () => {
+  await renderEasyCreditWidget(easyCreditInlineComponent.value, easyCreditInlineComponentId);
+};
+
+const renderEasyCreditModalWidget = async () => {
+  await renderEasyCreditWidget(easyCreditModalComponent.value, easyCreditModalComponentId, true);
+};
+
+watch([easyCreditPurchaseAmount, showEasyCreditButton], async () => {
+  await nextTick();
+  await renderEasyCreditInlineWidget();
+  if (easyCreditModalOpen.value) await renderEasyCreditModalWidget();
+});
+
+watch(easyCreditModalOpen, async (isOpen) => {
+  await nextTick();
+
+  if (isOpen) {
+    await renderEasyCreditModalWidget();
+  } else {
+    easyCreditStatus.value = 'idle';
+    easyCreditError.value = '';
+    if (easyCreditModalComponent.value) easyCreditModalComponent.value.innerHTML = '';
+  }
+});
+
+const handleEasyCreditInlineClick = (event: MouseEvent) => {
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  openEasyCreditModal();
+};
+
+const openEasyCreditModal = () => {
+  easyCreditModalOpen.value = true;
+};
+
+const closeEasyCreditModal = () => {
+  easyCreditModalOpen.value = false;
+};
 
 const scrollToReviews = () => {
   if (!isReviewsAccordionOpen()) {
@@ -732,8 +1064,6 @@ const openProductQuestionTab = () => {
 </script>
 
 <style scoped>
-
-
 .purchase-card {
   color: #071625;
   box-shadow: none;
@@ -787,15 +1117,46 @@ const openProductQuestionTab = () => {
   color: #071625;
   font-size: 0.875rem;
   line-height: 1.25;
-  text-transform: uppercase;
 }
 
-.purchase-card__availability-dot {
-  width: 8px;
-  height: 8px;
-  flex: 0 0 8px;
+.purchase-card__availability-icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
-  background: #ff9d00;
+  color: #fff;
+}
+
+.purchase-card__availability-icon--success {
+  background: #24a148;
+}
+
+.purchase-card__availability-icon--orange {
+  background: #f97316;
+}
+
+.purchase-card__availability-icon--info {
+  background: #2563eb;
+}
+
+.purchase-card__availability-icon--neutral {
+  background: #8b949e;
+}
+
+.purchase-card__availability-icon--danger {
+  background: #dc2626;
+}
+
+.purchase-card__availability-icon :deep(svg) {
+  width: 14px;
+  height: 14px;
+}
+
+.purchase-card__availability-text {
+  text-transform: none;
 }
 
 .purchase-card__preview-text {
@@ -1050,6 +1411,125 @@ const openProductQuestionTab = () => {
   width: 100%;
 }
 
+.purchase-card__easycredit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 0 0;
+  background: transparent;
+  color: #0066b3;
+  text-align: center;
+}
+
+.purchase-card__easycredit-logo {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+}
+
+.purchase-card__easycredit-content {
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+:global(.purchase-card__easycredit-modal-overlay) {
+  z-index: 2147483400 !important;
+  background: rgb(0 0 0 / 50%);
+}
+
+:global(.purchase-card__easycredit-modal) {
+  width: min(620px, calc(100vw - 32px));
+  max-height: min(760px, calc(100vh - 32px));
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  padding: 0;
+  background: #fff;
+  color: #071625;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 28%);
+}
+
+:global(.purchase-card__easycredit-modal-header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  color: #1c76bd;
+}
+
+:global(.purchase-card__easycredit-modal-title) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #1c76bd;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.purchase-card__easycredit-modal-logo {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+}
+
+:global(.purchase-card__easycredit-close) {
+  color: #777 !important;
+}
+
+.purchase-card__easycredit-modal-content {
+  max-height: calc(min(760px, 100vh - 32px) - 62px);
+  overflow-y: auto;
+  padding: 0 1rem 1rem;
+}
+
+.purchase-card__easycredit-widget {
+  width: 100%;
+  min-height: 24px;
+  color: #0066b3;
+  text-align: center;
+}
+
+.purchase-card__easycredit-widget :deep(*) {
+  color: #0066b3 !important;
+}
+
+.purchase-card__easycredit-modal-content .purchase-card__easycredit-widget {
+  min-height: 360px;
+}
+
+.purchase-card__easycredit-widget :deep(.styleKurzText),
+.purchase-card__easycredit-widget :deep(.styleRate),
+.purchase-card__easycredit-widget :deep(.styleLink) {
+  color: #0066b3 !important;
+}
+
+.purchase-card__easycredit-widget :deep(.styleKurzText),
+.purchase-card__easycredit-widget :deep(.styleRate) {
+  font-weight: 700 !important;
+}
+
+.purchase-card__easycredit-widget :deep(.styleLink) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.purchase-card__easycredit-debug {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border: 1px dashed #f28c00;
+  background: #fff8ed;
+  color: #7a4b00;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
 .purchase-card__tax-note {
   color: #8b8f96;
   font-style: italic;
@@ -1150,7 +1630,8 @@ const openProductQuestionTab = () => {
   .purchase-card__preview-text,
   .purchase-card__leasing-panel,
   .purchase-card__cart-section,
-  .purchase-card__paypal-buttons {
+  .purchase-card__paypal-buttons,
+  .purchase-card__easycredit {
     width: 100%;
     max-width: 100%;
   }
@@ -1245,6 +1726,5 @@ const openProductQuestionTab = () => {
   .purchase-card__paypal-buttons :deep(*) {
     max-width: 100%;
   }
-  
 }
 </style>

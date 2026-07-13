@@ -1,6 +1,6 @@
 import type { Filters, GetFacetsFromURLResponse, UseCategoryFiltersResponse } from './types';
 import type { RouteLocationNormalizedGeneric } from 'vue-router';
-import { isPageOfType } from '~/utils/pathHelper';
+import { isPageOfType, SEARCH_RELEVANCE_SORT } from '~/utils/pathHelper';
 const nonFilters = new Set(['page', 'sort', 'term', 'facets', 'itemsPerPage', 'priceMin', 'priceMax']);
 
 const reduceFilters =
@@ -59,12 +59,11 @@ export const useCategoryFilter = (to?: RouteLocationNormalizedGeneric): UseCateg
   const getFacetsFromURL = (): GetFacetsFromURLResponse => {
     const { getCategoryUrlFromRoute } = useLocalization();
     const { getSetting: defaultSortingOption } = useSiteSettings('defaultSortingOption');
-    const { getSetting: defaultSortingSearch } = useSiteSettings('defaultSortingSearch');
     const config = useRuntimeConfig().public;
 
     const currentRoute = getRoute();
 
-    const defaultOption = isPageOfType('search') ? defaultSortingSearch() : defaultSortingOption();
+    const defaultOption = isPageOfType('search') ? SEARCH_RELEVANCE_SORT : defaultSortingOption();
 
     return {
       categoryUrlPath: getCategoryUrlFromRoute(currentRoute.fullPath),

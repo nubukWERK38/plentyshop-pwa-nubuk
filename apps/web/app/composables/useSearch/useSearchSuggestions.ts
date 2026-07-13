@@ -10,6 +10,7 @@ export const useSearchSuggestions: UseSearchSuggestionsReturn = () => {
   const state = useState<UseSearchSuggestionsState>('useSearchSuggestions', () => ({
     results: null as ItemSearchAutocompleteResult | null,
     searchTerm: '',
+    pendingSearchTerm: '',
     loading: false,
     currentRequestId: 0,
   }));
@@ -20,31 +21,56 @@ export const useSearchSuggestions: UseSearchSuggestionsReturn = () => {
     if (term.length < 2) {
       state.value.currentRequestId++;
       state.value.results = null;
+      state.value.pendingSearchTerm = '';
       state.value.loading = false;
       return;
     }
 
-    if (state.value.searchTerm === term) return;
+    if (state.value.searchTerm === term || state.value.pendingSearchTerm === term) return;
 
     const requestId = ++state.value.currentRequestId;
+    state.value.pendingSearchTerm = term;
     state.value.loading = true;
-    try {
-      const { data } = await useSdk().plentysystems.getItemSearchAutocomplete({
-        query: term,
-        types: ['suggestion', 'category'],
-      });
 
-      if (data && requestId === state.value.currentRequestId) {
-        data.categories = data?.categories?.slice(0, CATEGORY_LIMIT) ?? [];
-        data.suggestions = data?.suggestions?.slice(0, SUGGESTIONS_LIMIT) ?? [];
-        data.items = sortAutocompleteItemsBySearchTerm(data?.items, term).slice(0, ITEMS_LIMIT);
-        state.value.searchTerm = term;
-        state.value.results = data as unknown as ItemSearchAutocompleteResult;
-      }
-    } catch (error) {
-      useHandleError(error as ApiError);
-    } finally {
-      if (requestId === state.value.currentRequestId) state.value.loading = false;
+    const updateResults = (data: ItemSearchAutocompleteResult, type: 'primary' | 'suggestions') => {
+      if (requestId !== state.value.currentRequestId) return;
+
+      const currentResults = state.value.searchTerm === term ? state.value.results : null;
+      state.value.results = {
+        ...data,
+        categories:
+          type === 'primary' ? (data.categories?.slice(0, CATEGORY_LIMIT) ?? []) : (currentResults?.categories ?? []),
+        suggestions:
+          type === 'suggestions'
+            ? (data.suggestions?.slice(0, SUGGESTIONS_LIMIT) ?? [])
+            : (currentResults?.suggestions ?? []),
+        items:
+          type === 'primary' || !currentResults
+            ? sortAutocompleteItemsBySearchTerm(data.items, term).slice(0, ITEMS_LIMIT)
+            : currentResults.items,
+        total: type === 'primary' || !currentResults ? data.total : currentResults.total,
+      };
+      state.value.searchTerm = term;
+      state.value.loading = false;
+    };
+
+    const sdk = useSdk().plentysystems;
+    const requests = [
+      sdk
+        .getItemSearchAutocomplete({ query: term, types: ['category'] })
+        .then(({ data }) => data && updateResults(data as ItemSearchAutocompleteResult, 'primary')),
+      sdk
+        .getItemSearchAutocomplete({ query: term, types: ['suggestion'] })
+        .then(({ data }) => data && updateResults(data as ItemSearchAutocompleteResult, 'suggestions')),
+    ];
+    const outcomes = await Promise.allSettled(requests);
+
+    if (requestId === state.value.currentRequestId) {
+      state.value.pendingSearchTerm = '';
+      state.value.loading = false;
+      outcomes.forEach((outcome) => {
+        if (outcome.status === 'rejected') useHandleError(outcome.reason as ApiError);
+      });
     }
   };
 
@@ -52,6 +78,7 @@ export const useSearchSuggestions: UseSearchSuggestionsReturn = () => {
     state.value.currentRequestId++;
     state.value.results = null;
     state.value.searchTerm = '';
+    state.value.pendingSearchTerm = '';
     state.value.loading = false;
   };
 
