@@ -6,6 +6,7 @@ export type ProductAttributesProps = {
 
 export type AttributeSelectProps = {
   attribute: VariationMapProductAttribute;
+  variationAvailabilityNames?: Record<number, string>;
 };
 
 export interface ComponentsMapper {

@@ -83,7 +83,7 @@
               <UiBadges class="mb-2" :product="product" :use-availability="false" :use-tags="true" />
             </template>
             <template v-if="key === 'availability' && configuration?.fields.availability">
-              <div v-if="availabilityName" class="purchase-card__availability" data-testid="badges">
+              <div v-if="shouldShowAvailability" class="purchase-card__availability" data-testid="badges">
                 <span
                   class="purchase-card__availability-icon"
                   :class="`purchase-card__availability-icon--${availabilityStatus.tone}`"
@@ -464,7 +464,7 @@ const showBundleComponents = computed(() => {
 const { showNetPrices } = useCart();
 const viewport = useViewport();
 const { format } = usePriceFormatter();
-const { getCombination } = useProductAttributes();
+const { attributes: productAttributes, combinations, getCombination } = useProductAttributes();
 const { getPropertiesForCart, getPropertiesPrice } = useProductOrderProperties();
 const { validateAllFields, invalidFields, resetInvalidFields } = useValidatorAggregator('properties');
 const {
@@ -572,6 +572,15 @@ const availabilityName = computed(() => {
   } catch {
     return '';
   }
+});
+const shouldShowAvailability = computed(() => {
+  if (!availabilityName.value) return false;
+
+  const attributeCount = props.product.variationAttributeMap?.attributes?.length ?? productAttributes.value.length;
+  if (attributeCount === 0) return true;
+  if (combinations.value.length === 0) return true;
+
+  return getCombination()?.attributes?.length === attributeCount;
 });
 
 const formatAvailabilityName = (name: string) => {

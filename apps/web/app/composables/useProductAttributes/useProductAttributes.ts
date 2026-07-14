@@ -168,7 +168,11 @@ export const useProductAttributes = (): UseProductAttributesReturn => {
     state.value.combinations = salableCombinations;
     state.value.attributeValues = {};
 
-    if (preSelectAttributes) {
+    if (salableCombinations.length === 1) {
+      salableCombinations[0]?.attributes?.forEach((attribute) => {
+        state.value.attributeValues[attribute.attributeId] = attribute.attributeValueId;
+      });
+    } else if (preSelectAttributes) {
       product.attributes?.forEach((attribute) => {
         const hasAvailableValue = state.value.attributes
           .find((availableAttribute) => availableAttribute.attributeId === attribute.attributeId)

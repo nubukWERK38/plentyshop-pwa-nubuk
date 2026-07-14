@@ -197,13 +197,19 @@ onNuxtReady(() => {
   observeRecommendedSection();
 
   if (import.meta.client && useCallisto().isEnabled) {
-    variationWatchHandler = watch(variationId, async () => {
-      if (Number(productParams.variationId) !== variationId.value && variationId.value > 0) {
-        productParams.variationId = variationId.value;
-        await fetchProduct(productParams);
-        setCurrentProduct(productForEditor.value || ({} as Product));
-      }
-    });
+    variationWatchHandler = watch(
+      variationId,
+      async () => {
+        const loadedVariationId = Number(productGetters.getVariationId(product.value));
+
+        if (loadedVariationId !== variationId.value && variationId.value > 0) {
+          productParams.variationId = variationId.value;
+          await fetchProduct(productParams);
+          setCurrentProduct(productForEditor.value || ({} as Product));
+        }
+      },
+      { immediate: true },
+    );
   }
 });
 </script>

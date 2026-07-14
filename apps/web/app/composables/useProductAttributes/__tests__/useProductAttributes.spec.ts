@@ -100,7 +100,7 @@ describe('useProductAttributes', () => {
     expect(attributeValues.value).toEqual({ 1: 1 });
   });
 
-  it('should not preselect an unsalable attribute value', () => {
+  it('should select the only salable value instead of an unsalable product value', () => {
     const product = {
       ...ProductFixture,
       attributes: [{ attributeId: 1, value: { id: 2 } }],
@@ -141,6 +141,96 @@ describe('useProductAttributes', () => {
     const { setAttribute, attributeValues } = useProductAttributes();
     setAttribute(product, true);
 
+    expect(attributeValues.value).toEqual({ 1: 1 });
+  });
+
+  it('should preselect the only salable variation without an explicit variation selection', () => {
+    const product = {
+      ...ProductFixture,
+      attributes: [],
+      variationAttributeMap: {
+        variations: [
+          {
+            variationId: 1100,
+            isSalable: true,
+            unitCombinationId: 9,
+            unitId: 5,
+            unitName: '2 liter',
+            attributes: [{ attributeId: 1, attributeValueId: 1 }],
+          },
+          {
+            variationId: 1101,
+            isSalable: false,
+            unitCombinationId: 9,
+            unitId: 5,
+            unitName: '2 liter',
+            attributes: [{ attributeId: 1, attributeValueId: 2 }],
+          },
+        ],
+        attributes: [
+          {
+            attributeId: 1,
+            position: 1,
+            name: 'Size',
+            type: 'dropdown',
+            values: [
+              { attributeValueId: 1, position: 1, name: 'In stock', imageUrl: '' },
+              { attributeValueId: 2, position: 2, name: 'Out of stock', imageUrl: '' },
+            ],
+          },
+        ],
+      },
+    } as Product;
+
+    const { setAttribute, attributeValues, getCombination } = useProductAttributes();
+    setAttribute(product, false);
+
+    expect(attributeValues.value).toEqual({ 1: 1 });
+    expect(getCombination()?.variationId).toBe(1100);
+  });
+
+  it('should keep attributes unselected when multiple salable variations exist', () => {
+    const product = {
+      ...ProductFixture,
+      attributes: [],
+      variationAttributeMap: {
+        variations: [
+          {
+            variationId: 1100,
+            isSalable: true,
+            unitCombinationId: 9,
+            unitId: 5,
+            unitName: '2 liter',
+            attributes: [{ attributeId: 1, attributeValueId: 1 }],
+          },
+          {
+            variationId: 1101,
+            isSalable: true,
+            unitCombinationId: 9,
+            unitId: 5,
+            unitName: '2 liter',
+            attributes: [{ attributeId: 1, attributeValueId: 2 }],
+          },
+        ],
+        attributes: [
+          {
+            attributeId: 1,
+            position: 1,
+            name: 'Size',
+            type: 'dropdown',
+            values: [
+              { attributeValueId: 1, position: 1, name: 'Small', imageUrl: '' },
+              { attributeValueId: 2, position: 2, name: 'Large', imageUrl: '' },
+            ],
+          },
+        ],
+      },
+    } as Product;
+
+    const { setAttribute, attributeValues, getCombination } = useProductAttributes();
+    setAttribute(product, false);
+
     expect(attributeValues.value).toEqual({});
+    expect(getCombination()).toBeNull();
   });
 });

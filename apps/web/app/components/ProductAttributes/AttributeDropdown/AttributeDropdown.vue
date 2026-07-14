@@ -22,6 +22,7 @@
         :disabled="productAttributeGetters.isAttributeValueDisabled(item)"
       >
         {{ productAttributeGetters.getAttributeValueName(item) }}
+        <template v-if="getAvailabilityName(item)"> — {{ getAvailabilityName(item) }}</template>
       </option>
     </SfSelect>
     <ErrorMessage as="span" name="selectedValue" class="flex text-negative-700 text-sm mt-2" />
@@ -31,14 +32,16 @@
 <script setup lang="ts">
 import { SfSelect } from '@storefront-ui/vue';
 import type { AttributeSelectProps } from '../types';
+import type { VariationMapProductAttributeValue } from '@plentymarkets/shop-api';
 import { productAttributeGetters } from '@plentymarkets/shop-api';
 import { number, object } from 'yup';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
 import { sortAttributeValues } from '~/utils/sortAttributeValues';
+import { getAttributeValueAvailabilityName } from '~/utils/getAttributeValueAvailabilityName';
 
-const { attribute } = defineProps<AttributeSelectProps>();
-const { updateValue, getValue } = useProductAttributes();
+const { attribute, variationAvailabilityNames = {} } = defineProps<AttributeSelectProps>();
+const { attributeValues, combinations, updateValue, getValue } = useProductAttributes();
 const { registerValidator, registerInvalidFields } = useValidatorAggregator('attributes');
 const value = ref<string | undefined>(
   getValue(productAttributeGetters.getAttributeId(attribute))?.toString() ?? undefined,
@@ -49,6 +52,14 @@ const sortedAttributeValues = computed(() =>
     productAttributeGetters.getAttributeName(attribute),
   ),
 );
+const getAvailabilityName = (item: VariationMapProductAttributeValue) =>
+  getAttributeValueAvailabilityName({
+    combinations: combinations.value,
+    selectedAttributeValues: attributeValues.value,
+    attributeId: productAttributeGetters.getAttributeId(attribute),
+    attributeValueId: productAttributeGetters.getAttributeValueId(item),
+    variationAvailabilityNames,
+  });
 
 watch(
   () => getValue(productAttributeGetters.getAttributeId(attribute)),
@@ -72,10 +83,8 @@ registerValidator(validate);
 const [selectedValue] = defineField('selectedValue');
 
 const doUpdateValue = (value: number) => {
-  if (value > -1) {
-    updateValue(attribute.attributeId, value);
-    selectedValue.value = getValue(attribute.attributeId);
-  }
+  updateValue(attribute.attributeId, value > -1 ? value : undefined);
+  selectedValue.value = getValue(attribute.attributeId);
 };
 
 const setValue = (value: string | undefined) => {
