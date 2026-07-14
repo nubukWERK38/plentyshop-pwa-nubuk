@@ -464,7 +464,7 @@ const showBundleComponents = computed(() => {
 const { showNetPrices } = useCart();
 const viewport = useViewport();
 const { format } = usePriceFormatter();
-const { attributes: productAttributes, combinations, getCombination } = useProductAttributes();
+const { attributes: productAttributes, getCombination } = useProductAttributes();
 const { getPropertiesForCart, getPropertiesPrice } = useProductOrderProperties();
 const { validateAllFields, invalidFields, resetInvalidFields } = useValidatorAggregator('properties');
 const {
@@ -578,9 +578,15 @@ const shouldShowAvailability = computed(() => {
 
   const attributeCount = props.product.variationAttributeMap?.attributes?.length ?? productAttributes.value.length;
   if (attributeCount === 0) return true;
-  if (combinations.value.length === 0) return true;
 
-  return getCombination()?.attributes?.length === attributeCount;
+  const salableVariations =
+    props.product.variationAttributeMap?.variations?.filter((variation) => variation.isSalable === true) ?? [];
+  if (salableVariations.length === 0) return true;
+
+  const selectedCombination = getCombination();
+  if (selectedCombination?.attributes?.length !== attributeCount) return false;
+
+  return Number(productGetters.getVariationId(props.product)) === Number(selectedCombination.variationId);
 });
 
 const formatAvailabilityName = (name: string) => {
@@ -605,19 +611,19 @@ const formatAvailabilityName = (name: string) => {
 
 const formattedAvailabilityName = computed(() => formatAvailabilityName(availabilityName.value));
 
-type AvailabilityTone = 'success' | 'orange' | 'info' | 'neutral' | 'danger';
+type AvailabilityTone = 'success' | 'orange' | 'info' | 'neutral' | 'danger' | 'black';
 
 const availabilityToneById: Record<number, AvailabilityTone> = {
   1: 'success',
-  2: 'orange',
+  2: 'info',
   3: 'info',
-  4: 'neutral',
+  4: 'info',
   5: 'danger',
   6: 'danger',
   7: 'danger',
   8: 'danger',
   9: 'danger',
-  10: 'neutral',
+  10: 'black',
 };
 
 const availabilityIconByTone = {
@@ -626,6 +632,20 @@ const availabilityIconByTone = {
   info: SfIconSchedule,
   neutral: SfIconWarehouse,
   danger: SfIconCancel,
+  black: SfIconWarehouse,
+} as const;
+
+const availabilityIconById = {
+  1: SfIconCheckCircle,
+  2: SfIconCheckCircle,
+  3: SfIconSchedule,
+  4: SfIconWarehouse,
+  5: SfIconCancel,
+  6: SfIconCancel,
+  7: SfIconCancel,
+  8: SfIconCancel,
+  9: SfIconCancel,
+  10: SfIconWarehouse,
 } as const;
 
 const getAvailabilityId = () => {
@@ -648,11 +668,12 @@ const getFallbackAvailabilityTone = (name: string): AvailabilityTone => {
 };
 
 const availabilityStatus = computed(() => {
-  const tone = availabilityToneById[getAvailabilityId()] ?? getFallbackAvailabilityTone(availabilityName.value);
+  const availabilityId = getAvailabilityId();
+  const tone = availabilityToneById[availabilityId] ?? getFallbackAvailabilityTone(availabilityName.value);
 
   return {
     tone,
-    icon: availabilityIconByTone[tone],
+    icon: availabilityIconById[availabilityId as keyof typeof availabilityIconById] ?? availabilityIconByTone[tone],
   };
 });
 const orderPropertiesGroups = computed(() => {
@@ -1157,6 +1178,10 @@ const openProductQuestionTab = () => {
 
 .purchase-card__availability-icon--danger {
   background: #dc2626;
+}
+
+.purchase-card__availability-icon--black {
+  background: #000;
 }
 
 .purchase-card__availability-icon :deep(svg) {
