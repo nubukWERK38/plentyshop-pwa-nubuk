@@ -33,7 +33,12 @@
           </li>
         </ul>
 
-        <ul v-if="showBrands && brands.length" class="category-data-link-list mt-8" data-testid="category-brands">
+        <ul
+          v-if="showBrands && brands.length"
+          class="category-data-link-list mt-8"
+          :style="brandListStyle"
+          data-testid="category-brands"
+        >
           <li
             v-for="(brand, index) in brands"
             :id="`category-brand-item-${index}`"
@@ -90,6 +95,7 @@ const props = defineProps<{
   showBrands: boolean;
   brands: CategoryDataLinkItem[];
   maxSubcategoryRows?: number;
+  maxBrandRows?: number;
 }>();
 
 const currentOrigin = useRequestURL().origin;
@@ -104,6 +110,15 @@ const renderOrder = computed<CategoryDataFieldKey[]>(() =>
     ? props.fieldsOrder
     : (['name', 'description1', 'description2', 'shortDescription'] as CategoryDataFieldKey[]),
 );
+
+const brandListStyle = computed(() => {
+  if (!props.maxBrandRows || props.maxBrandRows < 1) return undefined;
+
+  return {
+    maxHeight: `calc(${props.maxBrandRows} * 1.5rem + ${props.maxBrandRows - 1} * 0.5rem)`,
+    overflow: 'hidden',
+  };
+});
 
 const subcategoryListRef = ref<HTMLElement[]>([]);
 const visibleSubcategoryCount = ref(props.subcategories.length);

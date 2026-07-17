@@ -110,6 +110,7 @@
                 :show-brands="shouldRenderBrands"
                 :brands="visibleBrands"
                 :max-subcategory-rows="4"
+                :max-brand-rows="4"
               />
             </div>
           </div>
