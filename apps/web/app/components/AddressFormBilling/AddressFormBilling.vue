@@ -169,7 +169,8 @@
           :data-testid="`save-address-${AddressType.Billing}`"
           :disabled="formIsLoading"
           variant="secondary"
-          type="submit"
+          type="button"
+          @click="validateAndSubmitForm"
         >
           {{ t('common.actions.saveAddress') }}
         </UiButton>
@@ -216,7 +217,7 @@ const {
 const { invalidVAT, clearInvalidVAT, vatServerError } = useCreateAddress(AddressType.Billing);
 const { addresses: billingAddresses } = useAddressStore(AddressType.Billing);
 const { set: setCheckoutAddress, hasCheckoutAddress } = useCheckoutAddress(AddressType.Billing);
-const { defineField, errors, setValues, validate, handleSubmit } = useForm({ validationSchema: billingSchema });
+const { defineField, errors, setValues, setFieldError, validate } = useForm({ validationSchema: billingSchema });
 const { billingCountries } = useAggregatedCountries();
 const { restrictedAddresses } = useRestrictedAddress();
 const { setBillingSkeleton } = useCheckout();
@@ -289,37 +290,62 @@ const syncCheckoutAddress = async () => {
   if (guestHasShippingAsBilling.value) shippingAsBilling.value = false;
 };
 
-const validateAndSubmitForm = async () => {
-  const formData = await validate();
+const validateRequiredFields = () => {
+  const requiredError = t('error.requiredField');
+  const requiredFields = [
+    ['firstName', firstName.value, !hasCompany.value],
+    ['lastName', lastName.value, !hasCompany.value],
+    ['country', country.value, true],
+    ['streetName', streetName.value, true],
+    ['apartment', apartment.value, true],
+    ['city', city.value, true],
+    ['zipCode', zipCode.value, true],
+    ['companyName', companyName.value, hasCompany.value],
+  ] as const;
 
-  if (formIsLoading.value) return;
-  if (missingGuestCheckoutEmail.value) return backToContactInformation();
+  let hasMissingFields = false;
+  requiredFields.forEach(([field, value, required]) => {
+    const isMissing = required && !String(value ?? '').trim();
+    setFieldError(field, isMissing ? requiredError : undefined);
+    hasMissingFields ||= isMissing;
+  });
 
-  if (formData.valid) {
-    if (hasCompany.value) setDefaultFormValues();
-
-    try {
-      setBillingSkeleton(true);
-      await submitForm();
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === getErrorCode('1400')) {
-          await fetchSession();
-          await submitForm();
-        }
-      } else if (error instanceof ApiError) {
-        useHandleError(error);
-      }
-    } finally {
-      setBillingSkeleton(false);
-      formIsLoading.value = false;
-    }
-    if (showNewForm.value && !invalidVAT.value && !vatServerError.value) showNewForm.value = false;
-  }
+  return !hasMissingFields;
 };
 
-const submitForm = handleSubmit((billingAddressForm) => {
-  addressToSave.value = billingAddressForm as Address;
+const validateAndSubmitForm = async () => {
+  if (formIsLoading.value) return;
+  if (!validateRequiredFields()) return;
+
+  const formData = await validate();
+  if (!formData.valid) return;
+  if (missingGuestCheckoutEmail.value) return backToContactInformation();
+
+  const billingAddressForm = formData.values as Address;
+
+  if (hasCompany.value) setDefaultFormValues();
+
+  try {
+    setBillingSkeleton(true);
+    await submitForm(billingAddressForm as Address);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === getErrorCode('1400')) {
+        await fetchSession();
+        await submitForm(billingAddressForm as Address);
+      }
+    } else if (error instanceof ApiError) {
+      useHandleError(error);
+    }
+  } finally {
+    setBillingSkeleton(false);
+    formIsLoading.value = false;
+  }
+  if (showNewForm.value && !invalidVAT.value && !vatServerError.value) showNewForm.value = false;
+};
+
+const submitForm = (billingAddressForm: Address) => {
+  addressToSave.value = billingAddressForm;
 
   if (guestHasShippingAsBilling.value && !addAddress) delete addressToSave.value?.id;
   if (addAddress) addressToSave.value.primary = true;
@@ -331,7 +357,7 @@ const submitForm = handleSubmit((billingAddressForm) => {
   return saveAddress()
     .then(() => syncCheckoutAddress())
     .then(() => refreshAddressDependencies());
-});
+};
 
 const edit = (address: Address) => {
   if (disabled) return;
