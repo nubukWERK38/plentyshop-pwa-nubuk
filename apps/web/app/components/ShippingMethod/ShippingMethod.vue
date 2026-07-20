@@ -30,8 +30,19 @@
               />
             </template>
             <div class="flex items-center flex-row gap-2">
-              <span class="shippingName">{{ shippingProviderGetters.getShippingMethodName(method) }}</span>
-              <span class="ml-auto text-nowrap shippingCost">{{ getShippingAmount(shippingProviderGetters.getShippingAmount(method)) }}</span>
+              <span class="shippingName">
+                <template
+                  v-for="(line, lineIndex) in getShippingMethodNameLines(
+                    shippingProviderGetters.getShippingMethodName(method),
+                  )"
+                  :key="line"
+                >
+                  <br v-if="lineIndex > 0" />{{ line }}
+                </template>
+              </span>
+              <span class="ml-auto text-nowrap shippingCost">
+                {{ getShippingAmount(shippingProviderGetters.getShippingAmount(method)) }}
+              </span>
             </div>
             <div v-if="getDeliveryDays(shippingProviderGetters.getParcelServicePresetId(method))">
               <span class="text-sm">
@@ -74,6 +85,7 @@
 import { AddressType, shippingProviderGetters, cartGetters } from '@plentymarkets/shop-api';
 import { SfIconWarning, SfListItem, SfRadio } from '@storefront-ui/vue';
 import type { CheckoutShippingEmits, ShippingMethodProps } from './types';
+import { getShippingMethodNameLines } from '~/utils/shippingMethodName';
 
 const { disabled = false, loading = false } = defineProps<ShippingMethodProps>();
 const { hasCheckoutAddress } = useCheckoutAddress(AddressType.Shipping);

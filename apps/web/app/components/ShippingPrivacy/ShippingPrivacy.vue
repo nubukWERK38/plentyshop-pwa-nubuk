@@ -19,10 +19,13 @@
 <script lang="ts" setup>
 import { shippingProviderGetters } from '@plentymarkets/shop-api';
 import { SfCheckbox } from '@storefront-ui/vue';
+import { getShippingMethodDisplayName } from '~/utils/shippingMethodName';
 
 const { shippingPrivacyAgreement, showErrors, setShippingPrivacyAgreement } = useAdditionalInformation();
 const { selectedMethod } = useCartShippingMethods();
 const parcelServiceInformation = computed(() =>
-  selectedMethod.value ? shippingProviderGetters.getShippingMethodName(selectedMethod.value) : '',
+  selectedMethod.value
+    ? getShippingMethodDisplayName(shippingProviderGetters.getShippingMethodName(selectedMethod.value))
+    : '',
 );
 </script>
