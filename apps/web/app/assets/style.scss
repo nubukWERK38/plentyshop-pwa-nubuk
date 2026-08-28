@@ -144,6 +144,10 @@
     column-count: 1;
     column-gap: 0;
   }
+  [data-testid=block-wrapper]:has([data-testid=category-sort-filter]){
+    position: relative!important;
+    z-index: 1!important;
+}
 }
 
 apple-pay-button {
@@ -887,4 +891,7 @@ textarea.ring-1 {
 .purchase-card__easycredit-modal-content .tb-rk-modal-header,
 .purchase-card__easycredit-modal-content .ec-widget {
   display: none !important;
+}
+section[aria-labelledby="search-modal-title"] {
+
 }
