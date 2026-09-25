@@ -45,6 +45,17 @@
     </div>
     <div class="text-sm text-neutral-500 mt-1 ml-7">* {{ t('contact.form.asterixHint') }}</div>
     <div v-if="showErrors" class="text-negative-700 text-sm">{{ t('legal.termsRequired') }}</div>
+    <p>
+      <a
+        target="_blank"
+        rel="noopener"
+        title="Offiziellen EU-Gewährleistungshinweis als PDF öffnen"
+        class="btn btn-primary d-block"
+        href="https://cdn03.plentyone.com/0bcmhf2jth7k/frontend/rechtliches/eu_notice_de.pdf"
+      >
+        EU-Gewährleistungshinweis
+      </a>
+    </p>
   </div>
 </template>
 

@@ -77,6 +77,12 @@
                     Herstellerangaben
                   </button>
                 </li>
+                <li>
+                  <a target="_blank" rel="noopener" href="https://www.nubuk-bikes.de/ueber-uns/agb#warranty">
+                    <SfIconChevronRight size="xs" aria-hidden="true" />
+                    Gesetzliche Gewährleistung - EU-Hinweis ansehen
+                  </a>
+                </li>
               </ul>
             </template>
             <template v-if="key === 'tags' && configuration?.fields.tags">

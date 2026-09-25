@@ -895,3 +895,19 @@ textarea.ring-1 {
 .header-blocks.sticky {
 z-index: 9999999;
 }
+
+.btn-primary {
+  padding: 10px;
+  background-color: #111416;
+  color: #fff;
+  text-align:center;
+  border-radius: 8px
+}
+.btn-primary:hover {
+  background-color: #333;
+}
+.btn-primary.d-block {
+  display: block;
+  width: 100%;
+  margin-top: 10px
+}
