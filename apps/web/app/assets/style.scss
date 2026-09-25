@@ -144,6 +144,9 @@
     column-count: 1;
     column-gap: 0;
   }
+  main + nav {
+    z-index: 9999999 !important;
+  }
 
 }
 
