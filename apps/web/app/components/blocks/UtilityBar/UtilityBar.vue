@@ -767,7 +767,7 @@ const bigMenuNeoContent = computed(() => {
 const buildBigMenuMobileItems = (content: BigMenueNeoContent): MobileMenuItem[] =>
   content.menus
     .map((menu, menuIndex) => {
-      const children = (menu.columns || [])
+      const categoryChildren = (menu.columns || [])
         .flatMap((column, columnIndex) => {
           const level3Items = (column.items || [])
             .filter((item) => isRenderableBigMenuCategoryLink(item.category))
@@ -800,6 +800,20 @@ const buildBigMenuMobileItems = (content: BigMenueNeoContent): MobileMenuItem[] 
           ];
         })
         .filter((item) => !!item.label);
+
+      const brandChildren = (menu.brands || [])
+        .filter((brand) => !!brand.alt?.trim() && !!brand.link?.trim())
+        .map(
+          (brand, brandIndex): MobileMenuItem => ({
+            id: `big-menu-${menuIndex}-brand-${brandIndex}-${brand.id}`,
+            label: brand.alt.trim(),
+            link: brand.link.trim(),
+            title: buildSeoLinkTitle(brand.alt.trim(), 'Nubuk Bikes Marken'),
+            children: [],
+          }),
+        );
+
+      const children = [...categoryChildren, ...brandChildren];
 
       if (!isRenderableBigMenuCategoryLink(menu.category)) return null;
 
