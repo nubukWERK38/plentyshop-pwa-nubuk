@@ -76,6 +76,15 @@ export default {
           cookieNames: ['^_ga', '^_gid', '^_gat', '^_gcl', '^_gac'],
         },
         {
+          name: 'CookieBar.marketing.cookies.openAi.name',
+          Provider: 'OpenAI',
+          Status: 'CookieBar.marketing.cookies.openAi.status',
+          PrivacyPolicy: 'https://openai.com/policies/privacy-policy/',
+          Lifespan: '365 days',
+          accepted: false,
+          cookieNames: ['^__oppref$', '^__obref$'],
+        },
+        {
           name: 'CookieBar.marketing.cookies.billigerDe.name',
           Provider: 'CookieBar.marketing.cookies.billigerDe.provider',
           Status: 'CookieBar.marketing.cookies.billigerDe.status',

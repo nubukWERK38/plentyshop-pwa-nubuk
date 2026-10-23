@@ -111,6 +111,7 @@ const localePath = useLocalePath();
 const bankDetails = orderGetters.getOrderPaymentBankDetails(order);
 const gtmTracking = useGtmTracking();
 const billigerDeTracking = useBilligerDeTracking();
+const openAiTracking = useOpenAiTracking();
 useProcessingOrder().processingOrder.value = false;
 
 await getActiveShippingCountries();
@@ -118,10 +119,15 @@ await getActiveShippingCountries();
 onMounted(() => {
   gtmTracking.trackPurchase(order);
   billigerDeTracking.trackPurchase(order);
+  void openAiTracking.trackPurchase(order);
 });
 
 watch(gtmTracking.consent, (consented) => {
   if (consented) gtmTracking.trackPurchase(order);
+});
+
+watch(openAiTracking.consent, (consented) => {
+  if (consented) void openAiTracking.trackPurchase(order);
 });
 
 watch(billigerDeTracking.consent, (consented) => {

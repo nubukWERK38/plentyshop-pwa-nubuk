@@ -543,6 +543,10 @@
           "provider": "Google LLC",
           "status": "Einbindung des Google Tag Managers zur Aussteuerung von Analyse- und Marketing-Skripten."
         },
+        "openAi": {
+          "name": "OpenAI Ads",
+          "status": "Erfasst nach Ihrer Einwilligung Bestellungen und Bestellwerte zur Erfolgsmessung von Anzeigen in ChatGPT. Die Zuordnungs-Cookies werden bis zu 30 bzw. 365 Tage gespeichert."
+        },
         "billigerDe": {
           "name": "billiger.de Conversion Tracking",
           "provider": "solute GmbH",
