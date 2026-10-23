@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="cookiebarReady && visible"
-    class="fixed max-sm:flex max-sm:flex-col max-sm:justify-between z-50 w-full xl:w-3/5 xl:right-2 bottom-0 max-md:bottom-[3.9rem] shadow-2xl p-3 bg-white rounded overflow-auto end-0 sm:top-auto"
+    class="fixed max-sm:flex max-sm:flex-col max-sm:justify-between z-[10000001] w-full xl:w-3/5 xl:right-2 bottom-0 max-md:bottom-[3.9rem] shadow-2xl p-3 bg-white rounded overflow-auto end-0 sm:top-auto"
   >
     <div v-if="!furtherSettingsOn">
       <!-- cookie info -->

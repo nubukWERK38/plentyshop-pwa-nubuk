@@ -12,6 +12,7 @@
       :model-value="true"
       :disable-click-away="true"
       :disable-esc="true"
+      :class="{ 'category-sidebar--open': isOpen }"
       class="!fixed inset-0 h-dvh w-full rounded shadow-none md:!static md:!inset-auto md:h-auto md:translate-x-0 z-[99999] md:z-0 md:!block -translate-x-full shrink-0 bg-white overflow-y-auto"
       data-testid="category-sidebar"
     >
@@ -44,3 +45,15 @@ import type { CategorySidebarEmits, CategorySidebarProps } from '~/components/Ca
 defineProps<CategorySidebarProps>();
 defineEmits<CategorySidebarEmits>();
 </script>
+
+<style>
+@media (max-width: 767px) {
+  [data-testid='category-sidebar'].category-sidebar--open,
+  [data-testid='multi-grid-column']:has(.category-sidebar--open),
+  [data-testid='multi-grid-structure'] .multi-grid__row:has(.category-sidebar--open),
+  [data-testid='block-wrapper']:has(.category-sidebar--open),
+  [data-testid='category-sort-filter']:has(.category-sidebar--open) {
+    z-index: 10000000 !important;
+  }
+}
+</style>

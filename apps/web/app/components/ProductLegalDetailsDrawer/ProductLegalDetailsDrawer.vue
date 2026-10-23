@@ -1,5 +1,5 @@
 <template>
-  <UiOverlay :visible="open" class="product-legal-details-overlay" style="z-index: 10000">
+  <UiOverlay :visible="open" class="product-legal-details-overlay">
     <SfDrawer
       ref="productLegalDrawerRef"
       v-model="open"
@@ -108,7 +108,6 @@ const title = computed(() => productLegalBlock.value?.content?.text?.title || t(
 
 <style scoped>
 .product-legal-details-overlay {
-  z-index: 10000;
   background: rgb(29 44 54 / 54%);
 }
 
