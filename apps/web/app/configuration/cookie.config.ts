@@ -76,9 +76,10 @@ export default {
           cookieNames: ['^_ga', '^_gid', '^_gat', '^_gcl', '^_gac'],
         },
         {
-          name: 'CookieBar.marketing.cookies.openAi.name',
+          name: 'CookieBar.marketing.cookies.openAiMatching.name',
           Provider: 'OpenAI',
-          Status: 'CookieBar.marketing.cookies.openAi.status',
+          // A distinct service key requires a new grant for automatic customer matching.
+          Status: 'CookieBar.marketing.cookies.openAiMatching.statusWithMatching',
           PrivacyPolicy: 'https://openai.com/policies/privacy-policy/',
           Lifespan: '365 days',
           accepted: false,

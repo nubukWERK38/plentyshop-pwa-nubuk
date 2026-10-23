@@ -543,9 +543,9 @@
           "provider": "Google LLC",
           "status": "Integrates Google Tag Manager to control analytics and marketing scripts."
         },
-        "openAi": {
+        "openAiMatching": {
           "name": "OpenAI Ads",
-          "status": "Measures completed orders and order values for ads in ChatGPT after your consent. Attribution cookies are stored for up to 30 or 365 days."
+          "statusWithMatching": "Measures orders and order values for ads in ChatGPT after your consent. For attribution, OpenAI can also automatically detect customer information such as email addresses and phone numbers, hash it in the browser and include it with purchase events. Attribution cookies are stored for up to 30 or 365 days."
         },
         "billigerDe": {
           "name": "billiger.de Conversion Tracking",

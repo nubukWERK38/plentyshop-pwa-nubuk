@@ -1,7 +1,7 @@
 import { orderGetters } from '@plentymarkets/shop-api';
 import type { Order } from '@plentymarkets/shop-api';
 
-export const OPENAI_COOKIE_NAME = 'CookieBar.marketing.cookies.openAi.name';
+export const OPENAI_COOKIE_NAME = 'CookieBar.marketing.cookies.openAiMatching.name';
 export const OPENAI_SCRIPT_ID = 'openai-measurement-pixel';
 export const OPENAI_SDK_URL = 'https://bzrcdn.openai.com/sdk/oaiq.min.js';
 export const OPENAI_PURCHASE_PREFIX = 'openai-purchase-tracked:';

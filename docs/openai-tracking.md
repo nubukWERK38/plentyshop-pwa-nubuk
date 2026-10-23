@@ -10,7 +10,9 @@ Die Bestellbestätigung sendet `order_created` an das vorhandene Nubuk-Pixel. Gr
 - `event_id`: `nubuk_order_<Bestell-ID>`. Wiederholte Aufrufe werden im laufenden Browser-Kontext und in der Sitzung unterdrückt. Die stabile ID kann später auch zur Deduplizierung mit Server-Ereignissen verwendet werden.
 - `opt_out: true`: Opt-out für eine mögliche zukünftige personenbezogene Personalisierung nach SDK-Spezifikation.
 
-Es werden keine zusätzlichen Kundendatenfelder wie E-Mail oder Telefonnummer von dieser Integration übergeben. Kontoabhängige Einstellungen des OpenAI-Pixels, insbesondere automatisches Advanced Matching, müssen separat im Ads Manager geprüft werden.
+Die expliziten Kaufaufrufe dieser Integration enthalten keine E-Mail- oder Telefonnummernfelder. Unabhängig davon kann das OpenAI-SDK Kundendaten automatisch erkennen, im Browser mit SHA-256 hashen und zusammen mit Conversion-Ereignissen übertragen. Die am 23.10.2026 live gelieferte Pixel-Konfiguration meldet `automatic_advanced_matching_enabled: true`. Der gezeigte Bearbeitungsdialog bietet dafür keinen Ausschalter; in den geprüften offiziellen Pixel- und Setup-Dokumentationen ist keine Abschaltoption beschrieben.
+
+Der deutsche und englische Cookie-Hinweis nennt diesen automatischen Kundendatenabgleich ausdrücklich. Der neue Dienstschlüssel `openAiMatching.name` verhindert die automatische Übernahme einer bisherigen OpenAI-Zustimmung; der geänderte Cookie-Konfigurationshash öffnet die Auswahl erneut. Das ist erforderlich, weil PlentyONE bei einer reinen Hash-Änderung zwar das Banner erneut zeigt, die bisherigen individuellen Zustimmungen aber weiter übernimmt. Der Hinweis ersetzt nicht die Abstimmung der Datenverarbeitung und der Datenschutzerklärung durch den Betreiber.
 
 Die Attribution bleibt bei Seitenwechseln mit gespeicherter Einwilligung erhalten. Beim Widerruf wird das SDK gesperrt; `__oppref` und `__obref` werden entfernt. Die Cookie-Auswahl wird vor einem erforderlichen Seitenneuladen synchron gespeichert, damit ein Widerruf nicht verloren geht.
 
