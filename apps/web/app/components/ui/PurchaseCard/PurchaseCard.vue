@@ -1436,15 +1436,23 @@ const openProductQuestionTab = () => {
 .purchase-card__cart-button {
   min-height: 60px;
   border-radius: 0;
-  background: #d1ff00 !important;
-  color: #000 !important;
   font-weight: 800;
 }
 
-.purchase-card__cart-button:hover,
-.purchase-card__cart-button:active {
-  background: #c4f000 !important;
-  color: #000 !important;
+.purchase-card__cart-button:not(:disabled) {
+  color: #fff;
+  background-color: var(--ci-primary);
+}
+
+.purchase-card__cart-button:hover:not(:disabled),
+.purchase-card__cart-button:active:not(:disabled) {
+  color: #fff;
+  background-color: var(--ci-primary-dark);
+}
+
+.purchase-card__cart-button:focus-visible {
+  outline: 3px solid var(--ci-primary);
+  outline-offset: 3px;
 }
 
 .purchase-card__paypal-buttons {

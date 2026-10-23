@@ -50,7 +50,7 @@
         target="_blank"
         rel="noopener"
         title="Offiziellen EU-Gewährleistungshinweis als PDF öffnen"
-        class="btn btn-primary d-block"
+        class="warranty-notice-link"
         href="https://cdn03.plentyone.com/0bcmhf2jth7k/frontend/rechtliches/eu_notice_de.pdf"
       >
         EU-Gewährleistungshinweis
@@ -67,3 +67,31 @@ const localePath = useLocalePath();
 
 const { checkboxValue, setCheckboxValue, showErrors } = useAgreementCheckbox('checkoutGeneralTerms');
 </script>
+
+<style scoped>
+.warranty-notice-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  color: var(--ci-text);
+  background-color: #e8e8e8;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.warranty-notice-link:hover {
+  color: var(--ci-text);
+  background-color: #d9d9d9;
+}
+
+.warranty-notice-link:focus-visible {
+  outline: 3px solid var(--ci-primary);
+  outline-offset: 3px;
+}
+</style>

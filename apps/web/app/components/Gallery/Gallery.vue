@@ -29,7 +29,12 @@
             :product-name="productName"
             :disable-zoom="shouldEnableEditorFeatures || configuration.thumbnails.enableHoverZoom === false"
             class="cursor-zoom-in"
+            :role="shouldEnableEditorFeatures ? undefined : 'button'"
+            :tabindex="!shouldEnableEditorFeatures && activeIndex === index ? 0 : -1"
+            :aria-label="`Produktbild ${index + 1} vergrößern`"
             @click="openLightbox(index)"
+            @keydown.enter.prevent="openLightbox(index)"
+            @keydown.space.prevent="openLightbox(index)"
           />
         </SwiperSlide>
       </Swiper>
@@ -109,10 +114,18 @@
   </div>
 
   <Teleport to="body">
-    <div v-if="isLightboxOpen" class="product-lightbox" role="dialog" aria-modal="true" @click.self="closeLightbox">
+    <div
+      v-if="isLightboxOpen"
+      ref="lightboxRoot"
+      class="product-lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Produktbilder"
+      @click.self="closeLightbox"
+    >
       <div class="product-lightbox__shell">
         <div class="product-lightbox__toolbar">
-          <div class="product-lightbox__counter">{{ lightboxIndex + 1 }} / {{ images.length }}</div>
+          <div class="product-lightbox__counter" aria-live="polite">{{ lightboxIndex + 1 }} / {{ images.length }}</div>
           <div class="product-lightbox__actions">
             <button
               type="button"
@@ -185,7 +198,7 @@
           </button>
         </div>
 
-        <div v-if="hasMoreImages" class="product-lightbox__thumbs" role="list">
+        <div v-if="hasMoreImages" class="product-lightbox__thumbs" role="group" aria-label="Produktbilder auswählen">
           <button
             v-for="(image, index) in images"
             :key="`lightbox-thumb-${index}`"
@@ -194,7 +207,6 @@
             :class="{ 'product-lightbox__thumb--active': lightboxIndex === index }"
             :aria-current="lightboxIndex === index"
             :aria-label="`Bild ${index + 1} anzeigen`"
-            role="listitem"
             @click="selectLightboxImage(index)"
           >
             <NuxtImg
@@ -243,6 +255,8 @@ const { images } = toRefs(props);
 const productName = computed(() => props.productName ?? '');
 const activeIndex = ref(0);
 const isLightboxOpen = ref(false);
+const lightboxRoot = ref<HTMLElement | null>(null);
+let lightboxTrigger: HTMLElement | null = null;
 const lightboxIndex = ref(0);
 const zoomLevel = ref(1);
 const minZoom = 1;
@@ -347,14 +361,17 @@ const getImageTitle = (image: ImagesData) =>
 
 const openLightbox = (index: number) => {
   if (shouldEnableEditorFeatures.value || images.value.length === 0) return;
+  lightboxTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   lightboxIndex.value = index;
   resetZoom();
   isLightboxOpen.value = true;
+  nextTick(() => lightboxRoot.value?.querySelector<HTMLButtonElement>('[aria-label="Lightbox schliessen"]')?.focus());
 };
 
 const closeLightbox = () => {
   isLightboxOpen.value = false;
   resetZoom();
+  if (lightboxTrigger?.isConnected) lightboxTrigger.focus({ preventScroll: true });
 };
 
 const selectLightboxImage = (index: number) => {
@@ -384,6 +401,23 @@ const zoomOut = () => {
 const onLightboxKeydown = (event: KeyboardEvent) => {
   if (!isLightboxOpen.value) return;
 
+  if (event.key === 'Tab') {
+    const controls = lightboxRoot.value?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+    if (!controls?.length) return;
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    const focusOutside = !lightboxRoot.value?.contains(document.activeElement);
+    if (focusOutside || (event.shiftKey && document.activeElement === first)) {
+      event.preventDefault();
+      (event.shiftKey ? last : first)?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+    return;
+  }
+
+  if (['Escape', 'ArrowLeft', 'ArrowRight', '+', '=', '-'].includes(event.key)) event.preventDefault();
   if (event.key === 'Escape') closeLightbox();
   if (event.key === 'ArrowLeft') showPreviousImage();
   if (event.key === 'ArrowRight') showNextImage();
@@ -429,7 +463,8 @@ body.product-lightbox-open {
 .product-lightbox {
   position: fixed;
   inset: 0;
-  z-index: 9998;
+  /* The sticky shop header uses 9999999; keep the dialog above it. */
+  z-index: 10000000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -457,7 +492,7 @@ body.product-lightbox-open {
 }
 
 .product-lightbox__counter {
-  color: var(--ci-muted);
+  color: var(--ci-primary);
   font-size: 14px;
   font-weight: 700;
 }
@@ -495,10 +530,22 @@ body.product-lightbox-open {
   border-color: var(--ci-accent);
 }
 
+.product-lightbox__control:focus-visible,
+.product-lightbox__nav:focus-visible,
+.product-lightbox__thumb:focus-visible {
+  outline: 3px solid var(--ci-primary);
+  outline-offset: 3px;
+}
+
 .product-lightbox__control:disabled,
 .product-lightbox__nav:disabled {
   cursor: default;
   opacity: 0.35;
+}
+
+.gallery-image:focus-visible {
+  outline: 3px solid var(--ci-primary);
+  outline-offset: -3px;
 }
 
 .product-lightbox__zoom {

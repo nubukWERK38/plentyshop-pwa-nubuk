@@ -45,7 +45,7 @@
       :disabled="disableBuyButton"
       size="lg"
       data-testid="place-order-button"
-      class="w-full mb-4 md:mb-0 cursor-pointer"
+      class="checkout-buy-button w-full mb-4 md:mb-0 cursor-pointer"
       @click="handlePreparePayment"
     >
       <template v-if="createOrderLoading || additionalInformationLoading">
@@ -278,3 +278,21 @@ const validateOnClickComponents = async (event: MouseEvent, component: PaymentBu
   }
 };
 </script>
+
+<style scoped>
+.checkout-buy-button:not(:disabled) {
+  color: #fff;
+  background-color: var(--ci-primary);
+}
+
+.checkout-buy-button:hover:not(:disabled),
+.checkout-buy-button:active:not(:disabled) {
+  color: #fff;
+  background-color: var(--ci-primary-dark);
+}
+
+.checkout-buy-button:focus-visible {
+  outline: 3px solid var(--ci-primary);
+  outline-offset: 3px;
+}
+</style>
