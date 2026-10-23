@@ -185,10 +185,53 @@ const {
   cookieGroups,
   data: cookieJson,
   visible,
-  setConsent,
-  setAllCookiesState,
+  setConsent: applyNativeConsent,
+  removeCookies,
   changeVisibilityState,
 } = useCookieBar();
+const router = useRouter();
+
+const setConsent = async () => {
+  const groups = cookieGroups.value;
+  const revoked = groups.flatMap((group) =>
+    group.cookies.filter((cookie) => useCookieConsent(cookie.name).consent.value && !cookie.accepted),
+  );
+  const acceptedLifespans = groups
+    .flatMap((group) => group.cookies)
+    .filter((cookie) => cookie.accepted)
+    .map((cookie) => Number.parseInt(String(cookie.Lifespan || ''), 10))
+    .filter((days) => Number.isFinite(days) && days > 0);
+  const maxAge = Math.min(100, ...acceptedLifespans) * 24 * 60 * 60;
+  const selection = {
+    hash: cookieJson.value.configHash,
+    groups: Object.fromEntries(
+      groups.map((group) => [
+        group.name,
+        Object.fromEntries(group.cookies.map((cookie) => [cookie.name, Boolean(cookie.accepted)])),
+      ]),
+    ),
+  };
+
+  // The native setter reloads immediately on withdrawal. Persist first, before
+  // Nuxt's asynchronous cookie watcher can lose the new selection on reload.
+  revoked.forEach((cookie) => removeCookies(cookie));
+  document.cookie = `consent-cookie=${encodeURIComponent(JSON.stringify(selection))}; Path=/; Max-Age=${maxAge}; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
+  applyNativeConsent();
+  refreshCookie('consent-cookie');
+  await nextTick();
+  if (revoked.length) router.go(0);
+};
+
+const setAllCookiesState = (accepted: boolean) => {
+  cookieGroups.value.forEach((group) => {
+    group.accepted = group.name === 'CookieBar.essentials.label' || accepted;
+    group.cookies.forEach((cookie) => {
+      cookie.accepted = group.accepted;
+    });
+  });
+  return setConsent();
+};
+
 const NuxtLink = resolveComponent('NuxtLink');
 const localePath = useLocalePath();
 const furtherSettingsOn = ref(false);

@@ -69,6 +69,8 @@ export default {
   sendGrossPricesToGoogleAnalytics: process.env.NUXT_PUBLIC_SEND_GROSS_PRICES_TO_GOOGLE_ANALITICS === 'true',
   googleAnalyticsCookieGroup: process.env.NUXT_PUBLIC_GOOGLE_ANALITICS_COOKIE_GROUP || 'CookieBar.marketing.label',
   registerCookieAsOptOut: process.env.NUXT_PUBLIC_REGISTER_COOKIE_AS_OPT_OUT === 'true',
+  enableOpenAiTracking: process.env.NUXT_PUBLIC_ENABLE_OPENAI_TRACKING !== 'false',
+  openAiPixelId: process.env.NUXT_PUBLIC_OPENAI_PIXEL_ID || 'WJsSUetFR1eMHGMMwsK2rd',
   enableGtm: process.env.NUXT_PUBLIC_ENABLE_GTM !== 'false',
   gtmId: process.env.NUXT_PUBLIC_GTM_ID || 'GTM-PNQ9JRTG',
   googleAdsId: process.env.NUXT_PUBLIC_GOOGLE_ADS_ID || 'AW-990164997',
