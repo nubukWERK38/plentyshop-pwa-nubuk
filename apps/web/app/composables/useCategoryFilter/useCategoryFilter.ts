@@ -1,6 +1,6 @@
 import type { Filters, GetFacetsFromURLResponse, UseCategoryFiltersResponse } from './types';
 import type { RouteLocationNormalizedGeneric } from 'vue-router';
-import { isPageOfType, SEARCH_RELEVANCE_SORT } from '~/utils/pathHelper';
+import { SEARCH_DEFAULT_SORT, SEARCH_DEFAULT_AVAILABILITY_FACETS } from '~/utils/pathHelper';
 const nonFilters = new Set(['page', 'sort', 'term', 'facets', 'itemsPerPage', 'priceMin', 'priceMax']);
 
 const reduceFilters =
@@ -63,13 +63,14 @@ export const useCategoryFilter = (to?: RouteLocationNormalizedGeneric): UseCateg
 
     const currentRoute = getRoute();
 
-    const defaultOption = isPageOfType('search') ? SEARCH_RELEVANCE_SORT : defaultSortingOption();
+    const isSearchPage = currentRoute.meta.type === 'search';
+    const defaultOption = isSearchPage ? SEARCH_DEFAULT_SORT : defaultSortingOption();
 
     return {
       categoryUrlPath: getCategoryUrlFromRoute(currentRoute.fullPath),
       page: Number(currentRoute.query.page as string) || defaults.DEFAULT_PAGE,
       sort: currentRoute.query.sort?.toString() ?? defaultOption,
-      facets: currentRoute.query.facets?.toString(),
+      facets: currentRoute.query.facets?.toString() ?? (isSearchPage ? SEARCH_DEFAULT_AVAILABILITY_FACETS : undefined),
       feedbackPage: Number(currentRoute.query.feedbackPage as string) || defaults.DEFAULT_FEEDBACK_PAGE,
       feedbacksPerPage: Number(currentRoute.query.feedbacksPerPage as string) || config.defaultItemsPerPage,
       itemsPerPage: Number(currentRoute.query.itemsPerPage as string) || defaults.DEFAULT_ITEMS_PER_PAGE,
@@ -89,7 +90,7 @@ export const useCategoryFilter = (to?: RouteLocationNormalizedGeneric): UseCateg
    */
   const getFiltersFromUrl = (): Filters => {
     const filters: Filters = {};
-    const facets = getFacetsFromURL().facets?.split(',') ?? [];
+    const facets = (getFacetsFromURL().facets?.split(',') ?? []).filter(Boolean);
 
     facets.forEach((facet: string) => {
       filters[facet] = true;
@@ -151,7 +152,8 @@ export const useCategoryFilter = (to?: RouteLocationNormalizedGeneric): UseCateg
     if (filtersIds) {
       updateQuery({ facets: filtersIds });
     } else {
-      updateQuery({ facets: null });
+      // An explicit empty value lets customers clear the search defaults.
+      updateQuery({ facets: getRoute().meta.type === 'search' ? '' : null });
     }
   };
 

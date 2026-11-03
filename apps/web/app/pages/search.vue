@@ -104,7 +104,6 @@ defineI18nRoute({
   locales: process.env.LANGUAGELIST?.split(',') as Locale[],
 });
 
-const { getRobots, setRobotForStaticPage } = useRobots();
 const { getSetting: getMetaDescription } = useSiteSettings('metaDescription');
 const { getSetting: getMetaKeywords } = useSiteSettings('metaKeywords');
 
@@ -190,12 +189,10 @@ watch(
   },
 );
 
-await getRobots();
-setRobotForStaticPage('SearchResult');
-
 useHead({
   title: searchTitle,
   meta: [
+    { name: 'robots', content: 'noindex, follow' },
     { name: 'description', content: () => getMetaDescription() },
     { name: 'keywords', content: () => getMetaKeywords() },
   ],

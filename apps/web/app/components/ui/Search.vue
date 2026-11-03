@@ -14,6 +14,9 @@
         :class="{ 'header-search-input': variant === 'header' }"
         :aria-label="t('common.actions.search')"
         :placeholder="t('common.actions.search')"
+        :maxlength="80"
+        :aria-describedby="isDropdownVisible && !canSubmit ? searchStatusId : undefined"
+        :aria-busy="loadingSuggestions || submitting"
         @focus="handleOpen"
       >
         <template v-if="variant !== 'header'" #prefix>
@@ -42,12 +45,42 @@
 
     <section
       v-if="isDropdownVisible"
-      class="search-suggestions w-full grid md:shadow @2xl:grid-cols-3 absolute px-4 pt-4 border border-neutral-100 mt-[2px] gap-8 max-h-[calc(100vh-120px)] overflow-y-auto"
+      :class="{ 'search-suggestions--empty': isEmptySearch }"
+      class="search-suggestions w-full grid md:shadow @2xl:grid-cols-3 absolute px-4 py-4 border border-neutral-100 mt-[2px] gap-8 max-h-[calc(100vh-120px)] overflow-y-auto"
       aria-live="polite"
       aria-relevant="all"
       :aria-label="t('searchBar.searchSuggestions')"
     >
-      <div class="w-full lg:col-span-full grid lg:grid-cols-2 gap-8">
+      <div v-if="isEmptySearch" :id="searchStatusId" role="status" class="search-empty" data-testid="search-status">
+        <div class="search-empty__copy">
+          <h3 class="search-empty__title">{{ t('searchBar.noMatchingProductsTitle') }}</h3>
+          <p class="search-empty__text">{{ t('searchBar.noMatchingProducts') }}</p>
+        </div>
+        <svg class="search-empty__smiley" viewBox="0 0 96 96" fill="none" aria-hidden="true" focusable="false">
+          <circle cx="48" cy="48" r="41" stroke="currentColor" stroke-width="3.5" />
+          <circle cx="34" cy="38" r="3.5" fill="currentColor" />
+          <circle cx="62" cy="38" r="3.5" fill="currentColor" />
+          <path
+            d="M29 55c3 11 12 16 19 16s16-5 19-16"
+            stroke="currentColor"
+            stroke-width="3.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+      <p
+        v-else-if="loadingSuggestions || searchError"
+        :id="searchStatusId"
+        role="status"
+        class="lg:col-span-full text-base text-neutral-900"
+        data-testid="search-status"
+      >
+        {{ t(loadingSuggestions ? 'searchBar.loading' : 'searchBar.searchError') }}
+      </p>
+      <div
+        v-if="results?.categories?.length || results?.suggestions?.length"
+        class="w-full lg:col-span-full grid lg:grid-cols-2 gap-8"
+      >
         <div class="w-full">
           <div v-if="results?.suggestions?.length" class="mb-8 lg:mb-0">
             <h3 class="sr-only uppercase tracking-widest text-sm font-bold text-neutral-700">
@@ -83,13 +116,13 @@
         </div>
       </div>
 
-      <div class="w-full lg:col-span-full @container/products lg:mb-4 overflow-hidden">
+      <div v-if="results?.items?.length" class="w-full lg:col-span-full @container/products lg:mb-4 overflow-hidden">
         <div class="flex items-center justify-between gap-2">
           <h3 class="uppercase tracking-widest text-sm font-bold text-neutral-700 shrink-0">
             {{ t('searchBar.productSuggestions') }}
           </h3>
           <NuxtLink
-            v-if="results?.total"
+            v-if="canSubmit && results?.total"
             :to="getSearchPath(searchTerm)"
             class="hidden @2xl/search:flex text-neutral-900 text-sm font-medium underline underline-offset-4 min-w-0 shrink"
           >
@@ -107,10 +140,9 @@
             <UiSearchSuggestionProduct :item="item" />
           </li>
         </ul>
-        <div v-else class="mt-4 text-base text-neutral-900 mb-4 @2xl:mb-0">{{ t('searchBar.noResultsFound') }}</div>
       </div>
       <NuxtLink
-        v-if="results?.total"
+        v-if="canSubmit && results?.total"
         :to="getSearchPath(searchTerm)"
         class="sticky bottom-0 @2xl:hidden px-2 py-4 bg-white text-base underline underline-offset-4 text-neutral-900 flex w-full overflow-hidden"
       >
@@ -127,7 +159,7 @@
 <script setup lang="ts">
 import { SfIconCancel, SfIconSearch, SfInput, SfLoaderCircular } from '@storefront-ui/vue';
 import { onClickOutside, unrefElement } from '@vueuse/core';
-import { SEARCH_RELEVANCE_SORT } from '~/utils/pathHelper';
+import { getSearchPath } from '~/utils/pathHelper';
 import { debounce } from '~/utils/debounce';
 
 const props = defineProps<{
@@ -136,10 +168,8 @@ const props = defineProps<{
   autofocus?: boolean;
 }>();
 
-const localePath = useLocalePath();
 const router = useRouter();
 const route = useRoute();
-const { updateSearchTerm } = useCategoryFilter();
 const { loading } = useSearch();
 const rootRef = ref<HTMLElement | null>(null);
 const isOpen = ref(false);
@@ -149,6 +179,7 @@ const {
   searchSuggestions,
   searchTerm,
   loading: loadingSuggestions,
+  error: searchError,
   resetSuggestions,
 } = useSearchSuggestions();
 const { emit } = usePlentyEvent();
@@ -178,13 +209,37 @@ const handleReset = () => {
   inputModel.value = '';
   handleInputFocus();
 };
-const handleSubmit = () => {
-  handleClose();
-  props.close?.();
-  updateSearchTerm(inputModel.value);
-  emit('frontend:searchProduct', inputModel.value);
-  router.push({ path: localePath(paths.search), query: { term: inputModel.value, sort: SEARCH_RELEVANCE_SORT } });
-  handleReset();
+const submitting = ref(false);
+let submissionId = 0;
+const canSubmit = computed(
+  () => !loadingSuggestions.value && !searchError.value && Boolean(results.value?.items?.length),
+);
+const searchStatusId = useId();
+const isEmptySearch = computed(() => !loadingSuggestions.value && !searchError.value && !results.value?.items?.length);
+const handleSubmit = async () => {
+  const term = inputModel.value.trim().slice(0, 80);
+  if (term.length < 2 || submitting.value) return;
+  const currentSubmissionId = ++submissionId;
+  submitting.value = true;
+  debounceInput.cancel();
+  handleOpen();
+  try {
+    await searchSuggestions(term);
+    if (
+      currentSubmissionId !== submissionId ||
+      inputModel.value.trim().slice(0, 80) !== term ||
+      searchTerm.value !== term ||
+      !canSubmit.value
+    )
+      return;
+    emit('frontend:searchProduct', term);
+    await router.push(getSearchPath(term));
+    handleClose();
+    props.close?.();
+    handleReset();
+  } finally {
+    if (currentSubmissionId === submissionId) submitting.value = false;
+  }
 };
 const handleSearch = () => {
   if (inputModel.value.trim().length > 1) {
@@ -207,6 +262,8 @@ onClickOutside(rootRef, () => {
 });
 
 watch(inputModel, () => {
+  submissionId++;
+  submitting.value = false;
   if (inputModel.value.trim().length < 2) {
     debounceInput.cancel();
     resetSuggestions();
@@ -257,6 +314,9 @@ onUnmounted(() => debounceInput.cancel());
 }
 
 .header-search-input :deep(input) {
+  min-width: 0 !important;
+  width: 0;
+  flex: 1;
   height: 39px;
   border: 0;
   border-radius: 0;
@@ -288,12 +348,66 @@ onUnmounted(() => debounceInput.cancel());
   color: #111827;
 }
 
-@media (min-width: 1024px) {
+.search-suggestions--empty {
+  gap: 1rem;
+  padding: 0;
+  margin-top: 8px;
+  border: 0;
+  box-shadow: none;
+}
+
+.search-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 26px 28px;
+  border-left: 4px solid var(--ci-accent, #d1ff00);
+  border-radius: 3px;
+  background: var(--ci-primary, #284f70);
+  color: #ffffff;
+  box-shadow: 0 10px 28px rgb(17 20 22 / 16%);
+}
+
+.search-empty__copy {
+  min-width: 0;
+  max-width: 42ch;
+}
+
+.search-empty__title {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.search-empty__text {
+  margin: 0;
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.search-empty__smiley {
+  flex: 0 0 auto;
+  width: 88px;
+  height: 88px;
+  color: var(--ci-accent, #d1ff00);
+}
+
+@media (min-width: 768px) {
   .search-suggestions {
     left: 50%;
     width: 70vw;
     max-width: calc(100vw - 2rem);
     transform: translateX(-50%);
+  }
+
+  .search-suggestions--empty {
+    width: min(640px, calc(100vw - 2rem));
   }
 }
 
@@ -307,6 +421,12 @@ onUnmounted(() => debounceInput.cancel());
   :global(.mobile-search [data-testid='search-bar-input']) {
     width: 100%;
     min-width: 0;
+  }
+
+  :global(.mobile-search form input[data-testid='search-bar-input']) {
+    min-width: 0 !important;
+    width: 0;
+    flex: 1;
   }
 
   :global(.mobile-search [data-testid='search-bar-input']) {
@@ -330,6 +450,46 @@ onUnmounted(() => debounceInput.cancel());
     padding: 16px;
     border: 0;
     box-shadow: none;
+  }
+}
+@media (max-width: 767px) {
+  :global(.mobile-search .search-suggestions--empty) {
+    padding: 0;
+    overflow: visible;
+  }
+
+  .search-empty {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 56px;
+    align-items: center;
+    gap: 12px 16px;
+    padding: 22px 18px;
+  }
+
+  .search-empty__copy {
+    display: contents;
+  }
+
+  .search-empty__title {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    font-size: 20px;
+  }
+
+  .search-empty__text {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .search-empty__smiley {
+    grid-column: 2;
+    grid-row: 1;
+    width: 56px;
+    height: 56px;
+    margin-top: 1px;
   }
 }
 </style>

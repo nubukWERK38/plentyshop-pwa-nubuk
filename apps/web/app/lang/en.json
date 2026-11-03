@@ -1154,7 +1154,11 @@
     "productSuggestions": "Product Suggestions",
     "matchingCategories": "Matched Categories",
     "showAllResults": "See all results for \"{searchTerm}\" ({hitsCount})",
-    "noResultsFound": "No results found."
+    "noResultsFound": "No results found.",
+    "loading": "Searching …",
+    "searchError": "Search is currently unavailable. Please try again.",
+    "noMatchingProductsTitle": "No luck yet?",
+    "noMatchingProducts": "Try another search term or check the spelling."
   },
   "sessionLifetime": {
     "oneDay": "One day, even if the browser is closed",

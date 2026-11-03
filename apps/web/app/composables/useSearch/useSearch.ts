@@ -34,7 +34,26 @@ export const useSearch: UseSearchReturn = () => {
       if (!params.type) {
         params.type = 'search';
       }
-      const { data } = await useSdk().plentysystems.getSearch(params);
+      const sdk = useSdk().plentysystems;
+      if (params.type === 'search') {
+        const term = params.term?.trim().slice(0, 80) ?? '';
+        params = { ...params, term };
+        const { data: preview } =
+          term.length > 1
+            ? await sdk.getItemSearchAutocomplete({ query: term, types: ['category'] })
+            : { data: { total: 0 } };
+        if (!preview) throw new Error('Missing search preview response');
+        if (!preview.total) {
+          state.value.productsPerPage = params.itemsPerPage || defaults.DEFAULT_ITEMS_PER_PAGE;
+          state.value.data = {
+            products: [],
+            facets: [],
+            pagination: { totals: 0, perPageOptions: defaults.PER_PAGE_STEPS },
+          };
+          return state.value.data;
+        }
+      }
+      const { data } = await sdk.getSearch(params);
       state.value.productsPerPage = params.itemsPerPage || defaults.DEFAULT_ITEMS_PER_PAGE;
       if (data) data.pagination.perPageOptions = defaults.PER_PAGE_STEPS;
       state.value.data = data ?? state.value.data;

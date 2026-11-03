@@ -1154,7 +1154,11 @@
     "productSuggestions": "Produktvorschläge",
     "matchingCategories": "Passende Kategorien",
     "showAllResults": "Alle Ergebnisse für „{searchTerm}“ anzeigen ({hitsCount})",
-    "noResultsFound": "Es wurden keine Ergebnisse gefunden."
+    "noResultsFound": "Es wurden keine Ergebnisse gefunden.",
+    "loading": "Die Suche läuft …",
+    "searchError": "Die Suche ist gerade nicht möglich. Bitte versuche es erneut.",
+    "noMatchingProductsTitle": "Noch kein Treffer?",
+    "noMatchingProducts": "Versuche einen anderen Suchbegriff oder prüfe die Schreibweise."
   },
   "sessionLifetime": {
     "oneDay": "Ein Tag, auch wenn der Browser geschlossen wird",

@@ -26,19 +26,18 @@
 <script setup lang="ts">
 import { SfSelect } from '@storefront-ui/vue';
 import { useRoute } from 'vue-router';
-import { isPageOfType } from '~/utils/pathHelper';
+import { isPageOfType, SEARCH_DEFAULT_SORT } from '~/utils/pathHelper';
 
 const props = defineProps<{ selectionModeCompact?: boolean }>();
 const { updateSorting } = useCategoryFilter();
 const { getJsonSetting: availableSortingOptions } = useSiteSettings('availableSortingOptions');
-const { getSetting: defaultSortingSearch } = useSiteSettings('defaultSortingSearch');
 const { getSetting: defaultSortingOption } = useSiteSettings('defaultSortingOption');
 
 const route = useRoute();
 const useSelectionModeCompact = computed(() => props.selectionModeCompact);
 const options = computed<string[]>(() => availableSortingOptions());
 const defaultOption = computed<string | undefined>(() =>
-  isPageOfType('search') ? defaultSortingSearch() : defaultSortingOption(),
+  isPageOfType('search') ? SEARCH_DEFAULT_SORT : defaultSortingOption(),
 );
 
 const selected = computed<string>({
@@ -47,7 +46,7 @@ const selected = computed<string>({
     const currentSort = typeof sortQueryParam === 'string' ? sortQueryParam : '';
     if (currentSort && options.value.includes(currentSort)) return currentSort;
 
-    if (useSelectionModeCompact.value) return '';
+    if (useSelectionModeCompact.value && !isPageOfType('search')) return '';
 
     return (
       (defaultOption.value && options.value.includes(defaultOption.value) ? defaultOption.value : options.value[0]) ??

@@ -23,6 +23,7 @@ export interface UseSearchSuggestionsState {
   results: ItemSearchAutocompleteResult | null;
   searchTerm: string;
   pendingSearchTerm: string;
+  error: boolean;
   loading: boolean;
   currentRequestId: number;
 }
@@ -34,6 +35,7 @@ export interface UseSearchSuggestions {
   results: Readonly<Ref<UseSearchSuggestionsState['results']>>;
   searchTerm: Readonly<Ref<string>>;
   loading: Readonly<Ref<boolean>>;
+  error: Readonly<Ref<boolean>>;
   searchSuggestions: SearchSuggestions;
   resetSuggestions: ResetSuggestions;
 }
